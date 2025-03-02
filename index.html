@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faisal-Portfolio</title>
+    <link rel="icon" href="imgs/F-logo2.png" type="image/png" />
+    <link rel="preload" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/animation.style.css" />
+    <link
+      rel="stylesheet"
+      id="ryancv-fonts-css"
+      href="//fonts.googleapis.com/css?family=Poppins%3A100%2C100i%2C200%2C200i%2C300%2C300i%2C400%2C400i%2C500%2C500i%2C600%2C600i%2C700%2C700i%2C800%2C800i%2C900%2C900i&amp&display=swap;subset=latin%2Clatin-ext"
+      type="text/css"
+      media="all"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/flaticon.css" />
+    <link rel="stylesheet" href="css/inoicons.css" />
+    <link
+      rel="stylesheet"
+      media="screen and (max-width: 1100px)"
+      href="css/responsive(1100).css"
+    />
+    <link
+      rel="stylesheet"
+      media="screen and (max-width: 650px)"
+      href="css/resposive(650).css"
+    />
+
+
+   
+
+    <style>
+      .button-container {
+        display: flex;
+        justify-content: center; /* Centers the buttons horizontally */
+        align-items: center;
+        gap: 20px; /* Adds space between the two buttons */
+        margin-top: 20px; /* Adds margin on top */
+      }
+
+      .button-container button {
+        background-color: white; /* White background */
+        color: black; /* Black text */
+        border: none; /* No border */
+        padding: 10px 20px; /* Padding around the text */
+        border-radius: 4px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and text color */
+      }
+
+      .button-container button:hover {
+        background-color: #0e6655; /* Green background on hover */
+        color: white; /* White text on hover */
+      }
+
+      /* Media query for screens less than 500px wide */
+
+      @media (min-width: 1105px) {
+    .page {
+        margin-top: -40px;
+    }
+}
+    
+    </style>
+
+    <script>
+      function downloadCV() {
+        // Prevent the default behavior of the anchor tag
+        event.preventDefault();
+        // Create a new anchor element dynamically
+        var link = document.createElement("a");
+        // Set the path to your CV file (adjust 'path/to/your/CV.pdf' to the actual path)
+        link.href = "imgs/Faisal-Resume.pdf";
+        // Set the download attribute with a default file name for the CV
+        link.download = "Faisal-CV.pdf";
+        // Append the anchor element to the body of the document
+        document.body.appendChild(link);
+        // Programmatically trigger a click on the anchor element
+        link.click();
+        // Remove the anchor element after download
+        document.body.removeChild(link);
+      }
+
+      function validateEmail(email) {
+        var re =
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+      }
+
+      function validateForm() {
+        var fullname = document.getElementById("fullname").value;
+        var email = document.getElementById("email").value;
+        var message = document.getElementById("message").value;
+
+        // Check if any field is empty
+        if (!fullname || !email || !message) {
+          alert("Please fill out all fields.");
+          return false; // Stop the form from submitting
+        }
+
+        // You can add more specific validations here
+        // Example: Validate email format
+        if (!validateEmail(email)) {
+          alert("Please enter a valid email address.");
+          return false;
+        }
+      }
+    </script>
+
+    <style>
+      @media (min-width: 650px) {
+        .menu label[for="blogs-card"] {
+          margin-left: -3.5px;
+        }
+      }
+    </style>
+
+    <script>
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var form = this;
+          var data = new FormData(form);
+
+          fetch(form.action, {
+            method: form.method,
+            body: data,
+            headers: {
+              Accept: "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.ok) {
+                alert("Thank you for your submission!");
+              } else {
+                alert(
+                  "There was a problem with your submission. Please try again."
+                );
+              }
+            })
+            .catch((error) => {
+              alert(
+                "There was a problem with your submission: " + error.message
+              );
+            });
+        });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const allWorksItems = document.querySelectorAll(".works-item");
+        const radioButtons = document.querySelectorAll(
+          'input[name="menu-list"]'
+        );
+
+        // Attach event listeners more efficiently
+        function handleRadioChange() {
+          const category = this.id; // 'this' refers to the radio button that changed
+          filterWorks(category);
+        }
+
+        radioButtons.forEach((radio) =>
+          radio.addEventListener("change", handleRadioChange)
+        );
+
+        function filterWorks(category) {
+          allWorksItems.forEach((item) => {
+            // Ternary operator for cleaner condition handling
+            item.style.display =
+              category === "All" ||
+              item.getAttribute("data-category") === category
+                ? "block"
+                : "none";
+          });
+        }
+      });
+
+      window.addEventListener("load", function () {
+        var iframe = document.createElement("iframe");
+        iframe.src =
+          "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5445.305620361764!2d74.3045157!3d31.5172607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x525e8e18678b4c07!2sGovt.+Pilot+Secondary+School+for+Girls!5e0!3m2!1sen!2s!4v1662394461952";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("marginheight", "0");
+        iframe.setAttribute("marginwidth", "0");
+
+        var mapContainer = document.getElementById("gmap_canvas");
+        mapContainer.innerHTML = ""; // Clear the loading placeholder
+        mapContainer.appendChild(iframe); // Insert the iframe
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const mapTrigger = document.getElementById("gmap_canvas"); // Assuming 'gmap_canvas' is the container for the map
+
+        // Function to create and insert the map iframe
+        function loadMap() {
+          var iframeExists = document.querySelector("#gmap_canvas iframe");
+          if (!iframeExists) {
+            var iframe = document.createElement("iframe");
+            iframe.src =
+              "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5445.305620361764!2d74.3045157!3d31.5172607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x525e8e18678b4c07!2sGovt.+Pilot+Secondary+School+for+Girls!5e0!3m2!1sen!2s!4v1662394461952";
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.setAttribute("frameborder", "0");
+            iframe.setAttribute("scrolling", "no");
+            iframe.setAttribute("marginheight", "0");
+            iframe.setAttribute("marginwidth", "0");
+
+            mapTrigger.innerHTML = ""; // Clear the placeholder
+            mapTrigger.appendChild(iframe); // Insert the iframe
+          }
+        }
+
+        // Optional: Trigger map loading based on scroll to the contact section or click
+        mapTrigger.addEventListener("click", loadMap); // Load map on click
+
+        // You could also add an IntersectionObserver to load the map when the contact section becomes visible
+        let observer = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                loadMap();
+                observer.unobserve(entry.target); // Stop observing once loaded
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+
+        observer.observe(document.querySelector(".contact-top")); // Start observing contact section
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const loadButton = document.getElementById("loadCalendlyButton");
+        const loadingMessage = document.getElementById("loadingMessage");
+        const calendlyWidget = document.querySelector(
+          ".calendly-inline-widget"
+        );
+
+        function loadCalendly() {
+          // Show the loading message
+          loadingMessage.style.display = "block";
+          loadButton.style.display = "none"; // Hide the button once clicked
+
+          // Create the Calendly iframe
+          const iframe = document.createElement("iframe");
+          iframe.src =
+            "https://calendly.com/mehrfaisal111/30min?hide_gdpr_banner=1";
+          iframe.style.width = "100%";
+          iframe.style.height = "100%";
+          iframe.setAttribute("frameborder", "0");
+          iframe.setAttribute("scrolling", "no");
+
+          // Show the Calendly widget and remove the loading message once the iframe is loaded
+          iframe.onload = function () {
+            loadingMessage.style.display = "none"; // Hide the loading message
+            calendlyWidget.style.display = "block"; // Show the Calendly widget
+          };
+
+          calendlyWidget.appendChild(iframe); // Insert the iframe into the widget div
+        }
+
+        // Event listener for the button click
+        loadButton.addEventListener("click", loadCalendly);
+      });
+    </script>
+
+    <script>
+      let isClicked = false; // State to keep track of whether the button has been clicked
+
+      function handleClick() {
+        const button = document.getElementById("loadCalendlyButton");
+        if (!isClicked) {
+          button.style.backgroundColor = "#0e6655"; // Set to the bold green color on click
+          isClicked = true;
+        } else {
+          button.style.backgroundColor = "black"; // Revert to black if clicked again
+          isClicked = false;
+        }
+      }
+
+      function handleMouseOver() {
+        const button = document.getElementById("loadCalendlyButton");
+        if (!isClicked) {
+          button.style.backgroundColor = "#0e6655"; // Bold green color on hover
+        }
+      }
+
+      function handleMouseOut() {
+        const button = document.getElementById("loadCalendlyButton");
+        if (!isClicked) {
+          button.style.backgroundColor = "black"; // Original black color
+        }
+      }
+    </script>
+
+<script>
+  function adjustMargin() {
+    // Get all elements with class 'img1' within '.works-item' that have 'data-category="Reactjs"'
+    var elements = document.querySelectorAll('.works-item[data-category="Reactjs"] .img1');
+
+    // Check the screen width
+    if (window.innerWidth <= 500) {
+      // Apply negative margin-top if conditions are met
+      elements.forEach(function(el) {
+        el.style.marginTop = '-220px';
+      });
+    } else {
+      // Revert the margin-top when condition is not met
+      elements.forEach(function(el) {
+        el.style.marginTop = ''; // Reverts to the stylesheet or removes inline style
+      });
+    }
+  }
+
+  // Listen to resize event
+  window.addEventListener('resize', adjustMargin);
+
+  // Call function on initial load
+  window.onload = adjustMargin;
+</script>
+
+  </head>
+
+  <body>
+    <div class="preloader">
+      <span class="ion-load-c"></span>
+    </div>
+    <div class="page">
+      <div class="background-gred">
+        <ul class="bg-bubble">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+      <div class="container">
+        <input type="radio" name="menu" id="about-card" checked />
+        <input type="radio" name="menu" id="resume-card" />
+        <input type="radio" name="menu" id="works-card" />
+        <input type="radio" name="menu" id="blogs-card" />
+        <input type="radio" name="menu" id="contact-card" />
+        <input type="radio" name="menu" id="schedule-card" />
+        <header>
+         
+          <div class="menu-list-wrap">
+
+            <div class="profile-container">
+              <img
+                src="imgs/FaisalN1.jpeg"
+                alt="Profile Photo"
+                class="profile-photo"
+              />
+              <div class="text-container">
+                <span>Faisal Hanif</span>
+                <p
+                  href=""
+                  class="typewrite"
+                  data-period="2000"
+                  data-type='["Frontend Developer"]'
+                >
+                  <span class="wrap"></span>
+                </p>
+              </div>
+            </div>
+
+            
+            <ul class="menu-list">
+              <li class="menu">
+                <label for="about-card">
+                  <span class="icon ion-ios-person"></span>
+                  About
+                </label>
+              </li>
+              <li class="menu">
+                <label for="resume-card">
+                  <span class="icon ion-android-list"></span>
+                  Profile
+                </label>
+              </li>
+              <li class="menu">
+                <label for="works-card">
+                  <span class="icon ion-briefcase"></span>
+                  Works
+                </label>
+              </li>
+              <li class="menu">
+                <label for="blogs-card">
+                  <span class="icon ion-trophy"></span>
+                  Approvals
+                </label>
+              </li>
+              <li class="menu">
+                <label for="contact-card">
+                  <span class="icon ion-chatbubbles"></span>
+                  Contact
+                </label>
+              </li>
+            </ul>
+          </div>
+        </header>
+
+        <div class="main-card">
+          <div class="main-card-wrap">
+            <div
+              class="my-photo"
+              style="background-image: url('imgs/FaisalN1.jpeg')"
+            ></div>
+            <div class="my-info">
+              <h2 class="name">Faisal Hanif</h2>
+
+              <p></p>
+              <p
+                href=""
+                class="typewrite"
+                data-period="2000"
+                data-type='["Frontend Developer"]'
+              >
+                <span class="wrap"></span>
+              </p>
+              <ul class="socialLinks">
+                <li>
+                  <a
+                    target="_blank"
+                    href="https://www.linkedin.com/in/faisal-frontend-developer/"
+                    ><span class="fa fa-linkedin"></span
+                  ></a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://x.com/FaisalHanif333"
+                    ><span class="fa fa-twitter"></span
+                  ></a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://github.com/FaisalHanif12"
+                    ><span class="fa fa-github"></span
+                  ></a>
+                </li>
+                <li>
+                  <a
+                    target="_blank"
+                    href="https://www.quora.com/profile/Faisal-Hanif-126"
+                    ><span class="fa fa-quora"></span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    target="_blank"
+                    href="https://www.instagram.com/faisal_hanif_0/"
+                    ><span class="fa fa-instagram"></span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="info-btns">
+              <div class="left-btn">
+                <a href="#" onclick="downloadCV()">
+                  <span class="fa fa-download" style="margin-right: 10px"></span
+                    >Download CV
+                </a>
+              </div>
+
+              <div class="right-btn">
+                <label for="schedule-card" id="loadCalendly"
+                  ><span
+                  class="fa fa-calendar"
+                  style="margin-right: 10px"
+                  ></span 
+                  >Schedule Meet</label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-card right-cards">
+          <div class="card-wrap">
+            <div class="about-card-wrap">
+              <section class="about-me-section">
+                <div class="section-header">
+                  <span class="header">About Me</span>
+                </div>
+                <div class="section-content about-me-section-content">
+                  <div class="info-text">
+                    <p>
+                      <strong style="font-weight: 500"
+                        >Hello! I’m Faisal Hanif</strong
+                      >
+                      <br />
+                      Front-End Developer with 3 years of experience and 10+
+                      successful projects. Skilled in React.js, Next.js, and
+                      React Native. My journey in tech has led me through roles
+                      at 3+ companies, contributing to both service and
+                      product-based projects.
+                    </p>
+                  </div>
+
+                  <div class="info-list">
+                    <ul>
+                      <li>
+                        <strong>Email</strong>
+                        <span>mehrfaisal111@gmail.com</span>
+                      </li>
+                      <li>
+                        <strong>Phone</strong>
+                        <span>+923148166354</span>
+                      </li>
+                      <li>
+                        <strong>Address</strong>
+                        <span>Lahore, Pakistan</span>
+                      </li>
+                      <li>
+                        <strong>Open to Work</strong>
+                        <span> Available</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+              <section class="my-services-section">
+                <div class="section-header">
+                  <span class="header">My Services</span>
+                </div>
+                <div class="section-content my-services-content">
+                  <div class="my-services-content-wrap">
+                    <div class="servies-item">
+                      <div class="icon">
+                        <span class="ion-code"></span>
+                      </div>
+                      <div class="name"><span>Web Development</span></div>
+                      <div class="dics">
+                        <p>
+                          High-quality development of sites at the professional
+                          level with advanced Frameworks.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="my-services-content-wrap">
+                    <div class="servies-item">
+                      <div class="icon">
+                        <span class="ion-android-cloud-outline"></span>
+                      </div>
+                      <div class="name"><span>Docker Management</span></div>
+                      <div class="dics">
+                        <p>
+                          I offer Docker Management services, ensuring efficient
+                          deployment and scalability of your applications.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="my-services-content-wrap">
+                    <div class="servies-item">
+                      <div class="icon">
+                        <span class="fa fa-android"></span>
+                      </div>
+                      <div class="name"><span>Mobile Devlopement</span></div>
+                      <div class="dics">
+                        <p>
+                          Professional development of applications for iOS and
+                          Android in react native.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="my-services-content-wrap">
+                    <div class="servies-item">
+                      <div class="icon">
+                        <span class="ion-android-desktop"></span>
+                      </div>
+                      <div class="name"><span>Desktop Development</span></div>
+                      <div class="dics">
+                        <p>
+                          I offer Desktop Development services to enhance your
+                          business and marketing operations.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section class="my-pricing-section">
+                <div class="section-header">
+                  <span class="header">Pricing</span>
+                </div>
+                <div  class="section-content my-pricing-content">
+                  <div class="my-pricing-content-wrap right-border-line" style=" ">
+                    <div > 
+                      <div class="pricing-item">
+                        <div class="icon">
+                          <span class="ion-battery-low"></span>
+                        </div>
+                        <div class="pricing-name"><span>Basic</span></div>
+                        <div class="amount">
+                          <sup class="doller">$</sup>
+                          <span class="time">25</span>
+                          <sub class="type-time">hour</sub>
+                        </div>
+                        <div class="services-list">
+                          <ul>
+                            <li>React.js Development</li>
+                            <li>Next.js Development</li>
+                            <li>Responsive Web Design</li>
+                            <li>UI/UX Design</li>
+                            <li>Static Site Generation</li>
+                          </ul>
+                        </div>
+                    </div>
+                  
+                      <div class="buying-btn top-border-line">
+                        <a href="#">Buy Basic</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="my-pricing-content-wrap">
+                    <div class="pricing-item">
+                      <div class="icon">
+                        <span class="ion-battery-full"></span>
+                      </div>
+                      <div class="pricing-name"><span>Pro</span></div>
+                      <div class="amount">
+                        <sup class="doller">$</sup>
+                        <span class="time">50</span>
+                        <sub class="type-time">hour</sub>
+                      </div>
+                      <div class="services-list">
+                        <ul>
+                          <li>Development with React and Node.js</li>
+                          <li>Backend API Development</li>
+                          <li>Database Design and Management</li>
+                          <li>Server and Cloud Deployment</li>
+                          <li>SEO and Performance Optimization</li>
+                        </ul>
+                      </div>
+
+                      <div class="buying-btn top-border-line">
+                        <a href="">Buy Pro</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="price-btn-block"></div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="resume-card right-cards">
+          <div class="card-wrap">
+            <div class="resume-card-wrap">
+              <section class="resume-section">
+                <div class="section-header">
+                  <span class="header">Profile</span>
+                </div>
+                <div class="section-content resume-section-content">
+                  <div class="resume-exp right-border-line">
+                    <div class="sub-section-header bottom-border-line">
+                      <div class="icon">
+                        <span class="fa fa-briefcase"></span>
+                      </div>
+                      <div class="name"><span>Exprience</span></div>
+                    </div>
+                    <div class="item bottom-border-line working">
+                      <div class="item-top">
+                        <div class="item-top-left">
+                          <div class="time-period">
+                            <span>2023 - Present</span>
+                          </div>
+                          <div class="work-as">
+                            <span>Front-End Developer</span>
+                          </div>
+                          <div class="company"><span>UHA</span></div>
+                        </div>
+                      </div>
+                      <div class="item-bottom">
+                        <p>
+                          As a Front-End Developer at UHA, I focused on
+                          enhancing web applications through strategic use of
+                          React.js and Next.js, achieving a 20% improvement in
+                          performance and responsiveness.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="item bottom-border-line working">
+                      <div class="item-top">
+                        <div class="item-top-left">
+                          <div class="time-period">
+                            <span>2021 - present</span>
+                          </div>
+                          <div class="work-as">
+                            <span>Front-End Developer</span>
+                          </div>
+                          <div class="company"><span>Upwork</span></div>
+                        </div>
+                      </div>
+                      <div class="item-bottom">
+                        <p>
+                          As a dedicated freelancer on Upwork, I've had the
+                          privilege of collaborating with clients from diverse
+                          industries in the software field. One of the most
+                          valuable lessons I've learned is the art of public
+                          dealing and client satisfaction. Building strong
+                          client relationships, understanding their unique
+                          needs.
+                        </p>
+                      </div>
+                    </div>
+     
+                    <div class="item bottom-border-line">
+                      <div class="item-top">
+                        <div class="item-top-left">
+                          <div class="time-period">
+                            <span>20022 - 2024</span>
+                          </div>
+                          <div class="work-as">
+                            <span>Outsourcing Engineer</span>
+                          </div>
+                          <div class="company"><span>TechXelo</span></div>
+                        </div>
+                      </div>
+                      <div class="item-bottom">
+                        <p>
+                          As the Outsourcing Manager at Techxelo, I have been
+                          entrusted with a pivotal role in orchestrating the
+                          acquisition of projects and captivating the attention
+                          of clients. I've honed the art of project extraction,
+                          adeptly identifying opportunities and strategically
+                          aligning them with our capabilities and expertise.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="item">
+                      <div class="item-top">
+                        <div class="item-top-left">
+                          <div class="time-period">
+                            <span>20022 - 2023</span>
+                          </div>
+                          <div class="work-as">
+                            <span>React Native</span>
+                          </div>
+                          <div class="company"><span>Viral Square</span></div>
+                        </div>
+                      </div>
+                      <div class="item-bottom">
+                        <p>
+                          During my enriching year-long tenure at Viral Square,
+                          I had the invaluable opportunity to delve into the
+                          world of React Native development. This hands-on
+                          experience equipped me with the skills to craft
+                          cross-platform mobile applications, enhancing my
+                          expertise as a frontend developer.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="resume-edu">
+                    <div class="sub-section-header bottom-border-line">
+                      <div class="icon">
+                        <span class="fa fa-university"></span>
+                      </div>
+                      <div class="name"><span>Education</span></div>
+                    </div>
+                    <div class="item bottom-border-line">
+                      <div class="item-top">
+                        <div class="item-top-left">
+                          <div class="time-period">
+                            <span>2020 - 2024 </span>
+                          </div>
+                          <div class="work-as"><span>UMT(BS-SE)</span></div>
+                          <div class="company"><span>Lahore</span></div>
+                        </div>
+                      </div>
+                      <div class="item-bottom">
+                        <p>
+                          I've had the privilege of serving as an educator at
+                          the esteemed University of Management and Technology,
+                          where I've not only imparted knowledge but also
+                          fostered meaningful connections with students.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="item bottom-border-line">
+                      <div class="item-top">
+                        <div class="item-top-left">
+                          <div class="time-period">
+                            <span>2018 - 2024</span>
+                          </div>
+                          <div class="work-as">
+                            <span>Unique College(Inter)</span>
+                          </div>
+                          <div class="company"><span>Lahore</span></div>
+                        </div>
+                      </div>
+                      <div class="item-bottom">
+                        <p>
+                          This program laid the foundational groundwork in
+                          computing principles, introduced me to basic
+                          concepts and essential skills in computer technology.
+                          It covered an array of topics that ranged from
+                          software applications to programming fundamentals,
+                          equipping me with a solid base.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="item bottom-border-line">
+                      <div class="item-top">
+                        <div class="item-top-left">
+                          <div class="time-period">
+                            <span>2016 - 2018</span>
+                          </div>
+                          <div class="work-as">
+                            <span>Unique College(Matric)</span>
+                          </div>
+                          <div class="company"><span>Lahore</span></div>
+                        </div>
+                      </div>
+                      <div class="item-bottom">
+                        <p>
+                          This early education provided me with fundamental
+                          insights into computing, equipped me with basic
+                          knowledge and essential skills. The curriculum spanned
+                          a variety of topics, from understanding software
+                          functionalities to basic programming techniques.
+                          Moreover,I engaged in hands-on activities.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section class="skills-section">
+                <div class="section-header">
+                  <span class="header">Skills</span>
+                </div>
+                <div class="section-content skills-section-content">
+                  <div class="skills-left right-border-line">
+                    <div class="sub-section-header bottom-border-line">
+                      <div class="icon">
+                        <span class="fa fa-paint-brush"></span>
+                      </div>
+                      <div class="name"><span>Frameworks</span></div>
+                    </div>
+                    <div class="item">
+                      <div class="item-list">
+                        <div class="item-list-content">
+                          <div class="item-list-content-name">Bootstrap</div>
+                          <div class="item-list-content-div">
+                            <div class="progress" style="width: 90%"></div>
+                          </div>
+                        </div>
+                        <div class="item-list-content">
+                          <div class="item-list-content-name">Tailwind CSS</div>
+                          <div class="item-list-content-div">
+                            <div class="progress" style="width: 80%"></div>
+                          </div>
+                        </div>
+                        <div class="item-list-content">
+                          <div class="item-list-content-name">React.js</div>
+                          <div class="item-list-content-div">
+                            <div class="progress" style="width: 95%"></div>
+                          </div>
+                        </div>
+                        <div class="item-list-content">
+                          <div class="item-list-content-name">Next.js</div>
+                          <div class="item-list-content-div">
+                            <div class="progress" style="width: 80%"></div>
+                          </div>
+                        </div>
+                        <div class="item-list-content">
+                          <div class="item-list-content-name">Express.js</div>
+                          <div class="item-list-content-div">
+                            <div class="progress" style="width: 70%"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="sub-section-header bottom-border-line">
+                      <div class="icon">
+                        <span class="fa fa-code"></span>
+                      </div>
+                      <div class="name"><span>Coding</span></div>
+                    </div>
+                    <div class="item">
+                      <div class="item-flex-row">
+                        <div class="item-flex-column">
+                          <div class="item-flex-column-content">
+                            <div class="circle-progress-div">
+                              <span class="persent">90%</span>
+                              <progress-ring
+                                stroke="5"
+                                radius="50"
+                                progress="85"
+                              ></progress-ring>
+                            </div>
+                            <span>Javascript</span>
+                          </div>
+                        </div>
+                        <div class="item-flex-column">
+                          <div class="item-flex-column-content">
+                            <div class="circle-progress-div">
+                              <span class="persent">85%</span>
+                              <progress-ring
+                                stroke="5"
+                                radius="50"
+                                progress="85"
+                              ></progress-ring>
+                            </div>
+                            <span>Node js</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="item-flex-row">
+                        <div class="item-flex-column">
+                          <div class="item-flex-column-content">
+                            <div class="circle-progress-div">
+                              <span class="persent">80%</span>
+                              <progress-ring
+                                stroke="5"
+                                radius="50"
+                                progress="80"
+                              ></progress-ring>
+                            </div>
+                            <span>React Native</span>
+                          </div>
+                        </div>
+                        <div class="item-flex-column">
+                          <div class="item-flex-column-content">
+                            <div class="circle-progress-div">
+                              <span class="persent">60%</span>
+                              <progress-ring
+                                stroke="5"
+                                radius="50"
+                                progress="60"
+                              ></progress-ring>
+                            </div>
+                            <span>C++</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="skills-right">
+                    <div class="sub-section-header bottom-border-line">
+                      <div class="icon">
+                        <span class="fa fa-flag"></span>
+                      </div>
+                      <div class="name"><span>Languages</span></div>
+                    </div>
+                    <div class="item mr-b">
+                      <div class="item-list">
+                        <div class="item-list-content">
+                          <div class="item-list-content-name">English</div>
+                          <div class="item-list-content-div">
+                            <div class="progress" style="width: 90%"></div>
+                          </div>
+                        </div>
+                        <div class="item-list-content">
+                          <div class="item-list-content-name">Urdu</div>
+                          <div class="item-list-content-div">
+                            <div class="progress" style="width: 90%"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="sub-section-header bottom-border-line">
+                      <div class="icon">
+                        <span class="fa fa-list"></span>
+                      </div>
+                      <div class="name"><span>Knowledge</span></div>
+                    </div>
+                    <div class="item coustom-item">
+                      <ul class="know-list">
+                        <li>
+                          <span class="ion-checkmark marker"></span>
+                          <span>Frontend development</span>
+                        </li>
+
+                        <li>
+                          <span class="ion-checkmark marker"></span>
+                          <span>Backend development </span>
+                        </li>
+
+                        <li>
+                          <span class="ion-checkmark marker"></span>
+                          <span>Mobile development</span>
+                        </li>
+
+                        <li>
+                          <span class="ion-checkmark marker"></span>
+                          <span>Progressive Web Apps </span>
+                        </li>
+
+                        <li>
+                          <span class="ion-checkmark marker"></span>
+                          <span>Website Testing</span>
+                        </li>
+
+                        <li>
+                          <span class="ion-checkmark marker"></span>
+                          <span>Website Deployment </span>
+                        </li>
+
+                        <li>
+                          <span class="ion-checkmark marker"></span>
+                          <span>Website maintance</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="works-card right-cards">
+          <div class="card-wrap">
+            <div class="section-header">
+              <span class="header">Works</span>
+            </div>
+            <div class="menu-list">
+              <ul>
+                <li class="">
+                  <input type="radio" name="menu-list" id="All" checked />
+                  <label class="coustom-menu" for="All">All</label>
+                </li>
+                <li>
+                  <input type="radio" name="menu-list" id="Reactjs" />
+                  <label class="coustom-menu" for="Reactjs">Reactjs</label>
+                </li>
+                <li>
+                  <input type="radio" name="menu-list" id="Nextjs" />
+                  <label class="coustom-menu" for="Nextjs">Nextjs</label>
+                </li>
+                <li>
+                  <input type="radio" name="menu-list" id="FullStack" />
+                  <label class="coustom-menu" for="FullStack">MERN</label>
+                </li>
+                <li>
+                  <input type="radio" name="menu-list" id="ReactNative" />
+                  <label class="coustom-menu" for="ReactNative"
+                    >ReactNative</label
+                  >
+                </li>
+                <li>
+                  <input type="radio" name="menu-list" id="Industrial" />
+                  <label class="coustom-menu" for="Industrial"
+                    >Industrial Works</label
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="section-content works-section-content">
+             
+                <div class="works-item" data-category="Industrial">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Shop.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Soledeck</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://soledeckf.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Soledeck"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+            
+             
+                <div class="works-item" data-category="Industrial">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Home.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">YOOM</a>
+                  </div>
+                  <div class="button-container">
+                    <a
+                      href="https://faisal-yoom.netlify.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/YOOM"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+
+
+
+                <div class="works-item" data-category="Industrial">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/doctors.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Dosnexa</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://dosnexa.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Dosnexa"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+            
+                <div class="works-item" data-category="Industrial">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/dairy.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">DairyBiz</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://youtu.be/4MmWenMwq8c"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Dairy-Software"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+              
+              
+                           
+            
+                <div class="works-item" data-category="Reactjs">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/dsa.webp" alt="" />
+                      <div class="info"></div>
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">DSA-Tracker</a>
+                  </div>
+                  <div class="button-container">
+                    <a
+                      href="https://faisal-dsa-tracker.netlify.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/DSA-Tracker-"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+
+             
+                <div class="works-item" data-category="Reactjs">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/sports1.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Sportsphere</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://faisal-sportspheres.netlify.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/SportSphere"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+
+            
+                <div class="works-item" data-category="Nextjs">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Weather.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Live Search Weather</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://weather-faisal.netlify.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Live-search-weather"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+
+            
+                <div class="works-item" data-category="Nextjs">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Dict.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Dictionary Website</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://dictionary-app-nu-self.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Dictionary-App-"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+             
+                <div class="works-item" data-category="FullStack">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Signup.png" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Home Rental</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://youtu.be/X6kdeQT5DgI"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Home-rental"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+
+            
+                <div class="works-item" data-category="FullStack">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Car.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Car-Vault</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://youtu.be/eblILcHzXj4"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Car-Vault-website"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+
+             
+                <div class="works-item" data-category="ReactNative">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Fo.webp" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">Food Delivery App</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://youtu.be/qMX5M61f6vM"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/Soledeck"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+
+            
+                <div class="works-item" data-category="ReactNative">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/uber4.webp" alt="" />
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a href="#">UberEat App</a>
+                  </div>
+
+                  <div class="button-container">
+                    <a
+                      href="https://youtu.be/2GnOP0FYhd4"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="siteViewButton">Site View</button>
+                    </a>
+                    <a
+                      href="https://github.com/FaisalHanif12/UberEatApp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button id="githubLinkButton">GitHub Link</button>
+                    </a>
+                  </div>
+                </div>
+             
+            </div>
+          </div>
+        </div>
+
+        <div class="blogs-card right-cards">
+          <div class="card-wrap">
+            <div class="section-header">
+              <span class="header">Approvals</span>
+            </div>
+            <div class="section-content blogs-section-content">
+              <div class="blogs-content-wrap">
+                <div class="blog-item">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/React.webp" alt="Check your internet" />
+                      <div class="info">
+                        <span class="ion-android-document"></span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a
+                      class="name"
+                      href="https://www.coursera.org/account/accomplishments/certificate/E5USQYWCKR6Q"
+                    >
+                      <div class="time-period">
+                        <span>18 Nov, 2023 </span>
+                      </div>
+                      React Certificate
+                    </a>
+                    <div class="short-dics">
+                      I engaged in practical, hands-on learning that went beyond
+                      theoretical knowledge. I completed all quizzes and
+                      assignments, applying what I learned directly to build
+                      dynamic and visually appealing web components.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="blogs-content-wrap">
+                <div class="blog-item">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Data.webp" alt="" />
+                      <div class="info">
+                        <span class="ion-android-document"></span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a
+                      class="name"
+                      href="https://www.coursera.org/account/accomplishments/certificate/3YLMQJ6HTBRE"
+                    >
+                      <div class="time-period">
+                        <span>21 Nov, 2023</span>
+                      </div>
+                      Data Storage Certifcate
+                    </a>
+                    <div class="short-dics">
+                      I delved into various aspects of Azure's data services,
+                      gaining hands-on experience with tools and techniques for
+                      efficiently managing and storing data on the cloud. This
+                      certification has equipped me to implement data storage
+                      solutions.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="blogs-content-wrap">
+                <div class="blog-item">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Frontend.webp" alt="" />
+                      <div class="info">
+                        <span class="ion-android-document"></span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a
+                      class="name"
+                      href="https://www.coursera.org/account/accomplishments/verify/EE42JSYQPZ7D"
+                    >
+                      <div class="time-period">
+                        <span>23 Oct, 2023</span>
+                      </div>
+                      Frontend developer Certifcate
+                    </a>
+                    <div class="short-dics">
+                      I immersed myself in learning the foundational concepts of
+                      ReactJS, including JSX, components, states, and props. I
+                      applied these concepts to develop functional web
+                      applications that are both efficient and scalable. The
+                      hands-on project approach allowed me to directly implement
+                      the theories I learned.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="blogs-content-wrap">
+                <div class="blog-item">
+                  <div class="img">
+                    <a href="#">
+                      <img src="imgs/Web.webp" alt="" />
+                      <div class="info">
+                        <span class="ion-android-document"></span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="dics">
+                    <a
+                      class="name"
+                      href="https://www.coursera.org/account/accomplishments/certificate/RKY4CN2NHHR3"
+                    >
+                      <div class="time-period active">
+                        <span>19 Aug, 2023</span>
+                      </div>
+                      Web developer certificate
+                    </a>
+                    <div class="short-dics">
+                      During this intensive training, I engaged with various
+                      learning modules that included live online sessions,
+                      practical exercises, and projects. This hands-on approach
+                      allowed me to understand and apply coding principles
+                      directly to create visually appealing and user-friendly
+                      web interfaces.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-card right-cards">
+          <div class="card-wrap">
+            <div class="section-header">
+              <span class="header">Get In Touch</span>
+            </div>
+            <div class="section-content contacts-section-content">
+              <div class="contact-top">
+                <div class="mapouter">
+                  <div
+                    id="gmap_canvas"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+                    <!-- Placeholder with loading message -->
+                    <div
+                      style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 20px;
+                        color: #666;
+                      "
+                    >
+                      Loading map...
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="contact-bottom">
+                <div class="info-list">
+                  <ul>
+                    <li>
+                      <strong>Email</strong>
+                      <span>mehrfaisal111@gmail.com</span>
+                    </li>
+                    <li>
+                      <strong>Address</strong>
+                      <span>Lahore, Pakistan</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="section-header">
+              <span class="header">Contact Form</span>
+            </div>
+            <div class="section-content contacts-section-content">
+              <form
+                action="https://formspree.io/f/xjvnlwea"
+                method="POST"
+                id="contactForm"
+                onsubmit="return validateForm()"
+              >
+                <div class="form-group" style="width: 49%">
+                  <input
+                    type="text"
+                    id="fullname"
+                    name="fullname"
+                    placeholder="Enter Your Full Name"
+                    required
+                  />
+                </div>
+                <div class="form-group" style="width: 49%">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Your Email"
+                    required
+                  />
+                </div>
+                <div class="form-group" style="width: 100%; padding-top: 10px">
+                  <textarea
+                    id="message"
+                    name="message"
+                    cols="30"
+                    rows="10"
+                    placeholder="Message"
+                    required
+                  ></textarea>
+                </div>
+                <div class="form-group" style="margin-top: 40px;">
+                  <input type="submit" value="Send Message" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-card right-cards">
+          <div class="card-wrap">
+            <div class="section-header">
+              <span class="header">Book Appointment</span>
+            </div>
+            <div
+              id="loadingMessage"
+              style="display: none; text-align: center; margin-top: 20px"
+            >
+              Wait for Meeting...
+            </div>
+            <button
+              id="loadCalendlyButton"
+              style="
+                width: 100%;
+                max-width: 200px;
+                font-size: 14px;
+                text-transform: uppercase;
+                background-color: black;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 4px;
+                cursor: pointer;
+                display: block;
+                margin: 80px auto 0;
+                text-align: center;
+              "
+              onclick="handleClick()"
+              onmouseover="handleMouseOver()"
+              onmouseout="handleMouseOut()"
+            >
+              Set Up Meeting
+            </button>
+
+            <div
+              class="calendly-inline-widget"
+              style="min-width: 320px; height: 1200px; display: none"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script defer src="js/animation-effect.js"></script>
+  <script defer src="js/Elements.js"></script>
+  <script defer src="js/main.js"></script>
+  <script defer src="js/coustom-progress-circle.js"></script>
+</html>
