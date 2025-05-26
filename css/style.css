@@ -51,7 +51,9 @@ body,html{
     color:var(--gray-orange);
     display:flex;
     align-items:center;
-    justify-content:center
+    justify-content:center;
+    transition: opacity 0.3s ease;
+    will-change: opacity;
 }
 .preloader span{
     animation:loading .4s linear infinite;

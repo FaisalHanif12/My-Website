@@ -3,38 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Faisal Hanif - Frontend Developer Portfolio" />
     <title>Faisal-Portfolio</title>
+    <!-- Preload critical assets -->
+    <link rel="preload" href="css/style.css" as="style" />
+    <link rel="preload" href="css/animation.style.css" as="style" />
+    <link rel="preload" href="imgs/FaisalN1.jpeg" as="image" />
+    <link rel="preload" href="imgs/F-logo2.png" as="image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://calendly.com" crossorigin />
+    <link rel="dns-prefetch" href="https://calendly.com" />
+    
+    <!-- Favicon -->
     <link rel="icon" href="imgs/F-logo2.png" type="image/png" />
-    <link rel="preload" />
+    
+    <!-- Critical CSS -->
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/animation.style.css" />
+    
+    <!-- Fonts and icons (load asynchronously) -->
     <link
       rel="stylesheet"
       id="ryancv-fonts-css"
       href="//fonts.googleapis.com/css?family=Poppins%3A100%2C100i%2C200%2C200i%2C300%2C300i%2C400%2C400i%2C500%2C500i%2C600%2C600i%2C700%2C700i%2C800%2C800i%2C900%2C900i&amp&display=swap;subset=latin%2Clatin-ext"
-      type="text/css"
-      media="all"
+      media="print" onload="this.media='all'"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css"
+      media="print" onload="this.media='all'"
     />
-
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      media="print" onload="this.media='all'"
     />
-    <link rel="stylesheet" href="css/flaticon.css" />
-    <link rel="stylesheet" href="css/inoicons.css" />
+    
+    <!-- Non-critical CSS -->
+    <link rel="stylesheet" href="css/flaticon.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="css/inoicons.css" media="print" onload="this.media='all'" />
     <link
       rel="stylesheet"
-      media="screen and (max-width: 1100px)"
       href="css/responsive(1100).css"
+      media="print" onload="this.media='screen and (max-width: 1100px)'"
     />
     <link
       rel="stylesheet"
-      media="screen and (max-width: 650px)"
       href="css/resposive(650).css"
+      media="print" onload="this.media='screen and (max-width: 650px)'"
     />
 
 
@@ -74,13 +92,13 @@
     
     </style>
 
-    <script>
+    <script defer>
       function downloadCV() {
         // Prevent the default behavior of the anchor tag
         event.preventDefault();
         // Create a new anchor element dynamically
         var link = document.createElement("a");
-        // Set the path to your CV file (adjust 'path/to/your/CV.pdf' to the actual path)
+        // Set the path to your CV file
         link.href = "imgs/Faisal-Resume.pdf";
         // Set the download attribute with a default file name for the CV
         link.download = "Faisal-CV.pdf";
@@ -109,8 +127,7 @@
           return false; // Stop the form from submitting
         }
 
-        // You can add more specific validations here
-        // Example: Validate email format
+        // Validate email format
         if (!validateEmail(email)) {
           alert("Please enter a valid email address.");
           return false;
@@ -126,223 +143,411 @@
       }
     </style>
 
-    <script>
-      document
-        .getElementById("contactForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
+    <script defer>
+      // Contact form submission handler - defer until needed
+      document.addEventListener("DOMContentLoaded", function() {
+        const contactForm = document.getElementById("contactForm");
+        if (contactForm) {
+          contactForm.addEventListener("submit", function (event) {
+            event.preventDefault();
 
-          var form = this;
-          var data = new FormData(form);
+            var form = this;
+            var data = new FormData(form);
 
-          fetch(form.action, {
-            method: form.method,
-            body: data,
-            headers: {
-              Accept: "application/json",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.ok) {
-                alert("Thank you for your submission!");
-              } else {
-                alert(
-                  "There was a problem with your submission. Please try again."
-                );
-              }
+            fetch(form.action, {
+              method: form.method,
+              body: data,
+              headers: {
+                Accept: "application/json",
+              },
             })
-            .catch((error) => {
-              alert(
-                "There was a problem with your submission: " + error.message
-              );
-            });
-        });
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.ok) {
+                  alert("Thank you for your submission!");
+                } else {
+                  alert("There was a problem with your submission. Please try again.");
+                }
+              })
+              .catch((error) => {
+                alert("There was a problem with your submission: " + error.message);
+              });
+          });
+        }
+      });
     </script>
-    <script>
+    <script defer>
+      // Portfolio filter functionality - optimize and defer
       document.addEventListener("DOMContentLoaded", function () {
         const allWorksItems = document.querySelectorAll(".works-item");
-        const radioButtons = document.querySelectorAll(
-          'input[name="menu-list"]'
-        );
+        const radioButtons = document.querySelectorAll('input[name="menu-list"]');
+        if (!allWorksItems.length || !radioButtons.length) return;
 
-        // Attach event listeners more efficiently
+        // Attach event listeners more efficiently with delegation if possible
         function handleRadioChange() {
-          const category = this.id; // 'this' refers to the radio button that changed
+          const category = this.id;
           filterWorks(category);
         }
 
+        // Use passive event listeners for better performance
         radioButtons.forEach((radio) =>
-          radio.addEventListener("change", handleRadioChange)
+          radio.addEventListener("change", handleRadioChange, { passive: true })
         );
 
         function filterWorks(category) {
-          allWorksItems.forEach((item) => {
-            // Ternary operator for cleaner condition handling
-            item.style.display =
-              category === "All" ||
-              item.getAttribute("data-category") === category
-                ? "block"
-                : "none";
+          // Use requestAnimationFrame for smoother UI updates
+          requestAnimationFrame(() => {
+            allWorksItems.forEach((item) => {
+              item.style.display =
+                category === "All" ||
+                item.getAttribute("data-category") === category
+                  ? "block"
+                  : "none";
+            });
           });
         }
       });
 
-      window.addEventListener("load", function () {
-        var iframe = document.createElement("iframe");
-        iframe.src =
-          "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5445.305620361764!2d74.3045157!3d31.5172607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x525e8e18678b4c07!2sGovt.+Pilot+Secondary+School+for+Girls!5e0!3m2!1sen!2s!4v1662394461952";
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.setAttribute("frameborder", "0");
-        iframe.setAttribute("scrolling", "no");
-        iframe.setAttribute("marginheight", "0");
-        iframe.setAttribute("marginwidth", "0");
-
-        var mapContainer = document.getElementById("gmap_canvas");
-        mapContainer.innerHTML = ""; // Clear the loading placeholder
-        mapContainer.appendChild(iframe); // Insert the iframe
-      });
+      // Remove redundant map loading code as it's already handled by the optimized version
     </script>
 
-    <script>
+    <script defer>
       document.addEventListener("DOMContentLoaded", function () {
-        const mapTrigger = document.getElementById("gmap_canvas"); // Assuming 'gmap_canvas' is the container for the map
+        // Lazy load Google Maps
+        const mapTrigger = document.getElementById("gmap_canvas");
+        if (!mapTrigger) return;
 
         // Function to create and insert the map iframe
         function loadMap() {
-          var iframeExists = document.querySelector("#gmap_canvas iframe");
-          if (!iframeExists) {
-            var iframe = document.createElement("iframe");
-            iframe.src =
-              "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5445.305620361764!2d74.3045157!3d31.5172607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x525e8e18678b4c07!2sGovt.+Pilot+Secondary+School+for+Girls!5e0!3m2!1sen!2s!4v1662394461952";
-            iframe.style.width = "100%";
-            iframe.style.height = "100%";
-            iframe.setAttribute("frameborder", "0");
-            iframe.setAttribute("scrolling", "no");
-            iframe.setAttribute("marginheight", "0");
-            iframe.setAttribute("marginwidth", "0");
-
-            mapTrigger.innerHTML = ""; // Clear the placeholder
-            mapTrigger.appendChild(iframe); // Insert the iframe
-          }
-        }
-
-        // Optional: Trigger map loading based on scroll to the contact section or click
-        mapTrigger.addEventListener("click", loadMap); // Load map on click
-
-        // You could also add an IntersectionObserver to load the map when the contact section becomes visible
-        let observer = new IntersectionObserver(
-          (entries, observer) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                loadMap();
-                observer.unobserve(entry.target); // Stop observing once loaded
-              }
-            });
-          },
-          { threshold: 0.5 }
-        );
-
-        observer.observe(document.querySelector(".contact-top")); // Start observing contact section
-      });
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const loadButton = document.getElementById("loadCalendlyButton");
-        const loadingMessage = document.getElementById("loadingMessage");
-        const calendlyWidget = document.querySelector(
-          ".calendly-inline-widget"
-        );
-
-        function loadCalendly() {
-          // Show the loading message
-          loadingMessage.style.display = "block";
-          loadButton.style.display = "none"; // Hide the button once clicked
-
-          // Create the Calendly iframe
-          const iframe = document.createElement("iframe");
-          iframe.src =
-            "https://calendly.com/mehrfaisal111/30min?hide_gdpr_banner=1";
+          if (document.querySelector("#gmap_canvas iframe")) return;
+          
+          var iframe = document.createElement("iframe");
+          iframe.src = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5445.305620361764!2d74.3045157!3d31.5172607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x525e8e18678b4c07!2sGovt.+Pilot+Secondary+School+for+Girls!5e0!3m2!1sen!2s!4v1662394461952";
           iframe.style.width = "100%";
           iframe.style.height = "100%";
           iframe.setAttribute("frameborder", "0");
           iframe.setAttribute("scrolling", "no");
+          iframe.setAttribute("marginheight", "0");
+          iframe.setAttribute("marginwidth", "0");
+          iframe.setAttribute("loading", "lazy");
 
-          // Show the Calendly widget and remove the loading message once the iframe is loaded
-          iframe.onload = function () {
-            loadingMessage.style.display = "none"; // Hide the loading message
-            calendlyWidget.style.display = "block"; // Show the Calendly widget
-          };
-
-          calendlyWidget.appendChild(iframe); // Insert the iframe into the widget div
+          mapTrigger.innerHTML = "";
+          mapTrigger.appendChild(iframe);
         }
 
-        // Event listener for the button click
-        loadButton.addEventListener("click", loadCalendly);
+        // Load map on click for better performance
+        mapTrigger.addEventListener("click", loadMap, { passive: true });
+
+        // Use Intersection Observer API to load map when visible
+        const contactSection = document.querySelector(".contact-top");
+        if (contactSection) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  // Delay map loading slightly to prioritize visible content
+                  setTimeout(loadMap, 1000);
+                  observer.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.3, rootMargin: "100px" }
+          );
+          observer.observe(contactSection);
+        }
+      });
+
+      // Optimize Calendly loading with preloading and improved performance
+      document.addEventListener("DOMContentLoaded", function () {
+        const loadButton = document.getElementById("loadCalendlyButton");
+        const loadingMessage = document.getElementById("loadingMessage");
+        const calendlyWidget = document.querySelector(".calendly-inline-widget");
+        
+        if (!loadButton || !loadingMessage || !calendlyWidget) return;
+        
+        // Create iframe element early but don't append it yet
+        const iframe = document.createElement("iframe");
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("scrolling", "no");
+        
+        // Start preloading Calendly in the background with a data URI
+        const preloadLink = document.createElement("link");
+        preloadLink.rel = "preload";
+        preloadLink.href = "https://calendly.com/mehrfaisal111/30min?hide_gdpr_banner=1";
+        preloadLink.as = "document";
+        document.head.appendChild(preloadLink);
+        
+        function loadCalendly() {
+          // Show loading state immediately
+          loadingMessage.style.display = "block";
+          loadButton.style.display = "none";
+          calendlyWidget.style.opacity = "0";
+          calendlyWidget.style.display = "block";
+          calendlyWidget.style.transition = "opacity 0.3s ease-in-out";
+          
+          // Set the source only when needed
+          iframe.src = "https://calendly.com/mehrfaisal111/30min?hide_gdpr_banner=1";
+          
+          // Add loading timeout to ensure UI doesn't get stuck
+          const loadingTimeout = setTimeout(() => {
+            loadingMessage.style.display = "none";
+            calendlyWidget.style.opacity = "1";
+          }, 2500); // Fallback timeout
+          
+          iframe.onload = function () {
+            clearTimeout(loadingTimeout);
+            loadingMessage.style.display = "none";
+            calendlyWidget.style.opacity = "1";
+            
+            // Track successful load for analytics
+            if (window.performance && window.performance.mark) {
+              window.performance.mark("calendly-loaded");
+            }
+          };
+          
+          calendlyWidget.appendChild(iframe);
+        }
+        
+        loadButton.addEventListener("click", loadCalendly, { passive: true });
       });
     </script>
 
-    <script>
-      let isClicked = false; // State to keep track of whether the button has been clicked
-
-      function handleClick() {
+    <script defer>
+      // Optimize button handlers by using event delegation and requestAnimationFrame
+      document.addEventListener('DOMContentLoaded', function() {
+        let isClicked = false;
         const button = document.getElementById("loadCalendlyButton");
-        if (!isClicked) {
-          button.style.backgroundColor = "#0e6655"; // Set to the bold green color on click
-          isClicked = true;
-        } else {
-          button.style.backgroundColor = "black"; // Revert to black if clicked again
-          isClicked = false;
+        
+        if (button) {
+          button.addEventListener('click', function() {
+            requestAnimationFrame(() => {
+              if (!isClicked) {
+                button.style.backgroundColor = "#0e6655";
+                isClicked = true;
+              } else {
+                button.style.backgroundColor = "black";
+                isClicked = false;
+              }
+            });
+          }, { passive: true });
+          
+          button.addEventListener('mouseover', function() {
+            if (!isClicked) {
+              button.style.backgroundColor = "#0e6655";
+            }
+          }, { passive: true });
+          
+          button.addEventListener('mouseout', function() {
+            if (!isClicked) {
+              button.style.backgroundColor = "black";
+            }
+          }, { passive: true });
         }
-      }
+      });
+      
+      // Enhanced typewriter effect with smoother animations
+      document.addEventListener('DOMContentLoaded', function() {
+        // Prevent the external typewriter script from running to avoid conflicts
+        window.loadDynamicTypingEffectExecuted = true;
+        
+        const elements = document.querySelectorAll('.typewrite');
+        if (!elements.length) return;
+        
+        // Implement enhanced typewriter effect with ultra-smooth transitions
+        function typeWriter(element, dataType, period) {
+          const toRotate = JSON.parse(dataType);
+          let loopNum = 0;
+          let txt = '';
+          let isDeleting = false;
+          let charIndex = 0;
+          
+          // Carefully tuned timing parameters for smooth animation
+          const typingBaseSpeed = 80;  // Base speed for typing (lower = faster)
+          const typingVariation = 40;   // Random variation to make typing feel natural
+          const deletingBaseSpeed = 40; // Base speed for deleting (lower = faster)
+          const deletingVariation = 20; // Random variation for deleting
+          const pauseAfterTyping = period || 2000; // Pause after typing completes
+          const pauseAfterDeleting = 500; // Pause after deleting before typing next word
+          
+          // Create or get the wrap element
+          let wrap = element.querySelector('.wrap');
+          if (!wrap) {
+            wrap = document.createElement('span');
+            wrap.className = 'wrap';
+            element.appendChild(wrap);
+          }
+          
+          const tick = function() {
+            const i = loopNum % toRotate.length;
+            const fullTxt = toRotate[i];
 
-      function handleMouseOver() {
-        const button = document.getElementById("loadCalendlyButton");
-        if (!isClicked) {
-          button.style.backgroundColor = "#0e6655"; // Bold green color on hover
-        }
-      }
+            if (isDeleting) {
+              // Smooth deletion - one character at a time with consistent timing
+              txt = fullTxt.substring(0, txt.length - 1);
+            } else {
+              // Smooth typing - one character at a time with consistent timing
+              txt = fullTxt.substring(0, txt.length + 1);
+            }
 
-      function handleMouseOut() {
-        const button = document.getElementById("loadCalendlyButton");
-        if (!isClicked) {
-          button.style.backgroundColor = "black"; // Original black color
+            // Update text with smooth rendering
+            wrap.textContent = txt;
+
+            // Calculate typing speed with natural variation
+            let delta;
+            
+            if (isDeleting) {
+              // Deleting speed calculation with slight randomness
+              delta = deletingBaseSpeed + Math.floor(Math.random() * deletingVariation);
+            } else {
+              // Typing speed calculation with natural randomness
+              delta = typingBaseSpeed + Math.floor(Math.random() * typingVariation);
+            }
+
+            // Handle state transitions with appropriate pauses
+            if (!isDeleting && txt === fullTxt) {
+              // Text fully typed - pause before starting to delete
+              delta = pauseAfterTyping;
+              isDeleting = true;
+            } else if (isDeleting && txt === '') {
+              // Text fully deleted - move to next phrase
+              isDeleting = false;
+              loopNum++;
+              // Pause before typing the next word
+              delta = pauseAfterDeleting;
+            }
+
+            // Schedule next frame with calculated timing
+            setTimeout(tick, delta);
+          };
+          
+          // Start the effect immediately for better responsiveness
+          tick();
         }
-      }
+        
+        // Initialize typewriter effect for all elements
+        elements.forEach(el => {
+          const period = el.getAttribute('data-period');
+          const dataType = el.getAttribute('data-type');
+          if (dataType) {
+            // Clear any existing content first
+            while (el.firstChild) {
+              el.removeChild(el.firstChild);
+            }
+            typeWriter(el, dataType, parseInt(period, 10));
+          }
+        });
+      });
     </script>
 
 <script>
-  function adjustMargin() {
-    // Get all elements with class 'img1' within '.works-item' that have 'data-category="Reactjs"'
-    var elements = document.querySelectorAll('.works-item[data-category="Reactjs"] .img1');
+  // Defer non-critical function execution
+  document.addEventListener('DOMContentLoaded', function() {
+    function adjustMargin() {
+      // Get all elements with class 'img1' within '.works-item' that have 'data-category="Reactjs"'
+      var elements = document.querySelectorAll('.works-item[data-category="Reactjs"] .img1');
 
-    // Check the screen width
-    if (window.innerWidth <= 500) {
-      // Apply negative margin-top if conditions are met
-      elements.forEach(function(el) {
-        el.style.marginTop = '-220px';
-      });
-    } else {
-      // Revert the margin-top when condition is not met
-      elements.forEach(function(el) {
-        el.style.marginTop = ''; // Reverts to the stylesheet or removes inline style
-      });
+      // Check the screen width
+      if (window.innerWidth <= 500) {
+        // Apply negative margin-top if conditions are met
+        elements.forEach(function(el) {
+          el.style.marginTop = '-220px';
+        });
+      } else {
+        // Revert the margin-top when condition is not met
+        elements.forEach(function(el) {
+          el.style.marginTop = ''; // Reverts to the stylesheet or removes inline style
+        });
+      }
     }
-  }
 
-  // Listen to resize event
-  window.addEventListener('resize', adjustMargin);
+    // Use debounced resize event for better performance
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(adjustMargin, 100);
+    }, { passive: true });
 
-  // Call function on initial load
-  window.onload = adjustMargin;
+    // Call function after a slight delay to prioritize critical rendering
+    setTimeout(adjustMargin, 100);
+  });
 </script>
 
   </head>
 
   <body>
-    <div class="preloader">
+    <div class="preloader" id="preloader">
       <span class="ion-load-c"></span>
     </div>
+    <script>
+      // Optimize preloader to hide quickly after content loads
+      document.addEventListener('DOMContentLoaded', function() {
+        // Hide preloader after content loads
+        setTimeout(function() {
+          const preloader = document.getElementById('preloader');
+          if (preloader) {
+            preloader.style.opacity = '0';
+            setTimeout(function() {
+              preloader.style.display = 'none';
+            }, 300);
+          }
+        }, 500);
+        
+        // Implement lazy loading for images
+        if ('loading' in HTMLImageElement.prototype) {
+          // Browser supports native lazy loading
+          const images = document.querySelectorAll('img:not([loading])');
+          images.forEach(img => {
+            img.loading = 'lazy';
+          });
+        } else {
+          // Fallback for browsers that don't support lazy loading
+          // Load a lazy loading library dynamically if needed
+          const lazyImages = document.querySelectorAll('.works-item img, .my-photo');
+          const lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                const lazyImage = entry.target;
+                if (lazyImage.dataset.src) {
+                  lazyImage.src = lazyImage.dataset.src;
+                  lazyImage.removeAttribute('data-src');
+                }
+                if (lazyImage.dataset.srcset) {
+                  lazyImage.srcset = lazyImage.dataset.srcset;
+                  lazyImage.removeAttribute('data-srcset');
+                }
+                if (lazyImage.dataset.background) {
+                  lazyImage.style.backgroundImage = `url('${lazyImage.dataset.background}')`;
+                  lazyImage.removeAttribute('data-background');
+                }
+                lazyImageObserver.unobserve(lazyImage);
+              }
+            });
+          });
+          
+          lazyImages.forEach(function(lazyImage) {
+            lazyImageObserver.observe(lazyImage);
+          });
+        }
+      });
+
+      // Add passive event listeners for better performance
+      document.addEventListener('DOMContentLoaded', function() {
+        const passiveSupported = false;
+        try {
+          const options = Object.defineProperty({}, 'passive', {
+            get: function() { passiveSupported = true; }
+          });
+          window.addEventListener('test', null, options);
+        } catch(err) {}
+        
+        const wheelOpt = passiveSupported ? { passive: true } : false;
+        const wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
+        document.addEventListener(wheelEvent, function() {}, wheelOpt);
+        document.addEventListener('touchstart', function() {}, wheelOpt);
+      });
+    </script>
     <div class="page">
       <div class="background-gred">
         <ul class="bg-bubble">
@@ -371,7 +576,7 @@
 
             <div class="profile-container">
               <img
-                src="imgs/FaisalN1.jpeg"
+                src="imgs/Faisal15.webp"
                 alt="Profile Photo"
                 class="profile-photo"
               />
@@ -428,7 +633,7 @@
           <div class="main-card-wrap">
             <div
               class="my-photo"
-              style="background-image: url('imgs/FaisalN1.jpeg')"
+              style="background-image: url('imgs/Faisal15.webp')"
             ></div>
             <div class="my-info">
               <h2 class="name">Faisal Hanif</h2>
@@ -594,10 +799,10 @@
                       <div class="icon">
                         <span class="ion-android-desktop"></span>
                       </div>
-                      <div class="name"><span>Desktop Development</span></div>
+                      <div class="name"><span>Progressive web Apps</span></div>
                       <div class="dics">
                         <p>
-                          I offer Desktop Development services to enhance your
+                          I offer Advanced Desktop Development services to enhance your
                           business and marketing operations.
                         </p>
                       </div>
@@ -619,7 +824,7 @@
                         <div class="pricing-name"><span>Basic</span></div>
                         <div class="amount">
                           <sup class="doller">$</sup>
-                          <span class="time">25</span>
+                          <span class="time">15</span>
                           <sub class="type-time">hour</sub>
                         </div>
                         <div class="services-list">
@@ -646,7 +851,7 @@
                       <div class="pricing-name"><span>Pro</span></div>
                       <div class="amount">
                         <sup class="doller">$</sup>
-                        <span class="time">50</span>
+                        <span class="time">30</span>
                         <sub class="type-time">hour</sub>
                       </div>
                       <div class="services-list">
@@ -1694,18 +1899,44 @@
                 display: block;
                 margin: 80px auto 0;
                 text-align: center;
+                transition: background-color 0.3s ease;
               "
-              onclick="handleClick()"
-              onmouseover="handleMouseOver()"
-              onmouseout="handleMouseOut()"
             >
               Set Up Meeting
             </button>
+            
+            <script>
+              // Button handlers for Calendly button
+              document.addEventListener('DOMContentLoaded', function() {
+                const button = document.getElementById('loadCalendlyButton');
+                if (button) {
+                  // Remove inline handlers and use proper event listeners
+                  button.addEventListener('mouseover', function() {
+                    this.style.backgroundColor = '#0e6655';
+                  });
+                  
+                  button.addEventListener('mouseout', function() {
+                    this.style.backgroundColor = 'black';
+                  });
+                }
+              });
+            </script>
 
+            <div id="loadingMessage" style="text-align: center; display: none; padding: 20px;">
+              <div class="loading-spinner" style="display: inline-block; width: 40px; height: 40px; border: 3px solid rgba(14, 102, 85, 0.3); border-radius: 50%; border-top-color: #0e6655; animation: spin 1s ease-in-out infinite;"></div>
+              <p style="margin-top: 10px; font-weight: 500;">Loading your calendar...</p>
+            </div>
+            
             <div
               class="calendly-inline-widget"
               style="min-width: 320px; height: 1200px; display: none"
             ></div>
+            
+            <style>
+              @keyframes spin {
+                to { transform: rotate(360deg); }
+              }
+            </style>
           </div>
         </div>
       </div>

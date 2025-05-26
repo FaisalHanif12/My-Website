@@ -58,5 +58,10 @@ function loadDynamicTypingEffect() {
     document.body.appendChild(css);
 }
 
-// Attach the typing effect once the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", loadDynamicTypingEffect);
+// Attach the typing effect once the DOM is fully loaded, but only if not already handled by the enhanced version
+document.addEventListener("DOMContentLoaded", function() {
+  // Skip initialization if the enhanced version is already running
+  if (!window.loadDynamicTypingEffectExecuted) {
+    loadDynamicTypingEffect();
+  }
+});
