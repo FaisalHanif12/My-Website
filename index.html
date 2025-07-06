@@ -315,6 +315,75 @@
     </script>
 
     <script defer>
+      // Testimonial slider functionality
+      let currentTestimonialIndex = 0;
+      let testimonialInterval;
+      
+      function showTestimonial(index) {
+        const testimonials = document.querySelectorAll('.testimonial-item');
+        const indicators = document.querySelectorAll('.indicator');
+        
+        // Hide all testimonials
+        testimonials.forEach(testimonial => {
+          testimonial.classList.remove('active');
+        });
+        
+        // Remove active class from all indicators
+        indicators.forEach(indicator => {
+          indicator.classList.remove('active');
+        });
+        
+        // Show current testimonial
+        if (testimonials[index]) {
+          testimonials[index].classList.add('active');
+        }
+        
+        // Highlight current indicator
+        if (indicators[index]) {
+          indicators[index].classList.add('active');
+        }
+      }
+      
+      function changeTestimonial(direction) {
+        const testimonials = document.querySelectorAll('.testimonial-item');
+        currentTestimonialIndex += direction;
+        
+        if (currentTestimonialIndex >= testimonials.length) {
+          currentTestimonialIndex = 0;
+        } else if (currentTestimonialIndex < 0) {
+          currentTestimonialIndex = testimonials.length - 1;
+        }
+        
+        showTestimonial(currentTestimonialIndex);
+      }
+      
+      function currentTestimonial(index) {
+        currentTestimonialIndex = index - 1;
+        showTestimonial(currentTestimonialIndex);
+        
+        // Reset the interval when manually changing
+        clearInterval(testimonialInterval);
+        startTestimonialAutoplay();
+      }
+      
+      function startTestimonialAutoplay() {
+        testimonialInterval = setInterval(() => {
+          changeTestimonial(1);
+        }, 2000); // Change every 2 seconds
+      }
+      
+      // Initialize testimonials when DOM is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        // Wait a bit for all elements to be rendered
+        setTimeout(() => {
+          const testimonials = document.querySelectorAll('.testimonial-item');
+          if (testimonials.length > 0) {
+            showTestimonial(0);
+            startTestimonialAutoplay();
+          }
+        }, 100);
+      });
+      
       // Optimize button handlers by using event delegation and requestAnimationFrame
       document.addEventListener('DOMContentLoaded', function() {
         let isClicked = false;
@@ -807,6 +876,88 @@
                         </p>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </section>
+              <section class="testimonials-section">
+                <div class="section-header">
+                  <span class="header">Testimonials</span>
+                </div>
+                <div class="section-content testimonials-content">
+                  <div class="testimonials-slider">
+                    <div class="testimonial-item active">
+                      <div class="testimonial-content">
+                        <p class="testimonial-text">
+                          "Faisal delivered exceptional work on our React project. His attention to detail and problem-solving skills are outstanding. The application performance improved significantly after his optimizations."
+                        </p>
+                        <div class="testimonial-author">
+                          <div class="author-info">
+                            <h4 class="author-name">Sarah Johnson</h4>
+                            <span class="author-position">Project Manager, TechCorp</span>
+                          </div>
+                          <div class="rating">
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="testimonial-item">
+                      <div class="testimonial-content">
+                        <p class="testimonial-text">
+                          "I had the pleasure of working with Faisal on a challenging project, and I'm impressed by his exceptional coding skills and problem-solving abilities. He consistently delivered high-quality work, demonstrating both technical expertise and strong teamwork. I highly recommend Faisal for any development role."
+                        </p>
+                        <div class="testimonial-author">
+                          <div class="author-info">
+                            <h4 class="author-name">Amnan Hussain</h4>
+                            <span class="author-position">Senior Developer, Tech Solutions</span>
+                          </div>
+                          <div class="rating">
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="testimonial-item">
+                      <div class="testimonial-content">
+                        <p class="testimonial-text">
+                          "Faisal's expertise in React Native helped us launch our mobile app successfully. His code quality and documentation are top-notch. Highly recommended for any frontend development work."
+                        </p>
+                        <div class="testimonial-author">
+                          <div class="author-info">
+                            <h4 class="author-name">Emily Rodriguez</h4>
+                            <span class="author-position">Lead Developer, AppSolutions</span>
+                          </div>
+                          <div class="rating">
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="testimonial-navigation">
+                    <button class="testimonial-nav prev" onclick="changeTestimonial(-1)">
+                      <span class="fa fa-chevron-left"></span>
+                    </button>
+                    <div class="testimonial-indicators">
+                      <span class="indicator active" onclick="currentTestimonial(1)"></span>
+                      <span class="indicator" onclick="currentTestimonial(2)"></span>
+                      <span class="indicator" onclick="currentTestimonial(3)"></span>
+                    </div>
+                    <button class="testimonial-nav next" onclick="changeTestimonial(1)">
+                      <span class="fa fa-chevron-right"></span>
+                    </button>
                   </div>
                 </div>
               </section>
