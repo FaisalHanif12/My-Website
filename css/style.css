@@ -1081,6 +1081,28 @@ header{
 .buying-btn:hover{
     color:var(--dark-blue)
 }
+
+.buying-btn label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-transform: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    transition: color .4s ease;
+}
+
+.buying-btn label:hover {
+    color: var(--dark-blue);
+}
 .fun-facts-section-content{
     display:flex;
     padding:unset;
