@@ -593,6 +593,88 @@
            });
          };
 
+         // Enhanced intro header animations
+         const initIntroHeaderAnimations = () => {
+           const introSection = document.querySelector('.about-intro-header');
+           if (!introSection) return;
+
+           // Animate intro elements on scroll
+           const observer = new IntersectionObserver((entries) => {
+             entries.forEach(entry => {
+               if (entry.isIntersecting) {
+                 // Add animation classes to intro elements
+                 const badge = introSection.querySelector('.intro-badge');
+                 const title = introSection.querySelector('.intro-title');
+                 const description = introSection.querySelector('.intro-description');
+                 const highlights = introSection.querySelectorAll('.highlight-item');
+                 const actions = introSection.querySelector('.intro-actions');
+
+                 // Staggered animation for better visual effect
+                 setTimeout(() => {
+                   if (badge) badge.style.animation = 'fadeInUp 0.6s ease forwards';
+                 }, 100);
+                 
+                 setTimeout(() => {
+                   if (title) title.style.animation = 'fadeInUp 0.8s ease forwards';
+                 }, 300);
+                 
+                 setTimeout(() => {
+                   if (description) description.style.animation = 'fadeInUp 0.8s ease forwards';
+                 }, 500);
+                 
+                 setTimeout(() => {
+                   highlights.forEach((item, index) => {
+                     setTimeout(() => {
+                       item.style.animation = 'fadeInUp 0.6s ease forwards';
+                     }, index * 150);
+                   });
+                 }, 700);
+                 
+                 setTimeout(() => {
+                   if (actions) actions.style.animation = 'fadeInUp 0.8s ease forwards';
+                 }, 1200);
+                 
+                 observer.unobserve(entry.target);
+               }
+             });
+           }, { threshold: 0.3 });
+           
+           observer.observe(introSection);
+         };
+
+         // Enhanced floating icons animation
+         const enhanceFloatingIcons = () => {
+           const floatingIcons = document.querySelectorAll('.floating-icon');
+           
+           floatingIcons.forEach((icon, index) => {
+             // Add hover effect
+             icon.addEventListener('mouseenter', () => {
+               icon.style.transform = 'scale(1.2) rotate(15deg)';
+               icon.style.background = 'rgba(255, 255, 255, 0.2)';
+             });
+             
+             icon.addEventListener('mouseleave', () => {
+               icon.style.transform = '';
+               icon.style.background = 'rgba(255, 255, 255, 0.1)';
+             });
+             
+             // Random position adjustment for more dynamic feel
+             setInterval(() => {
+               const randomX = Math.random() * 20 - 10; // -10 to 10px
+               const randomY = Math.random() * 20 - 10; // -10 to 10px
+               icon.style.transform += ` translate(${randomX}px, ${randomY}px)`;
+               
+               setTimeout(() => {
+                 icon.style.transform = icon.style.transform.replace(/translate\([^)]*\)/g, '');
+               }, 2000);
+             }, 5000 + index * 1000); // Staggered timing
+           });
+         };
+
+         // Initialize intro header animations
+         initIntroHeaderAnimations();
+         enhanceFloatingIcons();
+
          // Enhanced testimonial functionality for new design
          const enhancedTestimonialCards = document.querySelectorAll('.testimonial-card');
          const enhancedDots = document.querySelectorAll('.dot');
@@ -651,7 +733,7 @@
            }
          };
 
-       });
+      });
       
       // Enhanced typewriter effect with smoother animations
       document.addEventListener('DOMContentLoaded', function() {
@@ -931,7 +1013,7 @@
                   Contact
                 </label>
               </li>
-             
+          
             </ul>
           </div>
         </header>
@@ -1014,36 +1096,53 @@
           <div class="card-wrap">
             <div class="about-card-wrap">
               
-              <!-- Hero About Section -->
-              <section class="about-hero-section">
-                <div class="about-hero-content">
-                  <div class="hero-badge">
+              <!-- Simple Intro Header -->
+              <section class="simple-intro-header">
+                <div class="intro-badge">
+                  <span class="status-dot"></span>
+                  <span>Available for Work</span>
+                </div>
+                
+                <div class="intro-content">
+                  <h1 class="intro-title">
+                    <span class="greeting">Hi there! I'm</span>
+                    <span class="name">Faisal Hanif</span>
+                  </h1>
+                  
+                  <div class="role-tag">
                     <i class="fa fa-code"></i>
                     <span>Frontend Developer</span>
                   </div>
-                  <h1 class="hero-title">
-                    Hello! I'm <span class="highlight">Faisal Hanif</span>
-                  </h1>
-                  <p class="hero-description">
-                    Passionate Frontend Developer with <strong>3+ years</strong> of experience crafting 
-                    exceptional digital experiences. Specialized in <strong>React.js, Next.js, and React Native</strong> 
-                    with a proven track record of delivering <strong>10+ successful projects</strong> across 
-                    service and product-based companies.
+                  
+                  <p class="intro-description">
+                    I craft digital experiences that matter. With <strong>3+ years</strong> of expertise in modern web technologies, 
+                    I transform ideas into beautiful, functional applications that users love.
                   </p>
                   
-                  <div class="hero-stats">
-                    <div class="stat-item">
-                      <div class="stat-number">3+</div>
-                      <div class="stat-label">Years Experience</div>
+                  <div class="intro-stats">
+                    <div class="stat">
+                      <span class="number">3+</span>
+                      <span class="label">Years Experience</span>
                     </div>
-                    <div class="stat-item">
-                      <div class="stat-number">10+</div>
-                      <div class="stat-label">Projects Completed</div>
+                    <div class="stat">
+                      <span class="number">10+</span>
+                      <span class="label">Projects Delivered</span>
                     </div>
-                    <div class="stat-item">
-                      <div class="stat-number">3+</div>
-                      <div class="stat-label">Companies Worked</div>
+                    <div class="stat">
+                      <span class="number">3+</span>
+                      <span class="label">Companies Trusted</span>
                     </div>
+                  </div>
+
+                  <div class="intro-buttons">
+                    <label for="schedule-card" class="btn-primary">
+                      <i class="fa fa-calendar"></i>
+                      Let's Work Together
+                    </label>
+                    <label for="works-card" class="btn-secondary">
+                      <i class="fa fa-eye"></i>
+                      View My Work
+                    </label>
                   </div>
                 </div>
               </section>
@@ -1057,7 +1156,7 @@
                   <div class="info-card">
                     <div class="info-icon">
                       <i class="fa fa-envelope"></i>
-                    </div>
+                      </div>
                     <div class="info-content">
                       <h4>Email</h4>
                       <p>mehrfaisal111@gmail.com</p>
@@ -1065,13 +1164,13 @@
                         <i class="fa fa-external-link"></i>
                         Send Email
                       </a>
+                      </div>
                     </div>
-                  </div>
                   
                   <div class="info-card">
                     <div class="info-icon">
                       <i class="fa fa-phone"></i>
-                    </div>
+                  </div>
                     <div class="info-content">
                       <h4>Phone</h4>
                       <p>+923148166354</p>
@@ -1079,8 +1178,8 @@
                         <i class="fa fa-phone"></i>
                         Call Now
                       </a>
-                    </div>
-                  </div>
+                      </div>
+                      </div>
                   
                   <div class="info-card">
                     <div class="info-icon">
@@ -1093,13 +1192,13 @@
                         <i class="fa fa-clock-o"></i>
                         GMT+5
                       </span>
-                    </div>
                   </div>
+                      </div>
                   
                   <div class="info-card featured">
                     <div class="info-icon">
                       <i class="fa fa-briefcase"></i>
-                    </div>
+                      </div>
                     <div class="info-content">
                       <h4>Availability</h4>
                       <p>Open to Work</p>
@@ -1109,23 +1208,23 @@
                       </label>
                     </div>
                   </div>
-                </div>
+                      </div>
               </section>
 
               <!-- Modern Services Section -->
               <section class="modern-services-section">
                 <div class="section-header">
                   <span class="header">What I Do Best</span>
-                </div>
+                      </div>
                 <div class="services-showcase">
                   
                   <div class="service-card" data-category="frontend">
                     <div class="service-header">
                       <div class="service-icon">
                         <i class="fa fa-code"></i>
-                      </div>
-                      <div class="service-category">Frontend</div>
                     </div>
+                      <div class="service-category">Frontend</div>
+                  </div>
                     <h3>Web Development</h3>
                     <p>Crafting responsive, high-performance web applications using modern frameworks and cutting-edge technologies.</p>
                     <div class="service-technologies">
@@ -1140,8 +1239,8 @@
                         <li><i class="fa fa-check"></i> Performance Optimization</li>
                         <li><i class="fa fa-check"></i> Modern UI/UX</li>
                       </ul>
-                    </div>
                   </div>
+                      </div>
 
                   <div class="service-card" data-category="mobile">
                     <div class="service-header">
@@ -1157,23 +1256,23 @@
                       <span class="tech-tag">Expo</span>
                       <span class="tech-tag">iOS</span>
                       <span class="tech-tag">Android</span>
-                    </div>
+                  </div>
                     <div class="service-features">
                       <ul>
                         <li><i class="fa fa-check"></i> Cross-Platform</li>
                         <li><i class="fa fa-check"></i> Native Performance</li>
                         <li><i class="fa fa-check"></i> App Store Ready</li>
                       </ul>
-                    </div>
-                  </div>
+                      </div>
+                      </div>
 
                   <div class="service-card" data-category="cloud">
                     <div class="service-header">
                       <div class="service-icon">
                         <i class="fa fa-cloud"></i>
-                      </div>
-                      <div class="service-category">DevOps</div>
                     </div>
+                      <div class="service-category">DevOps</div>
+                  </div>
                     <h3>Cloud & Deployment</h3>
                     <p>Streamlining deployment processes with containerization and modern DevOps practices for scalable solutions.</p>
                     <div class="service-technologies">
@@ -1181,21 +1280,21 @@
                       <span class="tech-tag">AWS</span>
                       <span class="tech-tag">Vercel</span>
                       <span class="tech-tag">CI/CD</span>
-                    </div>
+                      </div>
                     <div class="service-features">
                       <ul>
                         <li><i class="fa fa-check"></i> Container Management</li>
                         <li><i class="fa fa-check"></i> Automated Deployment</li>
                         <li><i class="fa fa-check"></i> Scalable Infrastructure</li>
                       </ul>
+                      </div>
                     </div>
-                  </div>
 
                   <div class="service-card" data-category="frontend">
                     <div class="service-header">
                       <div class="service-icon">
                         <i class="fa fa-desktop"></i>
-                      </div>
+                  </div>
                       <div class="service-category">Progressive</div>
                     </div>
                     <h3>Progressive Web Apps</h3>
@@ -1228,23 +1327,23 @@
                     <div class="testimonial-header">
                       <div class="client-avatar">
                         <i class="fa fa-user"></i>
-                      </div>
+                          </div>
                       <div class="client-info">
                         <h4>Sarah Johnson</h4>
                         <span>Project Manager, TechCorp</span>
-                        <div class="rating">
+                          <div class="rating">
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
+                          </div>
                         </div>
-                      </div>
                       <div class="testimonial-quote-icon">
                         <i class="fa fa-quote-right"></i>
                       </div>
                     </div>
-                    <p class="testimonial-text">
+                        <p class="testimonial-text">
                       "Faisal delivered exceptional work on our React project. His attention to detail and 
                       problem-solving skills are outstanding. The application performance improved significantly 
                       after his optimizations."
@@ -1254,7 +1353,7 @@
                         <span class="tag">React.js</span>
                         <span class="tag">Performance</span>
                         <span class="tag">Optimization</span>
-                      </div>
+                          </div>
                     </div>
                   </div>
 
@@ -1266,19 +1365,19 @@
                       <div class="client-info">
                         <h4>Amnan Hussain</h4>
                         <span>Infinity Edge Technology</span>
-                        <div class="rating">
+                          <div class="rating">
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
+                          </div>
                         </div>
-                      </div>
                       <div class="testimonial-quote-icon">
                         <i class="fa fa-quote-right"></i>
                       </div>
                     </div>
-                    <p class="testimonial-text">
+                        <p class="testimonial-text">
                       "I had the pleasure of working with Faisal on a challenging project. His exceptional coding skills 
                       and problem-solving abilities consistently delivered high-quality work, demonstrating both technical 
                       expertise and strong teamwork."
@@ -1288,7 +1387,7 @@
                         <span class="tag">Team Work</span>
                         <span class="tag">Problem Solving</span>
                         <span class="tag">Quality Code</span>
-                      </div>
+                          </div>
                     </div>
                   </div>
 
@@ -1300,14 +1399,14 @@
                       <div class="client-info">
                         <h4>Emily Rodriguez</h4>
                         <span>Lead Developer, AppSolutions</span>
-                        <div class="rating">
+                          <div class="rating">
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
+                          </div>
                         </div>
-                      </div>
                       <div class="testimonial-quote-icon">
                         <i class="fa fa-quote-right"></i>
                       </div>
@@ -1321,7 +1420,7 @@
                         <span class="tag">React Native</span>
                         <span class="tag">Mobile App</span>
                         <span class="tag">Documentation</span>
-                      </div>
+                  </div>
                     </div>
                   </div>
 
@@ -1353,10 +1452,10 @@
                     <div class="pricing-header">
                       <div class="plan-icon">
                         <i class="fa fa-rocket"></i>
-                      </div>
+                        </div>
                       <h3>Basic</h3>
                       <div class="plan-badge">Perfect Start</div>
-                    </div>
+                        </div>
                     <div class="pricing-amount">
                       <span class="currency">$</span>
                       <span class="amount">15</span>
@@ -1370,14 +1469,14 @@
                         <li><i class="fa fa-check"></i> UI/UX Design</li>
                         <li><i class="fa fa-check"></i> Static Site Generation</li>
                         <li><i class="fa fa-check"></i> Code Review & Optimization</li>
-                      </ul>
-                    </div>
+                          </ul>
+                        </div>
                     <label for="schedule-card" class="pricing-cta">
                       <span>Choose Basic</span>
                       <i class="fa fa-arrow-right"></i>
                     </label>
-                  </div>
-
+                    </div>
+                  
                   <div class="pricing-card pro featured">
                     <div class="popular-badge">Most Popular</div>
                     <div class="pricing-header">
@@ -1391,7 +1490,7 @@
                       <span class="currency">$</span>
                       <span class="amount">30</span>
                       <span class="period">/hour</span>
-                    </div>
+                  </div>
                     <div class="pricing-features">
                       <ul>
                         <li><i class="fa fa-check"></i> Full-Stack Development</li>
@@ -1400,20 +1499,20 @@
                         <li><i class="fa fa-check"></i> Cloud Deployment</li>
                         <li><i class="fa fa-check"></i> Performance Optimization</li>
                         <li><i class="fa fa-check"></i> 24/7 Technical Support</li>
-                      </ul>
+                        </ul>
                     </div>
                     <label for="schedule-card" class="pricing-cta">
                       <span>Choose Professional</span>
                       <i class="fa fa-arrow-right"></i>
                     </label>
-                  </div>
+                      </div>
 
-                </div>
+                      </div>
                 
                 <!-- Pricing CTA -->
                 <div class="pricing-footer">
                   <p>Need a custom solution? <label for="contact-card" class="inline-link">Let's discuss your project</label></p>
-                </div>
+                    </div>
               </section>
 
             </div>
@@ -2105,31 +2204,31 @@
               <div class="stat-item">
                 <div class="stat-icon">
                   <i class="fa fa-trophy"></i>
-                </div>
+                      </div>
                 <div class="stat-content">
                   <h3>4+</h3>
                   <p>Certifications</p>
-                </div>
-              </div>
+                  </div>
+                      </div>
               <div class="stat-item">
                 <div class="stat-icon">
                   <i class="fa fa-graduation-cap"></i>
-                </div>
+                    </div>
                 <div class="stat-content">
                   <h3>200+</h3>
                   <p>Learning Hours</p>
+                  </div>
                 </div>
-              </div>
               <div class="stat-item">
                 <div class="stat-icon">
                   <i class="fa fa-star"></i>
-                </div>
+              </div>
                 <div class="stat-content">
                   <h3>2023</h3>
                   <p>Latest Year</p>
-                </div>
-              </div>
-            </div>
+                      </div>
+                  </div>
+                      </div>
 
             <!-- Filter Tabs -->
             <div class="certification-filters">
@@ -2149,7 +2248,7 @@
                 <i class="fa fa-cloud"></i>
                 Cloud
               </button>
-            </div>
+                    </div>
 
             <!-- Modern Certification Cards -->
             <div class="section-content certifications-section-content">
@@ -2163,11 +2262,11 @@
                   <div class="cert-issuer">
                     <span class="issuer-name">Coursera</span>
                     <span class="issuer-type">Online Learning Platform</span>
-                  </div>
+                </div>
                   <div class="cert-date">
                     <span class="date-badge">Nov 2023</span>
-                  </div>
-                </div>
+              </div>
+                      </div>
                 
                 <div class="cert-content">
                   <div class="cert-image">
@@ -2177,9 +2276,9 @@
                          target="_blank" class="view-cert-btn">
                         <i class="fa fa-external-link"></i>
                         View Certificate
-                      </a>
-                    </div>
+                    </a>
                   </div>
+                      </div>
                   
                   <div class="cert-details">
                     <h3>React Development Mastery</h3>
@@ -2244,13 +2343,13 @@
                       <span class="skill-tag">Database Design</span>
                       <span class="skill-tag">Cloud Security</span>
                       <span class="skill-tag">Data Management</span>
-                    </div>
+                </div>
                     
                     <div class="cert-verification">
                       <i class="fa fa-shield"></i>
                       <span>Verified Certificate</span>
-                    </div>
-                  </div>
+              </div>
+                      </div>
                 </div>
               </div>
 
@@ -2277,9 +2376,9 @@
                          target="_blank" class="view-cert-btn">
                         <i class="fa fa-external-link"></i>
                         View Certificate
-                      </a>
-                    </div>
+                    </a>
                   </div>
+                      </div>
                   
                   <div class="cert-details">
                     <h3>Frontend Development Specialist</h3>
@@ -2344,13 +2443,13 @@
                       <span class="skill-tag">UI/UX Design</span>
                       <span class="skill-tag">Modern Frameworks</span>
                       <span class="skill-tag">Best Practices</span>
-                    </div>
+                </div>
                     
                     <div class="cert-verification featured">
                       <i class="fa fa-star"></i>
                       <span>Featured Certificate</span>
-                    </div>
-                  </div>
+              </div>
+            </div>
                 </div>
               </div>
 
@@ -2485,7 +2584,7 @@
               <div class="hero-content">
                 <div class="hero-icon">
                   <i class="fa fa-calendar-check-o"></i>
-                </div>
+            </div>
                 <h2>Let's Connect & Collaborate</h2>
                 <p>Ready to bring your ideas to life? Schedule a free consultation to discuss your project, explore solutions, and plan your next steps together.</p>
               </div>
@@ -2556,7 +2655,7 @@
                 </div>
               </div>
             </div>
-
+            
             <!-- CTA Section -->
             <div class="cta-section">
               <button id="loadCalendlyButton" class="modern-cta-button">
