@@ -551,11 +551,107 @@
           });
         }, { threshold: 0.5 });
 
-        const statsSection = document.querySelector('.achievement-stats');
-        if (statsSection) {
-          statsObserver.observe(statsSection);
-        }
-      });
+                 const statsSection = document.querySelector('.achievement-stats');
+         if (statsSection) {
+           statsObserver.observe(statsSection);
+         }
+
+         // Enhanced About Page Functionality
+         const aboutStatsSection = document.querySelector('.hero-stats');
+         if (aboutStatsSection) {
+           const aboutStatsObserver = new IntersectionObserver((entries) => {
+             entries.forEach(entry => {
+               if (entry.isIntersecting) {
+                 animateAboutNumbers();
+                 aboutStatsObserver.unobserve(entry.target);
+               }
+             });
+           }, { threshold: 0.5 });
+           aboutStatsObserver.observe(aboutStatsSection);
+         }
+
+         // Animate about page numbers
+         const animateAboutNumbers = () => {
+           const numberElements = document.querySelectorAll('.hero-stats .stat-number');
+           
+           numberElements.forEach(element => {
+             const finalNumber = element.textContent.replace(/\D/g, '');
+             if (finalNumber) {
+               const suffix = element.textContent.replace(/[0-9]/g, '');
+               let currentNumber = 0;
+               const increment = Math.ceil(finalNumber / 30);
+               
+               const timer = setInterval(() => {
+                 currentNumber += increment;
+                 if (currentNumber >= finalNumber) {
+                   currentNumber = finalNumber;
+                   clearInterval(timer);
+                 }
+                 element.textContent = currentNumber + suffix;
+               }, 50);
+             }
+           });
+         };
+
+         // Enhanced testimonial functionality for new design
+         const enhancedTestimonialCards = document.querySelectorAll('.testimonial-card');
+         const enhancedDots = document.querySelectorAll('.dot');
+         
+         if (enhancedTestimonialCards.length > 0) {
+           // Update dot click handlers
+           enhancedDots.forEach((dot, index) => {
+             dot.addEventListener('click', () => {
+               showEnhancedTestimonial(index);
+               currentTestimonialIndex = index;
+             });
+           });
+         }
+
+         function showEnhancedTestimonial(index) {
+           // Hide all testimonial cards
+           enhancedTestimonialCards.forEach(card => {
+             card.classList.remove('active');
+           });
+           
+           // Remove active class from all dots
+           enhancedDots.forEach(dot => {
+             dot.classList.remove('active');
+           });
+           
+           // Show current testimonial
+           if (enhancedTestimonialCards[index]) {
+             enhancedTestimonialCards[index].classList.add('active');
+           }
+           
+           // Highlight current dot
+           if (enhancedDots[index]) {
+             enhancedDots[index].classList.add('active');
+           }
+         }
+
+         // Override original testimonial functions for new design
+         window.changeTestimonial = function(direction) {
+           if (enhancedTestimonialCards.length > 0) {
+             currentTestimonialIndex += direction;
+             
+             if (currentTestimonialIndex >= enhancedTestimonialCards.length) {
+               currentTestimonialIndex = 0;
+             } else if (currentTestimonialIndex < 0) {
+               currentTestimonialIndex = enhancedTestimonialCards.length - 1;
+             }
+             
+             showEnhancedTestimonial(currentTestimonialIndex);
+           }
+         };
+
+         window.currentTestimonial = function(index) {
+           if (enhancedTestimonialCards.length > 0) {
+             currentTestimonialIndex = index - 1;
+             showEnhancedTestimonial(currentTestimonialIndex);
+           }
+         };
+
+       });
       
       // Enhanced typewriter effect with smoother animations
       document.addEventListener('DOMContentLoaded', function() {
@@ -917,256 +1013,409 @@
         <div class="about-card right-cards">
           <div class="card-wrap">
             <div class="about-card-wrap">
-              <section class="about-me-section">
-                <div class="section-header">
-                  <span class="header">About Me</span>
-                </div>
-                <div class="section-content about-me-section-content">
-                  <div class="info-text">
-                    <p>
-                      <strong style="font-weight: 500"
-                        >Hello! I’m Faisal Hanif</strong
-                      >
-                      <br />
-                      Front-End Developer with 3 years of experience and 10+
-                      successful projects. Skilled in React.js, Next.js, and
-                      React Native. My journey in tech has led me through roles
-                      at 3+ companies, contributing to both service and
-                      product-based projects.
-                    </p>
+              
+              <!-- Hero About Section -->
+              <section class="about-hero-section">
+                <div class="about-hero-content">
+                  <div class="hero-badge">
+                    <i class="fa fa-code"></i>
+                    <span>Frontend Developer</span>
                   </div>
-
-                  <div class="info-list">
-                    <ul>
-                      <li>
-                        <strong>Email</strong>
-                        <span>mehrfaisal111@gmail.com</span>
-                      </li>
-                      <li>
-                        <strong>Phone</strong>
-                        <span>+923148166354</span>
-                      </li>
-                      <li>
-                        <strong>Address</strong>
-                        <span>Lahore, Pakistan</span>
-                      </li>
-                      <li>
-                        <strong>Open to Work</strong>
-                        <span> Available</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </section>
-              <section class="my-services-section">
-                <div class="section-header">
-                  <span class="header">My Services</span>
-                </div>
-                <div class="section-content my-services-content">
-                  <div class="my-services-content-wrap">
-                    <div class="servies-item">
-                      <div class="icon">
-                        <span class="ion-code"></span>
-                      </div>
-                      <div class="name"><span>Web Development</span></div>
-                      <div class="dics">
-                        <p>
-                          High-quality development of sites at the professional
-                          level with advanced Frameworks.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="my-services-content-wrap">
-                    <div class="servies-item">
-                      <div class="icon">
-                        <span class="ion-android-cloud-outline"></span>
-                      </div>
-                      <div class="name"><span>Docker Management</span></div>
-                      <div class="dics">
-                        <p>
-                          I offer Docker Management services, ensuring efficient
-                          deployment and scalability of your applications.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="my-services-content-wrap">
-                    <div class="servies-item">
-                      <div class="icon">
-                        <span class="fa fa-android"></span>
-                      </div>
-                      <div class="name"><span>Mobile Devlopement</span></div>
-                      <div class="dics">
-                        <p>
-                          Professional development of applications for iOS and
-                          Android in react native.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="my-services-content-wrap">
-                    <div class="servies-item">
-                      <div class="icon">
-                        <span class="ion-android-desktop"></span>
-                      </div>
-                      <div class="name"><span>Progressive web Apps</span></div>
-                      <div class="dics">
-                        <p>
-                          I offer Advanced Desktop Development services to enhance your
-                          business and marketing operations.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-              <section class="testimonials-section">
-                <div class="section-header">
-                  <span class="header">Testimonials</span>
-                </div>
-                <div class="section-content testimonials-content">
-                  <div class="testimonials-slider">
-                    <div class="testimonial-item active">
-                      <div class="testimonial-content">
-                        <p class="testimonial-text">
-                          "Faisal delivered exceptional work on our React project. His attention to detail and problem-solving skills are outstanding. The application performance improved significantly after his optimizations."
-                        </p>
-                        <div class="testimonial-author">
-                          <div class="author-info">
-                            <h4 class="author-name">Sarah Johnson</h4>
-                            <span class="author-position">Project Manager, TechCorp</span>
-                          </div>
-                          <div class="rating">
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="testimonial-item">
-                      <div class="testimonial-content">
-                        <p class="testimonial-text">
-                          "I had the pleasure of working with Faisal on a challenging project, and I'm impressed by his exceptional coding skills and problem-solving abilities. He consistently delivered high-quality work, demonstrating both technical expertise and strong teamwork. I highly recommend Faisal for any development role."
-                        </p>
-                        <div class="testimonial-author">
-                          <div class="author-info">
-                            <h4 class="author-name">Amnan Hussain</h4>
-                            <span class="author-position">Infinity Edge Technology</span>
-                          </div>
-                          <div class="rating">
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="testimonial-item">
-                      <div class="testimonial-content">
-                        <p class="testimonial-text">
-                          "Faisal's expertise in React Native helped us launch our mobile app successfully. His code quality and documentation are top-notch. Highly recommended for any frontend development work."
-                        </p>
-                        <div class="testimonial-author">
-                          <div class="author-info">
-                            <h4 class="author-name">Emily Rodriguez</h4>
-                            <span class="author-position">Lead Developer, AppSolutions</span>
-                          </div>
-                          <div class="rating">
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="testimonial-navigation">
-                    <button class="testimonial-nav prev" onclick="changeTestimonial(-1)">
-                      <span class="fa fa-chevron-left"></span>
-                    </button>
-                    <div class="testimonial-indicators">
-                      <span class="indicator active" onclick="currentTestimonial(1)"></span>
-                      <span class="indicator" onclick="currentTestimonial(2)"></span>
-                      <span class="indicator" onclick="currentTestimonial(3)"></span>
-                    </div>
-                    <button class="testimonial-nav next" onclick="changeTestimonial(1)">
-                      <span class="fa fa-chevron-right"></span>
-                    </button>
-                  </div>
-                </div>
-              </section>
-              <section class="my-pricing-section">
-                <div class="section-header">
-                  <span class="header">Pricing</span>
-                </div>
-                <div  class="section-content my-pricing-content">
-                  <div class="my-pricing-content-wrap right-border-line" style=" ">
-                    <div > 
-                      <div class="pricing-item">
-                        <div class="icon">
-                          <span class="ion-battery-low"></span>
-                        </div>
-                        <div class="pricing-name"><span>Basic</span></div>
-                        <div class="amount">
-                          <sup class="doller">$</sup>
-                          <span class="time">15</span>
-                          <sub class="type-time">hour</sub>
-                        </div>
-                        <div class="services-list">
-                          <ul>
-                            <li>React.js Development</li>
-                            <li>Next.js Development</li>
-                            <li>Responsive Web Design</li>
-                            <li>UI/UX Design</li>
-                            <li>Static Site Generation</li>
-                            <li>Code Review & Optimization</li>
-                          </ul>
-                        </div>
-                    </div>
+                  <h1 class="hero-title">
+                    Hello! I'm <span class="highlight">Faisal Hanif</span>
+                  </h1>
+                  <p class="hero-description">
+                    Passionate Frontend Developer with <strong>3+ years</strong> of experience crafting 
+                    exceptional digital experiences. Specialized in <strong>React.js, Next.js, and React Native</strong> 
+                    with a proven track record of delivering <strong>10+ successful projects</strong> across 
+                    service and product-based companies.
+                  </p>
                   
-                      <div class="buying-btn top-border-line">
-                        <label for="schedule-card">Buy Basic</label>
-                      </div>
+                  <div class="hero-stats">
+                    <div class="stat-item">
+                      <div class="stat-number">3+</div>
+                      <div class="stat-label">Years Experience</div>
                     </div>
-                  </div>
-                  <div class="my-pricing-content-wrap">
-                    <div class="pricing-item">
-                      <div class="icon">
-                        <span class="ion-battery-full"></span>
-                      </div>
-                      <div class="pricing-name"><span>Pro</span></div>
-                      <div class="amount">
-                        <sup class="doller">$</sup>
-                        <span class="time">30</span>
-                        <sub class="type-time">hour</sub>
-                      </div>
-                      <div class="services-list">
-                        <ul>
-                          <li>Development with React and Node.js</li>
-                          <li>Backend API Development</li>
-                          <li>Database Design and Management</li>
-                          <li>Server and Cloud Deployment</li>
-                          <li>SEO and Performance Optimization</li>
-                          <li>24/7 Technical Support</li>
-                        </ul>
-                      </div>
-
-                      <div class="buying-btn top-border-line">
-                        <label for="schedule-card">Buy Pro</label>
-                      </div>
+                    <div class="stat-item">
+                      <div class="stat-number">10+</div>
+                      <div class="stat-label">Projects Completed</div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-number">3+</div>
+                      <div class="stat-label">Companies Worked</div>
                     </div>
                   </div>
                 </div>
-                <div class="price-btn-block"></div>
               </section>
+
+              <!-- Personal Info Cards -->
+              <section class="personal-info-section">
+                <div class="section-header">
+                  <span class="header">Get to Know Me</span>
+                </div>
+                <div class="info-cards-grid">
+                  <div class="info-card">
+                    <div class="info-icon">
+                      <i class="fa fa-envelope"></i>
+                    </div>
+                    <div class="info-content">
+                      <h4>Email</h4>
+                      <p>mehrfaisal111@gmail.com</p>
+                      <a href="mailto:mehrfaisal111@gmail.com" class="info-action">
+                        <i class="fa fa-external-link"></i>
+                        Send Email
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="info-card">
+                    <div class="info-icon">
+                      <i class="fa fa-phone"></i>
+                    </div>
+                    <div class="info-content">
+                      <h4>Phone</h4>
+                      <p>+923148166354</p>
+                      <a href="tel:+923148166354" class="info-action">
+                        <i class="fa fa-phone"></i>
+                        Call Now
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="info-card">
+                    <div class="info-icon">
+                      <i class="fa fa-map-marker"></i>
+                    </div>
+                    <div class="info-content">
+                      <h4>Location</h4>
+                      <p>Lahore, Pakistan</p>
+                      <span class="info-action">
+                        <i class="fa fa-clock-o"></i>
+                        GMT+5
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div class="info-card featured">
+                    <div class="info-icon">
+                      <i class="fa fa-briefcase"></i>
+                    </div>
+                    <div class="info-content">
+                      <h4>Availability</h4>
+                      <p>Open to Work</p>
+                      <label for="schedule-card" class="info-action cta">
+                        <i class="fa fa-calendar"></i>
+                        Book Meeting
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Modern Services Section -->
+              <section class="modern-services-section">
+                <div class="section-header">
+                  <span class="header">What I Do Best</span>
+                </div>
+                <div class="services-showcase">
+                  
+                  <div class="service-card" data-category="frontend">
+                    <div class="service-header">
+                      <div class="service-icon">
+                        <i class="fa fa-code"></i>
+                      </div>
+                      <div class="service-category">Frontend</div>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Crafting responsive, high-performance web applications using modern frameworks and cutting-edge technologies.</p>
+                    <div class="service-technologies">
+                      <span class="tech-tag">React.js</span>
+                      <span class="tech-tag">Next.js</span>
+                      <span class="tech-tag">TypeScript</span>
+                      <span class="tech-tag">Tailwind CSS</span>
+                    </div>
+                    <div class="service-features">
+                      <ul>
+                        <li><i class="fa fa-check"></i> Responsive Design</li>
+                        <li><i class="fa fa-check"></i> Performance Optimization</li>
+                        <li><i class="fa fa-check"></i> Modern UI/UX</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="service-card" data-category="mobile">
+                    <div class="service-header">
+                      <div class="service-icon">
+                        <i class="fa fa-mobile"></i>
+                      </div>
+                      <div class="service-category">Mobile</div>
+                    </div>
+                    <h3>Mobile Development</h3>
+                    <p>Creating cross-platform mobile applications with native performance and exceptional user experience.</p>
+                    <div class="service-technologies">
+                      <span class="tech-tag">React Native</span>
+                      <span class="tech-tag">Expo</span>
+                      <span class="tech-tag">iOS</span>
+                      <span class="tech-tag">Android</span>
+                    </div>
+                    <div class="service-features">
+                      <ul>
+                        <li><i class="fa fa-check"></i> Cross-Platform</li>
+                        <li><i class="fa fa-check"></i> Native Performance</li>
+                        <li><i class="fa fa-check"></i> App Store Ready</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="service-card" data-category="cloud">
+                    <div class="service-header">
+                      <div class="service-icon">
+                        <i class="fa fa-cloud"></i>
+                      </div>
+                      <div class="service-category">DevOps</div>
+                    </div>
+                    <h3>Cloud & Deployment</h3>
+                    <p>Streamlining deployment processes with containerization and modern DevOps practices for scalable solutions.</p>
+                    <div class="service-technologies">
+                      <span class="tech-tag">Docker</span>
+                      <span class="tech-tag">AWS</span>
+                      <span class="tech-tag">Vercel</span>
+                      <span class="tech-tag">CI/CD</span>
+                    </div>
+                    <div class="service-features">
+                      <ul>
+                        <li><i class="fa fa-check"></i> Container Management</li>
+                        <li><i class="fa fa-check"></i> Automated Deployment</li>
+                        <li><i class="fa fa-check"></i> Scalable Infrastructure</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="service-card" data-category="frontend">
+                    <div class="service-header">
+                      <div class="service-icon">
+                        <i class="fa fa-desktop"></i>
+                      </div>
+                      <div class="service-category">Progressive</div>
+                    </div>
+                    <h3>Progressive Web Apps</h3>
+                    <p>Building PWAs that deliver app-like experiences with the reach of the web, optimized for performance and engagement.</p>
+                    <div class="service-technologies">
+                      <span class="tech-tag">PWA</span>
+                      <span class="tech-tag">Service Workers</span>
+                      <span class="tech-tag">Web Push</span>
+                      <span class="tech-tag">Offline Support</span>
+                    </div>
+                    <div class="service-features">
+                      <ul>
+                        <li><i class="fa fa-check"></i> Offline Functionality</li>
+                        <li><i class="fa fa-check"></i> Push Notifications</li>
+                        <li><i class="fa fa-check"></i> App-like Experience</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+              <!-- Enhanced Testimonials -->
+              <section class="enhanced-testimonials-section">
+                <div class="section-header">
+                  <span class="header">Client Success Stories</span>
+                </div>
+                <div class="testimonials-container">
+                  <div class="testimonial-card active" data-testimonial="1">
+                    <div class="testimonial-header">
+                      <div class="client-avatar">
+                        <i class="fa fa-user"></i>
+                      </div>
+                      <div class="client-info">
+                        <h4>Sarah Johnson</h4>
+                        <span>Project Manager, TechCorp</span>
+                        <div class="rating">
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                        </div>
+                      </div>
+                      <div class="testimonial-quote-icon">
+                        <i class="fa fa-quote-right"></i>
+                      </div>
+                    </div>
+                    <p class="testimonial-text">
+                      "Faisal delivered exceptional work on our React project. His attention to detail and 
+                      problem-solving skills are outstanding. The application performance improved significantly 
+                      after his optimizations."
+                    </p>
+                    <div class="testimonial-footer">
+                      <div class="project-tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">Performance</span>
+                        <span class="tag">Optimization</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="testimonial-card" data-testimonial="2">
+                    <div class="testimonial-header">
+                      <div class="client-avatar">
+                        <i class="fa fa-user"></i>
+                      </div>
+                      <div class="client-info">
+                        <h4>Amnan Hussain</h4>
+                        <span>Infinity Edge Technology</span>
+                        <div class="rating">
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                        </div>
+                      </div>
+                      <div class="testimonial-quote-icon">
+                        <i class="fa fa-quote-right"></i>
+                      </div>
+                    </div>
+                    <p class="testimonial-text">
+                      "I had the pleasure of working with Faisal on a challenging project. His exceptional coding skills 
+                      and problem-solving abilities consistently delivered high-quality work, demonstrating both technical 
+                      expertise and strong teamwork."
+                    </p>
+                    <div class="testimonial-footer">
+                      <div class="project-tags">
+                        <span class="tag">Team Work</span>
+                        <span class="tag">Problem Solving</span>
+                        <span class="tag">Quality Code</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="testimonial-card" data-testimonial="3">
+                    <div class="testimonial-header">
+                      <div class="client-avatar">
+                        <i class="fa fa-user"></i>
+                      </div>
+                      <div class="client-info">
+                        <h4>Emily Rodriguez</h4>
+                        <span>Lead Developer, AppSolutions</span>
+                        <div class="rating">
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                          <i class="fa fa-star"></i>
+                        </div>
+                      </div>
+                      <div class="testimonial-quote-icon">
+                        <i class="fa fa-quote-right"></i>
+                      </div>
+                    </div>
+                    <p class="testimonial-text">
+                      "Faisal's expertise in React Native helped us launch our mobile app successfully. His code quality 
+                      and documentation are top-notch. Highly recommended for any frontend development work."
+                    </p>
+                    <div class="testimonial-footer">
+                      <div class="project-tags">
+                        <span class="tag">React Native</span>
+                        <span class="tag">Mobile App</span>
+                        <span class="tag">Documentation</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Modern Navigation -->
+                  <div class="testimonial-controls">
+                    <button class="testimonial-nav-btn prev" onclick="changeTestimonial(-1)">
+                      <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <div class="testimonial-dots">
+                      <button class="dot active" onclick="currentTestimonial(1)"></button>
+                      <button class="dot" onclick="currentTestimonial(2)"></button>
+                      <button class="dot" onclick="currentTestimonial(3)"></button>
+                    </div>
+                    <button class="testimonial-nav-btn next" onclick="changeTestimonial(1)">
+                      <i class="fa fa-chevron-right"></i>
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Modern Pricing Section -->
+              <section class="modern-pricing-section">
+                <div class="section-header">
+                  <span class="header">Investment Plans</span>
+                </div>
+                <div class="pricing-cards">
+                  
+                  <div class="pricing-card basic">
+                    <div class="pricing-header">
+                      <div class="plan-icon">
+                        <i class="fa fa-rocket"></i>
+                      </div>
+                      <h3>Basic</h3>
+                      <div class="plan-badge">Perfect Start</div>
+                    </div>
+                    <div class="pricing-amount">
+                      <span class="currency">$</span>
+                      <span class="amount">15</span>
+                      <span class="period">/hour</span>
+                    </div>
+                    <div class="pricing-features">
+                      <ul>
+                        <li><i class="fa fa-check"></i> React.js Development</li>
+                        <li><i class="fa fa-check"></i> Next.js Development</li>
+                        <li><i class="fa fa-check"></i> Responsive Web Design</li>
+                        <li><i class="fa fa-check"></i> UI/UX Design</li>
+                        <li><i class="fa fa-check"></i> Static Site Generation</li>
+                        <li><i class="fa fa-check"></i> Code Review & Optimization</li>
+                      </ul>
+                    </div>
+                    <label for="schedule-card" class="pricing-cta">
+                      <span>Choose Basic</span>
+                      <i class="fa fa-arrow-right"></i>
+                    </label>
+                  </div>
+
+                  <div class="pricing-card pro featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-header">
+                      <div class="plan-icon">
+                        <i class="fa fa-crown"></i>
+                      </div>
+                      <h3>Professional</h3>
+                      <div class="plan-badge">Full Stack Power</div>
+                    </div>
+                    <div class="pricing-amount">
+                      <span class="currency">$</span>
+                      <span class="amount">30</span>
+                      <span class="period">/hour</span>
+                    </div>
+                    <div class="pricing-features">
+                      <ul>
+                        <li><i class="fa fa-check"></i> Full-Stack Development</li>
+                        <li><i class="fa fa-check"></i> Backend API Development</li>
+                        <li><i class="fa fa-check"></i> Database Design & Management</li>
+                        <li><i class="fa fa-check"></i> Cloud Deployment</li>
+                        <li><i class="fa fa-check"></i> Performance Optimization</li>
+                        <li><i class="fa fa-check"></i> 24/7 Technical Support</li>
+                      </ul>
+                    </div>
+                    <label for="schedule-card" class="pricing-cta">
+                      <span>Choose Professional</span>
+                      <i class="fa fa-arrow-right"></i>
+                    </label>
+                  </div>
+
+                </div>
+                
+                <!-- Pricing CTA -->
+                <div class="pricing-footer">
+                  <p>Need a custom solution? <label for="contact-card" class="inline-link">Let's discuss your project</label></p>
+                </div>
+              </section>
+
             </div>
           </div>
         </div>
