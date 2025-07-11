@@ -667,7 +667,8 @@ header{
     position:relative;
     top:0;
     background-color:#fff;
-    z-index:100
+    z-index:100;
+    margin-bottom: 25px;
 }
 .section-header::after{
     position:absolute;
@@ -680,11 +681,13 @@ header{
 }
 .header{
     position:relative;
-    font-size:20px;
+    font-size:22px;
     font-weight:600;
     line-height:30px;
     margin:10px 22px;
     border-radius: 330px;
+    color: #333;
+    display: block;
 }
 .header::before{
     position:absolute;
@@ -698,7 +701,7 @@ header{
     -moz-border-radius:50%;
     -ms-border-radius:50%;
     -o-border-radius:50%;
-    background:linear-gradient(135deg,rgba(109,118,204,.253) 0,rgba(120,204,109,.01) 100%)
+    background:linear-gradient(135deg,rgba(14, 102, 85, 0.15) 0,rgba(14, 102, 85, 0.05) 100%)
 }
 .about-me-section-content{
     display:flex;
@@ -2772,11 +2775,16 @@ input[name=menu-list]:checked+label{
     margin-bottom: 40px;
 }
 
+.personal-info-section .section-header {
+    margin-bottom: 30px;
+}
+
 .info-cards-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     padding: 0 15px;
+    margin-top: 25px;
 }
 
 .info-card {
@@ -2895,11 +2903,16 @@ input[name=menu-list]:checked+label{
     margin-bottom: 40px;
 }
 
+.modern-services-section .section-header {
+    margin-bottom: 30px;
+}
+
 .services-showcase {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
     padding: 0 15px;
+    margin-top: 25px;
 }
 
 .service-card {
@@ -3022,9 +3035,14 @@ input[name=menu-list]:checked+label{
     margin-bottom: 40px;
 }
 
+.enhanced-testimonials-section .section-header {
+    margin-bottom: 30px;
+}
+
 .testimonials-container {
     position: relative;
     padding: 0 15px;
+    margin-top: 25px;
 }
 
 .testimonial-card {
@@ -3202,12 +3220,17 @@ input[name=menu-list]:checked+label{
     margin-bottom: 40px;
 }
 
+.modern-pricing-section .section-header {
+    margin-bottom: 30px;
+}
+
 .pricing-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
     padding: 0 15px;
     margin-bottom: 30px;
+    margin-top: 25px;
 }
 
 .pricing-card {
@@ -3394,6 +3417,16 @@ input[name=menu-list]:checked+label{
     color: #0a4d3e;
 }
 
+/* Additional spacing fixes */
+.about-card-wrap .section-header {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.about-card-wrap .section-header:first-child {
+    margin-top: 0;
+}
+
 /* Responsive Design for About Page */
 @media (max-width: 768px) {
     .hero-title {
@@ -3441,6 +3474,14 @@ input[name=menu-list]:checked+label{
         width: 40px;
         height: 40px;
         font-size: 14px;
+    }
+    
+    .section-header {
+        margin-bottom: 20px;
+    }
+    
+    .header {
+        font-size: 20px;
     }
 }
 
