@@ -384,36 +384,70 @@
         }, 100);
       });
       
-      // Optimize button handlers by using event delegation and requestAnimationFrame
+      // Modern Schedule Page Functionality
       document.addEventListener('DOMContentLoaded', function() {
-        let isClicked = false;
-        const button = document.getElementById("loadCalendlyButton");
+        // Meeting type card selection
+        const meetingCards = document.querySelectorAll('.meeting-type-card');
         
-        if (button) {
+        meetingCards.forEach(card => {
+          card.addEventListener('click', function() {
+            // Remove active class from all cards
+            meetingCards.forEach(c => c.classList.remove('active'));
+            // Add active class to clicked card
+            this.classList.add('active');
+          });
+        });
+
+        // Enhanced button functionality
+        const button = document.getElementById("loadCalendlyButton");
+        const loadingMessage = document.getElementById("loadingMessage");
+        const calendlyWidget = document.querySelector(".calendly-inline-widget");
+        
+        if (button && loadingMessage && calendlyWidget) {
           button.addEventListener('click', function() {
-            requestAnimationFrame(() => {
-              if (!isClicked) {
-                button.style.backgroundColor = "#0e6655";
-                isClicked = true;
-              } else {
-                button.style.backgroundColor = "black";
-                isClicked = false;
+            // Hide the main content and show loading
+            document.querySelector('.schedule-hero').style.display = 'none';
+            document.querySelector('.meeting-types').style.display = 'none';
+            document.querySelector('.expectations-section').style.display = 'none';
+            document.querySelector('.cta-section').style.display = 'none';
+            
+            loadingMessage.style.display = 'block';
+            
+            // Trigger the original Calendly loading functionality
+            const originalEvent = new Event('click');
+            loadButton = document.getElementById("loadCalendlyButton");
+            if (loadButton) {
+              // Load Calendly after a brief delay for better UX
+              setTimeout(() => {
+                loadCalendly();
+              }, 1500);
+            }
+          });
+        }
+
+        // Add smooth scrolling animation for better UX
+        function addSmoothAnimations() {
+          const sections = document.querySelectorAll('.schedule-hero, .meeting-types, .expectations-section, .cta-section');
+          
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
               }
             });
-          }, { passive: true });
-          
-          button.addEventListener('mouseover', function() {
-            if (!isClicked) {
-              button.style.backgroundColor = "#0e6655";
-            }
-          }, { passive: true });
-          
-          button.addEventListener('mouseout', function() {
-            if (!isClicked) {
-              button.style.backgroundColor = "black";
-            }
-          }, { passive: true });
+          }, { threshold: 0.1 });
+
+          sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+          });
         }
+
+        // Initialize smooth animations
+        addSmoothAnimations();
       });
       
       // Enhanced typewriter effect with smoother animations
@@ -694,6 +728,12 @@
                   Contact
                 </label>
               </li>
+              <li class="menu">
+                <label for="schedule-card">
+                  <span class="icon ion-calendar"></span>
+                  Schedule
+                </label>
+              </li>
             </ul>
           </div>
         </header>
@@ -765,7 +805,7 @@
                   class="fa fa-calendar"
                   style="margin-right: 10px"
                   ></span 
-                  >Schedule Meet</label
+                  >Book Meeting</label
                 >
               </div>
             </div>
@@ -913,7 +953,7 @@
                         <div class="testimonial-author">
                           <div class="author-info">
                             <h4 class="author-name">Amnan Hussain</h4>
-                            <span class="author-position">Senior Developer, Tech Solutions</span>
+                            <span class="author-position">Infinity Edge Technology</span>
                           </div>
                           <div class="rating">
                             <span class="fa fa-star"></span>
@@ -1934,68 +1974,107 @@
         <div class="schedule-card right-cards">
           <div class="card-wrap">
             <div class="section-header">
-              <span class="header">Book Appointment</span>
+              <span class="header">Schedule a Meeting</span>
             </div>
-            <div
-              id="loadingMessage"
-              style="display: none; text-align: center; margin-top: 20px"
-            >
-              Wait for Meeting...
-            </div>
-            <button
-              id="loadCalendlyButton"
-              style="
-                width: 100%;
-                max-width: 200px;
-                font-size: 14px;
-                text-transform: uppercase;
-                background-color: black;
-                color: white;
-                border: none;
-                padding: 10px 15px;
-                border-radius: 4px;
-                cursor: pointer;
-                display: block;
-                margin: 80px auto 0;
-                text-align: center;
-                transition: background-color 0.3s ease;
-              "
-            >
-              Set Up Meeting
-            </button>
             
-            <script>
-              // Button handlers for Calendly button
-              document.addEventListener('DOMContentLoaded', function() {
-                const button = document.getElementById('loadCalendlyButton');
-                if (button) {
-                  // Remove inline handlers and use proper event listeners
-                  button.addEventListener('mouseover', function() {
-                    this.style.backgroundColor = '#0e6655';
-                  });
-                  
-                  button.addEventListener('mouseout', function() {
-                    this.style.backgroundColor = 'black';
-                  });
-                }
-              });
-            </script>
+            <!-- Modern Hero Section -->
+            <div class="schedule-hero">
+              <div class="hero-content">
+                <div class="hero-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </div>
+                <h2>Let's Connect & Collaborate</h2>
+                <p>Ready to bring your ideas to life? Schedule a free consultation to discuss your project, explore solutions, and plan your next steps together.</p>
+              </div>
+            </div>
 
-            <div id="loadingMessage" style="text-align: center; display: none; padding: 20px;">
-              <div class="loading-spinner" style="display: inline-block; width: 40px; height: 40px; border: 3px solid rgba(14, 102, 85, 0.3); border-radius: 50%; border-top-color: #0e6655; animation: spin 1s ease-in-out infinite;"></div>
-              <p style="margin-top: 10px; font-weight: 500;">Loading your calendar...</p>
+            <!-- Meeting Types Grid -->
+            <div class="meeting-types">
+              <div class="meeting-type-card active" data-duration="30">
+                <div class="meeting-icon">
+                  <i class="fa fa-comments"></i>
+                </div>
+                <h3>Quick Chat</h3>
+                <p class="duration">30 minutes</p>
+                <p class="description">Perfect for initial discussions and project exploration</p>
+                <ul class="features">
+                  <li><i class="fa fa-check"></i> Project overview</li>
+                  <li><i class="fa fa-check"></i> Requirements discussion</li>
+                  <li><i class="fa fa-check"></i> Technology suggestions</li>
+                </ul>
+              </div>
+              
+              <div class="meeting-type-card" data-duration="60">
+                <div class="meeting-icon">
+                  <i class="fa fa-cogs"></i>
+                </div>
+                <h3>Technical Deep Dive</h3>
+                <p class="duration">60 minutes</p>
+                <p class="description">Comprehensive discussion for complex projects</p>
+                <ul class="features">
+                  <li><i class="fa fa-check"></i> Detailed planning</li>
+                  <li><i class="fa fa-check"></i> Architecture review</li>
+                  <li><i class="fa fa-check"></i> Timeline & budget</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- What to Expect Section -->
+            <div class="expectations-section">
+              <h3>What to Expect</h3>
+              <div class="expectations-grid">
+                <div class="expectation-item">
+                  <div class="expectation-icon">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <h4>Personal Consultation</h4>
+                  <p>One-on-one discussion tailored to your specific needs and goals</p>
+                </div>
+                <div class="expectation-item">
+                  <div class="expectation-icon">
+                    <i class="fa fa-lightbulb-o"></i>
+                  </div>
+                  <h4>Expert Insights</h4>
+                  <p>Professional recommendations and innovative solutions for your project</p>
+                </div>
+                <div class="expectation-item">
+                  <div class="expectation-icon">
+                    <i class="fa fa-clock-o"></i>
+                  </div>
+                  <h4>Flexible Timing</h4>
+                  <p>Choose a time that works best for your schedule across different time zones</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="cta-section">
+              <button id="loadCalendlyButton" class="modern-cta-button">
+                <span class="button-icon">
+                  <i class="fa fa-calendar"></i>
+                </span>
+                <span class="button-text">Book Your Session</span>
+                <span class="button-arrow">
+                  <i class="fa fa-arrow-right"></i>
+                </span>
+              </button>
+              <p class="cta-note">
+                <i class="fa fa-shield"></i>
+                Free consultation • No commitment required • Instant confirmation
+              </p>
+            </div>
+
+            <!-- Loading States -->
+            <div id="loadingMessage" class="loading-container">
+              <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h3>Setting up your calendar...</h3>
+                <p>Please wait while we prepare your booking interface</p>
+              </div>
             </div>
             
-            <div
-              class="calendly-inline-widget"
-              style="min-width: 320px; height: 1200px; display: none"
-            ></div>
-            
-            <style>
-              @keyframes spin {
-                to { transform: rotate(360deg); }
-              }
-            </style>
+            <!-- Calendly Widget Container -->
+            <div class="calendly-inline-widget" style="min-width: 320px; height: 1200px; display: none"></div>
           </div>
         </div>
       </div>
