@@ -120,17 +120,237 @@
         var fullname = document.getElementById("fullname").value;
         var email = document.getElementById("email").value;
         var message = document.getElementById("message").value;
+        var projectType = document.querySelector('input[name="project_type"]:checked');
 
-        // Check if any field is empty
+        // Check if required fields are empty
         if (!fullname || !email || !message) {
-          alert("Please fill out all fields.");
+          alert("Please fill out all required fields (Name, Email, and Project Details).");
           return false; // Stop the form from submitting
+        }
+
+        // Check if project type is selected
+        if (!projectType) {
+          alert("Please select a project type.");
+          return false;
         }
 
         // Validate email format
         if (!validateEmail(email)) {
           alert("Please enter a valid email address.");
           return false;
+        }
+
+        return true; // Allow form submission
+      }
+
+      // Map show/hide functionality
+      function showMap() {
+        var mapSection = document.getElementById("mapSection");
+        if (mapSection) {
+          mapSection.style.display = "block";
+          mapSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          
+          // Load Google Maps if not already loaded
+          loadGoogleMaps();
+        }
+      }
+
+      function hideMap() {
+        var mapSection = document.getElementById("mapSection");
+        if (mapSection) {
+          mapSection.style.display = "none";
+        }
+      }
+
+      // Google Maps loader
+      function loadGoogleMaps() {
+        // Check if map is already loaded
+        if (window.google && window.google.maps) {
+          initializeMap();
+          return;
+        }
+
+        // Check if script is already being loaded
+        if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+          return;
+        }
+
+        // For now, let's use a fallback solution since the API key might be invalid
+        // You can replace this with your own Google Maps API key
+        initializeMapFallback();
+      }
+
+             // Fallback map function using OpenStreetMap/Leaflet or embedded map
+      function initializeMapFallback() {
+        var mapContainer = document.getElementById('gmap_canvas');
+        if (!mapContainer) return;
+
+        // Clear loading content
+        mapContainer.innerHTML = '';
+
+        // Create an embedded OpenStreetMap or use an iframe solution
+        mapContainer.innerHTML = `
+          <div style="
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+          ">
+            <!-- Interactive Map Iframe -->
+            <iframe 
+              src="https://www.openstreetmap.org/export/embed.html?bbox=74.2587%2C31.4204%2C74.4587%2C31.6204&layer=mapnik&marker=31.5204%2C74.3587" 
+              style="
+                width: 100%; 
+                height: 100%; 
+                border: none; 
+                border-radius: 12px;
+                filter: hue-rotate(200deg) saturate(0.8) brightness(1.1);
+              "
+              title="Faisal Hanif Location - Lahore, Pakistan"
+              loading="lazy">
+            </iframe>
+            
+            <!-- Custom Overlay with Contact Info -->
+            <div style="
+              position: absolute;
+              top: 20px;
+              right: 20px;
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(10px);
+              padding: 16px 20px;
+              border-radius: 16px;
+              box-shadow: 0 8px 25px rgba(14, 102, 85, 0.2);
+              border: 1px solid rgba(14, 102, 85, 0.1);
+              max-width: 200px;
+              font-family: 'Poppins', sans-serif;
+            ">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <div style="
+                  width: 32px;
+                  height: 32px;
+                  background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                ">
+                  <i class="fa fa-map-marker" style="color: white; font-size: 14px;"></i>
+                </div>
+                <div>
+                  <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #0e6655;">Faisal Hanif</h4>
+                  <p style="margin: 0; font-size: 11px; color: #666;">Frontend Developer</p>
+                </div>
+              </div>
+              
+              <div style="margin-bottom: 12px;">
+                <p style="margin: 0 0 4px 0; font-size: 12px; color: #333; font-weight: 500;">
+                  <i class="fa fa-map-marker" style="color: #0e6655; margin-right: 6px; font-size: 11px;"></i>
+                  Lahore, Pakistan
+                </p>
+                <p style="margin: 0 0 4px 0; font-size: 12px; color: #333; font-weight: 500;">
+                  <i class="fa fa-clock-o" style="color: #0e6655; margin-right: 6px; font-size: 11px;"></i>
+                  GMT+5 (PKT)
+                </p>
+              </div>
+              
+              <a href="mailto:mehrfaisal111@gmail.com" style="
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 12px;
+                text-decoration: none;
+                font-size: 11px;
+                font-weight: 600;
+                width: 100%;
+                justify-content: center;
+                transition: all 0.3s ease;
+              " onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(14, 102, 85, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <i class="fa fa-envelope" style="font-size: 10px;"></i>
+                Contact Me
+              </a>
+            </div>
+            
+            <!-- Location Details at Bottom -->
+            <div style="
+              position: absolute;
+              bottom: 20px;
+              left: 20px;
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(10px);
+              padding: 12px 16px;
+              border-radius: 12px;
+              box-shadow: 0 4px 15px rgba(14, 102, 85, 0.15);
+              border: 1px solid rgba(14, 102, 85, 0.1);
+              font-family: 'Poppins', sans-serif;
+            ">
+              <p style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #0e6655;">
+                📍 My Work Location
+              </p>
+              <p style="margin: 0; font-size: 11px; color: #666; line-height: 1.4;">
+                Available for remote work worldwide<br>
+                Local meetings in Lahore available
+              </p>
+            </div>
+          </div>
+        `;
+      }
+
+      // Initialize Google Map (keeping this for future use with valid API key)
+      function initializeMap() {
+        var mapContainer = document.getElementById('gmap_canvas');
+        if (!mapContainer) return;
+
+        // Lahore, Pakistan coordinates
+        var myLocation = { lat: 31.5204, lng: 74.3587 };
+
+        // Clear loading content
+        mapContainer.innerHTML = '';
+
+        try {
+          var map = new google.maps.Map(mapContainer, {
+            zoom: 13,
+            center: myLocation,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+          });
+
+          // Add marker
+          var marker = new google.maps.Marker({
+            position: myLocation,
+            map: map,
+            title: 'Faisal Hanif - Frontend Developer',
+          });
+
+          // Add info window
+          var infoWindow = new google.maps.InfoWindow({
+            content: `
+              <div style="font-family: 'Poppins', sans-serif; padding: 10px; max-width: 250px;">
+                <h3 style="margin: 0 0 8px 0; color: #0e6655; font-size: 16px; font-weight: 600;">Faisal Hanif</h3>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">Frontend Developer</p>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;"><strong>Location:</strong> Lahore, Pakistan</p>
+                <p style="margin: 0 0 12px 0; color: #666; font-size: 13px;"><strong>Timezone:</strong> GMT+5 (PKT)</p>
+                <a href="mailto:mehrfaisal111@gmail.com" style="background: #0e6655; color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 500; display: inline-block;">
+                  Contact Me
+                </a>
+              </div>
+            `
+          });
+
+          // Show info window when marker is clicked
+          marker.addListener('click', function() {
+            infoWindow.open(map, marker);
+          });
+
+        } catch (error) {
+          console.error('Error initializing Google Maps:', error);
+          // Fallback to the alternative map
+          initializeMapFallback();
         }
       }
     </script>
@@ -144,14 +364,30 @@
     </style>
 
     <script defer>
-      // Contact form submission handler - defer until needed
+      // Contact form submission handler - Fixed version
       document.addEventListener("DOMContentLoaded", function() {
         const contactForm = document.getElementById("contactForm");
         if (contactForm) {
           contactForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
+            // First validate the form
+            if (!validateForm()) {
+              return false;
+            }
+
             var form = this;
+            var submitBtn = form.querySelector('.modern-submit-btn');
+            var btnText = submitBtn.querySelector('.btn-text');
+            var btnIcon = submitBtn.querySelector('.btn-icon');
+            var originalText = btnText.textContent;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.textContent = 'Sending...';
+            btnIcon.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            submitBtn.style.opacity = '0.7';
+
             var data = new FormData(form);
 
             fetch(form.action, {
@@ -161,54 +397,188 @@
                 Accept: "application/json",
               },
             })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.ok) {
-                  alert("Thank you for your submission!");
+              .then((response) => {
+                if (response.ok) {
+                  return response.json();
                 } else {
-                  alert("There was a problem with your submission. Please try again.");
+                  throw new Error('Network response was not ok');
                 }
               })
+              .then((data) => {
+                // Success
+                alert("Thank you for your message! I'll get back to you within 24 hours.");
+                form.reset(); // Clear the form
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.textContent = originalText;
+                btnIcon.innerHTML = '<i class="fa fa-paper-plane"></i>';
+                submitBtn.style.opacity = '1';
+              })
               .catch((error) => {
-                alert("There was a problem with your submission: " + error.message);
+                // Error handling
+                console.error('Form submission error:', error);
+                alert("There was a problem sending your message. Please try again or contact me directly at mehrfaisal111@gmail.com");
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.textContent = originalText;
+                btnIcon.innerHTML = '<i class="fa fa-paper-plane"></i>';
+                submitBtn.style.opacity = '1';
               });
           });
         }
       });
     </script>
     <script defer>
-      // Portfolio filter functionality - optimize and defer
+      // Enhanced Portfolio filter functionality with smooth animations
       document.addEventListener("DOMContentLoaded", function () {
         const allWorksItems = document.querySelectorAll(".works-item");
+        const filterButtons = document.querySelectorAll('.filter-btn');
         const radioButtons = document.querySelectorAll('input[name="menu-list"]');
-        if (!allWorksItems.length || !radioButtons.length) return;
+        const projectsGrid = document.querySelector('.projects-grid');
+        const loadingState = document.querySelector('.projects-loading');
+        const emptyState = document.querySelector('.works-empty-state');
+        
+        if (!allWorksItems.length || !filterButtons.length) return;
 
-        // Attach event listeners more efficiently with delegation if possible
+        // Initialize filter system
+        initializeFilters();
+
+        function initializeFilters() {
+          // Add click event listeners to filter buttons
+          filterButtons.forEach((button) => {
+            button.addEventListener('click', handleFilterClick);
+          });
+
+          // Add change event listeners to radio buttons for backward compatibility
+          radioButtons.forEach((radio) => {
+            radio.addEventListener('change', handleRadioChange, { passive: true });
+          });
+        }
+
+        function handleFilterClick(e) {
+          e.preventDefault();
+          const button = e.currentTarget;
+          const category = button.getAttribute('data-category');
+          const radio = document.getElementById(category);
+          
+          if (radio) {
+            radio.checked = true;
+            updateActiveFilter(button);
+            filterWorks(category);
+          }
+        }
+
         function handleRadioChange() {
           const category = this.id;
+          const button = document.querySelector(`[data-category="${category}"]`);
+          if (button) {
+            updateActiveFilter(button);
+          }
           filterWorks(category);
         }
 
-        // Use passive event listeners for better performance
-        radioButtons.forEach((radio) =>
-          radio.addEventListener("change", handleRadioChange, { passive: true })
-        );
+        function updateActiveFilter(activeButton) {
+          // Remove active class from all filter buttons
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          // Add active class to clicked button
+          activeButton.classList.add('active');
+        }
 
         function filterWorks(category) {
+          // Show loading state
+          showLoadingState();
+
           // Use requestAnimationFrame for smoother UI updates
           requestAnimationFrame(() => {
-            allWorksItems.forEach((item) => {
-              item.style.display =
-                category === "All" ||
-                item.getAttribute("data-category") === category
-                  ? "block"
-                  : "none";
-            });
+            setTimeout(() => {
+              let visibleCount = 0;
+              
+              allWorksItems.forEach((item, index) => {
+                const itemCategory = item.getAttribute("data-category");
+                const shouldShow = category === "All" || itemCategory === category;
+                
+                if (shouldShow) {
+                  visibleCount++;
+                  item.classList.remove('fade-out');
+                  item.classList.add('fade-in');
+                  item.style.display = "block";
+                  
+                  // Add staggered animation delay
+                  setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0) scale(1)';
+                  }, index * 100);
+                } else {
+                  item.classList.remove('fade-in');
+                  item.classList.add('fade-out');
+                  item.style.opacity = '0';
+                  item.style.transform = 'translateY(30px) scale(0.95)';
+                  
+                  setTimeout(() => {
+                    item.style.display = "none";
+                  }, 300);
+                }
+              });
+
+              // Hide loading state and show results
+              setTimeout(() => {
+                hideLoadingState();
+                
+                // Show empty state if no items found
+                if (visibleCount === 0 && category !== "All") {
+                  showEmptyState();
+                } else {
+                  hideEmptyState();
+                }
+              }, 500);
+            }, 300);
           });
         }
-      });
 
-      // Remove redundant map loading code as it's already handled by the optimized version
+        function showLoadingState() {
+          if (loadingState) {
+            loadingState.style.display = 'flex';
+            hideEmptyState();
+          }
+        }
+
+        function hideLoadingState() {
+          if (loadingState) {
+            loadingState.style.display = 'none';
+          }
+        }
+
+        function showEmptyState() {
+          if (emptyState) {
+            emptyState.style.display = 'block';
+          }
+        }
+
+        function hideEmptyState() {
+          if (emptyState) {
+            emptyState.style.display = 'none';
+          }
+        }
+
+        // Add smooth hover effects for project cards
+        allWorksItems.forEach(item => {
+          item.addEventListener('mouseenter', function() {
+            this.style.willChange = 'transform';
+          });
+          
+          item.addEventListener('mouseleave', function() {
+            this.style.willChange = 'auto';
+          });
+        });
+
+        // Initialize with "All" filter active
+        const allFilter = document.querySelector('[data-category="All"]');
+        if (allFilter) {
+          allFilter.classList.add('active');
+        }
+      });
     </script>
 
     <script defer>
@@ -2022,304 +2392,509 @@
 
         <div class="works-card right-cards">
           <div class="card-wrap">
-            <div class="section-header">
-              <span class="header">Works</span>
-            </div>
-            <div class="menu-list">
-              <ul>
-                <li class="">
-                  <input type="radio" name="menu-list" id="All" checked />
-                  <label class="coustom-menu" for="All">All</label>
-                </li>
-                <li>
-                  <input type="radio" name="menu-list" id="Reactjs" />
-                  <label class="coustom-menu" for="Reactjs">Reactjs</label>
-                </li>
-                <li>
-                  <input type="radio" name="menu-list" id="Nextjs" />
-                  <label class="coustom-menu" for="Nextjs">Nextjs</label>
-                </li>
-                <li>
-                  <input type="radio" name="menu-list" id="FullStack" />
-                  <label class="coustom-menu" for="FullStack">MERN</label>
-                </li>
-                <li>
-                  <input type="radio" name="menu-list" id="ReactNative" />
-                  <label class="coustom-menu" for="ReactNative"
-                    >ReactNative</label
-                  >
-                </li>
-               
-              </ul>
+            
+            <!-- Modern Works Hero Section -->
+            <div class="works-hero-section">
+              <div class="works-hero-content">
+                <div class="hero-badge">
+                  <div class="status-dot"></div>
+                  <span>Portfolio Showcase</span>
+                </div>
+                <h1 class="works-title">
+                  Featured <span class="highlight">Projects</span>
+                </h1>
+                <p class="works-description">
+                  Explore my collection of modern web applications, mobile solutions, and full-stack projects that showcase cutting-edge technology and innovative design.
+                </p>
+                <div class="works-stats">
+                  <div class="works-stat">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Projects</span>
+                  </div>
+                  <div class="works-stat">
+                    <span class="stat-number">5+</span>
+                    <span class="stat-label">Technologies</span>
+                  </div>
+                  <div class="works-stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Responsive</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
+            <!-- Modern Filter System -->
+            <div class="works-filter-section">
+              <div class="filter-container">
+                <div class="filter-item">
+                  <input type="radio" name="menu-list" id="All" checked style="display: none;" />
+                  <label class="filter-btn active" for="All" data-category="All">
+                    <i class="fa fa-th-large"></i>
+                    <span>All Projects</span>
+                    <span class="filter-count">10</span>
+                  </label>
+                </div>
+                <div class="filter-item">
+                  <input type="radio" name="menu-list" id="Reactjs" style="display: none;" />
+                  <label class="filter-btn" for="Reactjs" data-category="Reactjs">
+                    <i class="fa fa-code"></i>
+                    <span>React.js</span>
+                    <span class="filter-count">2</span>
+                  </label>
+                </div>
+                <div class="filter-item">
+                  <input type="radio" name="menu-list" id="Nextjs" style="display: none;" />
+                  <label class="filter-btn" for="Nextjs" data-category="Nextjs">
+                    <i class="fa fa-rocket"></i>
+                    <span>Next.js</span>
+                    <span class="filter-count">3</span>
+                  </label>
+                </div>
+                <div class="filter-item">
+                  <input type="radio" name="menu-list" id="FullStack" style="display: none;" />
+                  <label class="filter-btn" for="FullStack" data-category="FullStack">
+                    <i class="fa fa-server"></i>
+                    <span>MERN Stack</span>
+                    <span class="filter-count">3</span>
+                  </label>
+                </div>
+                <div class="filter-item">
+                  <input type="radio" name="menu-list" id="ReactNative" style="display: none;" />
+                  <label class="filter-btn" for="ReactNative" data-category="ReactNative">
+                    <i class="fa fa-mobile"></i>
+                    <span>React Native</span>
+                    <span class="filter-count">2</span>
+                  </label>
+                </div>
+              </div>
+            </div>
 
+            <!-- Modern Projects Grid -->
             <div class="section-content works-section-content">
+              <div class="projects-grid">
 
-              <div class="works-item" data-category="FullStack">
-                <div class="img">
-                  <a href="#">
-                    <img src="imgs/Dashboard.webp" alt="" />
-                  </a>
-                </div>
-                <div class="dics">
-                  <a href="#">Smart Health Care</a>
-                </div>
-
-                <div class="button-container">
-                  <a
-                    href="https://smart-health-care.vercel.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button id="siteViewButton">Site View</button>
-                  </a>
-                  <a
-                    href="https://github.com/FaisalHanif12/Smart-health-Care"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button id="githubLinkButton">GitHub Link</button>
-                  </a>
-                </div>
-              </div>
-              
-
-            
-              <div class="works-item" data-category="ReactNative">
-                <div class="img">
-                  <a href="#">
-                    <img src="imgs/Smart Gallery.webp" alt="" />
-                  </a>
-                </div>
-                <div class="dics">
-                  <a href="#">Smart Gallery App</a>
-                </div>
-
-                <div class="button-container">
-                  <a
-                    href="https://smartgallery-display.netlify.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button id="siteViewButton">Site View</button>
-                  </a>
-                  <a
-                    href="https://github.com/FaisalHanif12/SmartGallery"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button id="githubLinkButton">GitHub Link</button>
-                  </a>
-                </div>
-              </div>
-
-
-              <div class="works-item" data-category="Reactjs">
-                <div class="img">
-                  <a href="#">
-                    <img src="imgs/Echoai.webp" alt="" />
-                  </a>
-                </div>
-                <div class="dics">
-                  <a href="#">Echo AI</a>
-                </div>
-
-                <div class="button-container">
-                  <a
-                    href="https://echoaai.netlify.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button id="siteViewButton">Site View</button>
-                  </a>
-                  <a
-                    href="https://github.com/FaisalHanif12/Echoai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button id="githubLinkButton">GitHub Link</button>
-                  </a>
-                </div>
-              </div>
-
-              
-             
+                <!-- Smart Health Care Project -->
                 <div class="works-item" data-category="FullStack">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/Shop.webp" alt="" />
-                    </a>
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/Dashboard.webp" alt="Smart Health Care Dashboard" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
                   </div>
-                  <div class="dics">
-                    <a href="#">Soledeck</a>
-                  </div>
-
-                  <div class="button-container">
-                    <a
-                      href="https://soledeckf.vercel.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="siteViewButton">Site View</button>
-                    </a>
-                    <a
-                      href="https://github.com/FaisalHanif12/Soledeck"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="githubLinkButton">GitHub Link</button>
-                    </a>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">Smart Health Care</h3>
+                      <span class="project-category">Full Stack</span>
+                    </div>
+                    <p class="project-description">
+                      A comprehensive healthcare management system with patient tracking, appointment scheduling, and medical records management.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">React</span>
+                      <span class="tech-tag">Node.js</span>
+                      <span class="tech-tag">MongoDB</span>
+                      <span class="tech-tag">Express</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/Smart-health-Care" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
 
-
+                <!-- Smart Gallery App Project -->
                 <div class="works-item" data-category="ReactNative">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/Financial-fusion.webp" alt="" />
-                    </a>
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/Smart Gallery.webp" alt="Smart Gallery App" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
                   </div>
-                  <div class="dics">
-                    <a href="#">Financial-fusion</a>
-                  </div>
-
-                  <div class="button-container">
-                    <a
-                      href="https://financial-fusion.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="siteViewButton">Site View</button>
-                    </a>
-                    <a
-                      href="https://github.com/FaisalHanif12/FinancialFusion"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="githubLinkButton">GitHub Link</button>
-                    </a>
-                  </div>
-                </div>
-            
-             
-                <div class="works-item" data-category="Nextjs">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/Home.webp" alt="" />
-                    </a>
-                  </div>
-                  <div class="dics">
-                    <a href="#">YOOM</a>
-                  </div>
-                  <div class="button-container">
-                    <a
-                      href="https://faisal-yoom.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="siteViewButton">Site View</button>
-                    </a>
-                    <a
-                      href="https://github.com/FaisalHanif12/YOOM"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="githubLinkButton">GitHub Link</button>
-                    </a>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">Smart Gallery App</h3>
+                      <span class="project-category">React Native</span>
+                    </div>
+                    <p class="project-description">
+                      An intelligent photo gallery application with advanced sorting, filtering, and AI-powered image recognition features.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">React Native</span>
+                      <span class="tech-tag">Expo</span>
+                      <span class="tech-tag">Firebase</span>
+                      <span class="tech-tag">AI/ML</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/SmartGallery" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
 
+                <!-- Echo AI Project -->
+                <div class="works-item featured" data-category="Reactjs">
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/Echoai.webp" alt="Echo AI Application" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Featured</div>
+                  </div>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">Echo AI</h3>
+                      <span class="project-category">React.js</span>
+                    </div>
+                    <p class="project-description">
+                      An advanced AI-powered conversational interface with natural language processing and intelligent response generation.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">React</span>
+                      <span class="tech-tag">OpenAI</span>
+                      <span class="tech-tag">TypeScript</span>
+                      <span class="tech-tag">Tailwind</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/Echoai" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
 
-
+                <!-- Soledeck Project -->
                 <div class="works-item" data-category="FullStack">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/doctors.png" alt="" />
-                    </a>
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/Shop.webp" alt="Soledeck E-commerce Platform" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
                   </div>
-                  <div class="dics">
-                    <a href="#">Dosnexa</a>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">Soledeck</h3>
+                      <span class="project-category">E-commerce</span>
+                    </div>
+                    <p class="project-description">
+                      A modern e-commerce platform for sneakers with advanced filtering, payment integration, and inventory management.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">Next.js</span>
+                      <span class="tech-tag">Stripe</span>
+                      <span class="tech-tag">MongoDB</span>
+                      <span class="tech-tag">Redux</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/Soledeck" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
                   </div>
+                </div>
 
-                  <div class="button-container">
-                    <a
-                      href="https://dosnexa.vercel.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="siteViewButton">Site View</button>
-                    </a>
-                    <a
-                      href="https://github.com/FaisalHanif12/Dosnexa"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="githubLinkButton">GitHub Link</button>
-                    </a>
+                <!-- Financial Fusion Project -->
+                <div class="works-item" data-category="ReactNative">
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/Financial-fusion.webp" alt="Financial Fusion App" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
+                  </div>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">Financial Fusion</h3>
+                      <span class="project-category">FinTech</span>
+                    </div>
+                    <p class="project-description">
+                      A comprehensive financial management application with expense tracking, budget planning, and investment analytics.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">React Native</span>
+                      <span class="tech-tag">Charts.js</span>
+                      <span class="tech-tag">SQLite</span>
+                      <span class="tech-tag">Redux</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/FinancialFusion" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
-                      
-                  
-            
-                <div class="works-item" data-category="Reactjs">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/dsa.webp" alt="" />
-                      <div class="info"></div>
-                    </a>
-                  </div>
-                  <div class="dics">
-                    <a href="#">DSA-Tracker</a>
-                  </div>
-                  <div class="button-container">
-                    <a
-                      href="https://faisal-dsa-tracker.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="siteViewButton">Site View</button>
-                    </a>
-                    <a
-                      href="https://github.com/FaisalHanif12/DSA-Tracker-"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="githubLinkButton">GitHub Link</button>
-                    </a>
-                  </div>
-                </div>
-             
-            
+
+                <!-- YOOM Project -->
                 <div class="works-item" data-category="Nextjs">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/Weather.webp" alt="" />
-                    </a>
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/Home.webp" alt="YOOM Video Conferencing" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
                   </div>
-                  <div class="dics">
-                    <a href="#">Live Search Weather</a>
-                  </div>
-
-                  <div class="button-container">
-                    <a
-                      href="https://weather-faisal.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="siteViewButton">Site View</button>
-                    </a>
-                    <a
-                      href="https://github.com/FaisalHanif12/Live-search-weather"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button id="githubLinkButton">GitHub Link</button>
-                    </a>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">YOOM</h3>
+                      <span class="project-category">Communication</span>
+                    </div>
+                    <p class="project-description">
+                      A modern video conferencing platform with real-time collaboration, screen sharing, and meeting management features.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">Next.js</span>
+                      <span class="tech-tag">WebRTC</span>
+                      <span class="tech-tag">Socket.io</span>
+                      <span class="tech-tag">Clerk Auth</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/YOOM" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
-             
-             
+
+                <!-- Dosnexa Project -->
+                <div class="works-item" data-category="FullStack">
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/doctors.png" alt="Dosnexa Medical Platform" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
+                  </div>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">Dosnexa</h3>
+                      <span class="project-category">Healthcare</span>
+                    </div>
+                    <p class="project-description">
+                      A comprehensive medical platform connecting patients with doctors, featuring appointment booking and telemedicine capabilities.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">Next.js</span>
+                      <span class="tech-tag">Prisma</span>
+                      <span class="tech-tag">PostgreSQL</span>
+                      <span class="tech-tag">Shadcn/ui</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/Dosnexa" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DSA Tracker Project -->
+                <div class="works-item" data-category="Reactjs">
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/dsa.webp" alt="DSA Tracker Application" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
+                  </div>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">DSA Tracker</h3>
+                      <span class="project-category">Education</span>
+                    </div>
+                    <p class="project-description">
+                      A comprehensive data structures and algorithms learning platform with progress tracking and coding challenges.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">React</span>
+                      <span class="tech-tag">Material-UI</span>
+                      <span class="tech-tag">Local Storage</span>
+                      <span class="tech-tag">PWA</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/DSA-Tracker-" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Live Search Weather Project -->
+                <div class="works-item" data-category="Nextjs">
+                  <div class="project-image-container">
+                    <div class="img">
+                      <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer">
+                        <img src="imgs/Weather.webp" alt="Live Search Weather App" />
+                      </a>
+                    </div>
+                    <div class="project-overlay">
+                      <div class="overlay-content">
+                        <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                          <i class="fa fa-eye"></i>
+                          <span>Live Preview</span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="project-status completed">Live</div>
+                  </div>
+                  <div class="project-content">
+                    <div class="project-header">
+                      <h3 class="project-title">Live Search Weather</h3>
+                      <span class="project-category">Utility</span>
+                    </div>
+                    <p class="project-description">
+                      A real-time weather application with live search functionality, detailed forecasts, and location-based services.
+                    </p>
+                    <div class="project-tech">
+                      <span class="tech-tag">Next.js</span>
+                      <span class="tech-tag">Weather API</span>
+                      <span class="tech-tag">Geolocation</span>
+                      <span class="tech-tag">CSS3</span>
+                    </div>
+                    <div class="project-actions">
+                      <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                        <i class="fa fa-external-link"></i>
+                        <span>Live Demo</span>
+                      </a>
+                      <a href="https://github.com/FaisalHanif12/Live-search-weather" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                        <i class="fa fa-github"></i>
+                        <span>Source Code</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Loading State -->
+              <div class="projects-loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <span>Loading projects...</span>
+              </div>
+
+              <!-- Empty State -->
+              <div class="works-empty-state" style="display: none;">
+                <div class="empty-icon">
+                  <i class="fa fa-search"></i>
+                </div>
+                <h3 class="empty-message">No projects found</h3>
+                <p class="empty-description">Try selecting a different category to see more projects.</p>
+              </div>
+
             </div>
           </div>
         </div>
@@ -2609,11 +3184,143 @@
 
         <div class="contact-card right-cards">
           <div class="card-wrap">
-            <div class="section-header">
-              <span class="header">Get In Touch</span>
+            
+            <!-- Modern Contact Hero Section -->
+            <div class="contact-hero-section">
+              <div class="contact-hero-content">
+                <div class="hero-badge">
+                  <div class="status-dot"></div>
+                  <span>Available for Projects</span>
+                </div>
+                <h1 class="contact-title">Let's Create Something <span class="highlight">Amazing</span> Together</h1>
+                <p class="contact-description">
+                  Ready to bring your ideas to life? Whether you need a stunning website, a powerful web application, 
+                  or expert consultation, I'm here to help turn your vision into reality.
+                </p>
+                <div class="contact-stats">
+                  <div class="contact-stat">
+                    <span class="stat-number">24h</span>
+                    <span class="stat-label">Response Time</span>
+                  </div>
+                  <div class="contact-stat">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Projects Completed</span>
+                  </div>
+                  <div class="contact-stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Client Satisfaction</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="section-content contacts-section-content">
-              <div class="contact-top">
+
+            <!-- Contact Methods Grid -->
+            <div class="contact-methods-section">
+              <div class="contact-methods-grid">
+                
+                <!-- Email Card -->
+                <div class="contact-method-card featured">
+                  <div class="method-icon">
+                    <i class="fa fa-envelope"></i>
+                  </div>
+                  <div class="method-content">
+                    <h3>Email Me</h3>
+                    <p class="method-description">Best for detailed project discussions</p>
+                    <div class="method-info">
+                      <span class="info-value">mehrfaisal111@gmail.com</span>
+                      <span class="response-time">
+                        <i class="fa fa-clock-o"></i>
+                        Usually responds within 2-4 hours
+                      </span>
+                    </div>
+                    <a href="mailto:mehrfaisal111@gmail.com" class="method-action primary">
+                      <i class="fa fa-paper-plane"></i>
+                      <span>Send Email</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Phone Card -->
+                <div class="contact-method-card">
+                  <div class="method-icon">
+                    <i class="fa fa-phone"></i>
+                  </div>
+                  <div class="method-content">
+                    <h3>Call Me</h3>
+                    <p class="method-description">For urgent matters and quick consultations</p>
+                    <div class="method-info">
+                      <span class="info-value">+92 314 8166354</span>
+                      <span class="response-time">
+                        <i class="fa fa-clock-o"></i>
+                        Available Mon-Fri, 9AM-6PM (GMT+5)
+                      </span>
+                    </div>
+                    <a href="tel:+923148166354" class="method-action secondary">
+                      <i class="fa fa-phone"></i>
+                      <span>Call Now</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Meeting Card -->
+                <div class="contact-method-card">
+                  <div class="method-icon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <div class="method-content">
+                    <h3>Schedule Meeting</h3>
+                    <p class="method-description">Book a free consultation at your convenience</p>
+                    <div class="method-info">
+                      <span class="info-value">Video Call or Phone</span>
+                      <span class="response-time">
+                        <i class="fa fa-clock-o"></i>
+                        30 or 60 minute sessions available
+                      </span>
+                    </div>
+                    <label for="schedule-card" class="method-action secondary">
+                      <i class="fa fa-calendar-check-o"></i>
+                      <span>Book Meeting</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Location Card -->
+                <div class="contact-method-card">
+                  <div class="method-icon">
+                    <i class="fa fa-map-marker"></i>
+                  </div>
+                  <div class="method-content">
+                    <h3>Location</h3>
+                    <p class="method-description">Based in Pakistan, serving clients worldwide</p>
+                    <div class="method-info">
+                      <span class="info-value">Lahore, Pakistan</span>
+                      <span class="response-time">
+                        <i class="fa fa-globe"></i>
+                        Timezone: GMT+5 (PKT)
+                      </span>
+                    </div>
+                    <button class="method-action secondary" onclick="showMap()">
+                      <i class="fa fa-map"></i>
+                      <span>View Map</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Interactive Map Section -->
+            <div class="map-section" id="mapSection" style="display: none;">
+              <div class="map-header">
+                <h3>
+                  <i class="fa fa-map-marker"></i>
+                  My Location
+                </h3>
+                <button class="close-map-btn" onclick="hideMap()">
+                  <i class="fa fa-times"></i>
+                </button>
+              </div>
+              <div class="map-container">
                 <div class="mapouter">
                   <div
                     id="gmap_canvas"
@@ -2623,6 +3330,8 @@
                       display: flex;
                       justify-content: center;
                       align-items: center;
+                      border-radius: 12px;
+                      overflow: hidden;
                     "
                   >
                     <!-- Placeholder with loading message -->
@@ -2633,74 +3342,298 @@
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        font-size: 20px;
+                        font-size: 18px;
                         color: #666;
+                        background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
                       "
                     >
-                      Loading map...
+                      <div style="text-align: center;">
+                        <div style="width: 40px; height: 40px; border: 3px solid #e3e3e3; border-radius: 50%; border-top: 3px solid var(--dark-blue); animation: spin 1s ease-in-out infinite; margin: 0 auto 15px;"></div>
+                        Loading interactive map...
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="contact-bottom">
-                <div class="info-list">
-                  <ul>
-                    <li>
-                      <strong>Email</strong>
-                      <span>mehrfaisal111@gmail.com</span>
-                    </li>
-                    <li>
-                      <strong>Address</strong>
-                      <span>Lahore, Pakistan</span>
-                    </li>
-                  </ul>
+            <!-- Modern Contact Form -->
+            <div class="modern-contact-form-section">
+              <div class="form-header">
+                <div class="form-icon">
+                  <i class="fa fa-paper-plane"></i>
+                </div>
+                <div class="form-header-content">
+                  <h2>Send Me a Message</h2>
+                  <p>Tell me about your project and let's discuss how I can help bring your vision to life.</p>
                 </div>
               </div>
-            </div>
-            <div class="section-header">
-              <span class="header">Contact Form</span>
-            </div>
-            <div class="section-content contacts-section-content">
+
               <form
                 action="https://formspree.io/f/xjvnlwea"
                 method="POST"
                 id="contactForm"
+                class="modern-contact-form"
                 onsubmit="return validateForm()"
               >
-                <div class="form-group" style="width: 49%">
-                  <input
-                    type="text"
-                    id="fullname"
-                    name="fullname"
-                    placeholder="Enter Your Full Name"
-                    required
-                  />
+                
+                <!-- Form Fields Grid -->
+                <div class="form-fields-grid">
+                  
+                  <!-- Name Field -->
+                  <div class="form-field-wrapper">
+                    <div class="form-field">
+                      <div class="field-icon">
+                        <i class="fa fa-user"></i>
+                      </div>
+                      <div class="field-input">
+                        <label for="fullname">Full Name *</label>
+                        <input
+                          type="text"
+                          id="fullname"
+                          name="fullname"
+                          placeholder="Enter your full name"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Email Field -->
+                  <div class="form-field-wrapper">
+                    <div class="form-field">
+                      <div class="field-icon">
+                        <i class="fa fa-envelope"></i>
+                      </div>
+                      <div class="field-input">
+                        <label for="email">Email Address *</label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          placeholder="Enter your email address"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Phone Field -->
+                  <div class="form-field-wrapper">
+                    <div class="form-field">
+                      <div class="field-icon">
+                        <i class="fa fa-phone"></i>
+                      </div>
+                      <div class="field-input">
+                        <label for="phone">Phone Number</label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          placeholder="Enter your phone number (optional)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Company Field -->
+                  <div class="form-field-wrapper">
+                    <div class="form-field">
+                      <div class="field-icon">
+                        <i class="fa fa-building"></i>
+                      </div>
+                      <div class="field-input">
+                        <label for="company">Company/Organization</label>
+                        <input
+                          type="text"
+                          id="company"
+                          name="company"
+                          placeholder="Enter company name (optional)"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
-                <div class="form-group" style="width: 49%">
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Enter Your Email"
-                    required
-                  />
+
+                <!-- Project Type Selection -->
+                <div class="project-type-section">
+                  <label class="section-label">What type of project are you interested in? *</label>
+                  <div class="project-type-grid">
+                    
+                    <div class="project-type-option">
+                      <input type="radio" id="website" name="project_type" value="website" required>
+                      <label for="website" class="project-type-card">
+                        <div class="project-icon">
+                          <i class="fa fa-globe"></i>
+                        </div>
+                        <span class="project-name">Website Development</span>
+                        <span class="project-desc">Business websites, portfolios, landing pages</span>
+                      </label>
+                    </div>
+
+                    <div class="project-type-option">
+                      <input type="radio" id="webapp" name="project_type" value="webapp">
+                      <label for="webapp" class="project-type-card">
+                        <div class="project-icon">
+                          <i class="fa fa-cogs"></i>
+                        </div>
+                        <span class="project-name">Web Application</span>
+                        <span class="project-desc">Complex web apps, dashboards, SaaS platforms</span>
+                      </label>
+                    </div>
+
+                    <div class="project-type-option">
+                      <input type="radio" id="ecommerce" name="project_type" value="ecommerce">
+                      <label for="ecommerce" class="project-type-card">
+                        <div class="project-icon">
+                          <i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <span class="project-name">E-commerce</span>
+                        <span class="project-desc">Online stores, payment integration, inventory</span>
+                      </label>
+                    </div>
+
+                    <div class="project-type-option">
+                      <input type="radio" id="maintenance" name="project_type" value="maintenance">
+                      <label for="maintenance" class="project-type-card">
+                        <div class="project-icon">
+                          <i class="fa fa-wrench"></i>
+                        </div>
+                        <span class="project-name">Maintenance & Support</span>
+                        <span class="project-desc">Bug fixes, updates, performance optimization</span>
+                      </label>
+                    </div>
+
+                    <div class="project-type-option">
+                      <input type="radio" id="consultation" name="project_type" value="consultation">
+                      <label for="consultation" class="project-type-card">
+                        <div class="project-icon">
+                          <i class="fa fa-lightbulb-o"></i>
+                        </div>
+                        <span class="project-name">Consultation</span>
+                        <span class="project-desc">Technical advice, code review, architecture</span>
+                      </label>
+                    </div>
+
+                    <div class="project-type-option">
+                      <input type="radio" id="other" name="project_type" value="other">
+                      <label for="other" class="project-type-card">
+                        <div class="project-icon">
+                          <i class="fa fa-ellipsis-h"></i>
+                        </div>
+                        <span class="project-name">Other</span>
+                        <span class="project-desc">Custom requirements, unique projects</span>
+                      </label>
+                    </div>
+
+                  </div>
                 </div>
-                <div class="form-group" style="width: 100%; padding-top: 10px">
-                  <textarea
-                    id="message"
-                    name="message"
-                    cols="30"
-                    rows="10"
-                    placeholder="Message"
-                    required
-                  ></textarea>
+
+                <!-- Budget Range -->
+                <div class="budget-section">
+                  <label class="section-label">Project Budget Range</label>
+                  <div class="budget-grid">
+                    
+                    <div class="budget-option">
+                      <input type="radio" id="budget1" name="budget" value="under-1000">
+                      <label for="budget1" class="budget-card">
+                        <span class="budget-range">Under $1,000</span>
+                        <span class="budget-desc">Small projects, basic websites</span>
+                      </label>
+                    </div>
+
+                    <div class="budget-option">
+                      <input type="radio" id="budget2" name="budget" value="1000-5000">
+                      <label for="budget2" class="budget-card">
+                        <span class="budget-range">$1,000 - $5,000</span>
+                        <span class="budget-desc">Medium complexity projects</span>
+                      </label>
+                    </div>
+
+                    <div class="budget-option">
+                      <input type="radio" id="budget3" name="budget" value="5000-10000">
+                      <label for="budget3" class="budget-card">
+                        <span class="budget-range">$5,000 - $10,000</span>
+                        <span class="budget-desc">Complex web applications</span>
+                      </label>
+                    </div>
+
+                    <div class="budget-option">
+                      <input type="radio" id="budget4" name="budget" value="over-10000">
+                      <label for="budget4" class="budget-card">
+                        <span class="budget-range">$10,000+</span>
+                        <span class="budget-desc">Enterprise solutions</span>
+                      </label>
+                    </div>
+
+                  </div>
                 </div>
-                <div class="form-group" style="margin-top: 40px;">
-                  <input type="submit" value="Send Message" />
+
+                <!-- Message Field -->
+                <div class="message-section">
+                  <div class="message-field">
+                    <div class="field-icon">
+                      <i class="fa fa-comment"></i>
+                    </div>
+                    <div class="field-input">
+                      <label for="message">Project Details *</label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        rows="5"
+                        placeholder="Tell me about your project... What are your goals? What features do you need? Any specific requirements or preferences?"
+                        required
+                      ></textarea>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Submit Section -->
+                <div class="submit-section">
+                  <button type="submit" class="modern-submit-btn">
+                    <span class="btn-icon">
+                      <i class="fa fa-paper-plane"></i>
+                    </span>
+                    <span class="btn-text">Send Message</span>
+                    <span class="btn-arrow">
+                      <i class="fa fa-arrow-right"></i>
+                    </span>
+                  </button>
+                  
+                  <div class="submit-info">
+                    <div class="privacy-note">
+                      <i class="fa fa-shield"></i>
+                      <span>Your information is secure and will never be shared with third parties</span>
+                    </div>
+                    <div class="response-promise">
+                      <i class="fa fa-clock-o"></i>
+                      <span>I'll respond within 24 hours with next steps</span>
+                    </div>
+                  </div>
+                </div>
+
               </form>
             </div>
+
+            <!-- Contact CTA Footer -->
+            <div class="contact-cta-footer">
+              <div class="cta-content">
+                <h3>Prefer a Different Approach?</h3>
+                <p>Choose the communication method that works best for you</p>
+              </div>
+              <div class="cta-actions">
+                <label for="schedule-card" class="cta-btn primary">
+                  <i class="fa fa-calendar"></i>
+                  Schedule a Call
+                </label>
+                <a href="mailto:mehrfaisal111@gmail.com" class="cta-btn secondary">
+                  <i class="fa fa-envelope"></i>
+                  Direct Email
+                </a>
+              </div>
+            </div>
+
           </div>
         </div>
 
