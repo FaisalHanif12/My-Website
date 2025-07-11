@@ -449,6 +449,113 @@
         // Initialize smooth animations
         addSmoothAnimations();
       });
+
+      // Modern Certifications Page Functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        // Certification filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const certificationCards = document.querySelectorAll('.certification-card');
+        
+        filterButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter cards
+            certificationCards.forEach(card => {
+              const cardCategory = card.getAttribute('data-category');
+              
+              if (category === 'all' || cardCategory === category) {
+                card.classList.remove('hidden');
+                card.style.display = 'block';
+              } else {
+                card.classList.add('hidden');
+                setTimeout(() => {
+                  if (card.classList.contains('hidden')) {
+                    card.style.display = 'none';
+                  }
+                }, 400);
+              }
+            });
+          });
+        });
+
+        // Add entrance animations for certification cards
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+
+        const cardObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, observerOptions);
+
+        // Observe certification cards
+        certificationCards.forEach((card, index) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(30px)';
+          card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+          cardObserver.observe(card);
+        });
+
+        // Add hover effects for stats
+        const statItems = document.querySelectorAll('.stat-item');
+        statItems.forEach(stat => {
+          stat.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.05)';
+          });
+          
+          stat.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+          });
+        });
+
+        // Animate achievement numbers on scroll
+        const animateNumbers = () => {
+          const numberElements = document.querySelectorAll('.stat-content h3');
+          
+          numberElements.forEach(element => {
+            const finalNumber = element.textContent.replace(/\D/g, '');
+            if (finalNumber) {
+              const suffix = element.textContent.replace(/[0-9]/g, '');
+              let currentNumber = 0;
+              const increment = Math.ceil(finalNumber / 50);
+              
+              const timer = setInterval(() => {
+                currentNumber += increment;
+                if (currentNumber >= finalNumber) {
+                  currentNumber = finalNumber;
+                  clearInterval(timer);
+                }
+                element.textContent = currentNumber + suffix;
+              }, 30);
+            }
+          });
+        };
+
+        // Trigger number animation when stats section is visible
+        const statsObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              animateNumbers();
+              statsObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('.achievement-stats');
+        if (statsSection) {
+          statsObserver.observe(statsSection);
+        }
+      });
       
       // Enhanced typewriter effect with smoother animations
       document.addEventListener('DOMContentLoaded', function() {
@@ -1741,131 +1848,283 @@
         <div class="blogs-card right-cards">
           <div class="card-wrap">
             <div class="section-header">
-              <span class="header">Approvals</span>
+              <span class="header">Professional Certifications</span>
             </div>
-            <div class="section-content blogs-section-content">
-              <div class="blogs-content-wrap">
-                <div class="blog-item">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/React.webp" alt="Check your internet" />
-                      <div class="info">
-                        <span class="ion-android-document"></span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="dics">
-                    <a
-                      class="name"
-                      href="https://www.coursera.org/account/accomplishments/certificate/E5USQYWCKR6Q"
-                    >
-                      <div class="time-period">
-                        <span>18 Nov, 2023 </span>
-                      </div>
-                      React Certificate
-                    </a>
-                    <div class="short-dics">
-                      I engaged in practical, hands-on learning that went beyond
-                      theoretical knowledge. I completed all quizzes and
-                      assignments, applying what I learned directly to build
-                      dynamic and visually appealing web components.
-                    </div>
-                  </div>
+            
+            <!-- Achievement Stats Section -->
+            <div class="achievement-stats">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="fa fa-trophy"></i>
+                </div>
+                <div class="stat-content">
+                  <h3>4+</h3>
+                  <p>Certifications</p>
                 </div>
               </div>
-              <div class="blogs-content-wrap">
-                <div class="blog-item">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/Data.webp" alt="" />
-                      <div class="info">
-                        <span class="ion-android-document"></span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="dics">
-                    <a
-                      class="name"
-                      href="https://www.coursera.org/account/accomplishments/certificate/3YLMQJ6HTBRE"
-                    >
-                      <div class="time-period">
-                        <span>21 Nov, 2023</span>
-                      </div>
-                      Data Storage Certifcate
-                    </a>
-                    <div class="short-dics">
-                      I delved into various aspects of Azure's data services,
-                      gaining hands-on experience with tools and techniques for
-                      efficiently managing and storing data on the cloud. This
-                      certification has equipped me to implement data storage
-                      solutions.
-                    </div>
-                  </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="fa fa-graduation-cap"></i>
+                </div>
+                <div class="stat-content">
+                  <h3>200+</h3>
+                  <p>Learning Hours</p>
                 </div>
               </div>
-              <div class="blogs-content-wrap">
-                <div class="blog-item">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/Frontend.webp" alt="" />
-                      <div class="info">
-                        <span class="ion-android-document"></span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="dics">
-                    <a
-                      class="name"
-                      href="https://www.coursera.org/account/accomplishments/verify/EE42JSYQPZ7D"
-                    >
-                      <div class="time-period">
-                        <span>23 Oct, 2023</span>
-                      </div>
-                      Frontend developer Certifcate
-                    </a>
-                    <div class="short-dics">
-                      I immersed myself in learning the foundational concepts of
-                      ReactJS, including JSX, components, states, and props. I
-                      applied these concepts to develop functional web
-                      applications that are both efficient and scalable. The
-                      hands-on project approach allowed me to directly implement
-                      the theories I learned.
-                    </div>
-                  </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="fa fa-star"></i>
                 </div>
-              </div>
-              <div class="blogs-content-wrap">
-                <div class="blog-item">
-                  <div class="img">
-                    <a href="#">
-                      <img src="imgs/Web.webp" alt="" />
-                      <div class="info">
-                        <span class="ion-android-document"></span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="dics">
-                    <a
-                      class="name"
-                      href="https://www.coursera.org/account/accomplishments/certificate/RKY4CN2NHHR3"
-                    >
-                      <div class="time-period active">
-                        <span>19 Aug, 2023</span>
-                      </div>
-                      Web developer certificate
-                    </a>
-                    <div class="short-dics">
-                      During this intensive training, I engaged with various
-                      learning modules that included live online sessions,
-                      practical exercises, and projects. This hands-on approach
-                      allowed me to understand and apply coding principles
-                      directly to create visually appealing and user-friendly
-                      web interfaces.
-                    </div>
-                  </div>
+                <div class="stat-content">
+                  <h3>2023</h3>
+                  <p>Latest Year</p>
                 </div>
               </div>
             </div>
+
+            <!-- Filter Tabs -->
+            <div class="certification-filters">
+              <button class="filter-btn active" data-category="all">
+                <i class="fa fa-list"></i>
+                All Certifications
+              </button>
+              <button class="filter-btn" data-category="frontend">
+                <i class="fa fa-code"></i>
+                Frontend
+              </button>
+              <button class="filter-btn" data-category="backend">
+                <i class="fa fa-server"></i>
+                Backend
+              </button>
+              <button class="filter-btn" data-category="cloud">
+                <i class="fa fa-cloud"></i>
+                Cloud
+              </button>
+            </div>
+
+            <!-- Modern Certification Cards -->
+            <div class="section-content certifications-section-content">
+              
+              <!-- React Certificate -->
+              <div class="certification-card frontend" data-category="frontend">
+                <div class="cert-header">
+                  <div class="cert-badge">
+                    <i class="fa fa-react"></i>
+                  </div>
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Coursera</span>
+                    <span class="issuer-type">Online Learning Platform</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">Nov 2023</span>
+                  </div>
+                </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/React.webp" alt="React Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/certificate/E5USQYWCKR6Q" 
+                         target="_blank" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="cert-details">
+                    <h3>React Development Mastery</h3>
+                    <p class="cert-description">
+                      Comprehensive hands-on training in React.js fundamentals, including JSX, components, 
+                      state management, and modern React patterns. Completed practical projects demonstrating 
+                      real-world application development skills.
+                    </p>
+                    
+                    <div class="cert-skills">
+                      <span class="skill-tag">React.js</span>
+                      <span class="skill-tag">JSX</span>
+                      <span class="skill-tag">State Management</span>
+                      <span class="skill-tag">Component Design</span>
+                    </div>
+                    
+                    <div class="cert-verification">
+                      <i class="fa fa-shield"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Data Storage Certificate -->
+              <div class="certification-card cloud" data-category="cloud">
+                <div class="cert-header">
+                  <div class="cert-badge">
+                    <i class="fa fa-database"></i>
+                  </div>
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Coursera</span>
+                    <span class="issuer-type">Microsoft Azure Training</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">Nov 2023</span>
+                  </div>
+                </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Data.webp" alt="Data Storage Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/certificate/3YLMQJ6HTBRE" 
+                         target="_blank" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="cert-details">
+                    <h3>Cloud Data Storage Solutions</h3>
+                    <p class="cert-description">
+                      Advanced training in Azure data services, covering database management, 
+                      cloud storage solutions, and data security best practices. Practical experience 
+                      with enterprise-grade data storage implementations.
+                    </p>
+                    
+                    <div class="cert-skills">
+                      <span class="skill-tag">Azure Storage</span>
+                      <span class="skill-tag">Database Design</span>
+                      <span class="skill-tag">Cloud Security</span>
+                      <span class="skill-tag">Data Management</span>
+                    </div>
+                    
+                    <div class="cert-verification">
+                      <i class="fa fa-shield"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Frontend Developer Certificate -->
+              <div class="certification-card frontend" data-category="frontend">
+                <div class="cert-header">
+                  <div class="cert-badge">
+                    <i class="fa fa-code"></i>
+                  </div>
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Coursera</span>
+                    <span class="issuer-type">Professional Development</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">Oct 2023</span>
+                  </div>
+                </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Frontend.webp" alt="Frontend Developer Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/verify/EE42JSYQPZ7D" 
+                         target="_blank" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="cert-details">
+                    <h3>Frontend Development Specialist</h3>
+                    <p class="cert-description">
+                      Intensive program covering modern frontend technologies including React.js, 
+                      responsive design, and user experience optimization. Focus on building 
+                      scalable and maintainable web applications.
+                    </p>
+                    
+                    <div class="cert-skills">
+                      <span class="skill-tag">React.js</span>
+                      <span class="skill-tag">HTML5/CSS3</span>
+                      <span class="skill-tag">JavaScript ES6+</span>
+                      <span class="skill-tag">Responsive Design</span>
+                    </div>
+                    
+                    <div class="cert-verification">
+                      <i class="fa fa-shield"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Web Developer Certificate -->
+              <div class="certification-card frontend" data-category="frontend">
+                <div class="cert-header">
+                  <div class="cert-badge featured">
+                    <i class="fa fa-globe"></i>
+                  </div>
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Coursera</span>
+                    <span class="issuer-type">Web Development Program</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge featured">Aug 2023</span>
+                  </div>
+                </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Web.webp" alt="Web Developer Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/certificate/RKY4CN2NHHR3" 
+                         target="_blank" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="cert-details">
+                    <h3>Professional Web Developer</h3>
+                    <p class="cert-description">
+                      Comprehensive web development certification covering full-stack fundamentals, 
+                      including interactive web interfaces, modern frameworks, and industry best practices. 
+                      Hands-on projects with real-world applications.
+                    </p>
+                    
+                    <div class="cert-skills">
+                      <span class="skill-tag">Full-Stack Web Dev</span>
+                      <span class="skill-tag">UI/UX Design</span>
+                      <span class="skill-tag">Modern Frameworks</span>
+                      <span class="skill-tag">Best Practices</span>
+                    </div>
+                    
+                    <div class="cert-verification featured">
+                      <i class="fa fa-star"></i>
+                      <span>Featured Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Call to Action -->
+            <div class="certifications-cta">
+              <div class="cta-content">
+                <h3>Ready to Work Together?</h3>
+                <p>My certifications represent continuous learning and commitment to excellence in web development.</p>
+                <div class="cta-buttons">
+                  <label for="contact-card" class="cta-btn primary">
+                    <i class="fa fa-envelope"></i>
+                    Get In Touch
+                  </label>
+                  <label for="works-card" class="cta-btn secondary">
+                    <i class="fa fa-eye"></i>
+                    View My Work
+                  </label>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
