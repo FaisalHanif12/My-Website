@@ -364,6 +364,237 @@
     </style>
 
     <script defer>
+      // Modern Blog Filter System
+      document.addEventListener("DOMContentLoaded", function() {
+        const filterButtons = document.querySelectorAll('.blog-filter-section .filter-btn');
+        const blogItems = document.querySelectorAll('.blog-item');
+        const blogGrid = document.querySelector('.blog-grid');
+        const emptyState = document.querySelector('.blog-empty-state');
+        const loadMoreBtn = document.querySelector('.load-more-btn');
+
+        // Blog filtering functionality
+        if (filterButtons.length > 0 && blogItems.length > 0) {
+          filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+              const category = this.getAttribute('data-category');
+              
+              // Update active button
+              filterButtons.forEach(btn => btn.classList.remove('active'));
+              this.classList.add('active');
+              
+              // Show loading state
+              if (blogGrid) {
+                blogGrid.style.opacity = '0.5';
+                blogGrid.style.transition = 'opacity 0.3s ease';
+              }
+              
+              setTimeout(() => {
+                let visibleCount = 0;
+                
+                blogItems.forEach((item, index) => {
+                  const itemCategory = item.getAttribute('data-category');
+                  
+                  if (category === 'all' || itemCategory === category) {
+                    item.style.display = 'block';
+                    item.classList.remove('fade-out');
+                    item.classList.add('fade-in');
+                    
+                    // Stagger animation
+                    setTimeout(() => {
+                      item.style.opacity = '1';
+                      item.style.transform = 'translateY(0) scale(1)';
+                    }, index * 100);
+                    
+                    visibleCount++;
+                  } else {
+                    item.classList.add('fade-out');
+                    item.classList.remove('fade-in');
+                    
+                    setTimeout(() => {
+                      item.style.display = 'none';
+                    }, 300);
+                  }
+                });
+                
+                // Show/hide empty state
+                if (emptyState) {
+                  if (visibleCount === 0) {
+                    emptyState.style.display = 'block';
+                  } else {
+                    emptyState.style.display = 'none';
+                  }
+                }
+                
+                // Restore grid opacity
+                if (blogGrid) {
+                  blogGrid.style.opacity = '1';
+                }
+              }, 200);
+            });
+          });
+        }
+
+        // Load more functionality
+        if (loadMoreBtn) {
+          loadMoreBtn.addEventListener('click', function() {
+            const btnText = this.querySelector('.btn-text');
+            const btnIcon = this.querySelector('.btn-icon i');
+            const btnArrow = this.querySelector('.btn-arrow i');
+            
+            // Update button state
+            this.style.opacity = '0.7';
+            this.style.transform = 'scale(0.98)';
+            btnText.textContent = 'Loading...';
+            btnIcon.className = 'fa fa-spinner fa-spin';
+            btnArrow.style.opacity = '0';
+            
+            // Simulate loading
+            setTimeout(() => {
+              // Reset button
+              this.style.opacity = '1';
+              this.style.transform = 'scale(1)';
+              btnText.textContent = 'Load More Articles';
+              btnIcon.className = 'fa fa-plus';
+              btnArrow.style.opacity = '1';
+              
+              // Show success message
+              const tempMessage = document.createElement('p');
+              tempMessage.textContent = 'No more articles to load!';
+              tempMessage.style.color = '#6b7280';
+              tempMessage.style.fontSize = '14px';
+              tempMessage.style.marginTop = '15px';
+              tempMessage.style.textAlign = 'center';
+              
+              this.parentNode.appendChild(tempMessage);
+              
+              setTimeout(() => {
+                if (tempMessage.parentNode) {
+                  tempMessage.parentNode.removeChild(tempMessage);
+                }
+              }, 3000);
+            }, 2000);
+          });
+        }
+      });
+
+      // Custom Success Alert System
+      function showCustomSuccessAlert() {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'custom-alert-overlay';
+        
+        // Create alert HTML
+        overlay.innerHTML = `
+          <div class="custom-alert">
+            <div class="alert-header">
+              <button class="alert-close" onclick="closeCustomAlert()">
+                <i class="fa fa-times"></i>
+              </button>
+              <div class="success-icon">
+                <i class="fa fa-check"></i>
+              </div>
+              <h2 class="alert-title">Message Sent Successfully!</h2>
+              <p class="alert-subtitle">Your message has been delivered to Faisal</p>
+            </div>
+            
+            <div class="alert-content">
+              <p class="alert-message">
+                Thank you for reaching out! I've received your message and will review it carefully. 
+                <strong>I'll get back to you within 24 hours</strong> with a detailed response and next steps for your project.
+              </p>
+              
+              <div class="response-timeline">
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i class="fa fa-envelope"></i>
+                  </div>
+                  <div class="timeline-text">Message Received</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i class="fa fa-eye"></i>
+                  </div>
+                  <div class="timeline-text">Under Review</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i class="fa fa-reply"></i>
+                  </div>
+                  <div class="timeline-text">Response within 24h</div>
+                </div>
+              </div>
+              
+              <div class="alert-actions">
+                <button class="alert-btn primary" onclick="closeCustomAlert()">
+                  <i class="fa fa-check"></i>
+                  <span>Perfect!</span>
+                </button>
+                <a href="mailto:mehrfaisal111@gmail.com" class="alert-btn secondary">
+                  <i class="fa fa-envelope"></i>
+                  <span>Email Directly</span>
+                </a>
+              </div>
+            </div>
+            
+            <div class="alert-footer">
+              <p class="alert-footer-text">
+                <i class="fa fa-shield"></i>
+                <span>Your information is secure and will never be shared</span>
+              </p>
+            </div>
+          </div>
+        `;
+        
+        // Add to body
+        document.body.appendChild(overlay);
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+        
+        // Show with animation
+        setTimeout(() => {
+          overlay.classList.add('show');
+        }, 100);
+        
+        // Auto close after 10 seconds (optional)
+        setTimeout(() => {
+          if (overlay.classList.contains('show')) {
+            closeCustomAlert();
+          }
+        }, 10000);
+      }
+      
+      function closeCustomAlert() {
+        const overlay = document.querySelector('.custom-alert-overlay');
+        if (overlay) {
+          overlay.classList.remove('show');
+          
+          // Restore body scroll
+          document.body.style.overflow = '';
+          
+          // Remove element after animation
+          setTimeout(() => {
+            if (overlay.parentNode) {
+              overlay.parentNode.removeChild(overlay);
+            }
+          }, 400);
+        }
+      }
+      
+      // Close on overlay click
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('custom-alert-overlay')) {
+          closeCustomAlert();
+        }
+      });
+      
+      // Close on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeCustomAlert();
+        }
+      });
+
       // Contact form submission handler - Fixed version
       document.addEventListener("DOMContentLoaded", function() {
         const contactForm = document.getElementById("contactForm");
@@ -405,8 +636,8 @@
                 }
               })
               .then((data) => {
-                // Success
-                alert("Thank you for your message! I'll get back to you within 24 hours.");
+                // Success - Show custom alert
+                showCustomSuccessAlert();
                 form.reset(); // Clear the form
                 
                 // Reset button state
@@ -1510,7 +1741,7 @@
                         <i class="fa fa-building"></i>
                       </div>
                       <div class="stat-content">
-                        <span class="stat-number">4+</span>
+                        <span class="stat-number">3+</span>
                         <span class="stat-label">Companies</span>
                       </div>
                     </div>
@@ -1935,7 +2166,7 @@
                         <i class="fa fa-building"></i>
                       </div>
                       <div class="stat-content">
-                        <span class="stat-number">4+</span>
+                        <span class="stat-number">3+</span>
                         <span class="stat-label">Companies</span>
                       </div>
                     </div>
@@ -2399,7 +2630,7 @@
                 <div class="hero-badge">
                   <div class="status-dot"></div>
                   <span>Portfolio Showcase</span>
-                </div>
+            </div>
                 <h1 class="works-title">
                   Featured <span class="highlight">Projects</span>
                 </h1>
@@ -2412,7 +2643,7 @@
                     <span class="stat-label">Projects</span>
                   </div>
                   <div class="works-stat">
-                    <span class="stat-number">5+</span>
+                    <span class="stat-number">7+</span>
                     <span class="stat-label">Technologies</span>
                   </div>
                   <div class="works-stat">
@@ -2426,6 +2657,55 @@
             <!-- Modern Filter System -->
             <div class="works-filter-section">
               <div class="filter-container">
+                <!-- Mobile Dropdown Filter -->
+                <div class="mobile-filter-dropdown">
+                  <button class="mobile-filter-trigger" data-current="All">
+                    <div class="current-filter">
+                      <i class="fa fa-th-large"></i>
+                      <span>All Projects</span>
+                    </div>
+                    <i class="fa fa-chevron-down dropdown-icon"></i>
+                  </button>
+                  <div class="mobile-filter-dropdown-menu">
+                    <div class="mobile-filter-option active" data-category="All">
+                      <div class="option-content">
+                        <i class="fa fa-th-large"></i>
+                        <span>All Projects</span>
+                      </div>
+                      <span class="option-count">10</span>
+                    </div>
+                    <div class="mobile-filter-option" data-category="Reactjs">
+                      <div class="option-content">
+                        <i class="fa fa-code"></i>
+                        <span>React.js</span>
+                      </div>
+                      <span class="option-count">2</span>
+                    </div>
+                    <div class="mobile-filter-option" data-category="Nextjs">
+                      <div class="option-content">
+                        <i class="fa fa-rocket"></i>
+                        <span>Next.js</span>
+                      </div>
+                      <span class="option-count">3</span>
+                    </div>
+                    <div class="mobile-filter-option" data-category="FullStack">
+                      <div class="option-content">
+                        <i class="fa fa-server"></i>
+                        <span>MERN Stack</span>
+                      </div>
+                      <span class="option-count">3</span>
+                    </div>
+                    <div class="mobile-filter-option" data-category="ReactNative">
+                      <div class="option-content">
+                        <i class="fa fa-mobile"></i>
+                        <span>React Native</span>
+                      </div>
+                      <span class="option-count">2</span>
+                    </div>
+                  </div>
+            </div>
+
+                <!-- Desktop Filter Buttons -->
                 <div class="filter-item">
                   <input type="radio" name="menu-list" id="All" checked style="display: none;" />
                   <label class="filter-btn active" for="All" data-category="All">
@@ -2447,7 +2727,7 @@
                   <label class="filter-btn" for="Nextjs" data-category="Nextjs">
                     <i class="fa fa-rocket"></i>
                     <span>Next.js</span>
-                    <span class="filter-count">3</span>
+                    <span class="filter-count">2</span>
                   </label>
                 </div>
                 <div class="filter-item">
@@ -2474,20 +2754,20 @@
               <div class="projects-grid">
 
                 <!-- Smart Health Care Project -->
-                <div class="works-item" data-category="FullStack">
+              <div class="works-item" data-category="FullStack">
                   <div class="project-image-container">
-                    <div class="img">
+                <div class="img">
                       <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/Dashboard.webp" alt="Smart Health Care Dashboard" />
-                      </a>
-                    </div>
+                  </a>
+                </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2497,7 +2777,7 @@
                       <span class="project-category">Full Stack</span>
                     </div>
                     <p class="project-description">
-                      A comprehensive healthcare management system with patient tracking, appointment scheduling, and medical records management.
+                      A full-featured fitness tracker platform with user activity monitoring, workout scheduling, and progress analytics.
                     </p>
                     <div class="project-tech">
                       <span class="tech-tag">React</span>
@@ -2515,24 +2795,24 @@
                         <span>Source Code</span>
                       </a>
                     </div>
-                  </div>
                 </div>
-
+              </div>
+              
                 <!-- Smart Gallery App Project -->
-                <div class="works-item" data-category="ReactNative">
+              <div class="works-item" data-category="ReactNative">
                   <div class="project-image-container">
-                    <div class="img">
+                <div class="img">
                       <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/Smart Gallery.webp" alt="Smart Gallery App" />
-                      </a>
-                    </div>
+                  </a>
+                </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2560,24 +2840,24 @@
                         <span>Source Code</span>
                       </a>
                     </div>
-                  </div>
                 </div>
+              </div>
 
                 <!-- Echo AI Project -->
                 <div class="works-item featured" data-category="Reactjs">
                   <div class="project-image-container">
-                    <div class="img">
+                <div class="img">
                       <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/Echoai.webp" alt="Echo AI Application" />
-                      </a>
-                    </div>
+                  </a>
+                </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                </div>
                     </div>
                     <div class="project-status completed">Featured</div>
                   </div>
@@ -2605,24 +2885,24 @@
                         <span>Source Code</span>
                       </a>
                     </div>
-                  </div>
                 </div>
+              </div>
 
                 <!-- Soledeck Project -->
                 <div class="works-item" data-category="FullStack">
                   <div class="project-image-container">
-                    <div class="img">
+                  <div class="img">
                       <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/Shop.webp" alt="Soledeck E-commerce Platform" />
-                      </a>
-                    </div>
+                    </a>
+                  </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                  </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2656,18 +2936,18 @@
                 <!-- Financial Fusion Project -->
                 <div class="works-item" data-category="ReactNative">
                   <div class="project-image-container">
-                    <div class="img">
+                  <div class="img">
                       <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/Financial-fusion.webp" alt="Financial Fusion App" />
-                      </a>
-                    </div>
+                    </a>
+                  </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                  </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2697,22 +2977,22 @@
                     </div>
                   </div>
                 </div>
-
+            
                 <!-- YOOM Project -->
                 <div class="works-item" data-category="Nextjs">
                   <div class="project-image-container">
-                    <div class="img">
+                  <div class="img">
                       <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/Home.webp" alt="YOOM Video Conferencing" />
-                      </a>
-                    </div>
+                    </a>
+                  </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                  </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2746,18 +3026,18 @@
                 <!-- Dosnexa Project -->
                 <div class="works-item" data-category="FullStack">
                   <div class="project-image-container">
-                    <div class="img">
+                  <div class="img">
                       <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/doctors.png" alt="Dosnexa Medical Platform" />
-                      </a>
-                    </div>
+                    </a>
+                  </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                  </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2787,22 +3067,22 @@
                     </div>
                   </div>
                 </div>
-
+                      
                 <!-- DSA Tracker Project -->
                 <div class="works-item" data-category="Reactjs">
                   <div class="project-image-container">
-                    <div class="img">
+                  <div class="img">
                       <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/dsa.webp" alt="DSA Tracker Application" />
-                      </a>
-                    </div>
+                    </a>
+                  </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                  </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2832,22 +3112,22 @@
                     </div>
                   </div>
                 </div>
-
+             
                 <!-- Live Search Weather Project -->
                 <div class="works-item" data-category="Nextjs">
                   <div class="project-image-container">
-                    <div class="img">
+                  <div class="img">
                       <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer">
                         <img src="imgs/Weather.webp" alt="Live Search Weather App" />
-                      </a>
-                    </div>
+                    </a>
+                  </div>
                     <div class="project-overlay">
                       <div class="overlay-content">
                         <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer" class="preview-btn">
                           <i class="fa fa-eye"></i>
                           <span>Live Preview</span>
                         </a>
-                      </div>
+                  </div>
                     </div>
                     <div class="project-status completed">Live</div>
                   </div>
@@ -2877,14 +3157,14 @@
                     </div>
                   </div>
                 </div>
-
+             
               </div>
-
+             
               <!-- Loading State -->
               <div class="projects-loading" style="display: none;">
                 <div class="loading-spinner"></div>
                 <span>Loading projects...</span>
-              </div>
+            </div>
 
               <!-- Empty State -->
               <div class="works-empty-state" style="display: none;">
@@ -2901,286 +3181,300 @@
 
         <div class="blogs-card right-cards">
           <div class="card-wrap">
-            <div class="section-header">
-              <span class="header">Professional Certifications</span>
+            
+            <!-- Certifications Hero Section -->
+            <div class="certification-hero-section">
+              <div class="certification-hero-content">
+                <div class="hero-badge">
+                  <div class="status-dot"></div>
+                  <span>Professional Certifications</span>
+                      </div>
+                <h1 class="certification-title">
+                  My <span class="highlight">Certifications</span> 
+                </h1>
+                <p class="certification-description">
+                  Professional certifications and learning achievements in web development, cloud computing, 
+                  and modern programming technologies that validate my expertise and continuous learning journey.
+                </p>
+                <div class="certification-stats">
+                  <div class="certification-stat">
+                    <span class="stat-number">4+</span>
+                    <span class="stat-label">Certifications</span>
+                  </div>
+                  <div class="certification-stat">
+                    <span class="stat-number">200+</span>
+                    <span class="stat-label">Learning Hours</span>
+                      </div>
+                  <div class="certification-stat">
+                    <span class="stat-number">15+</span>
+                    <span class="stat-label">Video Tutorials</span>
+                    </div>
+                      </div>
+                  </div>
             </div>
             
-            <!-- Achievement Stats Section -->
-            <div class="achievement-stats">
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <i class="fa fa-trophy"></i>
+            <!-- Certification Filter System -->
+            <div class="certification-filter-section">
+              <div class="filter-container">
+                <!-- Mobile Dropdown Filter -->
+                <div class="mobile-filter-dropdown">
+                  <button class="mobile-filter-trigger" data-current="all">
+                    <div class="current-filter">
+                      <i class="fa fa-th-large"></i>
+                      <span>All Certifications</span>
                       </div>
-                <div class="stat-content">
-                  <h3>4+</h3>
-                  <p>Certifications</p>
+                    <i class="fa fa-chevron-down dropdown-icon"></i>
+                  </button>
+                  <div class="mobile-filter-dropdown-menu">
+                    <div class="mobile-filter-option active" data-category="all">
+                      <div class="option-content">
+                        <i class="fa fa-th-large"></i>
+                        <span>All Certifications</span>
                   </div>
+                      <span class="option-count">4</span>
                       </div>
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <i class="fa fa-graduation-cap"></i>
+                    <div class="mobile-filter-option" data-category="frontend">
+                      <div class="option-content">
+                        <i class="fa fa-code"></i>
+                        <span>Frontend</span>
                     </div>
-                <div class="stat-content">
-                  <h3>200+</h3>
-                  <p>Learning Hours</p>
+                      <span class="option-count">2</span>
                   </div>
+                    <div class="mobile-filter-option" data-category="web">
+                      <div class="option-content">
+                        <i class="fa fa-globe"></i>
+                        <span>Backend</span>
                 </div>
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <i class="fa fa-star"></i>
+                      <span class="option-count">1</span>
               </div>
-                <div class="stat-content">
-                  <h3>2023</h3>
-                  <p>Latest Year</p>
+                    <div class="mobile-filter-option" data-category="cloud">
+                      <div class="option-content">
+                        <i class="fa fa-cloud"></i>
+                        <span>Cloud</span>
+                      </div>
+                      <span class="option-count">1</span>
                       </div>
                   </div>
                       </div>
 
-            <!-- Filter Tabs -->
-            <div class="certification-filters">
+                <!-- Desktop Filter Buttons -->
+                <div class="filter-item">
               <button class="filter-btn active" data-category="all">
-                <i class="fa fa-list"></i>
-                All Certifications
+                    <i class="fa fa-th-large"></i>
+                    <span>All Certifications</span>
+                    <span class="filter-count">4</span>
               </button>
+                </div>
+                <div class="filter-item">
               <button class="filter-btn" data-category="frontend">
                 <i class="fa fa-code"></i>
-                Frontend
+                    <span>Frontend</span>
+                    <span class="filter-count">2</span>
               </button>
-              <button class="filter-btn" data-category="backend">
-                <i class="fa fa-server"></i>
-                Backend
+                </div>
+                <div class="filter-item">
+                  <button class="filter-btn" data-category="web">
+                    <i class="fa fa-globe"></i>
+                    <span>Backend</span>
+                    <span class="filter-count">1</span>
               </button>
+                </div>
+                <div class="filter-item">
               <button class="filter-btn" data-category="cloud">
                 <i class="fa fa-cloud"></i>
-                Cloud
+                    <span>Cloud</span>
+                    <span class="filter-count">1</span>
               </button>
+                </div>
+              </div>
                     </div>
 
-            <!-- Modern Certification Cards -->
+            <!-- Certifications Grid -->
             <div class="section-content certifications-section-content">
+              <div class="certifications-grid">
               
-              <!-- React Certificate -->
-              <div class="certification-card frontend" data-category="frontend">
+                <!-- Certification 1 - Frontend Development -->
+                <div class="certification-card featured" data-category="frontend">
                 <div class="cert-header">
-                  <div class="cert-badge">
-                    <i class="fa fa-react"></i>
-                  </div>
-                  <div class="cert-issuer">
-                    <span class="issuer-name">Coursera</span>
-                    <span class="issuer-type">Online Learning Platform</span>
-                </div>
-                  <div class="cert-date">
-                    <span class="date-badge">Nov 2023</span>
-              </div>
-                      </div>
-                
-                <div class="cert-content">
-                  <div class="cert-image">
-                    <img src="imgs/React.webp" alt="React Certificate" />
-                    <div class="cert-overlay">
-                      <a href="https://www.coursera.org/account/accomplishments/certificate/E5USQYWCKR6Q" 
-                         target="_blank" class="view-cert-btn">
-                        <i class="fa fa-external-link"></i>
-                        View Certificate
-                    </a>
-                  </div>
-                      </div>
-                  
-                  <div class="cert-details">
-                    <h3>React Development Mastery</h3>
-                    <p class="cert-description">
-                      Comprehensive hands-on training in React.js fundamentals, including JSX, components, 
-                      state management, and modern React patterns. Completed practical projects demonstrating 
-                      real-world application development skills.
-                    </p>
-                    
-                    <div class="cert-skills">
-                      <span class="skill-tag">React.js</span>
-                      <span class="skill-tag">JSX</span>
-                      <span class="skill-tag">State Management</span>
-                      <span class="skill-tag">Component Design</span>
-                    </div>
-                    
-                    <div class="cert-verification">
-                      <i class="fa fa-shield"></i>
-                      <span>Verified Certificate</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Data Storage Certificate -->
-              <div class="certification-card cloud" data-category="cloud">
-                <div class="cert-header">
-                  <div class="cert-badge">
-                    <i class="fa fa-database"></i>
-                  </div>
-                  <div class="cert-issuer">
-                    <span class="issuer-name">Coursera</span>
-                    <span class="issuer-type">Microsoft Azure Training</span>
-                  </div>
-                  <div class="cert-date">
-                    <span class="date-badge">Nov 2023</span>
-                  </div>
-                </div>
-                
-                <div class="cert-content">
-                  <div class="cert-image">
-                    <img src="imgs/Data.webp" alt="Data Storage Certificate" />
-                    <div class="cert-overlay">
-                      <a href="https://www.coursera.org/account/accomplishments/certificate/3YLMQJ6HTBRE" 
-                         target="_blank" class="view-cert-btn">
-                        <i class="fa fa-external-link"></i>
-                        View Certificate
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div class="cert-details">
-                    <h3>Cloud Data Storage Solutions</h3>
-                    <p class="cert-description">
-                      Advanced training in Azure data services, covering database management, 
-                      cloud storage solutions, and data security best practices. Practical experience 
-                      with enterprise-grade data storage implementations.
-                    </p>
-                    
-                    <div class="cert-skills">
-                      <span class="skill-tag">Azure Storage</span>
-                      <span class="skill-tag">Database Design</span>
-                      <span class="skill-tag">Cloud Security</span>
-                      <span class="skill-tag">Data Management</span>
-                </div>
-                    
-                    <div class="cert-verification">
-                      <i class="fa fa-shield"></i>
-                      <span>Verified Certificate</span>
-              </div>
-                      </div>
-                </div>
-              </div>
-
-              <!-- Frontend Developer Certificate -->
-              <div class="certification-card frontend" data-category="frontend">
-                <div class="cert-header">
-                  <div class="cert-badge">
-                    <i class="fa fa-code"></i>
-                  </div>
-                  <div class="cert-issuer">
-                    <span class="issuer-name">Coursera</span>
-                    <span class="issuer-type">Professional Development</span>
-                  </div>
-                  <div class="cert-date">
-                    <span class="date-badge">Oct 2023</span>
-                  </div>
-                </div>
-                
-                <div class="cert-content">
-                  <div class="cert-image">
-                    <img src="imgs/Frontend.webp" alt="Frontend Developer Certificate" />
-                    <div class="cert-overlay">
-                      <a href="https://www.coursera.org/account/accomplishments/verify/EE42JSYQPZ7D" 
-                         target="_blank" class="view-cert-btn">
-                        <i class="fa fa-external-link"></i>
-                        View Certificate
-                    </a>
-                  </div>
-                      </div>
-                  
-                  <div class="cert-details">
-                    <h3>Frontend Development Specialist</h3>
-                    <p class="cert-description">
-                      Intensive program covering modern frontend technologies including React.js, 
-                      responsive design, and user experience optimization. Focus on building 
-                      scalable and maintainable web applications.
-                    </p>
-                    
-                    <div class="cert-skills">
-                      <span class="skill-tag">React.js</span>
-                      <span class="skill-tag">HTML5/CSS3</span>
-                      <span class="skill-tag">JavaScript ES6+</span>
-                      <span class="skill-tag">Responsive Design</span>
-                    </div>
-                    
-                    <div class="cert-verification">
-                      <i class="fa fa-shield"></i>
-                      <span>Verified Certificate</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Web Developer Certificate -->
-              <div class="certification-card frontend" data-category="frontend">
-                <div class="cert-header">
-                  <div class="cert-badge featured">
-                    <i class="fa fa-globe"></i>
-                  </div>
-                  <div class="cert-issuer">
-                    <span class="issuer-name">Coursera</span>
-                    <span class="issuer-type">Web Development Program</span>
-                  </div>
-                  <div class="cert-date">
-                    <span class="date-badge featured">Aug 2023</span>
-                  </div>
-                </div>
-                
-                <div class="cert-content">
-                  <div class="cert-image">
-                    <img src="imgs/Web.webp" alt="Web Developer Certificate" />
-                    <div class="cert-overlay">
-                      <a href="https://www.coursera.org/account/accomplishments/certificate/RKY4CN2NHHR3" 
-                         target="_blank" class="view-cert-btn">
-                        <i class="fa fa-external-link"></i>
-                        View Certificate
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div class="cert-details">
-                    <h3>Professional Web Developer</h3>
-                    <p class="cert-description">
-                      Comprehensive web development certification covering full-stack fundamentals, 
-                      including interactive web interfaces, modern frameworks, and industry best practices. 
-                      Hands-on projects with real-world applications.
-                    </p>
-                    
-                    <div class="cert-skills">
-                      <span class="skill-tag">Full-Stack Web Dev</span>
-                      <span class="skill-tag">UI/UX Design</span>
-                      <span class="skill-tag">Modern Frameworks</span>
-                      <span class="skill-tag">Best Practices</span>
-                </div>
-                    
-                    <div class="cert-verification featured">
+                    <div class="cert-badge featured">
                       <i class="fa fa-star"></i>
-                      <span>Featured Certificate</span>
+                  </div>
+                  <div class="cert-issuer">
+                      <span class="issuer-name">Google</span>
+                      <span class="issuer-type">Professional Certificate</span>
+                </div>
+                  <div class="cert-date">
+                      <span class="date-badge featured">2024</span>
               </div>
-            </div>
+                      </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                      <img src="imgs/Frontend.webp" alt="Frontend Development Certificate" />
+                    <div class="cert-overlay">
+                        <a href="#" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                    </a>
+                  </div>
+                      </div>
+                  <div class="cert-details">
+                      <h3>Frontend Web Development Professional Certificate</h3>
+                    <p class="cert-description">
+                        Comprehensive frontend development training covering HTML5, CSS3, JavaScript ES6+, responsive design, and modern frontend frameworks for building interactive web applications.
+                    </p>
+                    <div class="cert-skills">
+                        <span class="skill-tag">HTML5</span>
+                        <span class="skill-tag">CSS3</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">Responsive Design</span>
+                    </div>
+                      <div class="cert-verification featured">
+                        <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-            </div>
-
-            <!-- Call to Action -->
-            <div class="certifications-cta">
-              <div class="cta-content">
-                <h3>Ready to Work Together?</h3>
-                <p>My certifications represent continuous learning and commitment to excellence in web development.</p>
-                <div class="cta-buttons">
-                  <label for="contact-card" class="cta-btn primary">
-                    <i class="fa fa-envelope"></i>
-                    Get In Touch
-                  </label>
-                  <label for="works-card" class="cta-btn secondary">
-                    <i class="fa fa-eye"></i>
-                    View My Work
-                  </label>
+                <!-- Certification 2 - React Development -->
+                <div class="certification-card" data-category="frontend">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                      <span class="issuer-name">Meta</span>
+                      <span class="issuer-type">Professional Certificate</span>
+                  </div>
+                  <div class="cert-date">
+                      <span class="date-badge">2024</span>
+                  </div>
+                </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                      <img src="imgs/React.webp" alt="React Development Certificate" />
+                    <div class="cert-overlay">
+                        <a href="#" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                      <h3>React Front-End Developer Professional Certificate</h3>
+                    <p class="cert-description">
+                        Advanced React development skills including hooks, state management, component architecture, and modern React patterns for building scalable single-page applications.
+                    </p>
+                    <div class="cert-skills">
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">JSX</span>
+                        <span class="skill-tag">Hooks</span>
+                        <span class="skill-tag">Redux</span>
+                </div>
+                    <div class="cert-verification">
+                        <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+              </div>
+                      </div>
                 </div>
               </div>
+
+                <!-- Certification 3 - Web Development -->
+                <div class="certification-card" data-category="web">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                      <span class="issuer-name">IBM</span>
+                      <span class="issuer-type">Professional Certificate</span>
+                  </div>
+                  <div class="cert-date">
+                      <span class="date-badge">2023</span>
+                  </div>
+                </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                      <img src="imgs/Web.webp" alt="Web Development Certificate" />
+                    <div class="cert-overlay">
+                        <a href="#" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                    </a>
+                  </div>
+                      </div>
+                  <div class="cert-details">
+                      <h3>Full Stack Web Development Professional Certificate</h3>
+                    <p class="cert-description">
+                        Complete web development training covering both frontend and backend technologies, including databases, APIs, deployment, and modern web development best practices.
+                    </p>
+                    <div class="cert-skills">
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">Express</span>
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">APIs</span>
+                    </div>
+                    <div class="cert-verification">
+                        <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                <!-- Certification 4 - Data & Cloud -->
+                <div class="certification-card" data-category="cloud">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                      <span class="issuer-name">AWS</span>
+                      <span class="issuer-type">Cloud Certification</span>
+                  </div>
+                  <div class="cert-date">
+                      <span class="date-badge">2023</span>
+                  </div>
+                </div>
+                
+                <div class="cert-content">
+                  <div class="cert-image">
+                      <img src="imgs/Data.webp" alt="Cloud & Data Certificate" />
+                    <div class="cert-overlay">
+                        <a href="#" class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                      <h3>AWS Cloud & Data Analytics Professional Certificate</h3>
+                    <p class="cert-description">
+                        Foundation-level understanding of AWS cloud services, data analytics, security best practices, and deployment strategies for scalable cloud-based data solutions.
+                    </p>
+                    <div class="cert-skills">
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Cloud Computing</span>
+                        <span class="skill-tag">Data Analytics</span>
+                        <span class="skill-tag">Security</span>
+                      </div>
+                      <div class="cert-verification">
+                        <i class="fa fa-certificate"></i>
+                        <span>Verified Certificate</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                    
+              </div>
+
+              <!-- Empty State (Hidden by default) -->
+              <div class="certification-empty-state" style="display: none;">
+                <div class="empty-icon">
+                  <i class="fa fa-search"></i>
             </div>
+                <h3 class="empty-message">No certifications found</h3>
+                <p class="empty-description">Try selecting a different category to see more certifications.</p>
+                </div>
+
+              </div>
 
           </div>
-        </div>
+            </div>
 
         <div class="contact-card right-cards">
           <div class="card-wrap">
@@ -3192,7 +3486,7 @@
                   <div class="status-dot"></div>
                   <span>Available for Projects</span>
                 </div>
-                <h1 class="contact-title">Let's Create Something <span class="highlight">Amazing</span> Together</h1>
+                <h1 class="contact-title">Let's <span class="highlight">Connect</span> </h1>
                 <p class="contact-description">
                   Ready to bring your ideas to life? Whether you need a stunning website, a powerful web application, 
                   or expert consultation, I'm here to help turn your vision into reality.
@@ -3280,8 +3574,8 @@
                     <label for="schedule-card" class="method-action secondary">
                       <i class="fa fa-calendar-check-o"></i>
                       <span>Book Meeting</span>
-                    </label>
-                  </div>
+                  </label>
+                </div>
                 </div>
 
                 <!-- Location Card -->
@@ -3303,11 +3597,11 @@
                       <i class="fa fa-map"></i>
                       <span>View Map</span>
                     </button>
-                  </div>
-                </div>
-
               </div>
             </div>
+
+          </div>
+        </div>
 
             <!-- Interactive Map Section -->
             <div class="map-section" id="mapSection" style="display: none;">
@@ -3319,7 +3613,7 @@
                 <button class="close-map-btn" onclick="hideMap()">
                   <i class="fa fa-times"></i>
                 </button>
-              </div>
+            </div>
               <div class="map-container">
                 <div class="mapouter">
                   <div
@@ -3350,23 +3644,23 @@
                       <div style="text-align: center;">
                         <div style="width: 40px; height: 40px; border: 3px solid #e3e3e3; border-radius: 50%; border-top: 3px solid var(--dark-blue); animation: spin 1s ease-in-out infinite; margin: 0 auto 15px;"></div>
                         Loading interactive map...
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+                </div>
+              </div>
 
             <!-- Modern Contact Form -->
             <div class="modern-contact-form-section">
               <div class="form-header">
                 <div class="form-icon">
                   <i class="fa fa-paper-plane"></i>
-                </div>
+            </div>
                 <div class="form-header-content">
                   <h2>Send Me a Message</h2>
                   <p>Tell me about your project and let's discuss how I can help bring your vision to life.</p>
-                </div>
+            </div>
               </div>
 
               <form
@@ -3388,14 +3682,14 @@
                       </div>
                       <div class="field-input">
                         <label for="fullname">Full Name *</label>
-                        <input
-                          type="text"
-                          id="fullname"
-                          name="fullname"
+                  <input
+                    type="text"
+                    id="fullname"
+                    name="fullname"
                           placeholder="Enter your full name"
-                          required
-                        />
-                      </div>
+                    required
+                  />
+                </div>
                     </div>
                   </div>
 
@@ -3407,14 +3701,14 @@
                       </div>
                       <div class="field-input">
                         <label for="email">Email Address *</label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
                           placeholder="Enter your email address"
-                          required
-                        />
-                      </div>
+                    required
+                  />
+                </div>
                     </div>
                   </div>
 
@@ -3467,8 +3761,8 @@
                         <div class="project-icon">
                           <i class="fa fa-globe"></i>
                         </div>
-                        <span class="project-name">Website Development</span>
-                        <span class="project-desc">Business websites, portfolios, landing pages</span>
+                        <span class="project-name">App Development</span>
+                        <span class="project-desc">Mobile apps, cross-platform solutions, custom applications</span>
                       </label>
                     </div>
 
@@ -3578,15 +3872,15 @@
                     </div>
                     <div class="field-input">
                       <label for="message">Project Details *</label>
-                      <textarea
-                        id="message"
-                        name="message"
+                  <textarea
+                    id="message"
+                    name="message"
                         rows="5"
                         placeholder="Tell me about your project... What are your goals? What features do you need? Any specific requirements or preferences?"
-                        required
-                      ></textarea>
-                    </div>
-                  </div>
+                    required
+                  ></textarea>
+                </div>
+                </div>
                 </div>
 
                 <!-- Submit Section -->

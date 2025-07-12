@@ -23,4 +23,190 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    // Mobile Filter Dropdown Functionality
+    function initMobileFilterDropdowns() {
+        const dropdowns = document.querySelectorAll('.mobile-filter-dropdown');
+        
+        dropdowns.forEach(dropdown => {
+            const trigger = dropdown.querySelector('.mobile-filter-trigger');
+            const menu = dropdown.querySelector('.mobile-filter-dropdown-menu');
+            const options = dropdown.querySelectorAll('.mobile-filter-option');
+            const currentFilterSpan = trigger.querySelector('.current-filter span');
+            const currentFilterIcon = trigger.querySelector('.current-filter i');
+            
+            // Toggle dropdown
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close other dropdowns
+                dropdowns.forEach(otherDropdown => {
+                    if (otherDropdown !== dropdown) {
+                        otherDropdown.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current dropdown
+                dropdown.classList.toggle('active');
+            });
+            
+            // Handle option selection
+            options.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const category = option.dataset.category;
+                    const optionText = option.querySelector('.option-content span').textContent;
+                    const optionIcon = option.querySelector('.option-content i').className;
+                    
+                    // Update active states
+                    options.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    // Update trigger display
+                    currentFilterSpan.textContent = optionText;
+                    currentFilterIcon.className = optionIcon;
+                    trigger.dataset.current = category;
+                    
+                    // Close dropdown
+                    dropdown.classList.remove('active');
+                    
+                    // Trigger filtering
+                    if (dropdown.closest('.works-filter-section')) {
+                        filterProjects(category);
+                    } else if (dropdown.closest('.certification-filter-section')) {
+                        filterCertifications(category);
+                    }
+                });
+            });
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.mobile-filter-dropdown')) {
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+    }
+    
+    // Filter Projects Function
+    function filterProjects(category) {
+        const projects = document.querySelectorAll('.works-item');
+        
+        projects.forEach(project => {
+            if (category === 'All' || project.dataset.category === category) {
+                project.style.display = 'block';
+                project.classList.remove('fade-out');
+                project.classList.add('fade-in');
+            } else {
+                project.classList.add('fade-out');
+                setTimeout(() => {
+                    project.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Update desktop filter buttons if they exist
+        const desktopButtons = document.querySelectorAll('.works-filter-section .filter-btn');
+        desktopButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.category === category) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    // Filter Certifications Function
+    function filterCertifications(category) {
+        const certifications = document.querySelectorAll('.certification-card');
+        
+        certifications.forEach(cert => {
+            if (category === 'all' || cert.dataset.category === category) {
+                cert.style.display = 'block';
+                cert.classList.remove('fade-out');
+                cert.classList.add('fade-in');
+            } else {
+                cert.classList.add('fade-out');
+                setTimeout(() => {
+                    cert.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Update desktop filter buttons if they exist
+        const desktopButtons = document.querySelectorAll('.certification-filter-section .filter-btn');
+        desktopButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.category === category) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    // Initialize mobile dropdowns
+    initMobileFilterDropdowns();
+    
+    // Handle desktop filter buttons (existing functionality)
+    const desktopFilterButtons = document.querySelectorAll('.filter-btn');
+    desktopFilterButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = button.dataset.category;
+            
+            // Update active states
+            const filterSection = button.closest('.works-filter-section, .certification-filter-section');
+            const buttons = filterSection.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Trigger filtering
+            if (filterSection.classList.contains('works-filter-section')) {
+                filterProjects(category);
+                // Update mobile dropdown if exists
+                const mobileDropdown = filterSection.querySelector('.mobile-filter-dropdown');
+                if (mobileDropdown) {
+                    const trigger = mobileDropdown.querySelector('.mobile-filter-trigger');
+                    const currentFilterSpan = trigger.querySelector('.current-filter span');
+                    const currentFilterIcon = trigger.querySelector('.current-filter i');
+                    const targetOption = mobileDropdown.querySelector(`[data-category="${category}"]`);
+                    
+                    if (targetOption) {
+                        currentFilterSpan.textContent = targetOption.querySelector('.option-content span').textContent;
+                        currentFilterIcon.className = targetOption.querySelector('.option-content i').className;
+                        trigger.dataset.current = category;
+                        
+                        // Update mobile option active states
+                        const mobileOptions = mobileDropdown.querySelectorAll('.mobile-filter-option');
+                        mobileOptions.forEach(opt => opt.classList.remove('active'));
+                        targetOption.classList.add('active');
+                    }
+                }
+            } else if (filterSection.classList.contains('certification-filter-section')) {
+                filterCertifications(category);
+                // Update mobile dropdown if exists
+                const mobileDropdown = filterSection.querySelector('.mobile-filter-dropdown');
+                if (mobileDropdown) {
+                    const trigger = mobileDropdown.querySelector('.mobile-filter-trigger');
+                    const currentFilterSpan = trigger.querySelector('.current-filter span');
+                    const currentFilterIcon = trigger.querySelector('.current-filter i');
+                    const targetOption = mobileDropdown.querySelector(`[data-category="${category}"]`);
+                    
+                    if (targetOption) {
+                        currentFilterSpan.textContent = targetOption.querySelector('.option-content span').textContent;
+                        currentFilterIcon.className = targetOption.querySelector('.option-content i').className;
+                        trigger.dataset.current = category;
+                        
+                        // Update mobile option active states
+                        const mobileOptions = mobileDropdown.querySelectorAll('.mobile-filter-option');
+                        mobileOptions.forEach(opt => opt.classList.remove('active'));
+                        targetOption.classList.add('active');
+                    }
+                }
+            }
+        });
+    });
 });
