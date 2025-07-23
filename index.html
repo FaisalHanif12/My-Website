@@ -143,6 +143,53 @@
         return true; // Allow form submission
       }
 
+      // Mobile menu toggle functionality
+      function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const hamburgerIcon = document.querySelector('.hamburger-menu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        mobileMenu.classList.toggle('active');
+        hamburgerIcon.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        
+        // Prevent body scroll when menu is open
+        if (mobileMenu.classList.contains('active')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      }
+      
+      // Close mobile menu function
+      function closeMobileMenu() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const hamburgerIcon = document.querySelector('.hamburger-menu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        mobileMenu.classList.remove('active');
+        hamburgerIcon.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      // Close mobile menu when clicking on a menu item
+      document.addEventListener('DOMContentLoaded', function() {
+        const menuItems = document.querySelectorAll('#mobileMenu .menu label');
+        menuItems.forEach(function(item) {
+          item.addEventListener('click', function() {
+            closeMobileMenu();
+          });
+        });
+        
+        // Close menu when pressing Escape key
+         document.addEventListener('keydown', function(e) {
+           if (e.key === 'Escape') {
+             closeMobileMenu();
+           }
+         });
+       });
+
       // Map show/hide functionality
       function showMap() {
         var mapSection = document.getElementById("mapSection");
@@ -1483,6 +1530,25 @@
           }
         }, 500);
         
+        // Ensure profile container stays centered
+        function centerProfileContent() {
+          const profileContainer = document.querySelector('.profile-container');
+          const header = document.querySelector('header');
+          
+          if (profileContainer && header) {
+            // Adjust centering based on screen width
+            if (window.innerWidth <= 480) {
+              profileContainer.style.justifyContent = 'flex-start';
+            } else {
+              profileContainer.style.justifyContent = 'center';
+            }
+          }
+        }
+        
+        // Call on load and resize
+        centerProfileContent();
+        window.addEventListener('resize', centerProfileContent, { passive: true });
+        
         // Implement lazy loading for images
         if ('loading' in HTMLImageElement.prototype) {
           // Browser supports native lazy loading
@@ -1582,39 +1648,69 @@
               </div>
             </div>
 
+            <!-- Hamburger Menu Icon -->
+            <div class="hamburger-menu" onclick="toggleMobileMenu()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
             
-            <ul class="menu-list">
-              <li class="menu">
-                <label for="about-card">
-                  <span class="icon ion-ios-person"></span>
-                  About
-                </label>
-              </li>
-              <li class="menu">
-                <label for="resume-card">
-                  <span class="icon ion-android-list"></span>
-                  Profile
-                </label>
-              </li>
-              <li class="menu">
-                <label for="works-card">
-                  <span class="icon ion-briefcase"></span>
-                  Works
-                </label>
-              </li>
-              <li class="menu">
-                <label for="blogs-card">
-                  <span class="icon ion-trophy"></span>
-                  Approvals
-                </label>
-              </li>
-              <li class="menu">
-                <label for="contact-card">
-                  <span class="icon ion-chatbubbles"></span>
-                  Contact
-                </label>
-              </li>
-          
+            <!-- Mobile Menu Overlay -->
+            <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+            
+            <ul class="menu-list" id="mobileMenu">
+              <!-- Sidebar Header -->
+              <div class="sidebar-header">
+                <div class="sidebar-logo">
+                  <div class="logo-circle">FH</div>
+                  <div class="logo-text">
+                    <h3>Faisal Hanif</h3>
+                    <p>Frontend Developer</p>
+                  </div>
+                </div>
+                <button class="sidebar-close" onclick="closeMobileMenu()">
+                  <span>&times;</span>
+                </button>
+              </div>
+              
+              <!-- Menu Items -->
+              <div class="sidebar-content">
+                <li class="menu">
+                  <label for="about-card">
+                    <span class="icon ion-ios-person"></span>
+                    About
+                  </label>
+                </li>
+                <li class="menu">
+                  <label for="resume-card">
+                    <span class="icon ion-android-list"></span>
+                    Profile
+                  </label>
+                </li>
+                <li class="menu">
+                  <label for="works-card">
+                    <span class="icon ion-briefcase"></span>
+                    Works
+                  </label>
+                </li>
+                <li class="menu">
+                  <label for="blogs-card">
+                    <span class="icon ion-trophy"></span>
+                    Approvals
+                  </label>
+                </li>
+                <li class="menu">
+                  <label for="contact-card">
+                    <span class="icon ion-chatbubbles"></span>
+                    Contact
+                  </label>
+                </li>
+              </div>
+              
+              <!-- Sidebar Footer -->
+              <div class="sidebar-footer">
+                <p>Faisal Portfolio Version 2.0</p>
+              </div>
             </ul>
           </div>
         </header>
@@ -1627,11 +1723,11 @@
             ></div>
             <div class="my-info">
               <h2 class="name">Faisal Hanif</h2>
-
-              <p></p>
+             
               <p
                 href=""
                 class="typewrite"
+                style="margin-bottom: 10px;"
                 data-period="2000"
                 data-type='["Frontend Developer"]'
               >
@@ -2092,7 +2188,7 @@
                     </div>
                     <div class="pricing-amount">
                       <span class="currency">$</span>
-                      <span class="amount">30</span>
+                      <span class="amount">25</span>
                       <span class="period">/hour</span>
                   </div>
                     <div class="pricing-features">
@@ -3982,26 +4078,17 @@
             <div class="section-header">
               <span class="header">Schedule a Meeting</span>
             </div>
-            
-            <!-- Modern Hero Section -->
-            <div class="schedule-hero">
-              <div class="hero-content">
-                <div class="hero-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-            </div>
-                <h2>Let's Connect & Collaborate</h2>
-                <p>Ready to bring your ideas to life? Schedule a free consultation to discuss your project, explore solutions, and plan your next steps together.</p>
-              </div>
-            </div>
-
+           
+          
             <!-- Meeting Types Grid -->
             <div class="meeting-types">
-              <div class="meeting-type-card active" data-duration="30">
+              <div class="meeting-type-card active" data-duration="30" data-price="15">
                 <div class="meeting-icon">
                   <i class="fa fa-comments"></i>
                 </div>
                 <h3>Quick Chat</h3>
                 <p class="duration">30 minutes</p>
+                <div class="price-tag">15 per session</div>
                 <p class="description">Perfect for initial discussions and project exploration</p>
                 <ul class="features">
                   <li><i class="fa fa-check"></i> Project overview</li>
@@ -4010,18 +4097,56 @@
                 </ul>
               </div>
               
-              <div class="meeting-type-card" data-duration="60">
+              <div class="meeting-type-card" data-duration="60" data-price="25">
                 <div class="meeting-icon">
                   <i class="fa fa-cogs"></i>
                 </div>
                 <h3>Technical Deep Dive</h3>
                 <p class="duration">60 minutes</p>
+                <div class="price-tag">25 per session</div>
                 <p class="description">Comprehensive discussion for complex projects</p>
                 <ul class="features">
                   <li><i class="fa fa-check"></i> Detailed planning</li>
                   <li><i class="fa fa-check"></i> Architecture review</li>
                   <li><i class="fa fa-check"></i> Timeline & budget</li>
                 </ul>
+              </div>
+            </div>
+
+            <!-- Hours Selection and Total Calculation Section -->
+            <div class="hours-selection-section">
+              <h3>Select Number of Hours</h3>
+              <div class="hours-input-container">
+                <div class="hours-control">
+                  <button type="button" id="decreaseHours" class="hours-btn">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <input type="number" id="hoursInput" min="1" max="10" value="1" class="hours-input">
+                  <button type="button" id="increaseHours" class="hours-btn">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <div class="hours-label">hour(s)</div>
+              </div>
+              
+              <div class="total-calculation">
+                <div class="calculation-row">
+                  <span class="calculation-label">Session Type:</span>
+                  <span id="selectedSessionType" class="calculation-value">Quick Chat</span>
+                </div>
+                <div class="calculation-row">
+                  <span class="calculation-label">Price per Session:</span>
+                  <span id="pricePerSession" class="calculation-value">$15</span>
+                </div>
+                <div class="calculation-row">
+                  <span class="calculation-label">Number of Hours:</span>
+                  <span id="numberOfHours" class="calculation-value">1</span>
+                </div>
+                <div class="calculation-divider"></div>
+                <div class="calculation-row total">
+                  <span class="calculation-label">Total Amount:</span>
+                  <span id="totalAmount" class="calculation-value">$15</span>
+                </div>
               </div>
             </div>
 
@@ -4073,7 +4198,7 @@
               </button>
               <p class="cta-note">
                 <i class="fa fa-shield"></i>
-                Free consultation • No commitment required • Instant confirmation
+                Paid consultation • Instant confirmation
               </p>
             </div>
 

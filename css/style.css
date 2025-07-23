@@ -196,7 +196,7 @@ body,html{
 header{
     position:relative;
     top:15px;
-    width:72px;
+    width:85px;
     text-align:center;
     float:left;
     margin-right:10px;
@@ -283,11 +283,17 @@ header{
 .profile-photo {
     width: 50px; /* Adjust size as needed */
     height: 50px; /* Adjust size as needed */
-    border-radius: 50%; /* Makes the image round */
+    border-radius: 6px; /* Modern rounded square to match main photo */
     margin-right: 15px; /* Space between the image and the text */
     margin-left: 10px; /* Space between the image and the text */
     margin-top: 5px; /* Space between the image and the text */
     object-fit: cover; /* Ensures the image covers the space without distorting */
+    box-shadow: 0 2px 8px rgba(14, 102, 85, 0.15); /* Subtle shadow */
+    transition: transform 0.2s ease;
+}
+
+.profile-photo:hover {
+    transform: scale(1.05);
 }
 
 .text-container {
@@ -307,6 +313,17 @@ header{
     .text-container {
         display: none;
     }
+    
+    /* Hide mobile-specific elements on desktop */
+    .hamburger-menu,
+    .menu-overlay,
+    .sidebar-header,
+    .sidebar-footer,
+    .logo-circle,
+    .logo-text,
+    .sidebar-close {
+        display: none !important;
+    }
 }
 @media screen and (max-width: 768px) {
     .profile-container {
@@ -315,43 +332,59 @@ header{
 }
 
 .menu label{
-    padding:13px 3px;
+    padding: 16px 12px;
     position:relative;
     overflow:hidden;
     display:block;
     height:auto;
-    color:#323232;
+    color: #6b7280;
     text-align:center;
-    font-size:12px;
-    font-weight:500;
+    font-size: 10px;
+    font-weight: 600;
     text-transform:uppercase;
+    letter-spacing: 0.3px;
     transition:all .3s ease 0s;
-    -moz-transition:all .3s ease 0s;
-    -webkit-transition:all .3s ease 0s;
-    -o-transition:all .3s ease 0s;
-    -ms-transition:all .3s ease 0s;
-    cursor:pointer
+    cursor:pointer;
+    border-radius: 8px;
+    margin: 2px 0;
+    white-space: nowrap;
+    min-width: 60px;
 }
 .menu label:hover{
-    color:var(--dark-blue)
+    color: #fff;
+    background: rgba(14, 102, 85, 0.1);
+    transform: translateX(2px);
 }
 .menu label:hover>span{
-    color:var(--dark-blue)!important
+    color: var(--dark-blue)!important;
+    transform: scale(1.1);
 }
 .menu label.active-menu{
-    color:var(--dark-blue)
+    color: var(--dark-blue);
+    background: rgba(14, 102, 85, 0.08);
+    font-weight: 700;
 }
 .menu label.active-menu>span{
-    color:var(--dark-blue)!important
+    color: var(--dark-blue)!important;
+    transform: scale(1.05);
 }
+.menu label .icon {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 6px;
+    transition: all 0.3s ease;
+}
+
+.menu label:hover .icon {
+    transform: translateY(-1px);
+}
+
+.menu label.active-menu .icon {
+    color: var(--dark-blue);
+}
+
 .menu label::after{
-    position:absolute;
-    content:"";
-    width:100%;
-    height:1px;
-    left:0;
-    bottom:0;
-    background:radial-gradient(ellipse at right,#ddd 0,rgba(255,255,255,0) 70%)
+    display: none; /* Remove old gradient line */
 }
 
 .main-card{
@@ -404,20 +437,27 @@ header{
     box-sizing: border-box; /* Includes padding in width/height calculations */
 }
 
-/* Styles for the profile photo */
+/* Styles for the profile photo - Modern square design */
 .my-photo {
     position: relative;
     width: 30%; /* Proportional width to the screen size */
     max-width: 280px; /* Maximum size */
     height: auto; /* Maintain aspect ratio */
-    aspect-ratio: 1; /* Ensures the div remains a circle */
+    aspect-ratio: 1; /* Ensures the div remains square */
     background-image: url('imgs/FaisalN.jpeg');
     background-position: center;
     background-size: cover;
-    border-radius: 50%;
+    border-radius: 12px; /* Modern rounded square */
     overflow: hidden;
     margin-top: 40px; /* Adjusted top margin for better vertical spacing */
     margin-bottom: 20px; /* Bottom margin for balance */
+    box-shadow: 0 8px 32px rgba(14, 102, 85, 0.15); /* Modern shadow with brand color */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.my-photo:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(14, 102, 85, 0.25);
 }
 
 .my-photo::after {
@@ -450,6 +490,7 @@ header{
 @media (max-width: 767px) {
     .main-card-wrap {
         padding: 20px 10px;
+        margin-top: -50px;
     }
 
     .my-photo {
@@ -476,24 +517,63 @@ header{
     display:flex;
     align-items:center;
     justify-content:center;
-    flex-direction:column
+    flex-direction:column;
+    padding: 0 20px;
 }
 .socialLinks{
     list-style:none;
     display:flex;
-    margin:13px auto
+    margin:5px auto;
+    gap: 10px; /* Reduced spacing */
+    justify-content: center;
 }
 .socialLinks a{
-    color:rgba(0,0,0,.616);
-    margin:0 5px;
-    transition:color .4s ease;
-    -webkit-transition:color .4s ease;
-    -moz-transition:color .4s ease;
-    -ms-transition:color .4s ease;
-    -o-transition:color .4s ease
+    color: #6b7280;
+    width: 36px; /* Smaller size */
+    height: 36px; /* Smaller size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px; /* Slightly smaller radius */
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.socialLinks a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+    z-index: 1;
 }
 .socialLinks a:hover{
-    color:var(--dark-blue)
+    color: #fff;
+    background: var(--dark-blue);
+    border-color: var(--dark-blue);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(14, 102, 85, 0.3);
+}
+
+.socialLinks a:hover span {
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.socialLinks a span {
+    font-size: 15px; /* Smaller icon size */
+    position: relative;
+    z-index: 2;
 }
 .my-info a{
     text-decoration:none
@@ -502,16 +582,22 @@ header{
     color:var(--dark-blue)
 }
 .my-info .name{
-    font-size:34px;
-    font-weight:400
+    font-size: 32px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
 }
 .info-btns{
     position:absolute;
     bottom:0;
     left:0;
     width:100%;
-    height:70px;
-    display:flex
+    height:80px;
+    display:flex;
+    padding: 0 20px;
+    gap: 12px;
+    align-items: center;
 }
 .info-btns .left-btn,.info-btns .right-btn{
     position:relative;
@@ -519,47 +605,28 @@ header{
     display:flex;
     align-items:center;
     justify-content:center;
-    line-height:70px;
+    height: 48px;
     font-size:14px;
-    color:#323232;
+    color:#374151;
     font-weight:500;
     text-align:center;
-    text-transform:uppercase;
-    transition:color .3s ease;
-    -webkit-transition:color .3s ease;
-    -moz-transition:color .3s ease;
-    -ms-transition:color .3s ease;
-    -o-transition:color .3s ease
-}
-.info-btns .left-btn::before{
-    position:absolute;
-    content:"";
-    width:100%;
-    height:2px;
-    top:0;
-    bottom:0;
-    background:radial-gradient(ellipse at left,rgba(221,221,221,.075) 30%,rgba(90,85,85,.425) 70%)
-}
-.info-btns .right-btn::before{
-    position:absolute;
-    content:"";
-    width:100%;
-    height:2px;
-    top:0;
-    bottom:0;
-    background:radial-gradient(ellipse at right,rgba(221,221,221,.075) 30%,rgba(90,85,85,.425) 70%)
-}
-.info-btns .right-btn::after{
-    position:absolute;
-    content:"";
-    width:2px;
-    height:100%;
-    top:0;
-    left:0;
-    background:radial-gradient(ellipse at bottom,rgba(221,221,221,.075) 35%,rgba(90,85,85,.425) 100%)
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 .info-btns .left-btn:hover,.info-btns .right-btn:hover{
-    color:var(--dark-blue)
+    color: #fff;
+    background: var(--dark-blue);
+    border-color: var(--dark-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(14, 102, 85, 0.3);
+}
+
+.info-btns .left-btn:active,.info-btns .right-btn:active{
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(14, 102, 85, 0.2);
 }
 .info-btns .right-btn label{
     cursor:pointer
@@ -5657,7 +5724,23 @@ input[name=menu-list]:checked + label::before {
     color: var(--dark-blue);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.meeting-type-card .price-tag {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.meeting-type-card .price-tag::before {
+    content: '\f155';
+    font-family: 'FontAwesome';
+    margin-right: 8px;
+    font-size: 16px;
 }
 
 .meeting-type-card .description {
@@ -5684,6 +5767,150 @@ input[name=menu-list]:checked + label::before {
     color: var(--dark-blue);
     margin-right: 10px;
     font-size: 12px;
+}
+
+.hours-selection-section {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin: 0 15px 40px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 2px solid #f0f0f0;
+}
+
+.hours-selection-section h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.hours-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.hours-control {
+    display: flex;
+    align-items: center;
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+}
+
+.hours-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--dark-blue);
+}
+
+.hours-btn:hover {
+    background: var(--dark-blue);
+    color: white;
+}
+
+.hours-input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 8px;
+    background: transparent;
+    border: none;
+    -moz-appearance: textfield; /* Firefox */
+}
+
+/* Hide number input arrows */
+.hours-input::-webkit-outer-spin-button,
+.hours-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.hours-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    margin-left: 10px;
+}
+
+.total-calculation {
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.calculation-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #555;
+}
+
+.calculation-row.total {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 5px;
+}
+
+.calculation-label {
+    font-weight: 500;
+}
+
+.calculation-value {
+    font-weight: 600;
+    color: var(--dark-blue);
+}
+
+.calculation-row.total .calculation-value {
+    font-size: 20px;
+    color: var(--dark-blue);
+}
+
+.calculation-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 15px 0;
+}
+
+/* Responsive styles for hours selection */
+@media (max-width: 768px) {
+    .hours-selection-section {
+        padding: 20px;
+    }
+    
+    .total-calculation {
+        padding: 15px;
+    }
+    
+    .calculation-row {
+        font-size: 14px;
+    }
+    
+    .calculation-row.total {
+        font-size: 16px;
+    }
+    
+    .calculation-row.total .calculation-value {
+        font-size: 18px;
+    }
 }
 
 .expectations-section {
@@ -7673,7 +7900,7 @@ input[name=menu-list]:checked + label::before {
   font-weight: 700 !important;
   color: #0f4c41 !important;
   line-height: 1.2 !important;
-  margin-bottom: 16px !important;
+  margin-bottom: 3px !important;
   letter-spacing: -0.5px !important;
 }
 

@@ -1,4 +1,178 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Meeting pricing calculation functionality
+    function initMeetingPricingCalculator() {
+        const meetingTypeCards = document.querySelectorAll('.meeting-type-card');
+        const hoursInput = document.getElementById('hoursInput');
+        const decreaseHoursBtn = document.getElementById('decreaseHours');
+        const increaseHoursBtn = document.getElementById('increaseHours');
+        const selectedSessionTypeEl = document.getElementById('selectedSessionType');
+        const pricePerSessionEl = document.getElementById('pricePerSession');
+        const numberOfHoursEl = document.getElementById('numberOfHours');
+        const totalAmountEl = document.getElementById('totalAmount');
+        
+        // Initialize with default values
+        let selectedPrice = 15; // Default price for Quick Chat
+        let selectedType = 'Quick Chat';
+        let hours = 1;
+        
+        // Update the calculation display
+        function updateCalculation() {
+            selectedSessionTypeEl.textContent = selectedType;
+            pricePerSessionEl.textContent = `${selectedPrice}`;
+            numberOfHoursEl.textContent = hours;
+            totalAmountEl.textContent = `${selectedPrice * hours}`;
+        }
+        
+        // Handle meeting type selection
+        meetingTypeCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Update active state
+                meetingTypeCards.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update selected values
+                selectedPrice = parseInt(this.dataset.price);
+                selectedType = this.querySelector('h3').textContent;
+                
+                // Update calculation
+                updateCalculation();
+            });
+        });
+        
+        // Handle hours input changes
+        hoursInput.addEventListener('change', function() {
+            hours = parseInt(this.value);
+            if (hours < 1) {
+                hours = 1;
+                this.value = 1;
+            } else if (hours > 10) {
+                hours = 10;
+                this.value = 10;
+            }
+            updateCalculation();
+        });
+        
+        // Handle decrease hours button
+        decreaseHoursBtn.addEventListener('click', function() {
+            if (hours > 1) {
+                hours--;
+                hoursInput.value = hours;
+                updateCalculation();
+            }
+        });
+        
+        // Handle increase hours button
+        increaseHoursBtn.addEventListener('click', function() {
+            if (hours < 10) {
+                hours++;
+                hoursInput.value = hours;
+                updateCalculation();
+            }
+        });
+        
+        // Initialize calculation display
+        updateCalculation();
+    }
+    
+    // Initialize meeting pricing calculator if elements exist
+    // Only initialize the meeting pricing calculator if we're on the schedule meeting page
+    if (document.querySelector('.meeting-types') && 
+        document.getElementById('hoursInput') && 
+        document.getElementById('selectedSessionType')) {
+        initMeetingPricingCalculator();
+    }
+    
+    // Initialize Meeting Pricing Calculator
+    function initMeetingPricingCalculator() {
+        const meetingTypeCards = document.querySelectorAll('.meeting-type-card');
+        const hoursInput = document.getElementById('hoursInput');
+        const decreaseBtn = document.getElementById('decreaseHours');
+        const increaseBtn = document.getElementById('increaseHours');
+        
+        // Display elements
+        const selectedSessionTypeEl = document.getElementById('selectedSessionType');
+        const pricePerSessionEl = document.getElementById('pricePerSession');
+        const numberOfHoursEl = document.getElementById('numberOfHours');
+        const totalAmountEl = document.getElementById('totalAmount');
+        
+        // Check if all required elements exist
+        if (!hoursInput || !decreaseBtn || !increaseBtn || 
+            !selectedSessionTypeEl || !pricePerSessionEl || 
+            !numberOfHoursEl || !totalAmountEl) {
+            console.log('Some elements for meeting pricing calculator not found');
+            return; // Exit the function if any element is missing
+        }
+        
+        // Initial values
+        let selectedPrice = 15; // Default to Quick Chat price
+        let selectedType = 'Quick Chat';
+        let hours = 1;
+        
+        // Function to update calculation display
+        function updateCalculation() {
+            selectedSessionTypeEl.textContent = selectedType;
+            pricePerSessionEl.textContent = `${selectedPrice}`;
+            numberOfHoursEl.textContent = hours;
+            totalAmountEl.textContent = `$${selectedPrice * hours}`;
+        }
+        
+        // Handle meeting type card selection
+        meetingTypeCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Update active state
+                meetingTypeCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                
+                // Update selected price and type
+                selectedPrice = parseInt(card.dataset.price);
+                selectedType = card.querySelector('h3').textContent;
+                
+                // Update calculation
+                updateCalculation();
+            });
+        });
+        
+        // Handle hours input change
+        hoursInput.addEventListener('change', () => {
+            let value = parseInt(hoursInput.value);
+            
+            // Validate input
+            if (isNaN(value) || value < 1) {
+                value = 1;
+            } else if (value > 10) {
+                value = 10;
+            }
+            
+            // Update hours and input value
+            hours = value;
+            hoursInput.value = value;
+            
+            // Update calculation
+            updateCalculation();
+        });
+        
+        // Handle decrease button
+        decreaseBtn.addEventListener('click', () => {
+            if (hours > 1) {
+                hours--;
+                hoursInput.value = hours;
+                updateCalculation();
+            }
+        });
+        
+        // Handle increase button
+        increaseBtn.addEventListener('click', () => {
+            if (hours < 10) {
+                hours++;
+                hoursInput.value = hours;
+                updateCalculation();
+            }
+        });
+        
+        // Initialize calculation display
+        updateCalculation();
+    }
+    
     // Hide the preloader when the window fully loads
     window.addEventListener("load", () => {
         const preloader = document.querySelector(".preloader");
