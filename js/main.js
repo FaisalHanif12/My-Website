@@ -9,10 +9,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const pricePerSessionEl = document.getElementById('pricePerSession');
         const numberOfHoursEl = document.getElementById('numberOfHours');
         const totalAmountEl = document.getElementById('totalAmount');
+        const proceedToPaymentBtn = document.getElementById('proceedToPaymentButton');
+        const paymentSection = document.getElementById('paymentSection');
+        const backToSelectionBtn = document.getElementById('backToSelectionButton');
+        const submitPaymentBtn = document.getElementById('submitPaymentButton');
+        
+        // Payment summary elements
+        const summarySessionTypeEl = document.getElementById('summarySessionType');
+        const summaryDurationEl = document.getElementById('summaryDuration');
+        const summaryHoursEl = document.getElementById('summaryHours');
+        const summaryTotalEl = document.getElementById('summaryTotal');
+        const paymentAmountEl = document.getElementById('paymentAmount');
         
         // Initialize with default values
         let selectedPrice = 15; // Default price for Quick Chat
         let selectedType = 'Quick Chat';
+        let selectedDuration = '30 minutes';
         let hours = 1;
         
         // Update the calculation display
@@ -20,7 +32,14 @@ document.addEventListener("DOMContentLoaded", function () {
             selectedSessionTypeEl.textContent = selectedType;
             pricePerSessionEl.textContent = `${selectedPrice}`;
             numberOfHoursEl.textContent = hours;
-            totalAmountEl.textContent = `${selectedPrice * hours}`;
+            totalAmountEl.textContent = `$${selectedPrice * hours}`;
+            
+            // Update payment summary if elements exist
+            if (summarySessionTypeEl) summarySessionTypeEl.textContent = selectedType;
+            if (summaryDurationEl) summaryDurationEl.textContent = selectedDuration;
+            if (summaryHoursEl) summaryHoursEl.textContent = hours;
+            if (summaryTotalEl) summaryTotalEl.textContent = `$${selectedPrice * hours}`;
+            if (paymentAmountEl) paymentAmountEl.textContent = `$${selectedPrice * hours}`;
         }
         
         // Handle meeting type selection
@@ -33,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Update selected values
                 selectedPrice = parseInt(this.dataset.price);
                 selectedType = this.querySelector('h3').textContent;
+                selectedDuration = this.querySelector('.duration').textContent;
                 
                 // Update calculation
                 updateCalculation();
@@ -72,6 +92,149 @@ document.addEventListener("DOMContentLoaded", function () {
         
         // Initialize calculation display
         updateCalculation();
+        
+        // Handle proceed to payment button
+        if (proceedToPaymentBtn) {
+            proceedToPaymentBtn.addEventListener('click', function() {
+                // Redirect to payment page with parameters
+                const paymentUrl = new URL('My-Website/payment.html', window.location.origin);
+                
+                // Add parameters to URL
+                paymentUrl.searchParams.append('sessionType', selectedType);
+                paymentUrl.searchParams.append('duration', selectedDuration);
+                paymentUrl.searchParams.append('hours', hours);
+                paymentUrl.searchParams.append('amount', selectedPrice * hours);
+                
+                // Navigate to payment page
+                window.location.href = paymentUrl.toString();
+            });
+        }
+        
+        // Handle close payment button
+        const closePaymentBtn = document.getElementById('closePaymentBtn');
+        if (closePaymentBtn) {
+            closePaymentBtn.addEventListener('click', function() {
+                if (paymentSection) {
+                    paymentSection.classList.remove('active');
+                    
+                    // Re-enable body scrolling
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+        
+        // Handle back to selection button
+        if (backToSelectionBtn) {
+            backToSelectionBtn.addEventListener('click', function() {
+                // Hide payment section
+                if (paymentSection) {
+                    paymentSection.classList.remove('active');
+                    
+                    // Re-enable body scrolling
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+        
+        // Handle submit payment button
+        if (submitPaymentBtn) {
+            submitPaymentBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const cardNumber = document.getElementById('cardNumber').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                const cardName = document.getElementById('cardName').value;
+                const email = document.getElementById('email').value;
+                const streetAddress = document.getElementById('streetAddress').value;
+                const city = document.getElementById('city').value;
+                const state = document.getElementById('state').value;
+                const zipCode = document.getElementById('zipCode').value;
+                
+                // Basic validation
+                if (!cardNumber || !expiryDate || !cvv || !cardName || !email || !streetAddress || !city || !state || !zipCode) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Simple card number validation
+                if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
+                    alert('Please enter a valid 16-digit card number');
+                    return;
+                }
+                
+                // Simple expiry date validation
+                if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+                    alert('Please enter a valid expiry date (MM/YY)');
+                    return;
+                }
+                
+                // Simple CVV validation
+                if (!/^\d{3,4}$/.test(cvv)) {
+                    alert('Please enter a valid CVV code');
+                    return;
+                }
+                
+                // Simple email validation
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
+                // Here you would normally integrate with Stripe API
+                // For now, show a success message
+                alert('Payment successful! Your session has been booked.');
+                
+                // Show a confirmation message within the modal
+                const paymentContainer = paymentSection.querySelector('.payment-container');
+                if (paymentContainer) {
+                    paymentContainer.innerHTML = `
+                        <div class="payment-success">
+                            <button id="closeSuccessBtn" class="close-payment-btn">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <div class="success-icon">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <h3>Payment Successful!</h3>
+                        <p>Your session has been booked. You will receive a confirmation email shortly.</p>
+                        <div class="booking-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Session:</span>
+                                <span class="detail-value">${selectedType}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Duration:</span>
+                                <span class="detail-value">${selectedDuration}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Hours:</span>
+                                <span class="detail-value">${hours}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Paid:</span>
+                                <span class="detail-value">$${selectedPrice * hours}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    
+                    // Add event listener for the close success button
+                    setTimeout(() => {
+                        const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+                        if (closeSuccessBtn) {
+                            closeSuccessBtn.addEventListener('click', function() {
+                                if (paymentSection) {
+                                    paymentSection.classList.remove('active');
+                                    document.body.style.overflow = '';
+                                }
+                            });
+                        }
+                    }, 100);
+                }
+            });
+        }
     }
     
     // Initialize meeting pricing calculator if elements exist
@@ -80,97 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('hoursInput') && 
         document.getElementById('selectedSessionType')) {
         initMeetingPricingCalculator();
-    }
-    
-    // Initialize Meeting Pricing Calculator
-    function initMeetingPricingCalculator() {
-        const meetingTypeCards = document.querySelectorAll('.meeting-type-card');
-        const hoursInput = document.getElementById('hoursInput');
-        const decreaseBtn = document.getElementById('decreaseHours');
-        const increaseBtn = document.getElementById('increaseHours');
-        
-        // Display elements
-        const selectedSessionTypeEl = document.getElementById('selectedSessionType');
-        const pricePerSessionEl = document.getElementById('pricePerSession');
-        const numberOfHoursEl = document.getElementById('numberOfHours');
-        const totalAmountEl = document.getElementById('totalAmount');
-        
-        // Check if all required elements exist
-        if (!hoursInput || !decreaseBtn || !increaseBtn || 
-            !selectedSessionTypeEl || !pricePerSessionEl || 
-            !numberOfHoursEl || !totalAmountEl) {
-            console.log('Some elements for meeting pricing calculator not found');
-            return; // Exit the function if any element is missing
-        }
-        
-        // Initial values
-        let selectedPrice = 15; // Default to Quick Chat price
-        let selectedType = 'Quick Chat';
-        let hours = 1;
-        
-        // Function to update calculation display
-        function updateCalculation() {
-            selectedSessionTypeEl.textContent = selectedType;
-            pricePerSessionEl.textContent = `${selectedPrice}`;
-            numberOfHoursEl.textContent = hours;
-            totalAmountEl.textContent = `$${selectedPrice * hours}`;
-        }
-        
-        // Handle meeting type card selection
-        meetingTypeCards.forEach(card => {
-            card.addEventListener('click', () => {
-                // Update active state
-                meetingTypeCards.forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                
-                // Update selected price and type
-                selectedPrice = parseInt(card.dataset.price);
-                selectedType = card.querySelector('h3').textContent;
-                
-                // Update calculation
-                updateCalculation();
-            });
-        });
-        
-        // Handle hours input change
-        hoursInput.addEventListener('change', () => {
-            let value = parseInt(hoursInput.value);
-            
-            // Validate input
-            if (isNaN(value) || value < 1) {
-                value = 1;
-            } else if (value > 10) {
-                value = 10;
-            }
-            
-            // Update hours and input value
-            hours = value;
-            hoursInput.value = value;
-            
-            // Update calculation
-            updateCalculation();
-        });
-        
-        // Handle decrease button
-        decreaseBtn.addEventListener('click', () => {
-            if (hours > 1) {
-                hours--;
-                hoursInput.value = hours;
-                updateCalculation();
-            }
-        });
-        
-        // Handle increase button
-        increaseBtn.addEventListener('click', () => {
-            if (hours < 10) {
-                hours++;
-                hoursInput.value = hours;
-                updateCalculation();
-            }
-        });
-        
-        // Initialize calculation display
-        updateCalculation();
     }
     
     // Hide the preloader when the window fully loads

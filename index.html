@@ -22,6 +22,7 @@
     <!-- Critical CSS -->
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/animation.style.css" />
+    <link rel="stylesheet" href="css/payment-styles.css" />
     
     <!-- Fonts and icons (load asynchronously) -->
     <link
@@ -4147,9 +4148,18 @@
                   <span class="calculation-label">Total Amount:</span>
                   <span id="totalAmount" class="calculation-value">$15</span>
                 </div>
+                
+                <!-- Payment Button inside the calculation card -->
+                <div class="calculation-row payment-button-row">
+                  <button id="proceedToPaymentButton" class="payment-proceed-button">
+                    <i class="fa fa-credit-card"></i>
+                    Proceed to Payment
+                  </button>
+                </div>
               </div>
             </div>
-
+                        
+           
             <!-- What to Expect Section -->
             <div class="expectations-section">
               <h3>What to Expect</h3>
@@ -4185,22 +4195,9 @@
               </div>
             </div>
             
-            <!-- CTA Section -->
-            <div class="cta-section">
-              <button id="loadCalendlyButton" class="modern-cta-button">
-                <span class="button-icon">
-                  <i class="fa fa-calendar"></i>
-                </span>
-                <span class="button-text">Book Your Session</span>
-                <span class="button-arrow">
-                  <i class="fa fa-arrow-right"></i>
-                </span>
-              </button>
-              <p class="cta-note">
-                <i class="fa fa-shield"></i>
-                Paid consultation • Instant confirmation
-              </p>
-            </div>
+            <!-- Payment Section (Now redirects to payment.html) -->
+            <!-- The payment section has been moved to a separate page (payment.html) -->
+            <!-- The 'Proceed to Payment' button now redirects to payment.html with parameters -->
 
             <!-- Loading States -->
             <div id="loadingMessage" class="loading-container">
@@ -4210,8 +4207,7 @@
                 <p>Please wait while we prepare your booking interface</p>
               </div>
             </div>
-            
-            <!-- Calendly Widget Container -->
+                        <!-- Calendly Widget Container -->
             <div class="calendly-inline-widget" style="min-width: 320px; height: 1200px; display: none"></div>
           </div>
         </div>
@@ -4222,4 +4218,67 @@
   <script defer src="js/Elements.js"></script>
   <script defer src="js/main.js"></script>
   <script defer src="js/coustom-progress-circle.js"></script>
+  <!-- Stripe JS -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    // Initialize Stripe (replace with your publishable key when ready for production)
+    document.addEventListener('DOMContentLoaded', function() {
+      // This is a test publishable key. Replace with your actual publishable key in production.
+      const stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+      
+      // Create a card element
+      const elements = stripe.elements();
+      const cardElement = document.getElementById('cardElement');
+      
+      if (cardElement) {
+        // Clear placeholder when Stripe is loaded
+        cardElement.innerHTML = '';
+        
+        // Create and mount the card element
+        const card = elements.create('card', {
+          style: {
+            base: {
+              color: '#333',
+              fontFamily: '"Poppins", sans-serif',
+              fontSmoothing: 'antialiased',
+              fontSize: '14px',
+              '::placeholder': {
+                color: '#aab7c4'
+              }
+            },
+            invalid: {
+              color: '#dc3545',
+              iconColor: '#dc3545'
+            }
+          }
+        });
+        
+        card.mount('#cardElement');
+        
+        // Handle real-time validation errors
+        const cardErrors = document.getElementById('cardErrors');
+        card.addEventListener('change', function(event) {
+          if (event.error && cardErrors) {
+            cardErrors.textContent = event.error.message;
+          } else if (cardErrors) {
+            cardErrors.textContent = '';
+          }
+        });
+        
+        // Handle form submission (in a real implementation)
+        const submitPaymentButton = document.getElementById('submitPaymentButton');
+        if (submitPaymentButton) {
+          const paymentForm = submitPaymentButton.closest('.payment-form');
+          
+          submitPaymentButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // In a real implementation, you would use stripe.confirmCardPayment here
+            // For this demo, we're just showing a success message
+            // The actual payment processing is handled in main.js
+          });
+        }
+      }
+    });
+  </script>
 </html>

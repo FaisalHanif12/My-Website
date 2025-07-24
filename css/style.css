@@ -193,6 +193,13 @@ body,html{
     -webkit-transition:all .4s ease 0s;
     -o-transition:all .4s ease 0s
 }
+/* Hide profile container on desktop screens wider than 650px */
+@media screen and (min-width: 651px) {
+    .profile-container {
+        display: none !important;
+    }
+}
+
 header{
     position:relative;
     top:15px;
@@ -263,11 +270,11 @@ header{
 .menu-list{
     list-style:none;
     background:#fff;
-    border-radius:0px;
-    -webkit-border-radius:0px;
-    -moz-border-radius:0px;
-    -ms-border-radius:0px;
-    -o-border-radius:0px;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -ms-border-radius:5px;
+    -o-border-radius:5px;
     padding:13px 5px
 }
 .menu{

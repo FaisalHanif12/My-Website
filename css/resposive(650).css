@@ -620,4 +620,8 @@ header{
     .hamburger-menu {
         display: none !important;
     }
+    
+    .profile-container {
+        display: none !important;
+    }
 }
