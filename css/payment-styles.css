@@ -381,14 +381,40 @@
   color: #007bff;
 }
 
+.success-actions {
+  text-align: center;
+  margin-top: 30px;
+}
+
 /* Payment Success Styles */
 .payment-success {
-  text-align: center;
   padding: 40px 30px;
   background-color: #fff;
   border-radius: 12px;
   position: relative;
   animation: fadeIn 0.4s ease-out;
+}
+
+.success-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.success-content {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.meeting-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.details-section {
+  flex: 1;
+  min-width: 0;
 }
 
 @keyframes fadeIn {
@@ -435,18 +461,114 @@
   margin-right: auto;
 }
 
+.meeting-link-section {
+  background-color: #f0f8ff;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  border: 2px solid #e3f2fd;
+}
+
+.meeting-link-section h4 {
+  color: #1976d2;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.meeting-link-section h4 i {
+  margin-right: 8px;
+}
+
+.meeting-link-box {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.meeting-link {
+  display: inline-flex;
+  align-items: center;
+  background-color: #1976d2;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.meeting-link:hover {
+  background-color: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.meeting-link i {
+  margin-right: 8px;
+}
+
+.meeting-url {
+  font-size: 12px;
+  color: #666;
+  word-break: break-all;
+  background-color: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
 .booking-details {
   background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
-  max-width: 400px;
-  margin: 0 auto;
+  border-radius: 12px;
+  padding: 25px;
+  height: fit-content;
+}
+
+.booking-details h4 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.details-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
 }
 
 .detail-item {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+
+.detail-item .label {
+  color: #666;
+  font-weight: 500;
+  font-size: 12px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-item .value {
+  font-weight: 600;
+  color: #333;
   font-size: 14px;
 }
 
@@ -474,6 +596,21 @@
     padding: 12px 16px;
     font-size: 15px;
   }
+  
+  .success-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .meeting-link-section,
+  .booking-details {
+    padding: 20px;
+  }
+  
+  .details-grid {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -497,5 +634,28 @@
   
   .summary-item.total {
     font-size: 15px;
+  }
+  
+  .success-content {
+    gap: 15px;
+  }
+  
+  .meeting-link-section,
+  .booking-details {
+    padding: 15px;
+  }
+  
+  .meeting-link {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .details-grid {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .detail-item {
+    padding: 10px;
   }
 }

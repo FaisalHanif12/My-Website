@@ -96,17 +96,18 @@ document.addEventListener("DOMContentLoaded", function () {
         // Handle proceed to payment button
         if (proceedToPaymentBtn) {
             proceedToPaymentBtn.addEventListener('click', function() {
-                // Redirect to payment page with parameters
-                const paymentUrl = new URL('My-Website/payment.html', window.location.origin);
+                // Redirect to booking page with parameters
+                // Use relative path to work with the current server
+                const bookingUrl = new URL('booking.html', window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'));
                 
                 // Add parameters to URL
-                paymentUrl.searchParams.append('sessionType', selectedType);
-                paymentUrl.searchParams.append('duration', selectedDuration);
-                paymentUrl.searchParams.append('hours', hours);
-                paymentUrl.searchParams.append('amount', selectedPrice * hours);
+                bookingUrl.searchParams.append('sessionType', selectedType);
+                bookingUrl.searchParams.append('duration', selectedDuration);
+                bookingUrl.searchParams.append('hours', hours);
+                bookingUrl.searchParams.append('amount', selectedPrice * hours);
                 
-                // Navigate to payment page
-                window.location.href = paymentUrl.toString();
+                // Navigate to booking page
+                window.location.href = bookingUrl.toString();
             });
         }
         
