@@ -10,6 +10,10 @@
     <link rel="preload" href="css/animation.style.css" as="style" />
     <link rel="preload" href="imgs/FaisalN1.jpeg" as="image" />
     <link rel="preload" href="imgs/F-logo2.png" as="image" />
+    <!-- Resource hints for better performance -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
@@ -17,12 +21,13 @@
     <link rel="dns-prefetch" href="https://calendly.com" />
     
     <!-- Favicon -->
-    <link rel="icon" href="imgs/F-Logo3.png" type="image/png" />
+    <link rel="icon" href="imgs/F-Logo3-optimized.svg" type="image/svg+xml" />
     
     <!-- Critical CSS -->
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/animation.style.css" />
-    <link rel="stylesheet" href="css/payment-styles.css" />
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="css/payment-styles.css" media="print" onload="this.media='all'" />
     
     <!-- Fonts and icons (load asynchronously) -->
     <link
@@ -2855,7 +2860,7 @@
                   <div class="project-image-container">
                 <div class="img">
                       <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/Dashboard.webp" alt="Smart Health Care Dashboard" />
+                        <img src="imgs/Dashboard.webp" alt="Smart Health Care Dashboard" loading="lazy" />
                   </a>
                 </div>
                     <div class="project-overlay">
@@ -2900,7 +2905,7 @@
                   <div class="project-image-container">
                 <div class="img">
                       <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/Smart Gallery.webp" alt="Smart Gallery App" />
+                        <img src="imgs/Smart Gallery.webp" alt="Smart Gallery App" loading="lazy" />
                   </a>
                 </div>
                     <div class="project-overlay">
@@ -2945,7 +2950,7 @@
                   <div class="project-image-container">
                 <div class="img">
                       <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/Echoai.webp" alt="Echo AI Application" />
+                        <img src="imgs/Echoai.webp" alt="Echo AI Application" loading="lazy" />
                   </a>
                 </div>
                     <div class="project-overlay">
@@ -2991,7 +2996,7 @@
                   <div class="project-image-container">
                 <div class="img">
                       <a href="https://medicaredisplay.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/medicare.png" alt="Smart Gallery App" />
+                        <img src="imgs/medicare.png" alt="Smart Gallery App" loading="lazy" />
                   </a>
                 </div>
                     <div class="project-overlay">
@@ -3036,7 +3041,7 @@
                   <div class="project-image-container">
                   <div class="img">
                       <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/Shop.webp" alt="Soledeck E-commerce Platform" />
+                        <img src="imgs/Shop.webp" alt="Soledeck E-commerce Platform" loading="lazy" />
                     </a>
                   </div>
                     <div class="project-overlay">
@@ -3081,7 +3086,7 @@
                   <div class="project-image-container">
                   <div class="img">
                       <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/Financial-fusion.webp" alt="Financial Fusion App" />
+                        <img src="imgs/Financial-fusion.webp" alt="Financial Fusion App" loading="lazy" />
                     </a>
                   </div>
                     <div class="project-overlay">
@@ -3126,7 +3131,7 @@
                   <div class="project-image-container">
                   <div class="img">
                       <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/Home.webp" alt="YOOM Video Conferencing" />
+                        <img src="imgs/Home.webp" alt="YOOM Video Conferencing" loading="lazy" />
                     </a>
                   </div>
                     <div class="project-overlay">
@@ -3171,7 +3176,7 @@
                   <div class="project-image-container">
                   <div class="img">
                       <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/doctors.png" alt="Dosnexa Medical Platform" />
+                        <img src="imgs/doctors.png" alt="Dosnexa Medical Platform" loading="lazy" />
                     </a>
                   </div>
                     <div class="project-overlay">
@@ -3216,7 +3221,7 @@
                   <div class="project-image-container">
                   <div class="img">
                       <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        <img src="imgs/dsa.webp" alt="DSA Tracker Application" />
+                        <img src="imgs/dsa.webp" alt="DSA Tracker Application" loading="lazy" />
                     </a>
                   </div>
                     <div class="project-overlay">
@@ -4156,6 +4161,17 @@
                     Book Session
                   </button>
                 </div>
+                
+                <!-- Optional Payment Message -->
+                <div class="optional-payment-message">
+                  <div class="optional-payment-icon">
+                    <i class="fa fa-heart"></i>
+                  </div>
+                  <div class="optional-payment-content">
+                    <h4>💝 Payment is Optional</h4>
+                    <p>If you like my meeting service, you can pay me after the meeting, but it's totally up to you. Your satisfaction is my priority!</p>
+                  </div>
+                </div>
               </div>
             </div>
                         
@@ -4216,7 +4232,7 @@
   </body>
   <script defer src="js/animation-effect.js"></script>
   <script defer src="js/Elements.js"></script>
-  <script defer src="js/main.js"></script>
+  <script defer src="js/main.min.js"></script>
   <script defer src="js/coustom-progress-circle.js"></script>
   <!-- Stripe JS -->
   <script src="https://js.stripe.com/v3/"></script>

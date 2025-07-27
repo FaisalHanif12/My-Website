@@ -3,544 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Successful - Faisal Hanif</title>
+    <title>Booking Confirmed - Faisal Hanif</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive(1100).css">
+    <link rel="stylesheet" href="css/resposive(650).css">
+    <link rel="stylesheet" href="css/animation.style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: white;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
         .success-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 50px auto;
             padding: 50px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
             text-align: center;
-            max-width: 600px;
-            width: 100%;
-            animation: fadeInUp 0.8s ease-out;
+            border: 1px solid #e5e7eb;
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        
         .success-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            animation: pulse 2s infinite;
+            font-size: 100px;
+            color: #10b981;
+            margin-bottom: 40px;
+            animation: bounce 1s ease-in-out;
+            text-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+            display: block;
         }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            }
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-            }
-        }
-
+        
         .success-icon i {
-            font-size: 40px;
-            color: white;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            /* Fallback for browsers that don't support background-clip */
+            color: #10b981;
         }
-
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
         .success-title {
-            font-size: 32px;
-            font-weight: 700;
+            font-size: 3rem;
             color: #1f2937;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1f2937, #374151);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
         }
-
+        
         .success-subtitle {
-            font-size: 18px;
+            font-size: 1.3rem;
             color: #6b7280;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
+            font-weight: 500;
             line-height: 1.6;
         }
-
+        
         .booking-details {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 25px;
-            margin: 30px 0;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
             text-align: left;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
-
-        .booking-details h4 {
-            font-size: 18px;
-            color: #0e6655;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .detail-item {
+        
+        .detail-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 18px 0;
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
         }
-
-        .detail-item:last-child {
+        
+        .detail-row:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 10px;
+            padding: 18px 15px;
+            margin: 0 -15px;
+        }
+        
+        .detail-row:last-child {
             border-bottom: none;
         }
-
+        
         .detail-label {
             font-weight: 600;
             color: #374151;
-        }
-
-        .detail-value {
-            color: #6b7280;
-            font-weight: 500;
-        }
-
-        .meeting-link-section {
-            background: linear-gradient(135deg, #0e6655, #10b981);
-            border-radius: 12px;
-            padding: 25px;
-            margin: 30px 0;
-            color: white;
-        }
-
-        .meeting-link-section h4 {
-            font-size: 18px;
-            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-size: 1.05rem;
         }
-
-        .meeting-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-bottom: 10px;
-        }
-
-        .meeting-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-        }
-
-        .meeting-url {
-            font-size: 12px;
-            opacity: 0.8;
-            word-break: break-all;
-            margin-top: 10px;
-        }
-
-        .payment-message {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 2px solid #f59e0b;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 30px 0;
+        
+        .detail-label i {
+            color: #3b82f6;
+            width: 20px;
             text-align: center;
         }
-
-        .payment-message h4 {
-            color: #92400e;
-            font-size: 18px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        
+        .detail-value {
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 1.05rem;
         }
-
-        .payment-message p {
-            color: #92400e;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 0;
+        
+        .meeting-link {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 15px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 30px 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            border: none;
         }
-
+        
+        .meeting-link:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        }
+        
+        .meeting-link i {
+            margin-right: 10px;
+        }
+        
         .action-buttons {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 40px;
         }
-
+        
         .btn {
-            padding: 14px 28px;
-            border: none;
+            padding: 15px 30px;
             border-radius: 10px;
+            text-decoration: none;
             font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            border: none;
+            cursor: pointer;
         }
-
+        
         .btn-primary {
-            background: linear-gradient(135deg, #0e6655, #10b981);
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
         }
-
+        
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
-            color: white;
-            text-decoration: none;
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
         }
-
+        
         .btn-secondary {
             background: #f3f4f6;
-            color: #6b7280;
-            border: 2px solid #e5e7eb;
+            color: #374151;
+            border: 2px solid #d1d5db;
         }
-
+        
         .btn-secondary:hover {
             background: #e5e7eb;
-            color: #374151;
-            text-decoration: none;
+            transform: translateY(-2px);
         }
-
+        
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
             justify-content: center;
+            align-items: center;
             z-index: 9999;
         }
-
+        
         .loading-content {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
             text-align: center;
-            max-width: 400px;
-            width: 90%;
         }
-
-        .loading-spinner {
+        
+        .spinner {
             width: 50px;
             height: 50px;
             border: 4px solid #f3f4f6;
-            border-top: 4px solid #0e6655;
+            border-top: 4px solid #3b82f6;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
-
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .loading-text {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 10px;
-        }
-
-        .loading-subtext {
-            font-size: 14px;
-            color: #6b7280;
-        }
-
+        
         @media (max-width: 768px) {
             .success-container {
+                margin: 20px;
                 padding: 30px 20px;
-                margin: 10px;
             }
-
+            
             .success-title {
-                font-size: 24px;
+                font-size: 2rem;
             }
-
-            .success-subtitle {
-                font-size: 16px;
+            
+            .success-icon {
+                font-size: 80px;
+                margin-bottom: 30px;
             }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .detail-item {
+            
+            .detail-row {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
+                gap: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="success-container">
-        <div class="success-icon">
-            <i class="fa fa-check"></i>
-        </div>
-        
-        <h1 class="success-title">Session Booked Successfully!</h1>
-        <p class="success-subtitle">Your session has been scheduled and confirmation details have been sent to your email.</p>
-        
-        <div id="bookingDetails" class="booking-details">
-            <h4><i class="fa fa-calendar"></i> Session Details</h4>
-            <!-- Details will be populated by JavaScript -->
-        </div>
-        
-        <div id="meetingLinkSection" class="meeting-link-section" style="display: none;">
-            <h4><i class="fa fa-video"></i> Join Your Meeting</h4>
-            <a id="meetingLink" href="#" target="_blank" class="meeting-link">
-                <i class="fa fa-external-link"></i>
-                Click to Join Meeting
-            </a>
-            <div id="meetingUrl" class="meeting-url"></div>
-        </div>
-        
-        <div class="payment-message">
-            <h4><i class="fa fa-info-circle"></i> Payment Information</h4>
-            <p>You can make a payment after the session if you would like to support my meeting services. However, this is completely optional and up to you. Your session is confirmed regardless of payment.</p>
-        </div>
-        
-        <div class="action-buttons">
-            <a href="index.html" class="btn btn-secondary">
-                <i class="fa fa-home"></i>
-                Back to Home
-            </a>
-        </div>
-    </div>
-
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">Processing Your Booking...</div>
-            <div class="loading-subtext">Please wait while we finalize your session</div>
+            <div class="spinner"></div>
+            <h3>Processing your booking...</h3>
+            <p>Please wait while we confirm your session details.</p>
+        </div>
+    </div>
+
+    <!-- Success Content -->
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        
+        <h1 class="success-title">Booking Confirmed!</h1>
+        <p class="success-subtitle">Your session has been successfully scheduled. You'll receive a confirmation shortly.</p>
+        
+        <div class="booking-details" id="bookingDetails">
+            <!-- Booking details will be populated here -->
+        </div>
+        
+        <!-- Meeting link removed as requested - only available in emails -->
+        
+        <div class="action-buttons">
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="mailto:mehrfaisal111@gmail.com" class="btn btn-secondary">
+                <i class="fas fa-envelope"></i> Contact Support
+            </a>
         </div>
     </div>
 
     <script>
-        // Show loading overlay initially
-        document.getElementById('loadingOverlay').style.display = 'flex';
-
-        // Process booking when page loads
-        document.addEventListener('DOMContentLoaded', async function() {
-            await processBooking();
+        // Initialize page and process booking
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show loading overlay initially
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            // Start processing booking
+            setTimeout(async () => {
+                await processBooking();
+            }, 1000);
         });
 
         async function processBooking() {
             try {
-                // Get booking details from URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
-                const sessionTimesParam = urlParams.get('sessionTimes');
-                let sessionTimes = [];
-                try {
-                    sessionTimes = sessionTimesParam ? JSON.parse(sessionTimesParam) : [];
-                } catch (e) {
-                    console.error('Error parsing session times:', e);
-                    sessionTimes = [];
-                }
-
-                const formData = {
-                    clientEmail: urlParams.get('clientEmail'),
-                    clientName: urlParams.get('clientName'),
-                    sessionDate: urlParams.get('sessionDate'),
-                    sessionTimes: sessionTimes,
-                    timezone: urlParams.get('timezone'),
-                    meetingMode: urlParams.get('meetingMode'),
-                    sessionNotes: urlParams.get('sessionNotes') || '',
-                    sessionType: urlParams.get('sessionType'),
-                    duration: urlParams.get('duration'),
-                    numberOfSessions: urlParams.get('hours')
-                };
-
-                // Validate required fields
-                if (!formData.clientEmail || !formData.clientName || !formData.sessionDate) {
-                    throw new Error('Missing required booking information');
-                }
-
-                // Determine the correct API endpoint
-                const currentPath = window.location.pathname;
-                const currentPort = window.location.port;
-                let apiEndpoint;
                 
-                if (currentPort === '3001' || currentPort === '') {
-                    apiEndpoint = currentPath.startsWith('/My-Website/') ? '/My-Website/api/book-session' : '/api/book-session';
-                } else {
-                    apiEndpoint = currentPath.startsWith('/My-Website/') 
-                        ? 'http://localhost:3001/My-Website/api/book-session' 
-                        : 'http://localhost:3001/api/book-session';
-                }
-
-                // Send booking data to backend
-                const response = await fetch(apiEndpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                    signal: AbortSignal.timeout(10000)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.success) {
-                    // Hide loading overlay
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                    
-                    // Display booking details
-                    displayBookingDetails(formData, result.meetingLink);
-                } else {
-                    throw new Error(result.message || 'Failed to book session');
-                }
-            } catch (error) {
-                console.error('Booking error:', error);
+                const formData = {
+                    clientName: urlParams.get('clientName') || 'Guest',
+                    clientEmail: urlParams.get('clientEmail') || 'No email provided',
+                    sessionType: urlParams.get('sessionType') || 'General Session',
+                    sessionDate: urlParams.get('sessionDate') || 'Not specified',
+                    sessionTimes: urlParams.get('sessionTimes') || 'Not specified',
+                    timezone: urlParams.get('timezone') || 'Not specified',
+                    meetingMode: urlParams.get('meetingMode') || 'google-meet',
+                    sessionNotes: urlParams.get('sessionNotes') || 'No additional notes',
+                    duration: urlParams.get('duration') || '30',
+                    hours: urlParams.get('hours') || '1',
+                    meetingLink: urlParams.get('meetingLink') || null
+                };
+                
+                console.log('📋 Processing booking with data:', formData);
+                
+                // Display booking information
+                displayBookingInfo(formData);
+                
+                // Meeting link functionality removed - links only available in emails
                 
                 // Hide loading overlay
                 document.getElementById('loadingOverlay').style.display = 'none';
                 
-                // Show error message
-                document.querySelector('.success-container').innerHTML = `
-                    <div class="success-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                        <i class="fa fa-exclamation-triangle"></i>
-                    </div>
-                    <h1 class="success-title">Booking Error</h1>
-                    <p class="success-subtitle">There was an issue processing your booking. Please try again or contact support.</p>
-                    <div class="action-buttons">
-                        <a href="booking.html" class="btn btn-primary">
-                            <i class="fa fa-arrow-left"></i>
-                            Try Again
-                        </a>
-                        <a href="index.html" class="btn btn-secondary">
-                            <i class="fa fa-home"></i>
-                            Back to Home
-                        </a>
-                    </div>
-                `;
+            } catch (error) {
+                console.error('❌ Error processing booking:', error);
+                
+                // Hide loading overlay even on error
+                document.getElementById('loadingOverlay').style.display = 'none';
             }
         }
 
-        function displayBookingDetails(bookingData, meetingLink) {
+        function displayBookingInfo(formData) {
+            const bookingDetails = document.getElementById('bookingDetails');
+            
+            // Parse session times if it's a JSON string
+            let sessionTimes = formData.sessionTimes;
+            try {
+                if (sessionTimes.startsWith('[')) {
+                    sessionTimes = JSON.parse(sessionTimes).join(', ');
+                }
+            } catch (e) {
+                // Keep original value if parsing fails
+            }
+            
             // Format date
-            const sessionDate = new Date(bookingData.sessionDate);
-            const formattedDate = sessionDate.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-
-            // Format session times
-            let formattedTimes = '';
-            if (bookingData.sessionTimes && bookingData.sessionTimes.length > 0) {
-                formattedTimes = bookingData.sessionTimes.join(', ');
-            } else {
-                formattedTimes = 'Time to be confirmed';
+            let formattedDate = formData.sessionDate;
+            if (formData.sessionDate && formData.sessionDate !== 'Not specified') {
+                try {
+                    const date = new Date(formData.sessionDate);
+                    formattedDate = date.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                } catch (e) {
+                    // Keep original value if parsing fails
+                }
             }
+            
+            const details = [
+                { icon: 'fas fa-user', label: 'Client Name', value: formData.clientName },
+                { icon: 'fas fa-envelope', label: 'Email', value: formData.clientEmail },
+                { icon: 'fas fa-calendar', label: 'Session Type', value: formData.sessionType },
+                { icon: 'fas fa-clock', label: 'Duration', value: `${formData.duration} minutes` },
+                { icon: 'fas fa-calendar-day', label: 'Date', value: formattedDate },
+                { icon: 'fas fa-clock', label: 'Time(s)', value: sessionTimes },
+                { icon: 'fas fa-globe', label: 'Timezone', value: formData.timezone },
+                { icon: 'fas fa-video', label: 'Platform', value: formData.meetingMode === 'google-meet' ? 'Google Meet' : 'Zoom' },
+                { icon: 'fas fa-sticky-note', label: 'Notes', value: formData.sessionNotes }
+            ];
+            
+            bookingDetails.innerHTML = details.map(detail => `
+                <div class="detail-row">
+                    <div class="detail-label">
+                        <i class="${detail.icon}"></i>
+                        ${detail.label}
+                    </div>
+                    <div class="detail-value">${detail.value}</div>
+                </div>
+            `).join('');
+        }
 
-            // Populate booking details
-            const detailsContainer = document.getElementById('bookingDetails');
-            detailsContainer.innerHTML = `
-                <h4><i class="fa fa-calendar"></i> Session Details</h4>
-                <div class="detail-item">
-                    <span class="detail-label">Session Type:</span>
-                    <span class="detail-value">${bookingData.sessionType || 'Not specified'}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Duration:</span>
-                    <span class="detail-value">${bookingData.duration || 'Not specified'}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Number of Sessions:</span>
-                    <span class="detail-value">${bookingData.numberOfSessions || 'Not specified'}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Date:</span>
-                    <span class="detail-value">${formattedDate}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Time:</span>
-                    <span class="detail-value">${formattedTimes} (${bookingData.timezone || 'UTC'})</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Meeting Platform:</span>
-                    <span class="detail-value">${bookingData.meetingMode === 'google-meet' ? 'Google Meet' : 'Zoom'}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Client Name:</span>
-                    <span class="detail-value">${bookingData.clientName}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Email:</span>
-                    <span class="detail-value">${bookingData.clientEmail}</span>
-                </div>
-            `;
-
-            // Show meeting link if available
-            if (meetingLink) {
-                const meetingSection = document.getElementById('meetingLinkSection');
-                const meetingLinkElement = document.getElementById('meetingLink');
-                const meetingUrlElement = document.getElementById('meetingUrl');
-                
-                meetingLinkElement.href = meetingLink;
-                meetingUrlElement.textContent = meetingLink;
-                meetingSection.style.display = 'block';
+        function generateMeetingLink(formData) {
+            // Generate session ID from URL params or create a fallback
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('sessionId') || 'SES-' + Date.now().toString().slice(-8);
+            
+            if (formData.meetingMode === 'google-meet') {
+                // Use Google Meet's instant meeting feature which creates a real meeting room
+                return 'https://meet.google.com/new';
+            } else if (formData.meetingMode === 'zoom') {
+                // Generate Zoom link with consistent meeting ID based on session ID
+                const meetingId = generateZoomMeetingId(sessionId);
+                const password = generateZoomPassword(sessionId);
+                return `https://zoom.us/j/${meetingId}?pwd=${password}`;
             }
+            return 'https://meet.google.com/new';
+        }
+        
+        function generateGoogleMeetRoomId(sessionId) {
+             // Generate a consistent Google Meet room ID format: abc-defg-hij
+             const hash = simpleHash(sessionId);
+             // Use alphanumeric characters for valid Google Meet room ID
+             const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+             let roomId = '';
+             
+             // Convert hash to valid room ID format (10 characters total)
+             for (let i = 0; i < 10; i++) {
+                 const index = parseInt(hash.charAt(i), 16) % chars.length;
+                 roomId += chars[index];
+             }
+             
+             // Format as abc-defg-hij (3-4-3 format)
+             return `${roomId.substring(0, 3)}-${roomId.substring(3, 7)}-${roomId.substring(7, 10)}`;
+         }
+        
+        function generateZoomMeetingId(sessionId) {
+            // Generate consistent 9-digit Zoom meeting ID
+            const hash = simpleHash(sessionId);
+            const numericHash = parseInt(hash, 16);
+            return (numericHash % 900000000) + 100000000;
+        }
+        
+        function generateZoomPassword(sessionId) {
+            // Generate consistent 6-character password
+            const hash = simpleHash(sessionId + 'pwd');
+            return hash.substring(0, 6).toUpperCase();
+        }
+        
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash).toString(16).padStart(10, '0');
         }
     </script>
 </body>
