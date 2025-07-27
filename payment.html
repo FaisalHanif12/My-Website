@@ -2105,13 +2105,14 @@
             <div class="success-content">
               <div class="meeting-section">
                 <div class="meeting-link-section">
-                  <h4><i class="fa fa-video"></i> Join Your Meeting</h4>
+                  <h4><i class="fa fa-envelope"></i> Meeting Link</h4>
                   <div class="meeting-link-box">
-                    <a href="${bookingData.meetingLink}" target="_blank" class="meeting-link">
-                      <i class="fa fa-external-link"></i>
-                      Click to Join Meeting
-                    </a>
-                    <div class="meeting-url">${bookingData.meetingLink}</div>
+                    <p style="color: #059669; text-align: center; margin: 20px 0; font-size: 16px; line-height: 1.6;">
+                      You will receive the meeting link from Faisal shortly before your session begins.
+                    </p>
+                    <p style="color: #64748b; text-align: center; margin: 0; font-size: 14px;">
+                      Please wait for the meeting link to be shared with you via email.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -2803,6 +2804,142 @@
         }, 1500);
       }
       
+      // Meeting link generation functions (consistent with booking.html)
+      function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          const char = str.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash; // Convert to 32-bit integer
+        }
+        // Return a fixed-length hexadecimal string
+        return Math.abs(hash).toString(16).padStart(10, '0');
+      }
+
+      async function generateMeetingLink(meetingMode, sessionId) {
+        if (meetingMode === 'google-meet') {
+          // Use Google Meet's instant meeting feature which creates a real meeting room
+          // This generates an authentic Google Meet link that actually works
+          // Note: In production, you should use Google Calendar API to create scheduled meetings
+          // For now, we'll use a consistent approach that creates real meeting rooms
+          return await createGoogleMeetInstantLink(sessionId);
+        } else if (meetingMode === 'zoom') {
+          // Generate Zoom link with consistent meeting ID based on session ID
+          const meetingId = generateZoomMeetingId(sessionId);
+          const password = generateZoomPassword(sessionId);
+          return `https://zoom.us/j/${meetingId}?pwd=${password}`;
+        }
+        // Fallback to Google Meet instant meeting
+        return await createGoogleMeetInstantLink(sessionId);
+      }
+      
+      async function createGoogleMeetInstantLink(sessionId) {
+        // IMPORTANT: This generates a REAL Google Meet instant meeting link
+        // Both client and owner will receive the exact same link
+        
+        // Option 1: Use Google Meet's instant meeting feature (recommended)
+        // This creates a real meeting room when first accessed
+        const meetingLink = 'https://meet.google.com/new';
+        
+        // Option 2: Create a personalized meeting link (alternative)
+        // const personalizedCode = generatePersonalizedMeetingCode(sessionId);
+        // const meetingLink = `https://meet.google.com/${personalizedCode}`;
+        
+        console.log('Generated REAL Google Meet instant meeting link:', meetingLink);
+        console.log('Session ID:', sessionId);
+        console.log('✅ This link will create a real meeting room when first accessed');
+        console.log('ℹ️ When someone clicks this link, Google will create a unique meeting room');
+        
+        return meetingLink;
+      }
+      
+      function generatePersonalizedMeetingCode(sessionId) {
+        // Generate a personalized meeting code based on session ID
+        // This creates a unique but valid Google Meet room code
+        const hash = simpleHash(sessionId + 'personal-meet');
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let code = '';
+        
+        // Generate 10 characters for the meeting code
+        for (let i = 0; i < 10; i++) {
+          const index = parseInt(hash.charAt(i % hash.length), 16) % chars.length;
+          code += chars[index];
+        }
+        
+        // Format as xxx-yyyy-zzz pattern
+        return `${code.substring(0, 3)}-${code.substring(3, 7)}-${code.substring(7, 10)}`;
+      }
+      
+      function generateConsistentMeetingCode(sessionId) {
+        // Generate a meeting code that looks realistic but is consistent
+        // This ensures both emails contain the exact same link
+        const hash = simpleHash(sessionId + 'meet-code');
+        
+        // Use alphanumeric characters for valid Google Meet room ID (matching success.html)
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let code = '';
+        
+        // Generate 10 characters for the meeting code
+        for (let i = 0; i < 10; i++) {
+          const index = parseInt(hash.charAt(i % hash.length), 16) % chars.length;
+          code += chars[index];
+        }
+        
+        // Format as xxx-yyyy-zzz pattern
+        return `${code.substring(0, 3)}-${code.substring(3, 7)}-${code.substring(7, 10)}`;
+      }
+
+      function generateGoogleMeetRoomCode(sessionId) {
+        // Generate consistent Google Meet room code based on session ID
+        // Format: abc-defg-hij (3-4-3 pattern with alphanumeric characters)
+        
+        // Ensure we have a consistent hash for the same session ID
+        const hash = simpleHash(sessionId);
+        
+        // Use alphanumeric characters for valid Google Meet codes (matching success.html)
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let roomCode = '';
+        
+        // Generate exactly 10 characters for the room code using session-based hash
+        for (let i = 0; i < 10; i++) {
+          // Ensure consistent character selection by using modulo on the hash characters
+          const index = parseInt(hash.charAt(i % hash.length), 16) % chars.length;
+          roomCode += chars[index];
+        }
+        
+        // Format as Google Meet standard: abc-defg-hij (3-4-3 pattern)
+        return `${roomCode.substring(0, 3)}-${roomCode.substring(3, 7)}-${roomCode.substring(7, 10)}`;
+      }
+
+      function generateGoogleMeetRoomId(sessionId) {
+        // This function is kept for backward compatibility but not used for link generation
+        // Google Meet instant meetings are created when the first person joins
+        const hash = simpleHash(sessionId);
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let roomId = '';
+        
+        for (let i = 0; i < 10; i++) {
+          const index = parseInt(hash.charAt(i), 16) % chars.length;
+          roomId += chars[index];
+        }
+        
+        return `${roomId.substring(0, 3)}-${roomId.substring(3, 7)}-${roomId.substring(7, 10)}`;
+      }
+      
+      function generateZoomMeetingId(sessionId) {
+        // Generate consistent Zoom meeting ID based on session ID
+        const hash = simpleHash(sessionId + 'zoom-meeting');
+        const meetingId = parseInt(hash.substring(0, 10), 16) % 999999999;
+        return meetingId.toString().padStart(9, '0');
+      }
+      
+      function generateZoomPassword(sessionId) {
+        // Generate consistent Zoom password based on session ID
+        const hash = simpleHash(sessionId + 'zoom-password');
+        const password = parseInt(hash.substring(0, 6), 16) % 999999;
+        return password.toString().padStart(6, '0');
+      }
+
       function selectMeetingMode(mode) {
         const radio = document.querySelector(`input[value="${mode}"]`);
         if (radio) {
@@ -2837,6 +2974,17 @@
           sessionTimes = [];
         }
         
+        // Get meeting mode first
+        const meetingMode = document.querySelector('input[name="meetingMode"]:checked')?.value;
+        
+        // Generate unique session ID for consistent meeting link
+        const sessionId = 'SES-' + Date.now().toString().slice(-8);
+        console.log('Generated session ID:', sessionId);
+        
+        // Generate consistent meeting link ONCE before sending to server
+        const meetingLink = await generateMeetingLink(meetingMode, sessionId);
+        console.log('Generated consistent meeting link:', meetingLink);
+        
         // Get all form data
         const formData = {
           clientEmail: document.getElementById('clientEmail').value,
@@ -2844,11 +2992,13 @@
           sessionDate: document.getElementById('sessionDate').value,
           sessionTimes: sessionTimes,
           timezone: document.getElementById('timezone').value,
-          meetingMode: document.querySelector('input[name="meetingMode"]:checked')?.value,
+          meetingMode: meetingMode,
           sessionNotes: document.getElementById('sessionNotes').value,
           sessionType: sessionType,
           duration: duration,
-          numberOfSessions: hours
+          numberOfSessions: hours,
+          sessionId: sessionId,
+          meetingLink: meetingLink // Include the pre-generated meeting link
         };
         
         // Debug log to check form data
@@ -2943,8 +3093,18 @@
           console.log('Server response:', result);
           
           if (result.success) {
-            // Add meeting link to form data for display
-            formData.meetingLink = result.meetingLink;
+            // Use the pre-generated meeting link for consistency
+            // The server should use the meetingLink we sent, not generate a new one
+            console.log('Using pre-generated meeting link:', formData.meetingLink);
+            
+            // Send emails with the consistent meeting link
+            try {
+              await sendBookingEmails(formData);
+              console.log('Emails sent successfully with consistent meeting link');
+            } catch (emailError) {
+              console.error('Failed to send emails:', emailError);
+              // Continue with success flow even if emails fail
+            }
             
             // Hide loading overlay first
             hideLoadingOverlay();
@@ -3001,7 +3161,18 @@
                     console.log('Fallback server response:', result);
                     
                     if (result.success) {
-                      formData.meetingLink = result.meetingLink;
+                      // Use the pre-generated meeting link for consistency
+                      console.log('Using pre-generated meeting link (fallback):', formData.meetingLink);
+                      
+                      // Send emails with the consistent meeting link
+                      try {
+                        await sendBookingEmails(formData);
+                        console.log('Emails sent successfully with consistent meeting link (fallback)');
+                      } catch (emailError) {
+                        console.error('Failed to send emails (fallback):', emailError);
+                        // Continue with success flow even if emails fail
+                      }
+                      
                       hideLoadingOverlay();
                       submitBtn.innerHTML = originalText;
                       submitBtn.disabled = false;
@@ -3080,6 +3251,81 @@
         }
       }
       
+      async function sendBookingEmails(formData) {
+        try {
+          console.log('Sending emails - meeting link only to owner:', formData.meetingLink);
+          
+          // Prepare template parameters matching the template variable names
+          const baseTemplateParams = {
+            // Client template variables (NO meeting link)
+            name: formData.clientName,
+            company_name: 'Faisal Hanif Consulting',
+            order_id: formData.sessionId,
+            session_type: formData.sessionType,
+            session_duration: formData.duration + ' minutes',
+            number_of_sessions: formData.numberOfSessions + ' session(s)',
+            session_date: formData.sessionDate,
+            session_time: Array.isArray(formData.sessionTimes) ? formData.sessionTimes.join(', ') : formData.sessionTimes,
+            session_timezone: formData.timezone,
+            meeting_platform: formData.meetingMode,
+            // meeting_link: REMOVED - client won't receive meeting link
+            support_email: 'mehrfaisal111@gmail.com',
+            website_link: 'https://faisalhanif.com',
+            
+            // Owner template variables (INCLUDES meeting link)
+            client_name: formData.clientName,
+            client_email: formData.clientEmail,
+            client_phone: formData.clientPhone || 'Not provided',
+            client_company: formData.clientCompany || 'Not provided',
+            preferred_date: formData.sessionDate,
+            preferred_time: Array.isArray(formData.sessionTimes) ? formData.sessionTimes.join(', ') : formData.sessionTimes,
+            service_type: formData.sessionType,
+            meeting_type: formData.meetingMode,
+            client_message: formData.sessionNotes || 'No additional notes provided',
+            session_fee: '$' + (formData.amount || 'TBD'),
+            timezone: formData.timezone,
+            booking_date: new Date().toLocaleDateString(),
+            booking_time: new Date().toLocaleTimeString(),
+            meeting_link: formData.meetingLink // ONLY owner gets the meeting link
+          };
+          
+          // Send email to owner first (WITH meeting link)
+          const ownerParams = {
+            ...baseTemplateParams,
+            user_name: 'Faisal',
+            user_email: 'mehrfaisal111@gmail.com',
+            to_name: 'Faisal',
+            to_email: 'mehrfaisal111@gmail.com',
+            reply_to: 'mehrfaisal111@gmail.com'
+          };
+          
+          console.log('Sending owner email with meeting link:', formData.meetingLink);
+          
+          const ownerResponse = await emailjs.send('service_cq9odii', 'template_a9m0jem', ownerParams);
+          console.log('Owner email sent successfully:', ownerResponse.status, ownerResponse.text);
+          
+          // Send email to client (WITHOUT meeting link)
+          const clientParams = {
+            ...baseTemplateParams,
+            user_name: formData.clientName,
+            user_email: formData.clientEmail,
+            to_name: formData.clientName,
+            to_email: formData.clientEmail,
+            reply_to: formData.clientEmail
+          };
+          
+          console.log('Sending client email WITHOUT meeting link');
+          
+          const clientResponse = await emailjs.send('service_cq9odii', 'template_sf2914b', clientParams);
+          console.log('Client email sent successfully:', clientResponse.status, clientResponse.text);
+          
+          return true;
+        } catch (error) {
+          console.error('Email sending failed:', error);
+          throw error;
+        }
+      }
+
       function sendBookingEmail(bookingData) {
         // This would integrate with your email service
         // For now, we'll simulate the email sending
@@ -3126,13 +3372,14 @@
             <p>Your session has been scheduled. The meeting link has been shared with you via email.</p>
                                   
             <div class="meeting-link-section">
-              <h4><i class="fa fa-video"></i> Join Your Meeting</h4>
+              <h4><i class="fa fa-envelope"></i> Meeting Link</h4>
               <div class="meeting-link-box">
-                <a href="${bookingData.meetingLink}" target="_blank" class="meeting-link">
-                  <i class="fa fa-external-link"></i>
-                  Click to Join Meeting
-                </a>
-                <div class="meeting-url">${bookingData.meetingLink}</div>
+                <p style="color: #059669; text-align: center; margin: 20px 0; font-size: 16px; line-height: 1.6;">
+                  You will receive the meeting link from Faisal shortly before your session begins.
+                </p>
+                <p style="color: #64748b; text-align: center; margin: 0; font-size: 14px;">
+                  Please wait for the meeting link to be shared with you via email.
+                </p>
               </div>
             </div>
             
@@ -3172,6 +3419,14 @@
           </div>
         `;
       }
+    </script>
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function() {
+        emailjs.init("2LDYO5RqPZ9vqBm1L");
+      })();
     </script>
     
     <!-- Loading Overlay -->

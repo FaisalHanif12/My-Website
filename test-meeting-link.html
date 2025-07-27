@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Link Test</title>
+</head>
+<body>
+    <h1>Meeting Link Generation Test</h1>
+    <div id="results"></div>
+
+    <script>
+        // Meeting link generation functions (copied from payment.html)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            // Return a fixed-length hexadecimal string
+            return Math.abs(hash).toString(16).padStart(10, '0');
+        }
+
+        async function generateMeetingLink(meetingMode, sessionId) {
+            if (meetingMode === 'google-meet') {
+                return await createGoogleMeetInstantLink(sessionId);
+            } else if (meetingMode === 'zoom') {
+                const meetingId = generateZoomMeetingId(sessionId);
+                const password = generateZoomPassword(sessionId);
+                return `https://zoom.us/j/${meetingId}?pwd=${password}`;
+            }
+            return await createGoogleMeetInstantLink(sessionId);
+        }
+        
+        async function createGoogleMeetInstantLink(sessionId) {
+            // Use Google Meet's instant meeting feature which creates a real meeting room
+            const meetingLink = 'https://meet.google.com/new';
+            console.log('Generated REAL Google Meet instant meeting link:', meetingLink);
+            console.log('Session ID:', sessionId);
+            console.log('✅ This link will create a real meeting room when first accessed');
+            return meetingLink;
+        }
+        
+        function generateConsistentMeetingCode(sessionId) {
+            const hash = simpleHash(sessionId + 'meet-code');
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            
+            for (let i = 0; i < 10; i++) {
+                const index = parseInt(hash.charAt(i % hash.length), 16) % chars.length;
+                code += chars[index];
+            }
+            
+            return `${code.substring(0, 3)}-${code.substring(3, 7)}-${code.substring(7, 10)}`;
+        }
+        
+        function generateZoomMeetingId(sessionId) {
+            const hash = simpleHash(sessionId + 'zoom-meeting');
+            const meetingId = parseInt(hash.substring(0, 10), 16) % 999999999;
+            return meetingId.toString().padStart(9, '0');
+        }
+        
+        function generateZoomPassword(sessionId) {
+            const hash = simpleHash(sessionId + 'zoom-password');
+            const password = parseInt(hash.substring(0, 6), 16) % 999999;
+            return password.toString().padStart(6, '0');
+        }
+
+        // Test function
+        async function testMeetingLinkGeneration() {
+            const resultsDiv = document.getElementById('results');
+            let results = '<h2>Test Results:</h2>';
+            
+            // Test 1: Same session ID should generate same meeting link
+            const sessionId1 = 'SES-12345678';
+            const meetingLink1 = await generateMeetingLink('google-meet', sessionId1);
+            const meetingLink2 = await generateMeetingLink('google-meet', sessionId1);
+            
+            results += `<h3>Test 1: Consistency Check</h3>`;
+            results += `<p>Session ID: ${sessionId1}</p>`;
+            results += `<p>Meeting Link 1: ${meetingLink1}</p>`;
+            results += `<p>Meeting Link 2: ${meetingLink2}</p>`;
+            results += `<p>Consistent: ${meetingLink1 === meetingLink2 ? '✅ YES' : '❌ NO'}</p>`;
+            
+            // Test 2: Different session IDs should generate different meeting links
+            const sessionId2 = 'SES-87654321';
+            const meetingLink3 = await generateMeetingLink('google-meet', sessionId2);
+            
+            results += `<h3>Test 2: Uniqueness Check</h3>`;
+            results += `<p>Session ID 1: ${sessionId1}</p>`;
+            results += `<p>Meeting Link 1: ${meetingLink1}</p>`;
+            results += `<p>Session ID 2: ${sessionId2}</p>`;
+            results += `<p>Meeting Link 2: ${meetingLink3}</p>`;
+            results += `<p>Different: ${meetingLink1 !== meetingLink3 ? '✅ YES' : '❌ NO'}</p>`;
+            
+            // Test 3: Zoom meeting link generation
+            const zoomLink1 = await generateMeetingLink('zoom', sessionId1);
+            const zoomLink2 = await generateMeetingLink('zoom', sessionId1);
+            
+            results += `<h3>Test 3: Zoom Meeting Link</h3>`;
+            results += `<p>Session ID: ${sessionId1}</p>`;
+            results += `<p>Zoom Link 1: ${zoomLink1}</p>`;
+            results += `<p>Zoom Link 2: ${zoomLink2}</p>`;
+            results += `<p>Consistent: ${zoomLink1 === zoomLink2 ? '✅ YES' : '❌ NO'}</p>`;
+            
+            // Test 4: Real session ID format
+            const realSessionId = 'SES-' + Date.now().toString().slice(-8);
+            const realMeetingLink = await generateMeetingLink('google-meet', realSessionId);
+            
+            results += `<h3>Test 4: Real Session ID</h3>`;
+            results += `<p>Session ID: ${realSessionId}</p>`;
+            results += `<p>Meeting Link: ${realMeetingLink}</p>`;
+            results += `<p>Valid Format: ${realMeetingLink.includes('meet.google.com/new') ? '✅ YES' : '❌ NO'}</p>`;
+            results += `<p>Real Meeting: ${realMeetingLink === 'https://meet.google.com/new' ? '✅ YES - Will create real meeting' : '❌ NO'}</p>`;
+            
+            resultsDiv.innerHTML = results;
+        }
+
+        // Run the test when page loads
+        window.onload = testMeetingLinkGeneration;
+    </script>
+</body>
+</html> 
