@@ -1,4 +1,14 @@
+// Performance optimized main script
 document.addEventListener("DOMContentLoaded", function () {
+    // Use requestIdleCallback for non-critical initialization
+    const initNonCritical = (callback) => {
+        if (window.requestIdleCallback) {
+            requestIdleCallback(callback, { timeout: 2000 });
+        } else {
+            setTimeout(callback, 100);
+        }
+    };
+    
     // Meeting pricing calculation functionality
     function initMeetingPricingCalculator() {
         const meetingTypeCards = document.querySelectorAll('.meeting-type-card');

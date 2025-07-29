@@ -8,20 +8,20 @@
     <!-- Preload critical assets -->
     <link rel="preload" href="css/style.css" as="style" />
     <link rel="preload" href="css/animation.style.css" as="style" />
-    <link rel="preload" href="imgs/FaisalN1.jpeg" as="image" />
-    <link rel="preload" href="imgs/F-logo2.png" as="image" />
+    <link rel="preload" href="imgs/FaisalN1.jpeg" as="image" fetchpriority="high" />
+    <link rel="preload" href="imgs/F-logo2.png" as="image" fetchpriority="high" />
     <!-- Resource hints for better performance -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://calendly.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
     <link rel="preconnect" href="https://calendly.com" crossorigin />
-    <link rel="dns-prefetch" href="https://calendly.com" />
     
     <!-- Favicon -->
-    <link rel="icon" href="imgs/F-Logo3-optimized.svg" type="image/svg+xml" />
+    <link rel="icon" href="imgs/F-Logo3.png" type="image/svg+xml" />
     
     <!-- Critical CSS -->
     <link rel="stylesheet" href="css/style.css" />
@@ -29,7 +29,7 @@
     <!-- Defer non-critical CSS -->
     <link rel="stylesheet" href="css/payment-styles.css" media="print" onload="this.media='all'" />
     
-    <!-- Fonts and icons (load asynchronously) -->
+    <!-- Fonts and icons (load asynchronously with display=swap) -->
     <link
       rel="stylesheet"
       id="ryancv-fonts-css"
@@ -60,6 +60,9 @@
       href="css/resposive(650).css"
       media="print" onload="this.media='screen and (max-width: 650px)'"
     />
+    
+    <!-- Performance monitoring script -->
+    <script src="js/performance-monitor.js" defer></script>
 
 
    
@@ -99,21 +102,19 @@
     </style>
 
     <script defer>
+      // Performance optimized CV download function
       function downloadCV() {
-        // Prevent the default behavior of the anchor tag
         event.preventDefault();
-        // Create a new anchor element dynamically
-        var link = document.createElement("a");
-        // Set the path to your CV file
+        const link = document.createElement("a");
         link.href = "imgs/Faisal-Resume.pdf";
-        // Set the download attribute with a default file name for the CV
         link.download = "Faisal-CV.pdf";
-        // Append the anchor element to the body of the document
+        link.style.display = "none";
         document.body.appendChild(link);
-        // Programmatically trigger a click on the anchor element
         link.click();
-        // Remove the anchor element after download
-        document.body.removeChild(link);
+        // Use requestAnimationFrame for better performance
+        requestAnimationFrame(() => {
+          document.body.removeChild(link);
+        });
       }
 
       function validateEmail(email) {
@@ -1523,18 +1524,19 @@
       <span class="ion-load-c"></span>
     </div>
     <script>
-      // Optimize preloader to hide quickly after content loads
+      // Performance optimized preloader
       document.addEventListener('DOMContentLoaded', function() {
-        // Hide preloader after content loads
-        setTimeout(function() {
-          const preloader = document.getElementById('preloader');
-          if (preloader) {
+        // Hide preloader faster for better perceived performance
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+          // Use requestAnimationFrame for smoother transition
+          requestAnimationFrame(() => {
             preloader.style.opacity = '0';
-            setTimeout(function() {
+            setTimeout(() => {
               preloader.style.display = 'none';
-            }, 300);
-          }
-        }, 500);
+            }, 200); // Reduced from 300ms
+          });
+        }
         
         // Ensure profile container stays centered
         function centerProfileContent() {
