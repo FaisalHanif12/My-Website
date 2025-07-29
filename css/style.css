@@ -1,9 +1,12 @@
+/* Performance optimized CSS reset */
 *{
     border:0;
     padding:0;
     margin:0;
     outline:0;
-    box-sizing:border-box
+    box-sizing:border-box;
+    /* Optimize for performance */
+    will-change: auto;
 }
 a{
     color:unset;
@@ -62,8 +65,11 @@ body,html{
     display:flex;
     align-items:center;
     justify-content:center;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
     will-change: opacity;
+    /* Performance optimizations */
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 .preloader span{
     animation:loading .4s linear infinite;
