@@ -98,6 +98,13 @@
         margin-top: -40px;
     }
 }
+
+      /* Hide typewriter on mobile screens */
+      @media (max-width: 644px) {
+        .hide-on-mobile {
+            display: none !important;
+        }
+      }
     
     </style>
 
@@ -1734,7 +1741,7 @@
              
               <p
                 href=""
-                class="typewrite"
+                class="typewrite hide-on-mobile"
                 style="margin-bottom: 10px;"
                 data-period="2000"
                 data-type='["Frontend Developer"]'
@@ -2189,7 +2196,7 @@
                     <div class="popular-badge">Most Popular</div>
                     <div class="pricing-header">
                       <div class="plan-icon">
-                        <i class="fa fa-crown"></i>
+                        <i class="fa fa-diamond"></i>
                       </div>
                       <h3>Professional</h3>
                       <div class="plan-badge">Full Stack Power</div>
@@ -2702,24 +2709,7 @@
               </section>
 
               <!-- Call to Action -->
-              <section class="profile-cta-section">
-                <div class="cta-container">
-                  <div class="cta-content">
-                    <h3>Ready to Collaborate?</h3>
-                    <p>Let's work together to bring your ideas to life with cutting-edge technology and innovative solutions.</p>
-                  </div>
-                  <div class="cta-actions">
-                    <label for="contact-card" class="cta-btn primary">
-                      <i class="fa fa-envelope"></i>
-                      Get in Touch
-                    </label>
-                    <label for="works-card" class="cta-btn secondary">
-                      <i class="fa fa-eye"></i>
-                      View My Work
-                    </label>
-                  </div>
-                </div>
-              </section>
+             
 
             </div>
           </div>
@@ -4059,25 +4049,7 @@
 
               </form>
             </div>
-
-            <!-- Contact CTA Footer -->
-            <div class="contact-cta-footer">
-              <div class="cta-content">
-                <h3>Prefer a Different Approach?</h3>
-                <p>Choose the communication method that works best for you</p>
-              </div>
-              <div class="cta-actions">
-                <label for="schedule-card" class="cta-btn primary">
-                  <i class="fa fa-calendar"></i>
-                  Schedule a Call
-                </label>
-                <a href="mailto:mehrfaisal111@gmail.com" class="cta-btn secondary">
-                  <i class="fa fa-envelope"></i>
-                  Direct Email
-                </a>
-              </div>
-            </div>
-
+           
           </div>
         </div>
 

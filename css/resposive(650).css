@@ -52,6 +52,7 @@ header{
     left:-100%;
     width:300px;
     height:100vh;
+    max-height:100vh;
     background:rgba(255, 255, 255, 0.98);
     backdrop-filter:blur(20px);
     -webkit-backdrop-filter:blur(20px);
@@ -61,9 +62,7 @@ header{
     display:flex;
     flex-direction:column;
     padding:0;
-    overflow-y:auto;
-    /* Prevent horizontal scrollbar */
-    overflow-x:hidden;
+    overflow:hidden;
     border-radius:0 20px 20px 0;
 }
 
@@ -112,6 +111,7 @@ header{
     background:linear-gradient(135deg, rgba(14, 102, 85, 0.02) 0%, rgba(255, 255, 255, 0.98) 100%);
     position:relative;
     margin-bottom:5px;
+    flex-shrink:0;
 }
 
 .sidebar-logo {
@@ -219,12 +219,11 @@ header{
 .sidebar-content {
     flex:1;
     padding:20px;
-    overflow-y:auto;
-    /* Prevent horizontal scrollbar */
-    overflow-x: hidden;
+    overflow:hidden;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    justify-content: center;
 }
 
 /* Sidebar Footer */
@@ -623,5 +622,96 @@ header{
     
     .profile-container {
         display: none !important;
+    }
+}
+
+/* Responsive menu for different screen heights */
+@media screen and (max-height: 600px) {
+    .sidebar-header {
+        padding: 20px 20px 15px;
+    }
+    
+    .logo-circle {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+    }
+    
+    .sidebar-content {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .menu label {
+        padding: 12px 10px;
+        font-size: 9px;
+    }
+    
+    .sidebar-footer {
+        padding: 12px 20px;
+    }
+    
+    .sidebar-footer p {
+        font-size: 11px;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .sidebar-header {
+        padding: 15px 20px 10px;
+    }
+    
+    .logo-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+    }
+    
+    .sidebar-content {
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .menu label {
+        padding: 10px 8px;
+        font-size: 8px;
+    }
+    
+    .sidebar-footer {
+        padding: 10px 15px;
+    }
+    
+    .sidebar-footer p {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-height: 400px) {
+    .sidebar-header {
+        padding: 10px 20px 8px;
+    }
+    
+    .logo-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .sidebar-content {
+        padding: 8px;
+        gap: 6px;
+    }
+    
+    .menu label {
+        padding: 8px 6px;
+        font-size: 7px;
+    }
+    
+    .sidebar-footer {
+        padding: 8px 12px;
+    }
+    
+    .sidebar-footer p {
+        font-size: 9px;
     }
 }
