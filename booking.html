@@ -710,12 +710,9 @@
         }
       }
     </style>
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
-      (function(){
-        emailjs.init("2LDYO5RqPZ9vqBm1L");
-      })();
+    <!-- Formspree Integration -->
+    <script>
+      // Formspree works with static hosting and doesn't require custom domains
     </script>
   </head>
   
@@ -1314,69 +1311,82 @@
           const meetingLink = await generateMeetingLink(formData.meetingMode, sessionId);
           console.log('Generated meeting link:', meetingLink);
         
-        // Prepare template parameters matching the template variable names
-        const baseTemplateParams = {
-          // Client template variables (NO meeting link)
-          name: formData.clientName,
-          company_name: 'Faisal Hanif Consulting',
-          order_id: sessionId,
-          session_type: formData.sessionType,
-          session_duration: formData.duration + ' minutes',
-          number_of_sessions: formData.hours + ' session(s)',
-          session_date: formData.sessionDate,
-          session_time: JSON.parse(formData.sessionTimes).join(', '),
-          session_timezone: formData.timezone,
-          meeting_platform: formData.meetingMode,
-          // meeting_link: REMOVED - client won't receive meeting link
-          support_email: 'mehrfaisal111@gmail.com',
-          website_link: 'https://faisalhanif.com',
-          
-          // Owner template variables (INCLUDES meeting link)
-          client_name: formData.clientName,
-          client_email: formData.clientEmail,
-          client_phone: formData.clientPhone || 'Not provided',
-          client_company: formData.clientCompany || 'Not provided',
-          preferred_date: formData.sessionDate,
-          preferred_time: JSON.parse(formData.sessionTimes).join(', '),
-          service_type: formData.sessionType,
-          meeting_type: formData.meetingMode,
-          client_message: formData.sessionNotes || 'No additional notes provided',
-          session_fee: '$' + formData.amount,
-          timezone: formData.timezone,
-          booking_date: new Date().toLocaleDateString(),
-          booking_time: new Date().toLocaleTimeString(),
-          meeting_link: meetingLink // ONLY owner gets the meeting link
-        };
+        // Web3Forms API keys
+        const ownerApiKey = 'c6b7fea5-f7cd-4363-be99-4098c93c42b8';
+        const clientApiKey = 'c6b7fea5-f7cd-4363-be99-4098c93c42b8'; // Same key but different approach
         
-        // Send email to owner first
-        const ownerParams = {
-          ...baseTemplateParams,
-          user_name: 'Faisal',
-          user_email: 'mehrfaisal111@gmail.com',
-          to_name: 'Faisal',
-          to_email: 'mehrfaisal111@gmail.com',
-          reply_to: 'mehrfaisal111@gmail.com'
-        };
-        
-        emailjs.send('service_cq9odii', 'template_a9m0jem', ownerParams)
-        .then(function(ownerResponse) {
-          console.log('Owner email sent successfully:', ownerResponse.status, ownerResponse.text);
-          
-          // Send email to client
-          const clientParams = {
-            ...baseTemplateParams,
-            user_name: formData.clientName,
-            user_email: formData.clientEmail,
-            to_name: formData.clientName,
-            to_email: formData.clientEmail,
-            reply_to: formData.clientEmail
+        try {
+          // Send client confirmation email to owner (for manual forwarding)
+          const clientConfirmationData = {
+            access_key: ownerApiKey,
+            subject: `📧 CLIENT CONFIRMATION: ${formData.sessionType} – ${formData.clientName}`,
+            name: 'Faisal Hanif',
+            email: 'mehrfaisal111@gmail.com', // Send to owner for manual forwarding
+            _replyto: formData.clientEmail,
+            message: `
+Dear ${formData.clientName},
+
+Thank you for booking a **${formData.sessionType}** session with Faisal Hanif Consulting!
+Your booking has been **confirmed**.
+
+---
+
+**Session Details:**
+• **Date:** ${formData.sessionDate}
+• **Time:** ${JSON.parse(formData.sessionTimes).join(', ')}
+• **Duration:** ${formData.duration} minutes
+• **Platform:** ${formData.meetingMode === 'google-meet' ? 'Google Meet' : formData.meetingMode}
+• **Session ID:** ${sessionId}
+
+---
+
+**Contact Information:**
+• **Your Email:** ${formData.clientEmail}
+• **Support:** mehrfaisal111@gmail.com
+• **Website:** https://faisalhanif.com
+
+---
+
+**Additional Notes:**
+${formData.sessionNotes ? formData.sessionNotes : '_No additional notes provided_'}
+
+---
+
+**Payment:**
+Session fee: **$${formData.amount}**
+_Payment is optional – only pay if you’re satisfied with the session!_
+
+---
+
+**Next Steps:**
+You will receive the meeting link from Faisal shortly before the scheduled time.
+
+---
+
+If you need to reschedule or have any questions, just reply to this email.
+
+Looking forward to our session!
+
+Best regards,
+Faisal Hanif
+mehrfaisal111@gmail.com
+            `
           };
-          
-          return emailjs.send('service_cq9odii', 'template_sf2914b', clientParams);
-        })
-        .then(function(clientResponse) {
-          console.log('Client email sent successfully:', clientResponse.status, clientResponse.text);
-          
+
+          console.log('Sending client confirmation to owner for forwarding to:', formData.clientEmail);
+          const clientResponse = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(clientConfirmationData),
+          });
+
+          if (!clientResponse.ok) {
+            throw new Error(`Web3Forms client confirmation failed with status ${clientResponse.status}`);
+          }
+          console.log('Client confirmation sent to owner for forwarding:', clientResponse.status);
+
           // Show success message
           showCustomAlert('success', 'Booking Confirmed!', 'Confirmation emails have been sent to both you and the service provider.');
           
@@ -1397,8 +1407,7 @@
             successUrl.searchParams.append('sessionId', sessionId);
             window.location.href = successUrl.toString();
           }, 2000);
-        })
-        .catch(function(error) {
+        } catch (error) {
           console.error('Email sending failed:', error);
           
           // Show error message
@@ -1407,7 +1416,7 @@
           // Reset button state
           proceedBtn.disabled = false;
           proceedBtn.innerHTML = originalText;
-        });
+        }
       }
       
       // Initialize form

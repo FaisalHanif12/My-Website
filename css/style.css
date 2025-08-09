@@ -702,6 +702,47 @@ header{
     animation-fill-mode:both;
     visibility:hidden
 }
+/* Mobile-specific: Show only About section by default */
+@media screen and (max-width: 768px) {
+    .about-card {
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        height: auto !important;
+        display: block !important;
+    }
+    
+    .resume-card,
+    .works-card,
+    .blogs-card,
+    .contact-card,
+    .schedule-card {
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: none !important;
+        pointer-events: none !important;
+    }
+    
+    /* Show sections only when their menu is clicked */
+    #resume-card:checked ~ .resume-card,
+    #works-card:checked ~ .works-card,
+    #blogs-card:checked ~ .blogs-card,
+    #contact-card:checked ~ .contact-card,
+    #schedule-card:checked ~ .schedule-card {
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        height: auto !important;
+        display: block !important;
+        pointer-events: auto !important;
+    }
+}
+
 @media screen and (min-width:1101px){
     #about-card:checked~.about-card{
         animation-name:fade-in-right;
@@ -742,7 +783,7 @@ header{
         animation-name:fade-in-right;
         visibility:visible
     }
-    #schedule-card:checked~header label[for=contact-card],#schedule-card:checked~header label[for=schedule-card] span{
+    #schedule-card:checked~header label[for=schedule-card],#schedule-card:checked~header label[for=schedule-card] span{
         color:var(--dark-blue)
     }
 }
@@ -7016,7 +7057,7 @@ input[name=menu-list]:checked + label::before {
 
 .testimonials-container {
     position: relative;
-    padding: 0 15px;
+    padding: 0;
     margin-top: 25px;
 }
 
@@ -7030,9 +7071,9 @@ input[name=menu-list]:checked + label::before {
     opacity: 0;
     transform: translateX(30px);
     position: absolute;
-    width: calc(100% - 30px);
+    width: 100%;
     top: 0;
-    left: 15px;
+    left: 0;
 }
 
 .testimonial-card.active {
@@ -7746,8 +7787,8 @@ input[name=menu-list]:checked + label::before {
     }
     
     .testimonial-card {
-        width: calc(100% - 20px);
-        left: 10px;
+        width: 100%;
+        left: 0;
     }
     
     .testimonials-container {
@@ -8844,6 +8885,10 @@ input[name=menu-list]:checked + label::before {
 .cta-container {
   max-width: 500px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .cta-content h3 {
@@ -8851,6 +8896,7 @@ input[name=menu-list]:checked + label::before {
   font-weight: 700;
   margin-bottom: 12px;
   color: #333;
+  text-align: center;
 }
 
 .cta-content p {
@@ -8858,6 +8904,7 @@ input[name=menu-list]:checked + label::before {
   line-height: 1.6;
   margin-bottom: 24px;
   font-weight: 400;
+  text-align: center;
 }
 
 .cta-actions {
@@ -9472,6 +9519,9 @@ input[name=menu-list]:checked + label::before {
     
     .certification-card {
         border-radius: 20px;
+        margin: 0 auto;
+        max-width: calc(100% - 30px);
+        width: 100%;
     }
     
     .cert-content {
@@ -9625,6 +9675,9 @@ input[name=menu-list]:checked + label::before {
     
     .certification-card {
         border-radius: 16px;
+        margin: 0 auto;
+        max-width: calc(100% - 20px);
+        width: 100%;
     }
     
     .cert-content {
@@ -9680,6 +9733,12 @@ input[name=menu-list]:checked + label::before {
         font-size: 8px !important;
         margin-left: 3px !important;
         min-width: 16px !important;
+    }
+    
+    .certification-card {
+        margin: 0 auto;
+        max-width: calc(100% - 16px);
+        width: 100%;
     }
     
     .cert-content {
@@ -9853,6 +9912,57 @@ input[name=menu-list]:checked + label::before {
     
     .optional-payment-icon {
         font-size: 16px;
+    }
+}
+
+/* Force mobile section visibility - ensure only About shows by default */
+@media screen and (max-width: 768px) {
+    /* Show About section by default */
+    .about-card {
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        height: auto !important;
+        display: block !important;
+        z-index: 10 !important;
+    }
+    
+    /* Hide all other sections completely */
+    .resume-card,
+    .works-card,
+    .blogs-card,
+    .contact-card,
+    .schedule-card {
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+        width: 0 !important;
+        height: 0 !important;
+        display: none !important;
+        pointer-events: none !important;
+        z-index: -1 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Only show sections when their radio button is checked */
+    #resume-card:checked ~ .resume-card,
+    #works-card:checked ~ .works-card,
+    #blogs-card:checked ~ .blogs-card,
+    #contact-card:checked ~ .contact-card,
+    #schedule-card:checked ~ .schedule-card {
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+        pointer-events: auto !important;
+        z-index: 10 !important;
+        overflow: visible !important;
     }
 }
 
