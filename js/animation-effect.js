@@ -31,10 +31,10 @@ class TxtType {
             // Text finished typing; start deleting after pause
             delta = this.period;
             this.isDeleting = true;
-        } else if (this.isDeleting && this.txt === '') {
-            // Text finished deleting; start next message
+        } else if (this.isDeleting && this.txt.length === 1 && this.txt === 'F') {
+            // Only delete back to 'F'; start typing the same message again
             this.isDeleting = false;
-            this.loopNum++;
+            // Don't increment loopNum to stay on the same phrase
             delta = 500;
         }
 

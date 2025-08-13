@@ -1034,6 +1034,26 @@
         }, 2000); // Change every 2 seconds
       }
       
+      // Smooth scroll to meeting section
+      function scrollToMeetingSection() {
+        // First, check the schedule card radio button to make the section visible
+        const scheduleRadio = document.getElementById('schedule-card');
+        if (scheduleRadio) {
+          scheduleRadio.checked = true;
+        }
+        
+        // Then scroll to the section
+        const scheduleSection = document.getElementById('schedule-section');
+        if (scheduleSection) {
+          setTimeout(() => {
+            scheduleSection.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }, 100); // Small delay to allow the section to become visible first
+        }
+      }
+      
       // Initialize testimonials when DOM is loaded
       document.addEventListener('DOMContentLoaded', function() {
         // Wait a bit for all elements to be rendered
@@ -1048,6 +1068,11 @@
       
       // Modern Schedule Page Functionality
       document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the meeting pricing calculator
+        if (typeof initMeetingPricingCalculator === 'function') {
+          initMeetingPricingCalculator();
+        }
+        
         // Meeting type card selection
         const meetingCards = document.querySelectorAll('.meeting-type-card');
         
@@ -1460,11 +1485,11 @@
               // Text fully typed - pause before starting to delete
               delta = pauseAfterTyping;
               isDeleting = true;
-            } else if (isDeleting && txt === '') {
-              // Text fully deleted - move to next phrase
+            } else if (isDeleting && txt.length === 1 && txt === 'F') {
+              // Only delete back to 'F' - then start typing again
               isDeleting = false;
-              loopNum++;
-              // Pause before typing the next word
+              // Don't increment loopNum to stay on the same phrase
+              // Pause before typing the rest of the word again
               delta = pauseAfterDeleting;
             }
 
@@ -1781,24 +1806,17 @@
                   </a>
                 </li>
               </ul>
-            </div>
-
-            <div class="info-btns">
-              <div class="left-btn">
-                <a href="#" onclick="downloadCV()">
-                  <span class="fa fa-download" style="margin-right: 10px"></span
-                    >Download CV
+              
+              <!-- Action Buttons -->
+              <div class="profile-action-buttons">
+                <a href="imgs/Faisal-Resume.pdf" download="Faisal-Hanif-Resume.pdf" class="action-btn primary-btn">
+                  <i class="fa fa-download"></i>
+                  <span>Download CV</span>
                 </a>
-              </div>
-
-              <div class="right-btn">
-                <label for="schedule-card" id="loadCalendly"
-                  ><span
-                  class="fa fa-calendar"
-                  style="margin-right: 10px"
-                  ></span 
-                  >Book Meeting</label
-                >
+                <a href="#schedule-section" class="action-btn secondary-btn" onclick="scrollToMeetingSection()">
+                  <i class="fa fa-calendar"></i>
+                  <span>Book Meeting</span>
+                </a>
               </div>
             </div>
           </div>
@@ -4053,7 +4071,7 @@
           </div>
         </div>
 
-        <div class="schedule-card right-cards">
+        <div class="schedule-card right-cards" id="schedule-section">
           <div class="card-wrap">
             <div class="section-header">
               <span class="header">Schedule a Meeting</span>
