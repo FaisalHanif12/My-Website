@@ -608,10 +608,6 @@ header{
         display: none !important;
     }
     
-    .menu-list {
-        display: none !important;
-    }
-    
     .menu-overlay {
         display: none !important;
     }
@@ -621,6 +617,31 @@ header{
     }
     
     .profile-container {
+        display: none !important;
+    }
+    
+    /* Restore the menu-list for desktop sidebar navigation */
+    .menu-list {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: auto !important;
+        height: auto !important;
+        max-height: auto !important;
+        background: #fff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        z-index: auto !important;
+        transition: none !important;
+        display: block !important;
+        flex-direction: column !important;
+        padding: 13px 5px !important;
+        overflow: visible !important;
+        border-radius: 5px !important;
+    }
+    
+    .menu-list::before {
         display: none !important;
     }
 }

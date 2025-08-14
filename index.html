@@ -1040,6 +1040,10 @@
         const scheduleRadio = document.getElementById('schedule-card');
         if (scheduleRadio) {
           scheduleRadio.checked = true;
+          
+          // Trigger the change event to ensure proper handling
+          const changeEvent = new Event('change', { bubbles: true });
+          scheduleRadio.dispatchEvent(changeEvent);
         }
         
         // Then scroll to the section
@@ -1745,6 +1749,7 @@
                     Contact
                   </label>
                 </li>
+              
               </div>
               
               <!-- Sidebar Footer -->
@@ -1813,7 +1818,7 @@
                   <i class="fa fa-download"></i>
                   <span>Download CV</span>
                 </a>
-                <a href="#schedule-section" class="action-btn secondary-btn" onclick="scrollToMeetingSection()">
+                <a href="javascript:void(0)" class="action-btn secondary-btn" onclick="scrollToMeetingSection()">
                   <i class="fa fa-calendar"></i>
                   <span>Book Meeting</span>
                 </a>

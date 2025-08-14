@@ -267,6 +267,46 @@ document.addEventListener("DOMContentLoaded", function () {
     // Setup event listener for menu change
     const menuInputs = document.querySelectorAll("input[name='menu']");
     const rightCards = document.querySelectorAll('.right-cards');
+    const menuLabels = document.querySelectorAll('.menu label');
+
+    function updateActiveMenuState(activeId) {
+        // Remove active class from all menu labels
+        menuLabels.forEach(label => {
+            label.classList.remove('active-menu');
+        });
+        
+        // Add active class to the current menu label
+        const activeLabel = document.querySelector(`label[for="${activeId}"]`);
+        if (activeLabel) {
+            activeLabel.classList.add('active-menu');
+        }
+        
+        // Update URL hash based on section
+        updateURLHash(activeId);
+    }
+
+    function updateURLHash(sectionId) {
+        // Map section IDs to appropriate hash values
+        const hashMap = {
+            'about-card': '',  // Home/About section (no hash)
+            'resume-card': '#profile',
+            'works-card': '#works', 
+            'blogs-card': '#approvals',
+            'contact-card': '#contact',
+            'schedule-card': '#schedule-section'
+        };
+        
+        const hash = hashMap[sectionId];
+        if (hash !== undefined) {
+            // Update URL without triggering page reload
+            if (hash === '') {
+                // For about section, remove hash completely
+                history.replaceState(null, null, window.location.pathname);
+            } else {
+                history.replaceState(null, null, hash);
+            }
+        }
+    }
 
     menuInputs.forEach(input => {
         input.addEventListener("change", event => {
@@ -277,9 +317,62 @@ document.addEventListener("DOMContentLoaded", function () {
                 rightCards.forEach(card => card.style.display = 'none');
                 targetCard.style.display = 'block'; // Ensure CSS allows this to show
                 targetCard.scrollIntoView({ behavior: "smooth" });
+                
+                // Update active menu state
+                updateActiveMenuState(targetId);
             }
         });
     });
+
+    // Handle initial page load with hash
+    function handleInitialHash() {
+        const hash = window.location.hash;
+        
+        // Map hash values back to section IDs
+        const sectionMap = {
+            '': 'about-card',
+            '#profile': 'resume-card',
+            '#works': 'works-card',
+            '#approvals': 'blogs-card', 
+            '#contact': 'contact-card',
+            '#schedule-section': 'schedule-card'
+        };
+        
+        const targetSectionId = sectionMap[hash];
+        if (targetSectionId) {
+            const targetRadio = document.getElementById(targetSectionId);
+            if (targetRadio) {
+                targetRadio.checked = true;
+                updateActiveMenuState(targetSectionId);
+                
+                // Trigger the change event to show the correct section
+                const changeEvent = new Event('change', { bubbles: true });
+                targetRadio.dispatchEvent(changeEvent);
+            }
+        }
+    }
+
+    // Initialize active menu state on page load
+    handleInitialHash();
+    
+    // Fallback: if no hash matched, ensure about is selected
+    const checkedInput = document.querySelector("input[name='menu']:checked");
+    if (!checkedInput) {
+        const aboutRadio = document.getElementById('about-card');
+        if (aboutRadio) {
+            aboutRadio.checked = true;
+            updateActiveMenuState('about-card');
+        }
+    } else {
+        updateActiveMenuState(checkedInput.id);
+    }
+
+    // Handle browser back/forward navigation
+    window.addEventListener('hashchange', function() {
+        handleInitialHash();
+    });
+
+    // Mobile menu is already handled by existing functions in the HTML
 
     // Mobile Filter Dropdown Functionality
     function initMobileFilterDropdowns() {
