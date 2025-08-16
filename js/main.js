@@ -314,8 +314,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const targetCard = document.querySelector(`.${targetId}`); // This looks for '.resume-card'
 
             if (targetCard) {
-                rightCards.forEach(card => card.style.display = 'none');
-                targetCard.style.display = 'block'; // Ensure CSS allows this to show
+                // For mobile: Only use CSS to control visibility (radio buttons + CSS)
+                // For desktop: Use JavaScript display control
+                if (window.innerWidth > 768) {
+                    rightCards.forEach(card => card.style.display = 'none');
+                    targetCard.style.display = 'block';
+                } else {
+                    // On mobile, CSS handles the display via radio button selectors
+                    // Just ensure we clear any inline display styles that might interfere
+                    rightCards.forEach(card => {
+                        card.style.display = '';
+                    });
+                }
+                
                 targetCard.scrollIntoView({ behavior: "smooth" });
                 
                 // Update active menu state
@@ -370,6 +381,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle browser back/forward navigation
     window.addEventListener('hashchange', function() {
         handleInitialHash();
+    });
+
+    // Handle window resize to ensure proper display behavior
+    window.addEventListener('resize', function() {
+        const checkedInput = document.querySelector("input[name='menu']:checked");
+        if (checkedInput) {
+            const targetCard = document.querySelector(`.${checkedInput.id}`);
+            if (targetCard) {
+                if (window.innerWidth > 768) {
+                    // Desktop: use JavaScript display control
+                    rightCards.forEach(card => card.style.display = 'none');
+                    targetCard.style.display = 'block';
+                } else {
+                    // Mobile: clear inline styles to let CSS handle it
+                    rightCards.forEach(card => {
+                        card.style.display = '';
+                    });
+                }
+            }
+        }
     });
 
     // Mobile menu is already handled by existing functions in the HTML
