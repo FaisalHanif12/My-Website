@@ -1,4 +1,4 @@
-/* Performance optimized CSS reset */
+  /* Performance optimized CSS reset */
 *{
     border:0;
     padding:0;
@@ -441,7 +441,7 @@ header{
     position: relative;
     width: 100%;
     height: auto;
-    min-height: 100%;
+    min-height: 100vh;
     background-color: #fff;
     z-index: 5;
     border-radius: 4px;
@@ -568,9 +568,17 @@ header{
 
 /* Adjustments for larger devices (above 1100px) */
 @media (min-width: 1101px) {
+    .main-card {
+        height: 85vh;
+        max-height: 85vh;
+        min-height: auto;
+        overflow: hidden;
+    }
     .main-card-wrap {
-        height: auto;
-        min-height: 85vh;
+        height: 100%;
+        max-height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .my-photo {
