@@ -404,6 +404,7 @@ header{
     position:relative;
     width:480px;
     height:auto;
+    max-height:674px;
     min-height:100%;
     float:left;
     border-radius:4px;
@@ -411,7 +412,7 @@ header{
     -moz-border-radius:4px;
     -ms-border-radius:4px;
     -o-border-radius:4px;
-    overflow:visible;
+    overflow:hidden;
 }
 .main-card::before{
     content:"";
@@ -440,8 +441,8 @@ header{
 .main-card-wrap {
     position: relative;
     width: 100%;
-    height: auto;
-    min-height: 100vh;
+    height: 100%;
+    max-height: 674px;
     background-color: #fff;
     z-index: 5;
     border-radius: 4px;
@@ -451,25 +452,26 @@ header{
     align-items: center;
     padding: 10px 20px;
     box-sizing: border-box;
-    overflow: visible;
+    overflow: hidden;
 }
 
 /* Styles for the profile photo - Modern square design */
 .my-photo {
     position: relative;
-    width: 30%; /* Proportional width to the screen size */
-    max-width: 280px; /* Maximum size */
-    height: auto; /* Maintain aspect ratio */
-    aspect-ratio: 1; /* Ensures the div remains square */
+    width: 280px; /* Fixed width for desktop */
+    height: 280px; /* Fixed height for desktop */
+    min-width: 180px; /* Minimum size */
+    min-height: 180px; /* Minimum height */
     background-image: url('imgs/FaisalN.jpeg');
-    background-position: center;
+    background-position: center center;
     background-size: cover;
+    background-repeat: no-repeat;
     border-radius: 12px; /* Modern rounded square */
     overflow: hidden;
-    margin-top: 20px; /* Reduced top margin for better fit */
-    margin-bottom: 15px; /* Reduced bottom margin */
+    margin: 20px auto 15px; /* Center with auto margins */
     box-shadow: 0 8px 32px rgba(14, 102, 85, 0.15); /* Modern shadow with brand color */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .my-photo:hover {
@@ -495,18 +497,29 @@ header{
 
 /* Media Queries */
 
-/* Adjustments for intermediate screen sizes (768px to 1100px) */
-@media (min-width: 768px) and (max-width: 1100px) {
+/* Adjustments for screens between 901px and 1100px */
+@media (min-width: 901px) and (max-width: 1100px) {
+    .main-card {
+        height: 674px;
+        max-height: 674px;
+        overflow: hidden;
+    }
+    .main-card-wrap {
+        height: 100%;
+        max-height: 674px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 20px 20px;
+    }
     .my-photo {
-        width: 50%;
-        margin-top: 30px;
+        width: 220px;
+        height: 220px;
+        margin: 15px auto 12px;
     }
     
-    /* Tablet adjustments for action buttons */
     .profile-action-buttons {
         gap: 14px;
-        margin-top: 30px;
-        max-width: 300px;
+        margin-top: 20px;
     }
     
     .action-btn {
@@ -516,23 +529,135 @@ header{
     }
 }
 
-/* Adjustments for smaller devices (below 768px) */
-@media (max-width: 767px) {
+/* Adjustments for tablets (701px to 900px) */
+@media (min-width: 701px) and (max-width: 900px) {
+    .main-card {
+        height: 674px;
+        max-height: 674px;
+        overflow: hidden;
+    }
     .main-card-wrap {
-        padding: 20px 10px;
-        margin-top: -50px;
+        height: 100%;
+        max-height: 674px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 18px 20px;
+    }
+    .my-photo {
+        width: 200px;
+        height: 200px;
+        margin: 12px auto 10px;
+    }
+    
+    .profile-action-buttons {
+        gap: 12px;
+        margin-top: 18px;
+    }
+    
+    .action-btn {
+        padding: 11px 16px;
+        font-size: 13px;
+        min-width: 130px;
+    }
+}
+
+/* Adjustments for intermediate screen sizes (768px to 1100px) */
+@media (min-width: 768px) and (max-width: 1100px) {
+    /* This media query is now handled by more specific ranges above */
+}
+
+/* Adjustments for screens 651px to 700px */
+@media (min-width: 651px) and (max-width: 700px) {
+    .main-card {
+        margin-top: 0;
+    }
+    
+    .main-card-wrap {
+        padding: 15px 18px;
+    }
+    
+    .my-photo {
+        width: 210px;
+        height: 210px;
+        margin: 15px auto 12px;
+    }
+    
+    .profile-action-buttons {
+        gap: 10px;
+        margin-top: 16px;
+        max-width: 300px;
+    }
+    
+    .action-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+        min-width: 120px;
+    }
+}
+
+/* Adjustments for smaller devices (481px to 650px) */
+@media (min-width: 481px) and (max-width: 650px) {
+    .container {
+        margin-top: 3vh;
+    }
+    
+    .main-card {
+        margin-top: -45px;
+    }
+    
+    .main-card-wrap {
+        padding: 20px 15px;
     }
 
     .my-photo {
-        width: 60%;
-        margin-top: 30px;
+        width: 200px;
+        height: 200px;
+        margin: 15px auto 12px;
     }
     
-    /* Mobile adjustments for action buttons */
     .profile-action-buttons {
         flex-direction: column;
         gap: 10px;
-        margin-top: 30px;
+        margin-top: 20px;
+        max-width: 280px;
+    }
+    
+    .action-btn {
+        width: 100%;
+        min-width: auto;
+        padding: 13px 22px;
+        font-size: 14px;
+    }
+    
+    .action-btn i {
+        font-size: 14px;
+    }
+}
+
+/* Adjustments for smaller devices (below 768px) */
+@media (max-width: 767px) {
+    .container {
+        margin-top: 3vh;
+    }
+    
+    .main-card {
+        margin-top: -45px;
+    }
+    
+    .main-card-wrap {
+        padding: 20px 15px;
+    }
+
+    .my-photo {
+        width: 190px;
+        height: 190px;
+        margin: 12px auto 10px;
+    }
+    
+    .profile-action-buttons {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
         max-width: 280px;
     }
     
@@ -550,13 +675,33 @@ header{
 
 /* Extra small screens (below 480px) */
 @media (max-width: 479px) {
+    .container {
+        margin-top: 2vh;
+    }
+    
+    .main-card {
+        margin-top: -50px;
+    }
+    
+    .main-card-wrap {
+        padding: 18px 12px;
+    }
+    
+    .my-photo {
+        width: 180px;
+        height: 180px;
+        margin: 12px auto 10px;
+    }
+    
     .profile-action-buttons {
+        flex-direction: column;
         gap: 8px;
-        margin-top: 30px;
+        margin-top: 18px;
         max-width: 260px;
     }
     
     .action-btn {
+        width: 100%;
         padding: 12px 20px;
         font-size: 14px;
     }
@@ -564,26 +709,65 @@ header{
     .action-btn span {
         font-size: 13px;
     }
+    
+    .action-btn i {
+        font-size: 13px;
+    }
+}
+
+/* Very small screens (below 380px) */
+@media (max-width: 379px) {
+    .container {
+        margin-top: 1vh;
+    }
+    
+    .main-card {
+        margin-top: -55px;
+    }
+    
+    .my-photo {
+        width: 170px;
+        height: 170px;
+        margin: 10px auto 10px;
+    }
+    
+    .main-card-wrap {
+        padding: 15px 10px;
+    }
+}
+
+/* Ultra small screens (below 360px) */
+@media (max-width: 359px) {
+    .my-photo {
+        width: 160px;
+        height: 160px;
+        margin: 8px auto 8px;
+    }
+    
+    .main-card-wrap {
+        padding: 12px 8px;
+    }
 }
 
 /* Adjustments for larger devices (above 1100px) */
 @media (min-width: 1101px) {
     .main-card {
-        height: 85vh;
-        max-height: 85vh;
+        height: 674px;
+        max-height: 674px;
         min-height: auto;
         overflow: hidden;
     }
     .main-card-wrap {
         height: 100%;
-        max-height: 100%;
+        max-height: 674px;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
 
     .my-photo {
-        width: 50%;
-        margin-top: 25px;
+        width: 280px;
+        height: 280px;
+        margin: 25px auto 20px;
     }
     
     /* Desktop adjustments for action buttons */
@@ -976,18 +1160,7 @@ header{
     display: block;
 }
 .header::before{
-    position:absolute;
-    content:"";
-    top:2px;
-    left:-15px; /* Move the accent circle slightly more left for better visibility */
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    -webkit-border-radius:50%;
-    -moz-border-radius:50%;
-    -ms-border-radius:50%;
-    -o-border-radius:50%;
-    background:linear-gradient(135deg,rgba(14, 102, 85, 0.15) 0,rgba(14, 102, 85, 0.05) 100%)
+    display: none;
 }
 .about-me-section-content{
     display:flex;
@@ -7901,10 +8074,6 @@ input[name=menu-list]:checked + label::before {
     }
     
     .info-list::before {
-        left: -10px;
-    }
-    
-    .header::before {
         left: -10px;
     }
     
