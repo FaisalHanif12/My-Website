@@ -468,12 +468,16 @@ header{
 }
 
 .menu label:hover {
-    color:#0e6655;
+    color:#000;
 }
 
 .menu label:active {
     color:#0e6655;
     background:transparent;
+}
+
+.menu label:active .icon {
+    color:#0e6655;
 }
 
 

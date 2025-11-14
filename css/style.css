@@ -364,7 +364,7 @@ header{
     min-width: 60px;
 }
 .menu label:hover{
-    color: #fff;
+    color: #000;
     background: rgba(14, 102, 85, 0.1);
     transform: translateX(2px);
 }
@@ -1076,35 +1076,35 @@ header{
         animation-name:fade-in-right;
         visibility:visible
     }
-    #about-card:checked~header label[for=about-card],#about-card:checked~header label[for=about-card] span{
+    #about-card:checked~header label[for=about-card],#about-card:checked~header label[for=about-card] span,#about-card:checked~header label[for=about-card] .icon{
         color:var(--dark-blue)
     }
     #resume-card:checked~.resume-card{
         animation-name:fade-in-right;
         visibility:visible
     }
-    #resume-card:checked~header label[for=resume-card],#resume-card:checked~header label[for=resume-card] span{
+    #resume-card:checked~header label[for=resume-card],#resume-card:checked~header label[for=resume-card] span,#resume-card:checked~header label[for=resume-card] .icon{
         color:var(--dark-blue)
     }
     #works-card:checked~.works-card{
         animation-name:fade-in-right;
         visibility:visible
     }
-    #works-card:checked~header label[for=works-card],#works-card:checked~header label[for=works-card] span{
+    #works-card:checked~header label[for=works-card],#works-card:checked~header label[for=works-card] span,#works-card:checked~header label[for=works-card] .icon{
         color:var(--dark-blue)
     }
     #blogs-card:checked~.blogs-card{
         animation-name:fade-in-right;
         visibility:visible
     }
-    #blogs-card:checked~header label[for=blogs-card],#blogs-card:checked~header label[for=blogs-card] span{
+    #blogs-card:checked~header label[for=blogs-card],#blogs-card:checked~header label[for=blogs-card] span,#blogs-card:checked~header label[for=blogs-card] .icon{
         color:var(--dark-blue)
     }
     #contact-card:checked~.contact-card{
         animation-name:fade-in-right;
         visibility:visible
     }
-    #contact-card:checked~header label[for=contact-card],#contact-card:checked~header label[for=contact-card] span{
+    #contact-card:checked~header label[for=contact-card],#contact-card:checked~header label[for=contact-card] span,#contact-card:checked~header label[for=contact-card] .icon{
         color:var(--dark-blue)
     }
     #schedule-card:checked~.schedule-card{
