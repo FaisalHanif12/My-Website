@@ -1,0 +1,4325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Faisal Hanif - Frontend Developer Portfolio" />
+  <title>Faisal-Portfolio</title>
+  <!-- Preload critical assets -->
+  <link rel="preload" href="css/style.css" as="style" />
+  <link rel="preload" href="css/animation.style.css" as="style" />
+  <link rel="preload" href="imgs/FaisalN1.jpeg" as="image" fetchpriority="high" />
+  <link rel="preload" href="imgs/F-logo2.png" as="image" fetchpriority="high" />
+  <!-- Resource hints for better performance -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+  <link rel="dns-prefetch" href="https://calendly.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://calendly.com" crossorigin />
+
+  <!-- Favicon -->
+  <link rel="icon" href="imgs/F-Logo3.png" type="image/svg+xml" />
+
+  <!-- Critical CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animation.style.css" />
+  <!-- Defer non-critical CSS -->
+  <link rel="stylesheet" href="css/payment-styles.css" media="print" onload="this.media='all'" />
+
+  <!-- Fonts and icons (load asynchronously with display=swap) -->
+  <link rel="stylesheet" id="ryancv-fonts-css"
+    href="//fonts.googleapis.com/css?family=Poppins%3A100%2C100i%2C200%2C200i%2C300%2C300i%2C400%2C400i%2C500%2C500i%2C600%2C600i%2C700%2C700i%2C800%2C800i%2C900%2C900i&amp&display=swap;subset=latin%2Clatin-ext"
+    media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css" media="print"
+    onload="this.media='all'" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    media="print" onload="this.media='all'" />
+
+  <!-- Non-critical CSS -->
+  <link rel="stylesheet" href="css/flaticon.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="css/inoicons.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="css/responsive(1100).css" media="print"
+    onload="this.media='screen and (max-width: 1100px)'" />
+  <link rel="stylesheet" href="css/resposive(650).css" media="print"
+    onload="this.media='screen and (max-width: 650px)'" />
+
+  <!-- Performance monitoring script -->
+  <script src="js/performance-monitor.js" defer></script>
+
+
+
+
+  <style>
+    .button-container {
+      display: flex;
+      justify-content: center;
+      /* Centers the buttons horizontally */
+      align-items: center;
+      gap: 20px;
+      /* Adds space between the two buttons */
+      margin-top: 20px;
+      /* Adds margin on top */
+    }
+
+    .button-container button {
+      background-color: white;
+      /* White background */
+      color: black;
+      /* Black text */
+      border: none;
+      /* No border */
+      padding: 10px 20px;
+      /* Padding around the text */
+      border-radius: 4px;
+      /* Rounded corners */
+      cursor: pointer;
+      /* Pointer cursor on hover */
+      transition: background-color 0.3s, color 0.3s;
+      /* Smooth transition for background and text color */
+    }
+
+    .button-container button:hover {
+      background-color: #0e6655;
+      /* Green background on hover */
+      color: white;
+      /* White text on hover */
+    }
+
+    /* Media query for screens less than 500px wide */
+
+    @media (min-width: 1105px) {
+      .page {
+        margin-top: -40px;
+      }
+    }
+
+    /* Hide typewriter on mobile screens */
+    @media (max-width: 644px) {
+      .hide-on-mobile {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <script defer>
+    // Performance optimized CV download function
+    function downloadCV() {
+      event.preventDefault();
+      const link = document.createElement("a");
+      link.href = "imgs/Faisal-Resume.pdf";
+      link.download = "Faisal-CV.pdf";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      // Use requestAnimationFrame for better performance
+      requestAnimationFrame(() => {
+        document.body.removeChild(link);
+      });
+    }
+
+    function validateEmail(email) {
+      var re =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    function validateForm() {
+      var fullname = document.getElementById("fullname").value;
+      var email = document.getElementById("email").value;
+      var message = document.getElementById("message").value;
+      var projectType = document.querySelector('input[name="project_type"]:checked');
+
+      // Check if required fields are empty
+      if (!fullname || !email || !message) {
+        alert("Please fill out all required fields (Name, Email, and Project Details).");
+        return false; // Stop the form from submitting
+      }
+
+      // Check if project type is selected
+      if (!projectType) {
+        alert("Please select a project type.");
+        return false;
+      }
+
+      // Validate email format
+      if (!validateEmail(email)) {
+        alert("Please enter a valid email address.");
+        return false;
+      }
+
+      return true; // Allow form submission
+    }
+
+    // Mobile menu toggle functionality
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const hamburgerIcon = document.querySelector('.hamburger-menu');
+      const menuOverlay = document.getElementById('menuOverlay');
+
+      mobileMenu.classList.toggle('active');
+      hamburgerIcon.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+
+      // Prevent body scroll when menu is open
+      if (mobileMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Close mobile menu function
+    function closeMobileMenu() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const hamburgerIcon = document.querySelector('.hamburger-menu');
+      const menuOverlay = document.getElementById('menuOverlay');
+
+      mobileMenu.classList.remove('active');
+      hamburgerIcon.classList.remove('active');
+      menuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close mobile menu when clicking on a menu item
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuItems = document.querySelectorAll('#mobileMenu .menu label');
+      menuItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+          closeMobileMenu();
+        });
+      });
+
+      // Close menu when pressing Escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeMobileMenu();
+        }
+      });
+    });
+
+    // Map show/hide functionality
+    function showMap() {
+      var mapSection = document.getElementById("mapSection");
+      if (mapSection) {
+        mapSection.style.display = "block";
+        mapSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Load Google Maps if not already loaded
+        loadGoogleMaps();
+      }
+    }
+
+    function hideMap() {
+      var mapSection = document.getElementById("mapSection");
+      if (mapSection) {
+        mapSection.style.display = "none";
+      }
+    }
+
+    // Google Maps loader
+    function loadGoogleMaps() {
+      // Check if map is already loaded
+      if (window.google && window.google.maps) {
+        initializeMap();
+        return;
+      }
+
+      // Check if script is already being loaded
+      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        return;
+      }
+
+      // For now, let's use a fallback solution since the API key might be invalid
+      // You can replace this with your own Google Maps API key
+      initializeMapFallback();
+    }
+
+    // Fallback map function using OpenStreetMap/Leaflet or embedded map
+    function initializeMapFallback() {
+      var mapContainer = document.getElementById('gmap_canvas');
+      if (!mapContainer) return;
+
+      // Clear loading content
+      mapContainer.innerHTML = '';
+
+      // Create an embedded OpenStreetMap or use an iframe solution
+      mapContainer.innerHTML = `
+          <div style="
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+          ">
+            <!-- Interactive Map Iframe -->
+            <iframe 
+              src="https://www.openstreetmap.org/export/embed.html?bbox=74.2587%2C31.4204%2C74.4587%2C31.6204&layer=mapnik&marker=31.5204%2C74.3587" 
+              style="
+                width: 100%; 
+                height: 100%; 
+                border: none; 
+                border-radius: 12px;
+                filter: hue-rotate(200deg) saturate(0.8) brightness(1.1);
+              "
+              title="Faisal Hanif Location - Lahore, Pakistan"
+              loading="lazy">
+            </iframe>
+            
+            <!-- Custom Overlay with Contact Info -->
+            <div style="
+              position: absolute;
+              top: 20px;
+              right: 20px;
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(10px);
+              padding: 16px 20px;
+              border-radius: 16px;
+              box-shadow: 0 8px 25px rgba(14, 102, 85, 0.2);
+              border: 1px solid rgba(14, 102, 85, 0.1);
+              max-width: 200px;
+              font-family: 'Poppins', sans-serif;
+            ">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <div style="
+                  width: 32px;
+                  height: 32px;
+                  background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                ">
+                  <i class="fa fa-map-marker" style="color: white; font-size: 14px;"></i>
+                </div>
+                <div>
+                  <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #0e6655;">Faisal Hanif</h4>
+                  <p style="margin: 0; font-size: 11px; color: #666;">Frontend Developer</p>
+                </div>
+              </div>
+              
+              <div style="margin-bottom: 12px;">
+                <p style="margin: 0 0 4px 0; font-size: 12px; color: #333; font-weight: 500;">
+                  <i class="fa fa-map-marker" style="color: #0e6655; margin-right: 6px; font-size: 11px;"></i>
+                  Lahore, Pakistan
+                </p>
+                <p style="margin: 0 0 4px 0; font-size: 12px; color: #333; font-weight: 500;">
+                  <i class="fa fa-clock-o" style="color: #0e6655; margin-right: 6px; font-size: 11px;"></i>
+                  GMT+5 (PKT)
+                </p>
+              </div>
+              
+              <a href="mailto:mehrfaisal111@gmail.com" style="
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 12px;
+                text-decoration: none;
+                font-size: 11px;
+                font-weight: 600;
+                width: 100%;
+                justify-content: center;
+                transition: all 0.3s ease;
+              " onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(14, 102, 85, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <i class="fa fa-envelope" style="font-size: 10px;"></i>
+                Contact Me
+              </a>
+            </div>
+            
+            <!-- Location Details at Bottom -->
+            <div style="
+              position: absolute;
+              bottom: 20px;
+              left: 20px;
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(10px);
+              padding: 12px 16px;
+              border-radius: 12px;
+              box-shadow: 0 4px 15px rgba(14, 102, 85, 0.15);
+              border: 1px solid rgba(14, 102, 85, 0.1);
+              font-family: 'Poppins', sans-serif;
+            ">
+              <p style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #0e6655;">
+                📍 My Work Location
+              </p>
+              <p style="margin: 0; font-size: 11px; color: #666; line-height: 1.4;">
+                Available for remote work worldwide<br>
+                Local meetings in Lahore available
+              </p>
+            </div>
+          </div>
+        `;
+    }
+
+    // Initialize Google Map (keeping this for future use with valid API key)
+    function initializeMap() {
+      var mapContainer = document.getElementById('gmap_canvas');
+      if (!mapContainer) return;
+
+      // Lahore, Pakistan coordinates
+      var myLocation = { lat: 31.5204, lng: 74.3587 };
+
+      // Clear loading content
+      mapContainer.innerHTML = '';
+
+      try {
+        var map = new google.maps.Map(mapContainer, {
+          zoom: 13,
+          center: myLocation,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+        });
+
+        // Add marker
+        var marker = new google.maps.Marker({
+          position: myLocation,
+          map: map,
+          title: 'Faisal Hanif - Frontend Developer',
+        });
+
+        // Add info window
+        var infoWindow = new google.maps.InfoWindow({
+          content: `
+              <div style="font-family: 'Poppins', sans-serif; padding: 10px; max-width: 250px;">
+                <h3 style="margin: 0 0 8px 0; color: #0e6655; font-size: 16px; font-weight: 600;">Faisal Hanif</h3>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">Frontend Developer</p>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;"><strong>Location:</strong> Lahore, Pakistan</p>
+                <p style="margin: 0 0 12px 0; color: #666; font-size: 13px;"><strong>Timezone:</strong> GMT+5 (PKT)</p>
+                <a href="mailto:mehrfaisal111@gmail.com" style="background: #0e6655; color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 500; display: inline-block;">
+                  Contact Me
+                </a>
+              </div>
+            `
+        });
+
+        // Show info window when marker is clicked
+        marker.addListener('click', function () {
+          infoWindow.open(map, marker);
+        });
+
+      } catch (error) {
+        console.error('Error initializing Google Maps:', error);
+        // Fallback to the alternative map
+        initializeMapFallback();
+      }
+    }
+  </script>
+
+  <style>
+    @media (min-width: 650px) {
+      .menu label[for="blogs-card"] {
+        margin-left: -3.5px;
+      }
+    }
+  </style>
+
+  <script defer>
+    // Modern Blog Filter System
+    document.addEventListener("DOMContentLoaded", function () {
+      const filterButtons = document.querySelectorAll('.blog-filter-section .filter-btn');
+      const blogItems = document.querySelectorAll('.blog-item');
+      const blogGrid = document.querySelector('.blog-grid');
+      const emptyState = document.querySelector('.blog-empty-state');
+      const loadMoreBtn = document.querySelector('.load-more-btn');
+
+      // Blog filtering functionality
+      if (filterButtons.length > 0 && blogItems.length > 0) {
+        filterButtons.forEach(button => {
+          button.addEventListener('click', function () {
+            const category = this.getAttribute('data-category');
+
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Show loading state
+            if (blogGrid) {
+              blogGrid.style.opacity = '0.5';
+              blogGrid.style.transition = 'opacity 0.3s ease';
+            }
+
+            setTimeout(() => {
+              let visibleCount = 0;
+
+              blogItems.forEach((item, index) => {
+                const itemCategory = item.getAttribute('data-category');
+
+                if (category === 'all' || itemCategory === category) {
+                  item.style.display = 'block';
+                  item.classList.remove('fade-out');
+                  item.classList.add('fade-in');
+
+                  // Stagger animation
+                  setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0) scale(1)';
+                  }, index * 100);
+
+                  visibleCount++;
+                } else {
+                  item.classList.add('fade-out');
+                  item.classList.remove('fade-in');
+
+                  setTimeout(() => {
+                    item.style.display = 'none';
+                  }, 300);
+                }
+              });
+
+              // Show/hide empty state
+              if (emptyState) {
+                if (visibleCount === 0) {
+                  emptyState.style.display = 'block';
+                } else {
+                  emptyState.style.display = 'none';
+                }
+              }
+
+              // Restore grid opacity
+              if (blogGrid) {
+                blogGrid.style.opacity = '1';
+              }
+            }, 200);
+          });
+        });
+      }
+
+      // Load more functionality
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function () {
+          const btnText = this.querySelector('.btn-text');
+          const btnIcon = this.querySelector('.btn-icon i');
+          const btnArrow = this.querySelector('.btn-arrow i');
+
+          // Update button state
+          this.style.opacity = '0.7';
+          this.style.transform = 'scale(0.98)';
+          btnText.textContent = 'Loading...';
+          btnIcon.className = 'fa fa-spinner fa-spin';
+          btnArrow.style.opacity = '0';
+
+          // Simulate loading
+          setTimeout(() => {
+            // Reset button
+            this.style.opacity = '1';
+            this.style.transform = 'scale(1)';
+            btnText.textContent = 'Load More Articles';
+            btnIcon.className = 'fa fa-plus';
+            btnArrow.style.opacity = '1';
+
+            // Show success message
+            const tempMessage = document.createElement('p');
+            tempMessage.textContent = 'No more articles to load!';
+            tempMessage.style.color = '#6b7280';
+            tempMessage.style.fontSize = '14px';
+            tempMessage.style.marginTop = '15px';
+            tempMessage.style.textAlign = 'center';
+
+            this.parentNode.appendChild(tempMessage);
+
+            setTimeout(() => {
+              if (tempMessage.parentNode) {
+                tempMessage.parentNode.removeChild(tempMessage);
+              }
+            }, 3000);
+          }, 2000);
+        });
+      }
+    });
+
+    // Custom Success Alert System
+    function showCustomSuccessAlert() {
+      // Create overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'custom-alert-overlay';
+
+      // Create alert HTML
+      overlay.innerHTML = `
+          <div class="custom-alert">
+            <div class="alert-header">
+              <button class="alert-close" onclick="closeCustomAlert()">
+                <i class="fa fa-times"></i>
+              </button>
+              <div class="success-icon">
+                <i class="fa fa-check"></i>
+              </div>
+              <h2 class="alert-title">Message Sent Successfully!</h2>
+              <p class="alert-subtitle">Your message has been delivered to Faisal</p>
+            </div>
+            
+            <div class="alert-content">
+              <p class="alert-message">
+                Thank you for reaching out! I've received your message and will review it carefully. 
+                <strong>I'll get back to you within 24 hours</strong> with a detailed response and next steps for your project.
+              </p>
+              
+              <div class="response-timeline">
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i class="fa fa-envelope"></i>
+                  </div>
+                  <div class="timeline-text">Message Received</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i class="fa fa-eye"></i>
+                  </div>
+                  <div class="timeline-text">Under Review</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i class="fa fa-reply"></i>
+                  </div>
+                  <div class="timeline-text">Response within 24h</div>
+                </div>
+              </div>
+              
+              <div class="alert-actions">
+                <button class="alert-btn primary" onclick="closeCustomAlert()">
+                  <i class="fa fa-check"></i>
+                  <span>Perfect!</span>
+                </button>
+                <a href="mailto:mehrfaisal111@gmail.com" class="alert-btn secondary">
+                  <i class="fa fa-envelope"></i>
+                  <span>Email Directly</span>
+                </a>
+              </div>
+            </div>
+            
+            <div class="alert-footer">
+              <p class="alert-footer-text">
+                <i class="fa fa-shield"></i>
+                <span>Your information is secure and will never be shared</span>
+              </p>
+            </div>
+          </div>
+        `;
+
+      // Add to body
+      document.body.appendChild(overlay);
+
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+
+      // Show with animation
+      setTimeout(() => {
+        overlay.classList.add('show');
+      }, 100);
+
+      // Auto close after 10 seconds (optional)
+      setTimeout(() => {
+        if (overlay.classList.contains('show')) {
+          closeCustomAlert();
+        }
+      }, 10000);
+    }
+
+    function closeCustomAlert() {
+      const overlay = document.querySelector('.custom-alert-overlay');
+      if (overlay) {
+        overlay.classList.remove('show');
+
+        // Restore body scroll
+        document.body.style.overflow = '';
+
+        // Remove element after animation
+        setTimeout(() => {
+          if (overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+          }
+        }, 400);
+      }
+    }
+
+    // Close on overlay click
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('custom-alert-overlay')) {
+        closeCustomAlert();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeCustomAlert();
+      }
+    });
+
+    // Contact form submission handler - Fixed version
+    document.addEventListener("DOMContentLoaded", function () {
+      const contactForm = document.getElementById("contactForm");
+      if (contactForm) {
+        contactForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          // First validate the form
+          if (!validateForm()) {
+            return false;
+          }
+
+          var form = this;
+          var submitBtn = form.querySelector('.modern-submit-btn');
+          var btnText = submitBtn.querySelector('.btn-text');
+          var btnIcon = submitBtn.querySelector('.btn-icon');
+          var originalText = btnText.textContent;
+
+          // Show loading state
+          submitBtn.disabled = true;
+          btnText.textContent = 'Sending...';
+          btnIcon.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+          submitBtn.style.opacity = '0.7';
+
+          var data = new FormData(form);
+
+          fetch(form.action, {
+            method: form.method,
+            body: data,
+            headers: {
+              Accept: "application/json",
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error('Network response was not ok');
+              }
+            })
+            .then((data) => {
+              // Success - Show custom alert
+              showCustomSuccessAlert();
+              form.reset(); // Clear the form
+
+              // Reset button state
+              submitBtn.disabled = false;
+              btnText.textContent = originalText;
+              btnIcon.innerHTML = '<i class="fa fa-paper-plane"></i>';
+              submitBtn.style.opacity = '1';
+            })
+            .catch((error) => {
+              // Error handling
+              console.error('Form submission error:', error);
+              alert("There was a problem sending your message. Please try again or contact me directly at mehrfaisal111@gmail.com");
+
+              // Reset button state
+              submitBtn.disabled = false;
+              btnText.textContent = originalText;
+              btnIcon.innerHTML = '<i class="fa fa-paper-plane"></i>';
+              submitBtn.style.opacity = '1';
+            });
+        });
+      }
+    });
+  </script>
+  <script defer>
+    // Enhanced Portfolio filter functionality with smooth animations
+    document.addEventListener("DOMContentLoaded", function () {
+      const allWorksItems = document.querySelectorAll(".works-item");
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const radioButtons = document.querySelectorAll('input[name="menu-list"]');
+      const projectsGrid = document.querySelector('.projects-grid');
+      const loadingState = document.querySelector('.projects-loading');
+      const emptyState = document.querySelector('.works-empty-state');
+
+      if (!allWorksItems.length || !filterButtons.length) return;
+
+      // Initialize filter system
+      initializeFilters();
+
+      function initializeFilters() {
+        // Add click event listeners to filter buttons
+        filterButtons.forEach((button) => {
+          button.addEventListener('click', handleFilterClick);
+        });
+
+        // Add change event listeners to radio buttons for backward compatibility
+        radioButtons.forEach((radio) => {
+          radio.addEventListener('change', handleRadioChange, { passive: true });
+        });
+      }
+
+      function handleFilterClick(e) {
+        e.preventDefault();
+        const button = e.currentTarget;
+        const category = button.getAttribute('data-category');
+        const radio = document.getElementById(category);
+
+        if (radio) {
+          radio.checked = true;
+          updateActiveFilter(button);
+          filterWorks(category);
+        }
+      }
+
+      function handleRadioChange() {
+        const category = this.id;
+        const button = document.querySelector(`[data-category="${category}"]`);
+        if (button) {
+          updateActiveFilter(button);
+        }
+        filterWorks(category);
+      }
+
+      function updateActiveFilter(activeButton) {
+        // Remove active class from all filter buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        activeButton.classList.add('active');
+      }
+
+      function filterWorks(category) {
+        // Show loading state
+        showLoadingState();
+
+        // Use requestAnimationFrame for smoother UI updates
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            let visibleCount = 0;
+
+            allWorksItems.forEach((item, index) => {
+              const itemCategory = item.getAttribute("data-category");
+              const shouldShow = category === "All" || itemCategory === category;
+
+              if (shouldShow) {
+                visibleCount++;
+                item.classList.remove('fade-out');
+                item.classList.add('fade-in');
+                item.style.display = "block";
+
+                // Add staggered animation delay
+                setTimeout(() => {
+                  item.style.opacity = '1';
+                  item.style.transform = 'translateY(0) scale(1)';
+                }, index * 100);
+              } else {
+                item.classList.remove('fade-in');
+                item.classList.add('fade-out');
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(30px) scale(0.95)';
+
+                setTimeout(() => {
+                  item.style.display = "none";
+                }, 300);
+              }
+            });
+
+            // Hide loading state and show results
+            setTimeout(() => {
+              hideLoadingState();
+
+              // Show empty state if no items found
+              if (visibleCount === 0 && category !== "All") {
+                showEmptyState();
+              } else {
+                hideEmptyState();
+              }
+            }, 500);
+          }, 300);
+        });
+      }
+
+      function showLoadingState() {
+        if (loadingState) {
+          loadingState.style.display = 'flex';
+          hideEmptyState();
+        }
+      }
+
+      function hideLoadingState() {
+        if (loadingState) {
+          loadingState.style.display = 'none';
+        }
+      }
+
+      function showEmptyState() {
+        if (emptyState) {
+          emptyState.style.display = 'block';
+        }
+      }
+
+      function hideEmptyState() {
+        if (emptyState) {
+          emptyState.style.display = 'none';
+        }
+      }
+
+      // Add smooth hover effects for project cards
+      allWorksItems.forEach(item => {
+        item.addEventListener('mouseenter', function () {
+          this.style.willChange = 'transform';
+        });
+
+        item.addEventListener('mouseleave', function () {
+          this.style.willChange = 'auto';
+        });
+      });
+
+      // Initialize with "All" filter active
+      const allFilter = document.querySelector('[data-category="All"]');
+      if (allFilter) {
+        allFilter.classList.add('active');
+      }
+    });
+  </script>
+
+  <script defer>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Lazy load Google Maps
+      const mapTrigger = document.getElementById("gmap_canvas");
+      if (!mapTrigger) return;
+
+      // Function to create and insert the map iframe
+      function loadMap() {
+        if (document.querySelector("#gmap_canvas iframe")) return;
+
+        var iframe = document.createElement("iframe");
+        iframe.src = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5445.305620361764!2d74.3045157!3d31.5172607!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x525e8e18678b4c07!2sGovt.+Pilot+Secondary+School+for+Girls!5e0!3m2!1sen!2s!4v1662394461952";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("marginheight", "0");
+        iframe.setAttribute("marginwidth", "0");
+        iframe.setAttribute("loading", "lazy");
+
+        mapTrigger.innerHTML = "";
+        mapTrigger.appendChild(iframe);
+      }
+
+      // Load map on click for better performance
+      mapTrigger.addEventListener("click", loadMap, { passive: true });
+
+      // Use Intersection Observer API to load map when visible
+      const contactSection = document.querySelector(".contact-top");
+      if (contactSection) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                // Delay map loading slightly to prioritize visible content
+                setTimeout(loadMap, 1000);
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.3, rootMargin: "100px" }
+        );
+        observer.observe(contactSection);
+      }
+    });
+
+    // Optimize Calendly loading with preloading and improved performance
+    document.addEventListener("DOMContentLoaded", function () {
+      const loadButton = document.getElementById("loadCalendlyButton");
+      const loadingMessage = document.getElementById("loadingMessage");
+      const calendlyWidget = document.querySelector(".calendly-inline-widget");
+
+      if (!loadButton || !loadingMessage || !calendlyWidget) return;
+
+      // Create iframe element early but don't append it yet
+      const iframe = document.createElement("iframe");
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.setAttribute("frameborder", "0");
+      iframe.setAttribute("scrolling", "no");
+
+      // Start preloading Calendly in the background with a data URI
+      const preloadLink = document.createElement("link");
+      preloadLink.rel = "preload";
+      preloadLink.href = "https://calendly.com/mehrfaisal111/30min?hide_gdpr_banner=1";
+      preloadLink.as = "document";
+      document.head.appendChild(preloadLink);
+
+      function loadCalendly() {
+        // Show loading state immediately
+        loadingMessage.style.display = "block";
+        loadButton.style.display = "none";
+        calendlyWidget.style.opacity = "0";
+        calendlyWidget.style.display = "block";
+        calendlyWidget.style.transition = "opacity 0.3s ease-in-out";
+
+        // Set the source only when needed
+        iframe.src = "https://calendly.com/mehrfaisal111/30min?hide_gdpr_banner=1";
+
+        // Add loading timeout to ensure UI doesn't get stuck
+        const loadingTimeout = setTimeout(() => {
+          loadingMessage.style.display = "none";
+          calendlyWidget.style.opacity = "1";
+        }, 2500); // Fallback timeout
+
+        iframe.onload = function () {
+          clearTimeout(loadingTimeout);
+          loadingMessage.style.display = "none";
+          calendlyWidget.style.opacity = "1";
+
+          // Track successful load for analytics
+          if (window.performance && window.performance.mark) {
+            window.performance.mark("calendly-loaded");
+          }
+        };
+
+        calendlyWidget.appendChild(iframe);
+      }
+
+      loadButton.addEventListener("click", loadCalendly, { passive: true });
+    });
+  </script>
+
+  <script defer>
+    // Testimonial slider functionality
+    let currentTestimonialIndex = 0;
+    let testimonialInterval;
+
+    function showTestimonial(index) {
+      const testimonials = document.querySelectorAll('.testimonial-item');
+      const indicators = document.querySelectorAll('.indicator');
+
+      // Hide all testimonials
+      testimonials.forEach(testimonial => {
+        testimonial.classList.remove('active');
+      });
+
+      // Remove active class from all indicators
+      indicators.forEach(indicator => {
+        indicator.classList.remove('active');
+      });
+
+      // Show current testimonial
+      if (testimonials[index]) {
+        testimonials[index].classList.add('active');
+      }
+
+      // Highlight current indicator
+      if (indicators[index]) {
+        indicators[index].classList.add('active');
+      }
+    }
+
+    function changeTestimonial(direction) {
+      const testimonials = document.querySelectorAll('.testimonial-item');
+      currentTestimonialIndex += direction;
+
+      if (currentTestimonialIndex >= testimonials.length) {
+        currentTestimonialIndex = 0;
+      } else if (currentTestimonialIndex < 0) {
+        currentTestimonialIndex = testimonials.length - 1;
+      }
+
+      showTestimonial(currentTestimonialIndex);
+    }
+
+    function currentTestimonial(index) {
+      currentTestimonialIndex = index - 1;
+      showTestimonial(currentTestimonialIndex);
+
+      // Reset the interval when manually changing
+      clearInterval(testimonialInterval);
+      startTestimonialAutoplay();
+    }
+
+    function startTestimonialAutoplay() {
+      testimonialInterval = setInterval(() => {
+        changeTestimonial(1);
+      }, 2000); // Change every 2 seconds
+    }
+
+    // Smooth scroll to meeting section
+    function scrollToMeetingSection() {
+      // First, check the schedule card radio button to make the section visible
+      const scheduleRadio = document.getElementById('schedule-card');
+      if (scheduleRadio) {
+        scheduleRadio.checked = true;
+
+        // Trigger the change event to ensure proper handling
+        const changeEvent = new Event('change', { bubbles: true });
+        scheduleRadio.dispatchEvent(changeEvent);
+      }
+
+      // Then scroll to the section
+      const scheduleSection = document.getElementById('schedule-section');
+      if (scheduleSection) {
+        setTimeout(() => {
+          scheduleSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 100); // Small delay to allow the section to become visible first
+      }
+    }
+
+    // Initialize testimonials when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+      // Wait a bit for all elements to be rendered
+      setTimeout(() => {
+        const testimonials = document.querySelectorAll('.testimonial-item');
+        if (testimonials.length > 0) {
+          showTestimonial(0);
+          startTestimonialAutoplay();
+        }
+      }, 100);
+    });
+
+    // Modern Schedule Page Functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize the meeting pricing calculator
+      if (typeof initMeetingPricingCalculator === 'function') {
+        initMeetingPricingCalculator();
+      }
+
+      // Meeting type card selection
+      const meetingCards = document.querySelectorAll('.meeting-type-card');
+
+      meetingCards.forEach(card => {
+        card.addEventListener('click', function () {
+          // Remove active class from all cards
+          meetingCards.forEach(c => c.classList.remove('active'));
+          // Add active class to clicked card
+          this.classList.add('active');
+        });
+      });
+
+      // Enhanced button functionality
+      const button = document.getElementById("loadCalendlyButton");
+      const loadingMessage = document.getElementById("loadingMessage");
+      const calendlyWidget = document.querySelector(".calendly-inline-widget");
+
+      if (button && loadingMessage && calendlyWidget) {
+        button.addEventListener('click', function () {
+          // Hide the main content and show loading
+          document.querySelector('.schedule-hero').style.display = 'none';
+          document.querySelector('.meeting-types').style.display = 'none';
+          document.querySelector('.expectations-section').style.display = 'none';
+          document.querySelector('.cta-section').style.display = 'none';
+
+          loadingMessage.style.display = 'block';
+
+          // Trigger the original Calendly loading functionality
+          const originalEvent = new Event('click');
+          loadButton = document.getElementById("loadCalendlyButton");
+          if (loadButton) {
+            // Load Calendly after a brief delay for better UX
+            setTimeout(() => {
+              loadCalendly();
+            }, 1500);
+          }
+        });
+      }
+
+      // Add smooth scrolling animation for better UX
+      function addSmoothAnimations() {
+        const sections = document.querySelectorAll('.schedule-hero, .meeting-types, .expectations-section, .cta-section');
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+          section.style.opacity = '0';
+          section.style.transform = 'translateY(30px)';
+          section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          observer.observe(section);
+        });
+      }
+
+      // Initialize smooth animations
+      addSmoothAnimations();
+    });
+
+    // Modern Certifications Page Functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      // Certification filter functionality
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const certificationCards = document.querySelectorAll('.certification-card');
+
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          const category = this.getAttribute('data-category');
+
+          // Update active button
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+
+          // Filter cards
+          certificationCards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+
+            if (category === 'all' || cardCategory === category) {
+              card.classList.remove('hidden');
+              card.style.display = 'block';
+            } else {
+              card.classList.add('hidden');
+              setTimeout(() => {
+                if (card.classList.contains('hidden')) {
+                  card.style.display = 'none';
+                }
+              }, 400);
+            }
+          });
+        });
+      });
+
+      // Add entrance animations for certification cards
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      // Observe certification cards
+      certificationCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        cardObserver.observe(card);
+      });
+
+      // Add hover effects for stats
+      const statItems = document.querySelectorAll('.stat-item');
+      statItems.forEach(stat => {
+        stat.addEventListener('mouseenter', function () {
+          this.style.transform = 'translateY(-10px) scale(1.05)';
+        });
+
+        stat.addEventListener('mouseleave', function () {
+          this.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+
+      // Animate achievement numbers on scroll
+      const animateNumbers = () => {
+        const numberElements = document.querySelectorAll('.stat-content h3');
+
+        numberElements.forEach(element => {
+          const finalNumber = element.textContent.replace(/\D/g, '');
+          if (finalNumber) {
+            const suffix = element.textContent.replace(/[0-9]/g, '');
+            let currentNumber = 0;
+            const increment = Math.ceil(finalNumber / 50);
+
+            const timer = setInterval(() => {
+              currentNumber += increment;
+              if (currentNumber >= finalNumber) {
+                currentNumber = finalNumber;
+                clearInterval(timer);
+              }
+              element.textContent = currentNumber + suffix;
+            }, 30);
+          }
+        });
+      };
+
+      // Trigger number animation when stats section is visible
+      const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateNumbers();
+            statsObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      const statsSection = document.querySelector('.achievement-stats');
+      if (statsSection) {
+        statsObserver.observe(statsSection);
+      }
+
+      // Enhanced About Page Functionality
+      const aboutStatsSection = document.querySelector('.hero-stats');
+      if (aboutStatsSection) {
+        const aboutStatsObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              animateAboutNumbers();
+              aboutStatsObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        aboutStatsObserver.observe(aboutStatsSection);
+      }
+
+      // Animate about page numbers
+      const animateAboutNumbers = () => {
+        const numberElements = document.querySelectorAll('.hero-stats .stat-number');
+
+        numberElements.forEach(element => {
+          const finalNumber = element.textContent.replace(/\D/g, '');
+          if (finalNumber) {
+            const suffix = element.textContent.replace(/[0-9]/g, '');
+            let currentNumber = 0;
+            const increment = Math.ceil(finalNumber / 30);
+
+            const timer = setInterval(() => {
+              currentNumber += increment;
+              if (currentNumber >= finalNumber) {
+                currentNumber = finalNumber;
+                clearInterval(timer);
+              }
+              element.textContent = currentNumber + suffix;
+            }, 50);
+          }
+        });
+      };
+
+      // Enhanced intro header animations
+      const initIntroHeaderAnimations = () => {
+        const introSection = document.querySelector('.about-intro-header');
+        if (!introSection) return;
+
+        // Animate intro elements on scroll
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Add animation classes to intro elements
+              const badge = introSection.querySelector('.intro-badge');
+              const title = introSection.querySelector('.intro-title');
+              const description = introSection.querySelector('.intro-description');
+              const highlights = introSection.querySelectorAll('.highlight-item');
+              const actions = introSection.querySelector('.intro-actions');
+
+              // Staggered animation for better visual effect
+              setTimeout(() => {
+                if (badge) badge.style.animation = 'fadeInUp 0.6s ease forwards';
+              }, 100);
+
+              setTimeout(() => {
+                if (title) title.style.animation = 'fadeInUp 0.8s ease forwards';
+              }, 300);
+
+              setTimeout(() => {
+                if (description) description.style.animation = 'fadeInUp 0.8s ease forwards';
+              }, 500);
+
+              setTimeout(() => {
+                highlights.forEach((item, index) => {
+                  setTimeout(() => {
+                    item.style.animation = 'fadeInUp 0.6s ease forwards';
+                  }, index * 150);
+                });
+              }, 700);
+
+              setTimeout(() => {
+                if (actions) actions.style.animation = 'fadeInUp 0.8s ease forwards';
+              }, 1200);
+
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.3 });
+
+        observer.observe(introSection);
+      };
+
+      // Enhanced floating icons animation
+      const enhanceFloatingIcons = () => {
+        const floatingIcons = document.querySelectorAll('.floating-icon');
+
+        floatingIcons.forEach((icon, index) => {
+          // Add hover effect
+          icon.addEventListener('mouseenter', () => {
+            icon.style.transform = 'scale(1.2) rotate(15deg)';
+            icon.style.background = 'rgba(255, 255, 255, 0.2)';
+          });
+
+          icon.addEventListener('mouseleave', () => {
+            icon.style.transform = '';
+            icon.style.background = 'rgba(255, 255, 255, 0.1)';
+          });
+
+          // Random position adjustment for more dynamic feel
+          setInterval(() => {
+            const randomX = Math.random() * 20 - 10; // -10 to 10px
+            const randomY = Math.random() * 20 - 10; // -10 to 10px
+            icon.style.transform += ` translate(${randomX}px, ${randomY}px)`;
+
+            setTimeout(() => {
+              icon.style.transform = icon.style.transform.replace(/translate\([^)]*\)/g, '');
+            }, 2000);
+          }, 5000 + index * 1000); // Staggered timing
+        });
+      };
+
+      // Initialize intro header animations
+      initIntroHeaderAnimations();
+      enhanceFloatingIcons();
+
+      // Enhanced testimonial functionality for new design
+      const enhancedTestimonialCards = document.querySelectorAll('.testimonial-card');
+      const enhancedDots = document.querySelectorAll('.dot');
+
+      function showEnhancedTestimonial(index) {
+        // Hide all testimonial cards
+        enhancedTestimonialCards.forEach(card => {
+          card.classList.remove('active');
+        });
+
+        // Remove active class from all dots
+        enhancedDots.forEach(dot => {
+          dot.classList.remove('active');
+        });
+
+        // Show current testimonial
+        if (enhancedTestimonialCards[index]) {
+          enhancedTestimonialCards[index].classList.add('active');
+        }
+
+        // Highlight current dot
+        if (enhancedDots[index]) {
+          enhancedDots[index].classList.add('active');
+        }
+      }
+
+      if (enhancedTestimonialCards.length > 0) {
+        // Initialize first testimonial
+        showEnhancedTestimonial(0);
+        
+        // Update dot click handlers
+        enhancedDots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            showEnhancedTestimonial(index);
+            currentTestimonialIndex = index;
+          });
+        });
+      }
+
+      // Override original testimonial functions for new design
+      window.changeTestimonial = function (direction) {
+        if (enhancedTestimonialCards.length > 0) {
+          currentTestimonialIndex += direction;
+
+          if (currentTestimonialIndex >= enhancedTestimonialCards.length) {
+            currentTestimonialIndex = 0;
+          } else if (currentTestimonialIndex < 0) {
+            currentTestimonialIndex = enhancedTestimonialCards.length - 1;
+          }
+
+          showEnhancedTestimonial(currentTestimonialIndex);
+        }
+      };
+
+      window.currentTestimonial = function (index) {
+        if (enhancedTestimonialCards.length > 0) {
+          currentTestimonialIndex = index - 1;
+          showEnhancedTestimonial(currentTestimonialIndex);
+        }
+      };
+
+    });
+
+    // Enhanced typewriter effect with smoother animations
+    document.addEventListener('DOMContentLoaded', function () {
+      // Prevent the external typewriter script from running to avoid conflicts
+      window.loadDynamicTypingEffectExecuted = true;
+
+      const elements = document.querySelectorAll('.typewrite');
+      if (!elements.length) return;
+
+      // Implement enhanced typewriter effect with ultra-smooth transitions
+      function typeWriter(element, dataType, period) {
+        const toRotate = JSON.parse(dataType);
+        let loopNum = 0;
+        let txt = '';
+        let isDeleting = false;
+        let charIndex = 0;
+
+        // Carefully tuned timing parameters for smooth animation
+        const typingBaseSpeed = 80;  // Base speed for typing (lower = faster)
+        const typingVariation = 40;   // Random variation to make typing feel natural
+        const deletingBaseSpeed = 40; // Base speed for deleting (lower = faster)
+        const deletingVariation = 20; // Random variation for deleting
+        const pauseAfterTyping = period || 2000; // Pause after typing completes
+        const pauseAfterDeleting = 500; // Pause after deleting before typing next word
+
+        // Create or get the wrap element
+        let wrap = element.querySelector('.wrap');
+        if (!wrap) {
+          wrap = document.createElement('span');
+          wrap.className = 'wrap';
+          element.appendChild(wrap);
+        }
+
+        const tick = function () {
+          const i = loopNum % toRotate.length;
+          const fullTxt = toRotate[i];
+
+          if (isDeleting) {
+            // Smooth deletion - one character at a time with consistent timing
+            txt = fullTxt.substring(0, txt.length - 1);
+          } else {
+            // Smooth typing - one character at a time with consistent timing
+            txt = fullTxt.substring(0, txt.length + 1);
+          }
+
+          // Update text with smooth rendering
+          wrap.textContent = txt;
+
+          // Calculate typing speed with natural variation
+          let delta;
+
+          if (isDeleting) {
+            // Deleting speed calculation with slight randomness
+            delta = deletingBaseSpeed + Math.floor(Math.random() * deletingVariation);
+          } else {
+            // Typing speed calculation with natural randomness
+            delta = typingBaseSpeed + Math.floor(Math.random() * typingVariation);
+          }
+
+          // Handle state transitions with appropriate pauses
+          if (!isDeleting && txt === fullTxt) {
+            // Text fully typed - pause before starting to delete
+            delta = pauseAfterTyping;
+            isDeleting = true;
+          } else if (isDeleting && txt.length === 1 && txt === 'F') {
+            // Only delete back to 'F' - then start typing again
+            isDeleting = false;
+            // Don't increment loopNum to stay on the same phrase
+            // Pause before typing the rest of the word again
+            delta = pauseAfterDeleting;
+          }
+
+          // Schedule next frame with calculated timing
+          setTimeout(tick, delta);
+        };
+
+        // Start the effect immediately for better responsiveness
+        tick();
+      }
+
+      // Initialize typewriter effect for all elements
+      elements.forEach(el => {
+        const period = el.getAttribute('data-period');
+        const dataType = el.getAttribute('data-type');
+        if (dataType) {
+          // Clear any existing content first
+          while (el.firstChild) {
+            el.removeChild(el.firstChild);
+          }
+          typeWriter(el, dataType, parseInt(period, 10));
+        }
+      });
+    });
+  </script>
+
+  <script>
+    // Defer non-critical function execution
+    document.addEventListener('DOMContentLoaded', function () {
+      function adjustMargin() {
+        // Get all elements with class 'img1' within '.works-item' that have 'data-category="Reactjs"'
+        var elements = document.querySelectorAll('.works-item[data-category="Reactjs"] .img1');
+
+        // Check the screen width
+        if (window.innerWidth <= 500) {
+          // Apply negative margin-top if conditions are met
+          elements.forEach(function (el) {
+            el.style.marginTop = '-220px';
+          });
+        } else {
+          // Revert the margin-top when condition is not met
+          elements.forEach(function (el) {
+            el.style.marginTop = ''; // Reverts to the stylesheet or removes inline style
+          });
+        }
+      }
+
+      // Use debounced resize event for better performance
+      let resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(adjustMargin, 100);
+      }, { passive: true });
+
+      // Call function after a slight delay to prioritize critical rendering
+      setTimeout(adjustMargin, 100);
+    });
+  </script>
+
+</head>
+
+<body>
+  <div class="preloader" id="preloader">
+    <span class="ion-load-c"></span>
+  </div>
+  <script>
+    // Performance optimized preloader
+    document.addEventListener('DOMContentLoaded', function () {
+      // Hide preloader faster for better perceived performance
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        // Use requestAnimationFrame for smoother transition
+        requestAnimationFrame(() => {
+          preloader.style.opacity = '0';
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 200); // Reduced from 300ms
+        });
+      }
+
+      // Ensure profile container stays centered
+      function centerProfileContent() {
+        const profileContainer = document.querySelector('.profile-container');
+        const header = document.querySelector('header');
+
+        if (profileContainer && header) {
+          // Adjust centering based on screen width
+          if (window.innerWidth <= 480) {
+            profileContainer.style.justifyContent = 'flex-start';
+          } else {
+            profileContainer.style.justifyContent = 'center';
+          }
+        }
+      }
+
+      // Call on load and resize
+      centerProfileContent();
+      window.addEventListener('resize', centerProfileContent, { passive: true });
+
+      // Implement lazy loading for images
+      if ('loading' in HTMLImageElement.prototype) {
+        // Browser supports native lazy loading
+        const images = document.querySelectorAll('img:not([loading])');
+        images.forEach(img => {
+          img.loading = 'lazy';
+        });
+      } else {
+        // Fallback for browsers that don't support lazy loading
+        // Load a lazy loading library dynamically if needed
+        const lazyImages = document.querySelectorAll('.works-item img, .my-photo');
+        const lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              const lazyImage = entry.target;
+              if (lazyImage.dataset.src) {
+                lazyImage.src = lazyImage.dataset.src;
+                lazyImage.removeAttribute('data-src');
+              }
+              if (lazyImage.dataset.srcset) {
+                lazyImage.srcset = lazyImage.dataset.srcset;
+                lazyImage.removeAttribute('data-srcset');
+              }
+              if (lazyImage.dataset.background) {
+                lazyImage.style.backgroundImage = `url('${lazyImage.dataset.background}')`;
+                lazyImage.removeAttribute('data-background');
+              }
+              lazyImageObserver.unobserve(lazyImage);
+            }
+          });
+        });
+
+        lazyImages.forEach(function (lazyImage) {
+          lazyImageObserver.observe(lazyImage);
+        });
+      }
+    });
+
+    // Add passive event listeners for better performance
+    document.addEventListener('DOMContentLoaded', function () {
+      const passiveSupported = false;
+      try {
+        const options = Object.defineProperty({}, 'passive', {
+          get: function () { passiveSupported = true; }
+        });
+        window.addEventListener('test', null, options);
+      } catch (err) { }
+
+      const wheelOpt = passiveSupported ? { passive: true } : false;
+      const wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
+      document.addEventListener(wheelEvent, function () { }, wheelOpt);
+      document.addEventListener('touchstart', function () { }, wheelOpt);
+    });
+  </script>
+  <div class="page">
+    <div class="background-gred">
+      <ul class="bg-bubble">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="container">
+      <input type="radio" name="menu" id="about-card" checked />
+      <input type="radio" name="menu" id="resume-card" />
+      <input type="radio" name="menu" id="works-card" />
+      <input type="radio" name="menu" id="blogs-card" />
+      <input type="radio" name="menu" id="contact-card" />
+      <input type="radio" name="menu" id="schedule-card" />
+      <header>
+
+        <div class="menu-list-wrap">
+
+          <div class="profile-container">
+            <img src="imgs/Faisal15.webp" alt="Profile Photo" class="profile-photo" />
+            <div class="text-container">
+              <span>Faisal Hanif</span>
+              <p href="" class="typewrite" data-period="2000" data-type='["Frontend Developer"]'>
+                <span class="wrap"></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Hamburger Menu Icon -->
+          <div class="hamburger-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <!-- Mobile Menu Overlay -->
+          <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+
+          <ul class="menu-list" id="mobileMenu">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+              <div class="sidebar-logo">
+                <div class="logo-circle">FH</div>
+                <div class="logo-text">
+                  <h3>Faisal Hanif</h3>
+                  <p>Frontend Developer</p>
+                </div>
+              </div>
+              <button class="sidebar-close" onclick="closeMobileMenu()">
+                <span>&times;</span>
+              </button>
+            </div>
+
+            <!-- Menu Items -->
+            <div class="sidebar-content">
+              <li class="menu">
+                <label for="about-card">
+                  <span class="icon ion-ios-person"></span>
+                  About
+                </label>
+              </li>
+              <li class="menu">
+                <label for="resume-card">
+                  <span class="icon ion-android-list"></span>
+                  Profile
+                </label>
+              </li>
+              <li class="menu">
+                <label for="works-card">
+                  <span class="icon ion-briefcase"></span>
+                  Works
+                </label>
+              </li>
+              <li class="menu">
+                <label for="blogs-card">
+                  <span class="icon ion-trophy"></span>
+                  Approvals
+                </label>
+              </li>
+              <li class="menu">
+                <label for="contact-card">
+                  <span class="icon ion-chatbubbles"></span>
+                  Contact
+                </label>
+              </li>
+
+            </div>
+
+           
+          </ul>
+        </div>
+      </header>
+
+      <div class="main-card">
+        <div class="main-card-wrap">
+          <div class="my-photo" style="background-image: url('imgs/Faisal15.webp')"></div>
+          <div class="my-info">
+            <h2 class="name">Faisal Hanif</h2>
+
+            <p href="" class="typewrite hide-on-mobile" style="margin-bottom: 10px;" data-period="2000"
+              data-type='["Frontend Developer"]'>
+              <span class="wrap"></span>
+            </p>
+            <ul class="socialLinks">
+              <li>
+                <a target="_blank" href="https://www.linkedin.com/in/faisal-frontend-developer/"><span
+                    class="fa fa-linkedin"></span></a>
+              </li>
+              <li>
+                <a target="_blank" href="https://x.com/FaisalHanif333"><span class="fa fa-twitter"></span></a>
+              </li>
+              <li>
+                <a target="_blank" href="https://github.com/FaisalHanif12"><span class="fa fa-github"></span></a>
+              </li>
+              <li>
+                <a target="_blank" href="https://www.quora.com/profile/Faisal-Hanif-126"><span
+                    class="fa fa-quora"></span>
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href="https://www.instagram.com/faisal_hanif_0/"><span
+                    class="fa fa-instagram"></span>
+                </a>
+              </li>
+            </ul>
+
+            <!-- Action Buttons -->
+            <div class="profile-action-buttons">
+              <a href="imgs/Faisal-Resume.pdf" download="Faisal-Hanif-Resume.pdf" class="action-btn primary-btn">
+                <i class="fa fa-download"></i>
+                <span>Download CV</span>
+              </a>
+              <a href="javascript:void(0)" class="action-btn secondary-btn" onclick="scrollToMeetingSection()">
+                <i class="fa fa-calendar"></i>
+                <span>Book Meeting</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-card right-cards">
+        <div class="card-wrap">
+          <div class="about-card-wrap">
+
+            <!-- Simple Intro Header -->
+            <section class="simple-intro-header">
+              <div class="intro-badge">
+                <span class="status-dot"></span>
+                <span>Available for Work</span>
+              </div>
+
+              <div class="intro-content">
+                <h1 class="intro-title">
+                  <span class="greeting">Hi there! I'm</span>
+                  <span class="name">Faisal Hanif</span>
+                </h1>
+
+                <div class="role-tag">
+                  <i class="fa fa-code"></i>
+                  <span>Frontend Developer</span>
+                </div>
+
+
+                <div class="intro-stats">
+                  <div class="stat">
+                    <div class="stat-icon">
+                      <i class="fa fa-code"></i>
+                    </div>
+                    <div class="stat-content">
+                      <span class="stat-number">3+</span>
+                      <span class="stat-label">Years Coding</span>
+                    </div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-icon">
+                      <i class="fa fa-briefcase"></i>
+                    </div>
+                    <div class="stat-content">
+                      <span class="stat-number">10+</span>
+                      <span class="stat-label">Projects</span>
+                    </div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-icon">
+                      <i class="fa fa-building"></i>
+                    </div>
+                    <div class="stat-content">
+                      <span class="stat-number">3+</span>
+                      <span class="stat-label">Companies</span>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </section>
+
+            <!-- Personal Info Cards -->
+            <section class="personal-info-section">
+              <div class="section-header">
+                <span class="header">Get to Know Me</span>
+              </div>
+              <div class="info-cards-grid">
+                <div class="info-card">
+                  <div class="info-icon">
+                    <i class="fa fa-envelope"></i>
+                  </div>
+                  <div class="info-content">
+                    <h4>Email</h4>
+                    <p>mehrfaisal111@gmail.com</p>
+                    <a href="mailto:mehrfaisal111@gmail.com" class="info-action">
+                      <i class="fa fa-external-link"></i>
+                      Send Email
+                    </a>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <div class="info-icon">
+                    <i class="fa fa-phone"></i>
+                  </div>
+                  <div class="info-content">
+                    <h4>Phone</h4>
+                    <p>+923148166354</p>
+                    <a href="tel:+923148166354" class="info-action">
+                      <i class="fa fa-phone"></i>
+                      Call Now
+                    </a>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <div class="info-icon">
+                    <i class="fa fa-map-marker"></i>
+                  </div>
+                  <div class="info-content">
+                    <h4>Location</h4>
+                    <p>Lahore, Pakistan</p>
+                    <span class="info-action">
+                      <i class="fa fa-clock-o"></i>
+                      GMT+5
+                    </span>
+                  </div>
+                </div>
+
+                <div class="info-card featured">
+                  <div class="info-icon">
+                    <i class="fa fa-briefcase"></i>
+                  </div>
+                  <div class="info-content">
+                    <h4>Availability</h4>
+                    <p>Open to Work</p>
+                    <label for="schedule-card" class="info-action cta">
+                      <i class="fa fa-calendar"></i>
+                      Book Meeting
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Modern Services Section -->
+            <section class="modern-services-section">
+              <div class="section-header">
+                <span class="header">What I Do Best</span>
+              </div>
+              <div class="services-showcase">
+
+                <div class="service-card" data-category="frontend">
+                  <div class="service-header">
+                    <div class="service-icon">
+                      <i class="fa fa-code"></i>
+                    </div>
+                    <div class="service-category">Frontend</div>
+                  </div>
+                  <h3>Web Development</h3>
+                  <p>Crafting responsive, high-performance web applications using modern frameworks and cutting-edge
+                    technologies.</p>
+                  <div class="service-technologies">
+                    <span class="tech-tag">React.js</span>
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Tailwind CSS</span>
+                  </div>
+                  <div class="service-features">
+                    <ul>
+                      <li><i class="fa fa-check"></i> Responsive Design</li>
+                      <li><i class="fa fa-check"></i> Performance Optimization</li>
+                      <li><i class="fa fa-check"></i> Modern UI/UX</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="service-card" data-category="mobile">
+                  <div class="service-header">
+                    <div class="service-icon">
+                      <i class="fa fa-mobile"></i>
+                    </div>
+                    <div class="service-category">Mobile</div>
+                  </div>
+                  <h3>Mobile Development</h3>
+                  <p>Creating cross-platform mobile applications with native performance and exceptional user
+                    experience.</p>
+                  <div class="service-technologies">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Expo</span>
+                    <span class="tech-tag">iOS</span>
+                    <span class="tech-tag">Android</span>
+                  </div>
+                  <div class="service-features">
+                    <ul>
+                      <li><i class="fa fa-check"></i> Cross-Platform</li>
+                      <li><i class="fa fa-check"></i> Native Performance</li>
+                      <li><i class="fa fa-check"></i> App Store Ready</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="service-card" data-category="cloud">
+                  <div class="service-header">
+                    <div class="service-icon">
+                      <i class="fa fa-cloud"></i>
+                    </div>
+                    <div class="service-category">DevOps</div>
+                  </div>
+                  <h3>Cloud & Deployment</h3>
+                  <p>Streamlining deployment processes with containerization and modern DevOps practices for scalable
+                    solutions.</p>
+                  <div class="service-technologies">
+                    <span class="tech-tag">Docker</span>
+                    <span class="tech-tag">AWS</span>
+                    <span class="tech-tag">Vercel</span>
+                    <span class="tech-tag">CI/CD</span>
+                  </div>
+                  <div class="service-features">
+                    <ul>
+                      <li><i class="fa fa-check"></i> Container Management</li>
+                      <li><i class="fa fa-check"></i> Automated Deployment</li>
+                      <li><i class="fa fa-check"></i> Scalable Infrastructure</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="service-card" data-category="frontend">
+                  <div class="service-header">
+                    <div class="service-icon">
+                      <i class="fa fa-desktop"></i>
+                    </div>
+                    <div class="service-category">Progressive</div>
+                  </div>
+                  <h3>Progressive Web Apps</h3>
+                  <p>Building PWAs that deliver app-like experiences with the reach of the web, optimized for
+                    performance and engagement.</p>
+                  <div class="service-technologies">
+                    <span class="tech-tag">PWA</span>
+                    <span class="tech-tag">Service Workers</span>
+                    <span class="tech-tag">Web Push</span>
+                    <span class="tech-tag">Offline Support</span>
+                  </div>
+                  <div class="service-features">
+                    <ul>
+                      <li><i class="fa fa-check"></i> Offline Functionality</li>
+                      <li><i class="fa fa-check"></i> Push Notifications</li>
+                      <li><i class="fa fa-check"></i> App-like Experience</li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+            <!-- Enhanced Testimonials -->
+            <section class="enhanced-testimonials-section">
+              <div class="section-header">
+                <span class="header">Client Success Stories</span>
+              </div>
+              <div class="testimonials-container">
+                <div class="testimonial-card active" data-testimonial="1">
+                  <div class="testimonial-header">
+                    <div class="client-avatar">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <div class="client-info">
+                      <h4>Sarah Johnson</h4>
+                      <span>Project Manager, TechCorp</span>
+                      <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="testimonial-quote-icon">
+                      <i class="fa fa-quote-right"></i>
+                    </div>
+                  </div>
+                  <p class="testimonial-text">
+                    "Faisal delivered exceptional work on our React project. His attention to detail and
+                    problem-solving skills are outstanding. The application performance improved significantly
+                    after his optimizations."
+                  </p>
+                  <div class="testimonial-footer">
+                    <div class="project-tags">
+                      <span class="tag">React.js</span>
+                      <span class="tag">Performance</span>
+                      <span class="tag">Optimization</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="testimonial-card" data-testimonial="2">
+                  <div class="testimonial-header">
+                    <div class="client-avatar">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <div class="client-info">
+                      <h4>Amnan Hussain</h4>
+                      <span>Infinity Edge Technology</span>
+                      <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="testimonial-quote-icon">
+                      <i class="fa fa-quote-right"></i>
+                    </div>
+                  </div>
+                  <p class="testimonial-text">
+                    "I had the pleasure of working with Faisal on a challenging project. His exceptional coding skills
+                    and problem-solving abilities consistently delivered high-quality work, demonstrating both technical
+                    expertise and strong teamwork."
+                  </p>
+                  <div class="testimonial-footer">
+                    <div class="project-tags">
+                      <span class="tag">Team Work</span>
+                      <span class="tag">Problem Solving</span>
+                      <span class="tag">Quality Code</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="testimonial-card" data-testimonial="3">
+                  <div class="testimonial-header">
+                    <div class="client-avatar">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <div class="client-info">
+                      <h4>Emily Rodriguez</h4>
+                      <span>Lead Developer, AppSolutions</span>
+                      <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                    <div class="testimonial-quote-icon">
+                      <i class="fa fa-quote-right"></i>
+                    </div>
+                  </div>
+                  <p class="testimonial-text">
+                    "Faisal's expertise in React Native helped us launch our mobile app successfully. His code quality
+                    and documentation are top-notch. Highly recommended for any frontend development work."
+                  </p>
+                  <div class="testimonial-footer">
+                    <div class="project-tags">
+                      <span class="tag">React Native</span>
+                      <span class="tag">Mobile App</span>
+                      <span class="tag">Documentation</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modern Navigation -->
+                <div class="testimonial-controls">
+                  <button class="testimonial-nav-btn prev" onclick="changeTestimonial(-1)">
+                    <i class="fa fa-chevron-left"></i>
+                  </button>
+                  <div class="testimonial-dots">
+                    <button class="dot active" onclick="currentTestimonial(1)"></button>
+                    <button class="dot" onclick="currentTestimonial(2)"></button>
+                    <button class="dot" onclick="currentTestimonial(3)"></button>
+                  </div>
+                  <button class="testimonial-nav-btn next" onclick="changeTestimonial(1)">
+                    <i class="fa fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Modern Pricing Section -->
+            <section class="modern-pricing-section">
+              <div class="section-header">
+                <span class="header">Investment Plans</span>
+              </div>
+              <div class="pricing-container">
+                <div class="pricing-card active">
+                  <div class="pricing-top-accent"></div>
+                  
+                  <!-- Row 1: Icon & Title -->
+                  <div class="pricing-left">
+                    <div class="plan-icon">
+                      <i class="fa fa-diamond"></i>
+                    </div>
+                    <div class="plan-info">
+                      <h3 class="plan-title">Professional</h3>
+                      <span class="plan-subtitle">Full Stack Power</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Row 2: Price -->
+                  <div class="pricing-right">
+                    <div class="pricing-amount">
+                      <span class="currency">$</span>
+                      <span class="amount">25</span>
+                      <span class="period">/hour</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Row 3: Services Grid 3x2 -->
+                  <div class="pricing-center">
+                    <div class="services-list">
+                      <span class="service-tag"><i class="fa fa-code"></i> Frontend</span>
+                      <span class="service-tag"><i class="fa fa-server"></i> Backend API</span>
+                      <span class="service-tag"><i class="fa fa-database"></i> Database</span>
+                      <span class="service-tag"><i class="fa fa-tachometer-alt"></i> Performance</span>
+                      <span class="service-tag"><i class="fa fa-cloud"></i> Cloud</span>
+                      <span class="service-tag"><i class="fa fa-tools"></i> Maintenance</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Row 4: Button -->
+                  <label for="schedule-card" class="pricing-cta-inline">
+                    <span>Get Started</span>
+                    <i class="fa fa-arrow-right"></i>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Pricing CTA -->
+              <div class="pricing-footer-section">
+                <p>Need a custom solution? <label for="contact-card" class="inline-link">Let's discuss your
+                    project</label></p>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-card right-cards">
+        <div class="card-wrap">
+          <div class="modern-profile-wrap">
+
+            <!-- Profile Hero Section -->
+            <section class="profile-hero-section">
+              <div class="profile-hero-content">
+                <div class="hero-badge">
+                  <div class="pulse-dot"></div>
+                  <span>Professional Journey</span>
+                </div>
+                <h1 class="hero-title">
+                  <span class="title-accent">My</span> Professional Profile
+                </h1>
+                <p class="works-description">
+                  A comprehensive overview of my experience, education, and technical expertise
+                  in modern web development and software engineering.
+                </p>
+
+                <div class="profile-stats">
+                  <div class="stat-card">
+                    <div class="stat-icon">
+                      <i class="fa fa-code"></i>
+                    </div>
+                    <div class="stat-content">
+                      <span class="stat-number">3+</span>
+                      <span class="stat-label">Years Coding</span>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon">
+                      <i class="fa fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-content">
+                      <span class="stat-number">BS-SE</span>
+                      <span class="stat-label">Degree</span>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon">
+                      <i class="fa fa-building"></i>
+                    </div>
+                    <div class="stat-content">
+                      <span class="stat-number">3+</span>
+                      <span class="stat-label">Companies</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Experience Timeline -->
+            <section class="modern-experience-section">
+              <div class="section-header">
+                <div class="header-icon">
+                  <i class="fa fa-briefcase"></i>
+                </div>
+                <div class="header-content">
+                  <h2>Professional Experience</h2>
+                  <p>My journey through the tech industry</p>
+                </div>
+              </div>
+
+              <div class="timeline-container">
+                <div class="timeline-item current">
+                  <div class="timeline-marker">
+                    <div class="marker-dot active"></div>
+                    <div class="marker-line"></div>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <div class="timeline-badge current">Current</div>
+                      <span class="timeline-period">2023 - Present</span>
+                    </div>
+                    <h3 class="timeline-title">Frontend Developer</h3>
+                    <div class="timeline-company">
+                      <i class="fa fa-building"></i>
+                      <span>UHA</span>
+                    </div>
+                    <p class="timeline-description">
+                      Leading frontend development initiatives with React.js and Next.js,
+                      achieving 20% performance improvements and delivering responsive,
+                      user-centric web applications.
+                    </p>
+                    <div class="timeline-tech">
+                      <span class="tech-tag">React.js</span>
+                      <span class="tech-tag">Next.js</span>
+                      <span class="tech-tag">Performance</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="timeline-item current">
+                  <div class="timeline-marker">
+                    <div class="marker-dot active"></div>
+                    <div class="marker-line"></div>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <div class="timeline-badge current">Ongoing</div>
+                      <span class="timeline-period">2022 - Present</span>
+                    </div>
+                    <h3 class="timeline-title">Freelance Developer</h3>
+                    <div class="timeline-company">
+                      <i class="fa fa-globe"></i>
+                      <span>Upwork Platform</span>
+                    </div>
+                    <p class="timeline-description">
+                      Collaborating with diverse international clients, delivering custom web solutions
+                      and building strong client relationships across various industries.
+                    </p>
+                    <div class="timeline-tech">
+                      <span class="tech-tag">Client Relations</span>
+                      <span class="tech-tag">Custom Solutions</span>
+                      <span class="tech-tag">Global Projects</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <div class="marker-dot"></div>
+                    <div class="marker-line"></div>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <span class="timeline-period">2023 - 2024</span>
+                    </div>
+                    <h3 class="timeline-title">Outsourcing Engineer</h3>
+                    <div class="timeline-company">
+                      <i class="fa fa-cogs"></i>
+                      <span>TechXelo</span>
+                    </div>
+                    <p class="timeline-description">
+                      Orchestrated project acquisition and client engagement strategies,
+                      expertly identifying opportunities and aligning them with company capabilities.
+                    </p>
+                    <div class="timeline-tech">
+                      <span class="tech-tag">Project Management</span>
+                      <span class="tech-tag">Client Acquisition</span>
+                      <span class="tech-tag">Strategy</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <div class="marker-dot"></div>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <span class="timeline-period">2022 - 2023</span>
+                    </div>
+                    <h3 class="timeline-title">React Native Developer</h3>
+                    <div class="timeline-company">
+                      <i class="fa fa-mobile"></i>
+                      <span>Viral Square</span>
+                    </div>
+                    <p class="timeline-description">
+                      Specialized in cross-platform mobile development, creating seamless
+                      user experiences for iOS and Android applications.
+                    </p>
+                    <div class="timeline-tech">
+                      <span class="tech-tag">React Native</span>
+                      <span class="tech-tag">Mobile Apps</span>
+                      <span class="tech-tag">Cross-Platform</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Education Section -->
+            <section class="modern-education-section">
+              <div class="section-header">
+                <div class="header-icon">
+                  <i class="fa fa-graduation-cap"></i>
+                </div>
+                <div class="header-content">
+                  <h2>Educational Background</h2>
+                  <p>My academic foundation and learning journey</p>
+                </div>
+              </div>
+
+              <div class="education-grid">
+                <div class="education-card featured">
+                  <div class="education-header">
+                    <div class="education-icon">
+                      <i class="fa fa-university"></i>
+                    </div>
+                    <div class="education-badge">Bachelor's Degree</div>
+                  </div>
+                  <h3>Software Engineering (BS-SE)</h3>
+                  <div class="education-institution">
+                    <i class="fa fa-map-marker"></i>
+                    <span>University of Management & Technology, Lahore</span>
+                  </div>
+                  <div class="education-period">2020 - 2024</div>
+                  <p class="education-description">
+                    Comprehensive software engineering program covering modern development
+                    practices, algorithms, and industry-standard methodologies.
+                  </p>
+                  <div class="education-subjects">
+                    <span class="subject-tag">Software Engineering</span>
+                    <span class="subject-tag">Data Structures</span>
+                    <span class="subject-tag">Web Development</span>
+                    <span class="subject-tag">Database Systems</span>
+                  </div>
+                </div>
+
+                <div class="education-card">
+                  <div class="education-header">
+                    <div class="education-icon">
+                      <i class="fa fa-book"></i>
+                    </div>
+                    <div class="education-badge">Intermediate</div>
+                  </div>
+                  <h3>Computer Science (Inter)</h3>
+                  <div class="education-institution">
+                    <i class="fa fa-map-marker"></i>
+                    <span>Unique College, Lahore</span>
+                  </div>
+                  <div class="education-period">2018 - 2020</div>
+                  <p class="education-description">
+                    Foundation in computing principles, programming fundamentals,
+                    and essential computer technology skills.
+                  </p>
+                  <div class="education-subjects">
+                    <span class="subject-tag">Programming Basics</span>
+                    <span class="subject-tag">Computer Science</span>
+                    <span class="subject-tag">Mathematics</span>
+                  </div>
+                </div>
+
+                <div class="education-card">
+                  <div class="education-header">
+                    <div class="education-icon">
+                      <i class="fa fa-certificate"></i>
+                    </div>
+                    <div class="education-badge">Matriculation</div>
+                  </div>
+                  <h3>Computer Science (Matric)</h3>
+                  <div class="education-institution">
+                    <i class="fa fa-map-marker"></i>
+                    <span>Unique College, Lahore</span>
+                  </div>
+                  <div class="education-period">2016 - 2018</div>
+                  <p class="education-description">
+                    Early foundation in computing with hands-on activities and
+                    basic programming concepts introduction.
+                  </p>
+                  <div class="education-subjects">
+                    <span class="subject-tag">Computer Basics</span>
+                    <span class="subject-tag">Mathematics</span>
+                    <span class="subject-tag">Science</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Skills Matrix -->
+            <section class="modern-skills-section">
+              <div class="section-header">
+                <div class="header-icon">
+                  <i class="fa fa-cogs"></i>
+                </div>
+                <div class="header-content">
+                  <h2>Technical Expertise</h2>
+                  <p>My technical skills and proficiency levels</p>
+                </div>
+              </div>
+
+              <div class="skills-container">
+                <!-- Programming Languages -->
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">
+                      <i class="fa fa-code"></i>
+                    </div>
+                    <h3>Programming Languages</h3>
+                  </div>
+                  <div class="skills-grid">
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">JavaScript</span>
+                        <span class="skill-level">90%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 90%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">TypeScript</span>
+                        <span class="skill-level">85%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 85%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">Node.js</span>
+                        <span class="skill-level">85%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 85%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">C++</span>
+                        <span class="skill-level">60%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 60%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Frameworks & Libraries -->
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">
+                      <i class="fa fa-cube"></i>
+                    </div>
+                    <h3>Frameworks & Libraries</h3>
+                  </div>
+                  <div class="skills-grid">
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">React.js</span>
+                        <span class="skill-level">95%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 95%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">Next.js</span>
+                        <span class="skill-level">80%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 80%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">React Native</span>
+                        <span class="skill-level">80%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 80%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">Express.js</span>
+                        <span class="skill-level">70%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 70%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CSS Frameworks -->
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">
+                      <i class="fa fa-paint-brush"></i>
+                    </div>
+                    <h3>CSS & Styling</h3>
+                  </div>
+                  <div class="skills-grid">
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">Tailwind CSS</span>
+                        <span class="skill-level">90%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 90%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">Bootstrap</span>
+                        <span class="skill-level">90%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 90%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">CSS3</span>
+                        <span class="skill-level">92%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 92%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">Responsive Design</span>
+                        <span class="skill-level">95%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 95%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Languages & Soft Skills -->
+              <div class="additional-skills">
+                <div class="languages-section">
+                  <h3>
+                    <i class="fa fa-globe"></i>
+                    Languages
+                  </h3>
+                  <div class="language-items">
+                    <div class="language-item">
+                      <span class="language-name">English</span>
+                      <div class="language-level">
+                        <div class="level-dots">
+                          <span class="dot filled"></span>
+                          <span class="dot filled"></span>
+                          <span class="dot filled"></span>
+                          <span class="dot filled"></span>
+                          <span class="dot"></span>
+                        </div>
+                        <span class="level-text">Professional</span>
+                      </div>
+                    </div>
+                    <div class="language-item">
+                      <span class="language-name">Urdu</span>
+                      <div class="language-level">
+                        <div class="level-dots">
+                          <span class="dot filled"></span>
+                          <span class="dot filled"></span>
+                          <span class="dot filled"></span>
+                          <span class="dot filled"></span>
+                          <span class="dot filled"></span>
+                        </div>
+                        <span class="level-text">Native</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="expertise-section">
+                  <h3>
+                    <i class="fa fa-star"></i>
+                    Core Expertise
+                  </h3>
+                  <div class="expertise-tags">
+                    <span class="expertise-tag">Frontend Development</span>
+                    <span class="expertise-tag">Backend Development</span>
+                    <span class="expertise-tag">Mobile Development</span>
+                    <span class="expertise-tag">Progressive Web Apps</span>
+                    <span class="expertise-tag">Website Testing</span>
+                    <span class="expertise-tag">Cloud Deployment</span>
+                    <span class="expertise-tag">Performance Optimization</span>
+                    <span class="expertise-tag">UI/UX Design</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Call to Action -->
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="works-card right-cards">
+        <div class="card-wrap">
+
+          <!-- Modern Works Hero Section -->
+          <div class="works-hero-section">
+            <div class="works-hero-content">
+              <div class="hero-badge">
+                <div class="status-dot"></div>
+                <span>Portfolio Showcase</span>
+              </div>
+              <h1 class="works-title">
+                Featured <span class="highlight">Projects</span>
+              </h1>
+              <p class="works-description">
+                Explore my collection of modern web applications, mobile solutions, and full-stack projects that
+                showcase cutting-edge technology and innovative design.
+              </p>
+              <div class="works-stats">
+                <div class="works-stat">
+                  <span class="stat-number">10+</span>
+                  <span class="stat-label">Projects</span>
+                </div>
+                <div class="works-stat">
+                  <span class="stat-number">7+</span>
+                  <span class="stat-label">Technologies</span>
+                </div>
+                <div class="works-stat">
+                  <span class="stat-number">100%</span>
+                  <span class="stat-label">Responsive</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modern Filter System -->
+          <div class="works-filter-section">
+            <div class="filter-container">
+              <!-- Mobile Dropdown Filter -->
+              <div class="mobile-filter-dropdown">
+                <button class="mobile-filter-trigger" data-current="All">
+                  <div class="current-filter">
+                    <i class="fa fa-th-large"></i>
+                    <span>All Projects</span>
+                  </div>
+                  <i class="fa fa-chevron-down dropdown-icon"></i>
+                </button>
+                <div class="mobile-filter-dropdown-menu">
+                  <div class="mobile-filter-option active" data-category="All">
+                    <div class="option-content">
+                      <i class="fa fa-th-large"></i>
+                      <span>All Projects</span>
+                    </div>
+                    <span class="option-count">10</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="Reactjs">
+                    <div class="option-content">
+                      <i class="fa fa-code"></i>
+                      <span>React.js</span>
+                    </div>
+                    <span class="option-count">2</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="Nextjs">
+                    <div class="option-content">
+                      <i class="fa fa-rocket"></i>
+                      <span>Next.js</span>
+                    </div>
+                    <span class="option-count">2</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="FullStack">
+                    <div class="option-content">
+                      <i class="fa fa-server"></i>
+                      <span>MERN Stack</span>
+                    </div>
+                    <span class="option-count">3</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="ReactNative">
+                    <div class="option-content">
+                      <i class="fa fa-mobile"></i>
+                      <span>React Native</span>
+                    </div>
+                    <span class="option-count">3</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Desktop Filter Buttons -->
+              <div class="filter-item">
+                <input type="radio" name="menu-list" id="All" checked style="display: none;" />
+                <label class="filter-btn active" for="All" data-category="All">
+                  <i class="fa fa-th-large"></i>
+                  <span>All Projects</span>
+                  <span class="filter-count">10</span>
+                </label>
+              </div>
+              <div class="filter-item">
+                <input type="radio" name="menu-list" id="Reactjs" style="display: none;" />
+                <label class="filter-btn" for="Reactjs" data-category="Reactjs">
+                  <i class="fa fa-code"></i>
+                  <span>React.js</span>
+                  <span class="filter-count">2</span>
+                </label>
+              </div>
+              <div class="filter-item">
+                <input type="radio" name="menu-list" id="Nextjs" style="display: none;" />
+                <label class="filter-btn" for="Nextjs" data-category="Nextjs">
+                  <i class="fa fa-rocket"></i>
+                  <span>Next.js</span>
+                  <span class="filter-count">2</span>
+                </label>
+              </div>
+              <div class="filter-item">
+                <input type="radio" name="menu-list" id="FullStack" style="display: none;" />
+                <label class="filter-btn" for="FullStack" data-category="FullStack">
+                  <i class="fa fa-server"></i>
+                  <span>MERN Stack</span>
+                  <span class="filter-count">3</span>
+                </label>
+              </div>
+              <div class="filter-item">
+                <input type="radio" name="menu-list" id="ReactNative" style="display: none;" />
+                <label class="filter-btn" for="ReactNative" data-category="ReactNative">
+                  <i class="fa fa-mobile"></i>
+                  <span>React Native</span>
+                  <span class="filter-count">3</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modern Projects Grid -->
+          <div class="section-content works-section-content">
+            <div class="projects-grid">
+
+              <!-- Smart Health Care Project -->
+              <div class="works-item" data-category="FullStack">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/Dashboard.webp" alt="Smart Health Care Dashboard" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Smart Health Care</h3>
+                    <span class="project-category">Full Stack</span>
+                  </div>
+                  <p class="project-description">
+                    A full-featured fitness tracker platform with user activity monitoring, workout scheduling, and
+                    progress analytics.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">MongoDB</span>
+                    <span class="tech-tag">Express</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/Smart-health-Care" target="_blank"
+                      rel="noopener noreferrer" class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Smart Gallery App Project -->
+              <div class="works-item" data-category="ReactNative">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/Smart Gallery.webp" alt="Smart Gallery App" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Smart Gallery App</h3>
+                    <span class="project-category">React Native</span>
+                  </div>
+                  <p class="project-description">
+                    An intelligent photo gallery application with advanced sorting, filtering, and AI-powered image
+                    recognition features.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Expo</span>
+                    <span class="tech-tag">Async Storage</span>
+                    <span class="tech-tag">OPEN AI</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/SmartGallery" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Echo AI Project -->
+              <div class="works-item featured" data-category="Reactjs">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/Echoai.webp" alt="Echo AI Application" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Featured</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Echo AI</h3>
+                    <span class="project-category">React.js</span>
+                  </div>
+                  <p class="project-description">
+                    An advanced AI-powered conversational interface with natural language processing and intelligent
+                    response generation.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">OpenAI</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Tailwind</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/Echoai" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Medicare App Project -->
+              <div class="works-item" data-category="ReactNative">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://medicaredisplay.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/medicare.png" alt="Smart Gallery App" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://medicaredisplay.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Smart Gallery App</h3>
+                    <span class="project-category">React Native</span>
+                  </div>
+                  <p class="project-description">
+                    A comprehensive pet healthcare management system for tracking medications and medical records for
+                    animal.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Expo</span>
+                    <span class="tech-tag">Async Storage</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://medicaredisplay.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/medicine-tracker-" target="_blank"
+                      rel="noopener noreferrer" class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Soledeck Project -->
+              <div class="works-item" data-category="FullStack">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/Shop.webp" alt="Soledeck E-commerce Platform" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Soledeck</h3>
+                    <span class="project-category">E-commerce</span>
+                  </div>
+                  <p class="project-description">
+                    A modern e-commerce platform for sneakers with advanced filtering, payment integration, and
+                    inventory management.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">Stripe</span>
+                    <span class="tech-tag">MongoDB</span>
+                    <span class="tech-tag">Redux</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/Soledeck" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Financial Fusion Project -->
+              <div class="works-item" data-category="ReactNative">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/Financial-fusion.webp" alt="Financial Fusion App" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Financial Fusion</h3>
+                    <span class="project-category">FinTech</span>
+                  </div>
+                  <p class="project-description">
+                    A comprehensive financial management application with expense tracking, budget planning, and
+                    investment analytics.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Charts.js</span>
+                    <span class="tech-tag">SQLite</span>
+                    <span class="tech-tag">Redux</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/FinancialFusion" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- YOOM Project -->
+              <div class="works-item" data-category="Nextjs">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/Home.webp" alt="YOOM Video Conferencing" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">YOOM</h3>
+                    <span class="project-category">Communication</span>
+                  </div>
+                  <p class="project-description">
+                    A modern video conferencing platform with real-time collaboration, screen sharing, and meeting
+                    management features.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">WebRTC</span>
+                    <span class="tech-tag">Socket.io</span>
+                    <span class="tech-tag">Clerk Auth</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/YOOM" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dosnexa Project -->
+              <div class="works-item" data-category="FullStack">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/doctors.png" alt="Dosnexa Medical Platform" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Dosnexa</h3>
+                    <span class="project-category">Healthcare</span>
+                  </div>
+                  <p class="project-description">
+                    A comprehensive medical platform connecting patients with doctors, featuring appointment booking and
+                    telemedicine capabilities.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">Prisma</span>
+                    <span class="tech-tag">PostgreSQL</span>
+                    <span class="tech-tag">Shadcn/ui</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/Dosnexa" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DSA Tracker Project -->
+              <div class="works-item" data-category="Reactjs">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/dsa.webp" alt="DSA Tracker Application" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">DSA Tracker</h3>
+                    <span class="project-category">Education</span>
+                  </div>
+                  <p class="project-description">
+                    A comprehensive data structures and algorithms learning platform with progress tracking and coding
+                    challenges.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Material-UI</span>
+                    <span class="tech-tag">Local Storage</span>
+                    <span class="tech-tag">PWA</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/DSA-Tracker-" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Search Weather Project -->
+              <div class="works-item" data-category="Nextjs">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/Weather.webp" alt="Live Search Weather App" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Live Search Weather</h3>
+                    <span class="project-category">Utility</span>
+                  </div>
+                  <p class="project-description">
+                    A real-time weather application with live search functionality, detailed forecasts, and
+                    location-based services.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">Weather API</span>
+                    <span class="tech-tag">Geolocation</span>
+                    <span class="tech-tag">CSS3</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live Demo</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/Live-search-weather" target="_blank"
+                      rel="noopener noreferrer" class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Loading State -->
+            <div class="projects-loading" style="display: none;">
+              <div class="loading-spinner"></div>
+              <span>Loading projects...</span>
+            </div>
+
+            <!-- Empty State -->
+            <div class="works-empty-state" style="display: none;">
+              <div class="empty-icon">
+                <i class="fa fa-search"></i>
+              </div>
+              <h3 class="empty-message">No projects found</h3>
+              <p class="empty-description">Try selecting a different category to see more projects.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="blogs-card right-cards">
+        <div class="card-wrap">
+
+          <!-- Certifications Hero Section -->
+          <div class="certification-hero-section">
+            <div class="certification-hero-content">
+              <div class="hero-badge">
+                <div class="status-dot"></div>
+                <span>Professional Certifications</span>
+              </div>
+              <h1 class="certification-title">
+                My <span class="highlight">Certifications</span>
+              </h1>
+              <p class="certification-description">
+                Professional certifications and learning achievements in web development, cloud computing,
+                and modern programming technologies that validate my expertise.
+              </p>
+              <div class="certification-stats">
+                <div class="certification-stat">
+                  <span class="stat-number">4+</span>
+                  <span class="stat-label">Certifications</span>
+                </div>
+                <div class="certification-stat">
+                  <span class="stat-number">200+</span>
+                  <span class="stat-label">Learning Hours</span>
+                </div>
+                <div class="certification-stat">
+                  <span class="stat-number">15+</span>
+                  <span class="stat-label">Video Tutorials</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certification Filter System -->
+          <div class="certification-filter-section">
+            <div class="filter-container">
+              <!-- Mobile Dropdown Filter -->
+              <div class="mobile-filter-dropdown">
+                <button class="mobile-filter-trigger" data-current="all">
+                  <div class="current-filter">
+                    <i class="fa fa-th-large"></i>
+                    <span>All Certifications</span>
+                  </div>
+                  <i class="fa fa-chevron-down dropdown-icon"></i>
+                </button>
+                <div class="mobile-filter-dropdown-menu">
+                  <div class="mobile-filter-option active" data-category="all">
+                    <div class="option-content">
+                      <i class="fa fa-th-large"></i>
+                      <span>All Certifications</span>
+                    </div>
+                    <span class="option-count">5</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="frontend">
+                    <div class="option-content">
+                      <i class="fa fa-code"></i>
+                      <span>Frontend</span>
+                    </div>
+                    <span class="option-count">2</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="web">
+                    <div class="option-content">
+                      <i class="fa fa-globe"></i>
+                      <span>Backend</span>
+                    </div>
+                    <span class="option-count">1</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="cloud">
+                    <div class="option-content">
+                      <i class="fa fa-cloud"></i>
+                      <span>Cloud</span>
+                    </div>
+                    <span class="option-count">1</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="mobile">
+                    <div class="option-content">
+                      <i class="fa fa-mobile"></i>
+                      <span>Mobile</span>
+                    </div>
+                    <span class="option-count">1</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Desktop Filter Buttons -->
+              <div class="filter-item">
+                <button class="filter-btn active" data-category="all">
+                  <i class="fa fa-th-large"></i>
+                  <span>All Certifications</span>
+                  <span class="filter-count">5</span>
+                </button>
+              </div>
+              <div class="filter-item">
+                <button class="filter-btn" data-category="frontend">
+                  <i class="fa fa-code"></i>
+                  <span>Frontend</span>
+                  <span class="filter-count">2</span>
+                </button>
+              </div>
+              <div class="filter-item">
+                <button class="filter-btn" data-category="web">
+                  <i class="fa fa-globe"></i>
+                  <span>Backend</span>
+                  <span class="filter-count">1</span>
+                </button>
+              </div>
+              <div class="filter-item">
+                <button class="filter-btn" data-category="cloud">
+                  <i class="fa fa-cloud"></i>
+                  <span>Cloud</span>
+                  <span class="filter-count">1</span>
+                </button>
+              </div>
+              <div class="filter-item">
+                <button class="filter-btn" data-category="mobile">
+                  <i class="fa fa-mobile"></i>
+                  <span>Mobile</span>
+                  <span class="filter-count">1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certifications Grid -->
+          <div class="section-content certifications-section-content">
+            <div class="certifications-grid">
+
+              <!-- Certification 1 - Frontend Development -->
+              <div class="certification-card featured" data-category="frontend">
+                <div class="cert-header">
+                  <div class="cert-badge featured">
+                    <i class="fa fa-star"></i>
+                  </div>
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Google</span>
+                    <span class="issuer-type">Professional Certificate</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge featured">2024</span>
+                  </div>
+                </div>
+
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Frontend.webp" alt="Frontend Development Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/certificate/ZBMGZAEQPFMZ"
+                        class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                    <h3>Frontend Web Development Professional Certificate</h3>
+                    <p class="cert-description">
+                      Comprehensive frontend development training covering HTML5, CSS3, JavaScript ES6+, responsive
+                      design, and modern frontend frameworks for building interactive web applications.
+                    </p>
+                    <div class="cert-skills">
+                      <span class="skill-tag">HTML5</span>
+                      <span class="skill-tag">CSS3</span>
+                      <span class="skill-tag">JavaScript</span>
+                      <span class="skill-tag">Responsive Design</span>
+                    </div>
+                    <div class="cert-verification featured">
+                      <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Certification 2 - React Development -->
+              <div class="certification-card" data-category="frontend">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Meta</span>
+                    <span class="issuer-type">Professional Certificate</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">2024</span>
+                  </div>
+                </div>
+
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/React.webp" alt="React Development Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/certificate/EE42JSYQPZ7D"
+                        class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                    <h3>React Front-End Developer Professional Certificate</h3>
+                    <p class="cert-description">
+                      Advanced React development skills including hooks, state management, component architecture, and
+                      modern React patterns for building scalable single-page applications.
+                    </p>
+                    <div class="cert-skills">
+                      <span class="skill-tag">React</span>
+                      <span class="skill-tag">JSX</span>
+                      <span class="skill-tag">Hooks</span>
+                      <span class="skill-tag">Redux</span>
+                    </div>
+                    <div class="cert-verification">
+                      <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Certification 3 - Web Development -->
+              <div class="certification-card" data-category="web">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                    <span class="issuer-name">IBM</span>
+                    <span class="issuer-type">Professional Certificate</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">2023</span>
+                  </div>
+                </div>
+
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Web.webp" alt="Web Development Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/certificate/RKY4CN2NHHR3"
+                        class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                    <h3>Full Stack Web Development Professional Certificate</h3>
+                    <p class="cert-description">
+                      Complete web development training covering both frontend and backend technologies, including
+                      databases, APIs, deployment, and modern web development best practices.
+                    </p>
+                    <div class="cert-skills">
+                      <span class="skill-tag">Node.js</span>
+                      <span class="skill-tag">Express</span>
+                      <span class="skill-tag">MongoDB</span>
+                      <span class="skill-tag">APIs</span>
+                    </div>
+                    <div class="cert-verification">
+                      <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Certification 4 - Data & Cloud -->
+              <div class="certification-card" data-category="cloud">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                    <span class="issuer-name">AWS</span>
+                    <span class="issuer-type">Cloud Certification</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">2023</span>
+                  </div>
+                </div>
+
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Data.webp" alt="Cloud & Data Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/verify/3YLMQJ6HTBRE"
+                        class="view-cert-btn">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                    <h3>AWS Cloud & Data Analytics Professional Certificate</h3>
+                    <p class="cert-description">
+                      Foundation-level understanding of AWS cloud services, data analytics, security best practices, and
+                      deployment strategies for scalable cloud-based data solutions.
+                    </p>
+                    <div class="cert-skills">
+                      <span class="skill-tag">AWS</span>
+                      <span class="skill-tag">Cloud Computing</span>
+                      <span class="skill-tag">Data Analytics</span>
+                      <span class="skill-tag">Security</span>
+                    </div>
+                    <div class="cert-verification">
+                      <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Certification 5 - Mobile React Native -->
+              <div class="certification-card" data-category="mobile">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Meta</span>
+                    <span class="issuer-type">Professional Certificate</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">2024</span>
+                  </div>
+                </div>
+
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/ReactNative.png" alt="React Native Mobile Certificate" />
+                    <div class="cert-overlay">
+                      <a href="https://www.coursera.org/account/accomplishments/certificate/BEMCRMJ7N46L"
+                        class="view-cert-btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                    <h3>Meta React Native Mobile Development Certificate</h3>
+                    <p class="cert-description">
+                      Comprehensive training in building cross-platform mobile applications using React Native, covering
+                      UI/UX, navigation, state management, and deployment to app stores.
+                    </p>
+                    <div class="cert-skills">
+                      <span class="skill-tag">React Native</span>
+                      <span class="skill-tag">Mobile Development</span>
+                      <span class="skill-tag">JavaScript</span>
+                      <span class="skill-tag">UI/UX</span>
+                    </div>
+                    <div class="cert-verification">
+                      <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Empty State (Hidden by default) -->
+            <div class="certification-empty-state" style="display: none;">
+              <div class="empty-icon">
+                <i class="fa fa-search"></i>
+              </div>
+              <h3 class="empty-message">No certifications found</h3>
+              <p class="empty-description">Try selecting a different category to see more certifications.</p>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="contact-card right-cards">
+        <div class="card-wrap">
+
+          <!-- Modern Contact Hero Section -->
+          <div class="contact-hero-section">
+            <div class="contact-hero-content">
+              <div class="hero-badge">
+                <div class="status-dot"></div>
+                <span>Available for Projects</span>
+              </div>
+              <h1 class="contact-title">Let's <span class="highlight">Connect</span> </h1>
+              <p class="contact-description">
+                Ready to bring your ideas to life? Whether you need a stunning website, a powerful web application,
+                or expert consultation, I'm here to help turn your vision into reality.
+              </p>
+              <div class="contact-stats">
+                <div class="contact-stat">
+                  <span class="stat-number">24h</span>
+                  <span class="stat-label">Response Time</span>
+                </div>
+                <div class="contact-stat">
+                  <span class="stat-number">10+</span>
+                  <span class="stat-label">Projects Completed</span>
+                </div>
+                <div class="contact-stat">
+                  <span class="stat-number">100%</span>
+                  <span class="stat-label">Client Satisfaction</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Methods Grid -->
+          <div class="contact-methods-section">
+            <div class="contact-methods-grid">
+
+              <!-- Email Card -->
+              <div class="contact-method-card featured">
+                <div class="method-icon">
+                  <i class="fa fa-envelope"></i>
+                </div>
+                <div class="method-content">
+                  <h3>Email Me</h3>
+                  <p class="method-description">Best for detailed project discussions</p>
+                  <div class="method-info">
+                    <span class="info-value">mehrfaisal111@gmail.com</span>
+                    <span class="response-time">
+                      <i class="fa fa-clock-o"></i>
+                      Usually responds within 2-4 hours
+                    </span>
+                  </div>
+                  <a href="mailto:mehrfaisal111@gmail.com" class="method-action primary">
+                    <i class="fa fa-paper-plane"></i>
+                    <span>Send Email</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Phone Card -->
+              <div class="contact-method-card">
+                <div class="method-icon">
+                  <i class="fa fa-phone"></i>
+                </div>
+                <div class="method-content">
+                  <h3>Call Me</h3>
+                  <p class="method-description">For urgent matters and quick consultations</p>
+                  <div class="method-info">
+                    <span class="info-value">+92 314 8166354</span>
+                    <span class="response-time">
+                      <i class="fa fa-clock-o"></i>
+                      Available Mon-Fri, 9AM-6PM (GMT+5)
+                    </span>
+                  </div>
+                  <a href="tel:+923148166354" class="method-action secondary">
+                    <i class="fa fa-phone"></i>
+                    <span>Call Now</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Meeting Card -->
+              <div class="contact-method-card">
+                <div class="method-icon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <div class="method-content">
+                  <h3>Schedule Meeting</h3>
+                  <p class="method-description">Book a free consultation at your convenience</p>
+                  <div class="method-info">
+                    <span class="info-value">Video Call or Phone</span>
+                    <span class="response-time">
+                      <i class="fa fa-clock-o"></i>
+                      30 or 60 minute sessions available
+                    </span>
+                  </div>
+                  <label for="schedule-card" class="method-action secondary">
+                    <i class="fa fa-calendar-check-o"></i>
+                    <span>Book Meeting</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Location Card -->
+              <div class="contact-method-card">
+                <div class="method-icon">
+                  <i class="fa fa-map-marker"></i>
+                </div>
+                <div class="method-content">
+                  <h3>Location</h3>
+                  <p class="method-description">Based in Pakistan, serving clients worldwide</p>
+                  <div class="method-info">
+                    <span class="info-value">Lahore, Pakistan</span>
+                    <span class="response-time">
+                      <i class="fa fa-globe"></i>
+                      Timezone: GMT+5 (PKT)
+                    </span>
+                  </div>
+                  <button class="method-action secondary" onclick="showMap()">
+                    <i class="fa fa-map"></i>
+                    <span>View Map</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Interactive Map Section -->
+          <div class="map-section" id="mapSection" style="display: none;">
+            <div class="map-header">
+              <h3>
+                <i class="fa fa-map-marker"></i>
+                My Location
+              </h3>
+              <button class="close-map-btn" onclick="hideMap()">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+            <div class="map-container">
+              <div class="mapouter">
+                <div id="gmap_canvas" style="
+                      width: 100%;
+                      height: 100%;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      border-radius: 12px;
+                      overflow: hidden;
+                    ">
+                  <!-- Placeholder with loading message -->
+                  <div style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 18px;
+                        color: #666;
+                        background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
+                      ">
+                    <div style="text-align: center;">
+                      <div
+                        style="width: 40px; height: 40px; border: 3px solid #e3e3e3; border-radius: 50%; border-top: 3px solid var(--dark-blue); animation: spin 1s ease-in-out infinite; margin: 0 auto 15px;">
+                      </div>
+                      Loading interactive map...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modern Contact Form -->
+          <div class="modern-contact-form-section">
+            <div class="form-header">
+              <div class="form-icon">
+                <i class="fa fa-paper-plane"></i>
+              </div>
+              <div class="form-header-content">
+                <h2>Send Me a Message</h2>
+                <p>Tell me about your project and let's discuss how I can help bring your vision to life.</p>
+              </div>
+            </div>
+
+            <form action="https://formspree.io/f/xjvnlwea" method="POST" id="contactForm" class="modern-contact-form"
+              onsubmit="return validateForm()">
+
+              <!-- Form Fields Grid -->
+              <div class="form-fields-grid">
+
+                <!-- Name Field -->
+                <div class="form-field-wrapper">
+                  <div class="form-field">
+                    <div class="field-icon">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <div class="field-input">
+                      <label for="fullname">Full Name *</label>
+                      <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-field-wrapper">
+                  <div class="form-field">
+                    <div class="field-icon">
+                      <i class="fa fa-envelope"></i>
+                    </div>
+                    <div class="field-input">
+                      <label for="email">Email Address *</label>
+                      <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Phone Field -->
+                <div class="form-field-wrapper">
+                  <div class="form-field">
+                    <div class="field-icon">
+                      <i class="fa fa-phone"></i>
+                    </div>
+                    <div class="field-input">
+                      <label for="phone">Phone Number</label>
+                      <input type="tel" id="phone" name="phone" placeholder="Enter your phone number (optional)" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Company Field -->
+                <div class="form-field-wrapper">
+                  <div class="form-field">
+                    <div class="field-icon">
+                      <i class="fa fa-building"></i>
+                    </div>
+                    <div class="field-input">
+                      <label for="company">Company/Organization</label>
+                      <input type="text" id="company" name="company" placeholder="Enter company name (optional)" />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Project Type Selection -->
+              <div class="project-type-section">
+                <label class="section-label">What type of project are you interested in? *</label>
+                <div class="project-type-grid">
+
+                  <div class="project-type-option">
+                    <input type="radio" id="website" name="project_type" value="website" required>
+                    <label for="website" class="project-type-card">
+                      <div class="project-icon">
+                        <i class="fa fa-globe"></i>
+                      </div>
+                      <span class="project-name">App Development</span>
+                      <span class="project-desc">Mobile apps, cross-platform solutions, custom applications</span>
+                    </label>
+                  </div>
+
+                  <div class="project-type-option">
+                    <input type="radio" id="webapp" name="project_type" value="webapp">
+                    <label for="webapp" class="project-type-card">
+                      <div class="project-icon">
+                        <i class="fa fa-cogs"></i>
+                      </div>
+                      <span class="project-name">Web Application</span>
+                      <span class="project-desc">Complex web apps, dashboards, SaaS platforms</span>
+                    </label>
+                  </div>
+
+                  <div class="project-type-option">
+                    <input type="radio" id="ecommerce" name="project_type" value="ecommerce">
+                    <label for="ecommerce" class="project-type-card">
+                      <div class="project-icon">
+                        <i class="fa fa-shopping-cart"></i>
+                      </div>
+                      <span class="project-name">E-commerce</span>
+                      <span class="project-desc">Online stores, payment integration, inventory</span>
+                    </label>
+                  </div>
+
+                  <div class="project-type-option">
+                    <input type="radio" id="maintenance" name="project_type" value="maintenance">
+                    <label for="maintenance" class="project-type-card">
+                      <div class="project-icon">
+                        <i class="fa fa-wrench"></i>
+                      </div>
+                      <span class="project-name">Maintenance & Support</span>
+                      <span class="project-desc">Bug fixes, updates, performance optimization</span>
+                    </label>
+                  </div>
+
+                  <div class="project-type-option">
+                    <input type="radio" id="consultation" name="project_type" value="consultation">
+                    <label for="consultation" class="project-type-card">
+                      <div class="project-icon">
+                        <i class="fa fa-lightbulb-o"></i>
+                      </div>
+                      <span class="project-name">Consultation</span>
+                      <span class="project-desc">Technical advice, code review, architecture</span>
+                    </label>
+                  </div>
+
+                  <div class="project-type-option">
+                    <input type="radio" id="other" name="project_type" value="other">
+                    <label for="other" class="project-type-card">
+                      <div class="project-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                      </div>
+                      <span class="project-name">Other</span>
+                      <span class="project-desc">Custom requirements, unique projects</span>
+                    </label>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Budget Range -->
+              <div class="budget-section">
+                <label class="section-label">Project Budget Range</label>
+                <div class="budget-grid">
+
+                  <div class="budget-option">
+                    <input type="radio" id="budget1" name="budget" value="under-1000">
+                    <label for="budget1" class="budget-card">
+                      <span class="budget-range">Under $1,000</span>
+                      <span class="budget-desc">Small projects, basic websites</span>
+                    </label>
+                  </div>
+
+                  <div class="budget-option">
+                    <input type="radio" id="budget2" name="budget" value="1000-5000">
+                    <label for="budget2" class="budget-card">
+                      <span class="budget-range">$1,000 - $5,000</span>
+                      <span class="budget-desc">Medium complexity projects</span>
+                    </label>
+                  </div>
+
+                  <div class="budget-option">
+                    <input type="radio" id="budget3" name="budget" value="5000-10000">
+                    <label for="budget3" class="budget-card">
+                      <span class="budget-range">$5,000 - $10,000</span>
+                      <span class="budget-desc">Complex web applications</span>
+                    </label>
+                  </div>
+
+                  <div class="budget-option">
+                    <input type="radio" id="budget4" name="budget" value="over-10000">
+                    <label for="budget4" class="budget-card">
+                      <span class="budget-range">$10,000+</span>
+                      <span class="budget-desc">Enterprise solutions</span>
+                    </label>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Message Field -->
+              <div class="message-section">
+                <div class="message-field">
+                  <div class="field-icon">
+                    <i class="fa fa-comment"></i>
+                  </div>
+                  <div class="field-input">
+                    <label for="message">Project Details *</label>
+                    <textarea id="message" name="message" rows="5"
+                      placeholder="Tell me about your project... What are your goals? What features do you need? Any specific requirements or preferences?"
+                      required></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Section -->
+              <div class="submit-section">
+                <button type="submit" class="modern-submit-btn">
+                  <span class="btn-icon">
+                    <i class="fa fa-paper-plane"></i>
+                  </span>
+                  <span class="btn-text">Send Message</span>
+                  <span class="btn-arrow">
+                    <i class="fa fa-arrow-right"></i>
+                  </span>
+                </button>
+
+                <div class="submit-info">
+                  <div class="privacy-note">
+                    <i class="fa fa-shield"></i>
+                    <span>Your information is secure and will never be shared with third parties</span>
+                  </div>
+                  <div class="response-promise">
+                    <i class="fa fa-clock-o"></i>
+                    <span>I'll respond within 24 hours with next steps</span>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="schedule-card right-cards" id="schedule-section">
+        <div class="card-wrap">
+          <div class="section-header">
+            <span class="header">Schedule a Meeting</span>
+          </div>
+
+
+          <!-- Meeting Types Grid -->
+          <div class="meeting-types">
+            <div class="meeting-type-card active" data-duration="30" data-price="15">
+              <div class="meeting-icon">
+                <i class="fa fa-comments"></i>
+              </div>
+              <h3>Quick Chat</h3>
+              <p class="duration">30 minutes</p>
+              <div class="price-tag">15 per session</div>
+              <p class="description">Perfect for initial discussions and project exploration</p>
+              <ul class="features">
+                <li><i class="fa fa-check"></i> Project overview</li>
+                <li><i class="fa fa-check"></i> Requirements discussion</li>
+                <li><i class="fa fa-check"></i> Technology suggestions</li>
+              </ul>
+            </div>
+
+            <div class="meeting-type-card" data-duration="60" data-price="25">
+              <div class="meeting-icon">
+                <i class="fa fa-cogs"></i>
+              </div>
+              <h3>Technical Deep Dive</h3>
+              <p class="duration">60 minutes</p>
+              <div class="price-tag">25 per session</div>
+              <p class="description">Comprehensive discussion for complex projects</p>
+              <ul class="features">
+                <li><i class="fa fa-check"></i> Detailed planning</li>
+                <li><i class="fa fa-check"></i> Architecture review</li>
+                <li><i class="fa fa-check"></i> Timeline & budget</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Hours Selection and Total Calculation Section -->
+          <div class="hours-selection-section">
+            <h3>Select Number of Session</h3>
+            <div class="hours-input-container">
+              <div class="hours-control">
+                <button type="button" id="decreaseHours" class="hours-btn">
+                  <i class="fa fa-minus"></i>
+                </button>
+                <input type="number" id="hoursInput" min="1" max="10" value="1" class="hours-input">
+                <button type="button" id="increaseHours" class="hours-btn">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+              <div class="hours-label">Session (s)</div>
+            </div>
+
+            <div class="total-calculation">
+              <div class="calculation-row">
+                <span class="calculation-label">Session Type:</span>
+                <span id="selectedSessionType" class="calculation-value">Quick Chat</span>
+              </div>
+              <div class="calculation-row">
+                <span class="calculation-label">Price per Session:</span>
+                <span id="pricePerSession" class="calculation-value">$15</span>
+              </div>
+              <div class="calculation-row">
+                <span class="calculation-label">Number of Sessions:</span>
+                <span id="numberOfHours" class="calculation-value">1</span>
+              </div>
+              <div class="calculation-divider"></div>
+              <div class="calculation-row total">
+                <span class="calculation-label">Total Amount:</span>
+                <span id="totalAmount" class="calculation-value">$15</span>
+              </div>
+
+              <!-- Payment Button inside the calculation card -->
+              <div class="calculation-row payment-button-row">
+                <button id="proceedToPaymentButton" class="payment-proceed-button">
+                  <i class="fa fa-credit-card"></i>
+                  Book Session
+                </button>
+              </div>
+
+              <!-- Optional Payment Message -->
+              <div class="optional-payment-message">
+                <div class="optional-payment-icon">
+                  <i class="fa fa-heart"></i>
+                </div>
+                <div class="optional-payment-content">
+                  <h4>💝 Payment is Optional</h4>
+                  <p>If you like my meeting service, you can pay me after the meeting, but it's totally up to you. Your
+                    satisfaction is my priority!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- What to Expect Section -->
+          <div class="expectations-section">
+            <h3>What to Expect</h3>
+            <div class="expectations-grid">
+              <div class="expectation-item">
+                <div class="expectation-icon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <h4>Personal Consultation</h4>
+                <p>One-on-one discussion tailored to your specific needs and goals</p>
+              </div>
+              <div class="expectation-item">
+                <div class="expectation-icon">
+                  <i class="fa fa-lightbulb-o"></i>
+                </div>
+                <h4>Expert Insights</h4>
+                <p>Professional recommendations and innovative solutions for your project</p>
+              </div>
+              <div class="expectation-item">
+                <div class="expectation-icon">
+                  <i class="fa fa-clock-o"></i>
+                </div>
+                <h4>Flexible Timing</h4>
+                <p>Choose a time that works best for your schedule across different time zones</p>
+              </div>
+              <div class="expectation-item">
+                <div class="expectation-icon">
+                  <i class="fa fa-shield"></i>
+                </div>
+                <h4>Confidential & Secure</h4>
+                <p>Your information and project details are kept private and secure at all times</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Section (Now redirects to payment.html) -->
+          <!-- The payment section has been moved to a separate page (payment.html) -->
+          <!-- The 'Proceed to Payment' button now redirects to payment.html with parameters -->
+
+          <!-- Loading States -->
+          <div id="loadingMessage" class="loading-container">
+            <div class="loading-content">
+              <div class="loading-spinner"></div>
+              <h3>Setting up your calendar...</h3>
+              <p>Please wait while we prepare your booking interface</p>
+            </div>
+          </div>
+          <!-- Calendly Widget Container -->
+          <div class="calendly-inline-widget" style="min-width: 320px; height: 1200px; display: none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script defer src="js/animation-effect.js"></script>
+<script defer src="js/Elements.js"></script>
+<script defer src="js/main.min.js"></script>
+<script defer src="js/coustom-progress-circle.js"></script>
+<!-- Stripe JS -->
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  // Initialize Stripe (replace with your publishable key when ready for production)
+  document.addEventListener('DOMContentLoaded', function () {
+    // This is a test publishable key. Replace with your actual publishable key in production.
+    const stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+
+    // Create a card element
+    const elements = stripe.elements();
+    const cardElement = document.getElementById('cardElement');
+
+    if (cardElement) {
+      // Clear placeholder when Stripe is loaded
+      cardElement.innerHTML = '';
+
+      // Create and mount the card element
+      const card = elements.create('card', {
+        style: {
+          base: {
+            color: '#333',
+            fontFamily: '"Poppins", sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '14px',
+            '::placeholder': {
+              color: '#aab7c4'
+            }
+          },
+          invalid: {
+            color: '#dc3545',
+            iconColor: '#dc3545'
+          }
+        }
+      });
+
+      card.mount('#cardElement');
+
+      // Handle real-time validation errors
+      const cardErrors = document.getElementById('cardErrors');
+      card.addEventListener('change', function (event) {
+        if (event.error && cardErrors) {
+          cardErrors.textContent = event.error.message;
+        } else if (cardErrors) {
+          cardErrors.textContent = '';
+        }
+      });
+
+      // Handle form submission (in a real implementation)
+      const submitPaymentButton = document.getElementById('submitPaymentButton');
+      if (submitPaymentButton) {
+        const paymentForm = submitPaymentButton.closest('.payment-form');
+
+        submitPaymentButton.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          // In a real implementation, you would use stripe.confirmCardPayment here
+          // For this demo, we're just showing a success message
+          // The actual payment processing is handled in main.js
+        });
+      }
+    }
+  });
+</script>
+
+</html>

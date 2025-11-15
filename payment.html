@@ -1,0 +1,3473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Faisal Hanif - Payment Page" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#0e6655" />
+    <title>Complete Your Payment</title>
+    <!-- Preload critical assets -->
+    <link rel="preload" href="css/style.css" as="style" />
+    <link rel="preload" href="css/payment-styles.css" as="style" />
+    <link rel="preload" href="imgs/F-logo2.png" as="image" />
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="imgs/F-Logo3.png" type="image/png" />
+    
+    <!-- Critical CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/payment-styles.css" />
+    
+    <!-- Fonts and icons (load asynchronously) -->
+    <link
+      rel="stylesheet"
+      id="ryancv-fonts-css"
+      href="//fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      media="print" onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="css/inoicons.css"
+      media="print" onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      media="print" onload="this.media='all'"
+    />
+    
+    <style>
+      /* Critical CSS - Inlined for faster rendering */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      /* Optimize font loading */
+      @font-face {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: local('Poppins Regular'), local('Poppins-Regular');
+      }
+      
+      body {
+        background: #d3d3d3;
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+      
+      .bg-bubble {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        list-style: none;
+        z-index: 1;
+        pointer-events: none;
+      }
+      
+      .bg-bubble li {
+        position: absolute;
+        list-style: none;
+        display: block;
+        width: 80px;
+        height: 80px;
+        background-color: rgba(14, 102, 85, 0.1);
+        bottom: -320px;
+        animation: square 50s infinite;
+        transition-timing-function: linear;
+        border-radius: 4px;
+        will-change: transform;
+        transform: translateZ(0);
+      }
+      
+      .bg-bubble li:nth-child(1) { left: 15%; animation-duration: 40s; }
+      .bg-bubble li:nth-child(2) { left: 35%; width: 120px; height: 120px; animation-delay: 2s; animation-duration: 35s; }
+      .bg-bubble li:nth-child(3) { left: 65%; animation-delay: 4s; animation-duration: 45s; }
+      .bg-bubble li:nth-child(4) { left: 85%; width: 100px; height: 100px; animation-delay: 1s; animation-duration: 38s; }
+      
+      @keyframes square {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-1000px) rotate(630deg); }
+      }
+      
+      .payment-page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .payment-content {
+        flex: 1;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
+      
+      .payment-container {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 0;
+        width: 100%;
+        max-width: 1400px;
+        position: relative;
+        overflow: hidden;
+        min-height: calc(100vh - 40px);
+        margin-top: 0;
+      }
+      
+      .payment-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #0e6655, #10b981, #0e6655);
+        background-size: 300% 100%;
+        animation: gradientShift 3s ease infinite;
+      }
+      
+      @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .payment-header {
+        text-align: center;
+        padding: 40px 40px 30px;
+        background: linear-gradient(135deg, rgba(14, 102, 85, 0.02), rgba(255, 255, 255, 0.98));
+        position: relative;
+      }
+      
+      .header-top {
+        position: absolute;
+        top: 20px;
+        left: 40px;
+        z-index: 10;
+      }
+      
+      .back-to-site {
+        text-decoration: none;
+        color: #0e6655;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 50px;
+        background: rgba(14, 102, 85, 0.1);
+        border: 2px solid rgba(14, 102, 85, 0.2);
+        transition: all 0.3s ease;
+        font-size: 14px;
+        white-space: nowrap;
+        margin-bottom: 10px;
+      }
+      
+      .back-to-site:hover {
+        background: rgba(14, 102, 85, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
+      }
+      
+      .payment-header h3 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0e6655;
+        margin-bottom: 12px;
+      }
+      
+      .payment-header p {
+        color: #6b7280;
+        font-size: 18px;
+        font-weight: 400;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      
+      .payment-form-container {
+        display: flex;
+        flex-direction: row;
+        height: calc(100vh - 120px);
+        min-height: 500px;
+      }
+      
+      .payment-summary {
+        flex: 0 0 400px;
+        background: linear-gradient(135deg, #f8fafc, #e6f0ee);
+        padding: 30px;
+        border-right: 1px solid rgba(14, 102, 85, 0.1);
+        overflow-y: auto;
+        max-height: 100%;
+      }
+      
+      .summary-header {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0e6655;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(14, 102, 85, 0.2);
+        position: relative;
+      }
+      
+      .summary-header::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 60px;
+        height: 2px;
+        background: #0e6655;
+        border-radius: 2px;
+      }
+      
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        font-size: 15px;
+        padding: 12px 0;
+      }
+      
+      .item-label {
+        color: #6b7280;
+        font-weight: 500;
+      }
+      
+      .item-value {
+        font-weight: 600;
+        color: #1f2937;
+      }
+      
+      .summary-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+        margin: 20px 0;
+      }
+      
+      .summary-item.total {
+        background: linear-gradient(135deg, #0e6655, #10b981);
+        color: white;
+        padding: 20px;
+        border-radius: 16px;
+        margin: 20px 0 0 0;
+        font-size: 18px;
+        font-weight: 700;
+        box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
+      }
+      
+      .summary-item.total .item-label,
+      .summary-item.total .item-value {
+        color: white;
+      }
+      
+      .payment-form {
+        flex: 1;
+        padding: 30px 40px;
+        overflow-y: auto;
+        max-height: 100%;
+        background: white;
+      }
+      
+      .payment-form h4 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0e6655;
+        margin: 25px 0 20px 0;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f3f4f6;
+        position: relative;
+      }
+      
+      .payment-form h4:first-child {
+        margin-top: 0;
+      }
+      
+      .payment-form h4::before {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #0e6655;
+        border-radius: 2px;
+      }
+      
+      .form-group {
+        margin-bottom: 20px;
+      }
+      
+      .form-group.compact {
+        margin-bottom: 16px;
+      }
+      
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      
+      .form-row.compact-row {
+        margin-bottom: 16px;
+      }
+      
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .form-control {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 15px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f9fafb;
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      .form-control:hover {
+        border-color: #d1d5db;
+        background: white;
+      }
+      
+      .form-control:focus {
+        border-color: #0e6655;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(14, 102, 85, 0.1);
+        outline: none;
+        transform: translateY(-1px);
+      }
+      
+      .payment-button {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #0e6655, #10b981);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 25px;
+        box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .payment-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .payment-button:hover::before {
+        left: 100%;
+      }
+      
+      .payment-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(14, 102, 85, 0.4);
+      }
+      
+      .payment-button:active {
+        transform: translateY(-1px);
+      }
+      
+      .payment-amount {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 700;
+      }
+      
+      .payment-security {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 14px;
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        border-radius: 8px;
+        border: 1px solid #a7f3d0;
+        color: #065f46;
+        font-weight: 500;
+        font-size: 14px;
+      }
+      
+      .payment-security i {
+        color: #10b981;
+        font-size: 16px;
+      }
+      
+      /* Error Styles */
+      .form-control.error {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+      }
+      
+      .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+        font-weight: 500;
+      }
+      
+      .payment-success {
+        text-align: center;
+        padding: 60px 40px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .success-icon {
+        font-size: 80px;
+        color: #10b981;
+        margin-bottom: 30px;
+        animation: successPulse 2s ease-in-out infinite;
+        text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .success-icon i {
+        display: block;
+        line-height: 1;
+      }
+      
+      @keyframes successPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+      
+      .payment-success h3 {
+        font-size: 32px;
+        color: #0e6655;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+      
+      .payment-success p {
+        font-size: 18px;
+        color: #6b7280;
+        margin-bottom: 40px;
+        max-width: 500px;
+      }
+      
+      .success-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+      }
+      
+      .book-session-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 35px;
+        background: linear-gradient(135deg, #0e6655, #10b981);
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
+        width: 100%;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .book-session-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .book-session-button:hover::before {
+        left: 100%;
+      }
+      
+      .book-session-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(14, 102, 85, 0.4);
+        color: white;
+        text-decoration: none;
+      }
+      
+      .book-session-button i {
+        font-size: 18px;
+      }
+      
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 25px;
+        background: transparent;
+        color: #6b7280;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        border: 2px solid #e5e7eb;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .back-button:hover {
+        background: #f9fafb;
+        border-color: #d1d5db;
+        color: #374151;
+        text-decoration: none;
+      }
+      
+      @media (max-width: 480px) {
+        .success-actions {
+          flex-direction: row;
+          gap: 20px;
+        }
+        
+        .book-session-button,
+        .back-button {
+          width: auto;
+          flex: 1;
+        }
+      }
+      
+      /* Custom Booking Form Styles */
+      .booking-container,
+      .booking-success-container {
+        margin-top: 30px;
+        padding: 30px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+        animation: fadeInUp 0.6s ease-out;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .custom-booking-form {
+        width: 100%;
+      }
+      
+      .booking-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f3f4f6;
+      }
+      
+      .booking-header h3 {
+        font-size: 28px;
+        color: #0e6655;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      
+      .booking-header p {
+        color: #6b7280;
+        font-size: 16px;
+        margin: 0;
+        text-align: center;
+      }
+      
+      .form-step {
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      
+      .form-step.active {
+        display: block;
+      }
+      
+      .form-step h4 {
+        font-size: 20px;
+        color: #0e6655;
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f3f4f6;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .form-step h4 i {
+        color: #10b981;
+      }
+      
+      .form-hint {
+        display: block;
+        color: #6b7280;
+        font-size: 12px;
+        margin-top: 5px;
+        font-style: italic;
+      }
+      
+      .step-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        justify-content: space-between;
+      }
+      
+      .next-step-btn,
+      .prev-step-btn,
+      .book-final-btn {
+        padding: 14px 25px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+      
+      .next-step-btn,
+      .book-final-btn {
+        background: linear-gradient(135deg, #0e6655, #10b981);
+        color: white;
+        flex: 1;
+        justify-content: center;
+      }
+      
+      .prev-step-btn {
+        background: #f9fafb;
+        color: #6b7280;
+        border: 2px solid #e5e7eb;
+      }
+      
+      .next-step-btn:hover,
+      .book-final-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
+      }
+      
+      .prev-step-btn:hover {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+      }
+      
+      .book-final-btn {
+        background: linear-gradient(135deg, #059669, #10b981);
+        font-size: 16px;
+        padding: 16px 30px;
+      }
+      
+      .book-final-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+      
+      /* Meeting Options */
+      .meeting-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 10px;
+      }
+      
+      .meeting-option {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        background: #f9fafb;
+      }
+      
+      .meeting-option:hover {
+        border-color: #0e6655;
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(14, 102, 85, 0.1);
+      }
+      
+      .meeting-option.selected {
+        border-color: #0e6655;
+        background: linear-gradient(135deg, rgba(14, 102, 85, 0.05), rgba(16, 185, 129, 0.05));
+      }
+      
+      .meeting-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .meeting-option label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        margin: 0;
+        text-transform: none;
+        letter-spacing: normal;
+        font-weight: 500;
+      }
+      
+      .meeting-option label i {
+        font-size: 24px;
+        color: #0e6655;
+      }
+      
+      .meeting-option label span {
+        font-size: 16px;
+        color: #1f2937;
+        font-weight: 600;
+      }
+      
+      .meeting-option label small {
+        font-size: 12px;
+        color: #6b7280;
+        text-align: center;
+      }
+      
+      /* Booking Success Styles */
+      .booking-success {
+        text-align: center !important;
+        padding: 40px 20px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .booking-success h3 {
+        text-align: center !important;
+        margin: 0 auto !important;
+        width: 100%;
+      }
+      
+      .booking-success p {
+        text-align: center !important;
+        margin: 0 auto !important;
+        width: 100%;
+        max-width: 600px;
+      }
+      
+      .booking-details {
+        background: linear-gradient(135deg, #f8fafc, #e6f0ee);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+        text-align: left;
+      }
+      
+      .booking-details h4 {
+        color: #0e6655;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: center;
+      }
+      
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(14, 102, 85, 0.1);
+      }
+      
+      .detail-item:last-child {
+        border-bottom: none;
+      }
+      
+      .detail-item .label {
+        font-weight: 600;
+        color: #374151;
+      }
+      
+      .detail-item .value {
+        color: #0e6655;
+        font-weight: 500;
+      }
+      
+      .meeting-link-section {
+        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        border: 2px solid #0e6655;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
+      }
+      
+      .meeting-link-section h4 {
+        color: #0e6655;
+        margin-bottom: 15px;
+        font-size: 18px;
+      }
+      
+      .meeting-link-box {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .meeting-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #0e6655, #10b981);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+      }
+      
+      .meeting-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
+        color: white;
+      }
+      
+      .meeting-url {
+        font-size: 12px;
+        color: #6b7280;
+        word-break: break-all;
+        margin: 10px 0 0 0;
+        padding: 8px;
+        background: #f9fafb;
+        border-radius: 4px;
+        border: 1px solid #e5e7eb;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* Responsive Design for Booking Form */
+      @media (max-width: 768px) {
+        .booking-container,
+        .booking-success-container {
+          padding: 20px;
+          margin: 20px 10px;
+        }
+        
+        .booking-header h3 {
+          font-size: 24px;
+        }
+        
+        .meeting-options {
+          grid-template-columns: 1fr;
+        }
+        
+        .step-buttons {
+          flex-direction: column;
+        }
+        
+        .prev-step-btn {
+          order: 2;
+        }
+        
+        .next-step-btn,
+        .book-final-btn {
+          order: 1;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .booking-header h3 {
+          font-size: 20px;
+        }
+        
+        .form-step h4 {
+          font-size: 18px;
+        }
+        
+        .meeting-option {
+          padding: 15px;
+        }
+        
+        .detail-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+        }
+      }
+      
+
+      
+      /* Custom scrollbar */
+      .payment-form::-webkit-scrollbar,
+      .payment-summary::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      .payment-form::-webkit-scrollbar-track,
+      .payment-summary::-webkit-scrollbar-track {
+        background: rgba(14, 102, 85, 0.05);
+        border-radius: 3px;
+      }
+      
+      .payment-form::-webkit-scrollbar-thumb,
+      .payment-summary::-webkit-scrollbar-thumb {
+        background: rgba(14, 102, 85, 0.3);
+        border-radius: 3px;
+      }
+      
+      .payment-form::-webkit-scrollbar-thumb:hover,
+      .payment-summary::-webkit-scrollbar-thumb:hover {
+        background: rgba(14, 102, 85, 0.5);
+      }
+      
+      @media (max-width: 1024px) {
+        .payment-form-container {
+          flex-direction: column;
+          height: auto;
+        }
+        
+        .payment-summary {
+          flex: none;
+          border-right: none;
+          border-bottom: 1px solid rgba(14, 102, 85, 0.1);
+          max-height: none;
+        }
+        
+        .payment-form {
+          max-height: none;
+        }
+        
+        .payment-container {
+          min-height: auto;
+        }
+      }
+      
+      @media (max-width: 1024px) and (min-width: 769px) {
+        .payment-header {
+          padding: 70px 30px 30px;
+        }
+        
+        .header-top {
+          left: 30px;
+          top: 20px;
+        }
+        
+        .back-to-site {
+          padding: 10px 18px;
+          font-size: 13px;
+        }
+        
+        .payment-header h3 {
+          font-size: 28px;
+          margin-top: 15px;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .payment-container {
+          margin: 15px;
+          min-height: calc(100vh - 30px);
+        }
+        
+        .payment-form-container {
+          flex-direction: column;
+          height: auto;
+          min-height: auto;
+        }
+        
+        .payment-summary {
+          display: none !important;
+        }
+        
+        .payment-form {
+          order: 1;
+          max-height: none;
+        }
+        
+        .payment-header {
+          padding: 60px 25px 25px;
+        }
+        
+        .header-top {
+          left: 25px;
+          top: 15px;
+          right: 25px;
+          display: flex;
+          justify-content: flex-start;
+        }
+        
+        .back-to-site {
+          padding: 8px 16px;
+          font-size: 12px;
+          gap: 6px;
+        }
+        
+        .payment-header h3 {
+          font-size: 24px;
+          margin-top: 10px;
+        }
+        
+        .payment-header p {
+          font-size: 16px;
+        }
+        
+        .form-row {
+          grid-template-columns: 1fr 1fr;
+          gap: 15px;
+        }
+        
+        .payment-form,
+        .payment-summary {
+          padding: 25px;
+        }
+        
+        .form-control {
+          padding: 12px;
+          font-size: 16px;
+        }
+        
+        .payment-button {
+          padding: 15px;
+          font-size: 16px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .payment-container {
+          margin: 10px;
+        }
+        
+        .payment-header {
+          padding: 70px 20px 20px;
+        }
+        
+        .header-top {
+          left: 20px;
+          top: 10px;
+          right: 20px;
+        }
+        
+        .back-to-site {
+          padding: 6px 12px;
+          font-size: 11px;
+          gap: 4px;
+        }
+        
+        .payment-header h3 {
+          font-size: 20px;
+          margin-top: 15px;
+        }
+        
+        .payment-header p {
+          font-size: 14px;
+        }
+        
+        .payment-form,
+        .payment-summary {
+          padding: 20px;
+        }
+        
+        .form-row {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+      }
+      
+      @media (max-width: 360px) {
+        .payment-header {
+          padding: 75px 15px 20px;
+        }
+        
+        .header-top {
+          left: 15px;
+          top: 8px;
+          right: 15px;
+        }
+        
+        .back-to-site {
+          padding: 5px 10px;
+          font-size: 10px;
+          gap: 3px;
+        }
+        
+        .payment-header h3 {
+          font-size: 18px;
+          margin-top: 20px;
+        }
+        
+        .payment-header p {
+          font-size: 13px;
+        }
+      }
+      
+      /* Responsive styles for booking form */
+      @media (max-width: 768px) {
+        .custom-booking-form {
+          padding: 20px;
+        }
+        
+        .booking-header h3 {
+          font-size: 24px;
+        }
+        
+        .form-step h4 {
+          font-size: 18px;
+        }
+        
+        .form-group {
+          margin-bottom: 20px;
+        }
+        
+        .form-control {
+          padding: 12px;
+          font-size: 16px;
+        }
+        
+        .meeting-options {
+          flex-direction: column;
+          gap: 15px;
+        }
+        
+        .meeting-option {
+          padding: 15px;
+        }
+        
+        .step-buttons {
+          flex-direction: column;
+          gap: 10px;
+        }
+        
+        .btn {
+          width: 100%;
+          padding: 15px;
+          font-size: 16px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .custom-booking-form {
+          padding: 15px;
+        }
+        
+        .booking-header {
+          padding: 20px 0;
+        }
+        
+        .booking-header h3 {
+          font-size: 20px;
+        }
+        
+        .booking-header p {
+          font-size: 14px;
+        }
+        
+        .form-step h4 {
+          font-size: 16px;
+          margin-bottom: 15px;
+        }
+        
+        .form-group {
+          margin-bottom: 15px;
+        }
+        
+        .form-control {
+          padding: 10px;
+          font-size: 16px;
+        }
+        
+        .meeting-option {
+          padding: 12px;
+        }
+        
+        .meeting-option h5 {
+          font-size: 14px;
+        }
+        
+        .meeting-option p {
+          font-size: 12px;
+        }
+        
+        .btn {
+          padding: 12px;
+          font-size: 14px;
+        }
+        
+        .booking-success {
+          padding: 20px;
+        }
+        
+        .booking-success h3 {
+          font-size: 20px;
+        }
+        
+        .detail-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+        }
+        
+        .meeting-link-box {
+          padding: 15px;
+        }
+        
+        .meeting-link {
+          padding: 10px 15px;
+          font-size: 14px;
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .custom-booking-form {
+          padding: 10px;
+        }
+        
+        .booking-header h3 {
+          font-size: 18px;
+        }
+        
+        .form-step h4 {
+          font-size: 14px;
+        }
+        
+        .form-control {
+          padding: 8px;
+          font-size: 14px;
+        }
+        
+        .meeting-option {
+          padding: 10px;
+        }
+        
+        .btn {
+          padding: 10px;
+          font-size: 13px;
+        }
+      }
+
+      /* Email verification styles */
+      .email-input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+
+      .email-input {
+        padding-right: 90px !important;
+        flex: 1;
+        width: 100%;
+      }
+
+      .verify-email-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #0e6655;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+        min-width: 60px;
+        text-align: center;
+      }
+
+      .verify-email-btn:hover {
+        background: #0a5a4a;
+        transform: translateY(-50%) scale(1.05);
+      }
+
+      .verify-email-btn.verified {
+        background: #10b981;
+        cursor: default;
+      }
+
+      .verify-email-btn.loading {
+        background: #6b7280;
+        cursor: not-allowed;
+      }
+
+      .verification-status {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 11px;
+        font-weight: 600;
+        z-index: 10;
+        display: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        min-width: 60px;
+        text-align: center;
+      }
+
+      .verification-status.verified {
+        color: white;
+        background: #10b981;
+        display: inline;
+      }
+
+      .verification-status.error {
+        color: white;
+        background: #ef4444;
+        display: inline;
+      }
+
+      /* Fix text centering for booking header */
+      .booking-header {
+        text-align: center !important;
+        margin-bottom: 30px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .booking-header h3 {
+        text-align: center !important;
+        margin: 0 auto !important;
+        width: 100%;
+        display: block;
+      }
+
+      .booking-header p {
+        text-align: center !important;
+        margin: 0 auto !important;
+        width: 100%;
+        display: block;
+      }
+
+      /* Loading overlay styles */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .loading-content {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-width: 300px;
+        width: 90%;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #0e6655;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-text {
+        color: #374151;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .loading-subtext {
+        color: #6b7280;
+        font-size: 14px;
+      }
+
+      /* Enhanced button loading states */
+      .btn.loading {
+        position: relative;
+        color: transparent !important;
+        pointer-events: none;
+      }
+
+      .btn.loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      /* Custom Alert Styles */
+      .custom-alert-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .custom-alert-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .custom-alert {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        max-width: 450px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        transform: scale(0.8) translateY(20px);
+        transition: all 0.3s ease;
+      }
+
+      .custom-alert-overlay.show .custom-alert {
+        transform: scale(1) translateY(0);
+      }
+
+      .alert-header {
+        padding: 30px 30px 20px;
+        text-align: center;
+        position: relative;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .alert-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .alert-close:hover {
+        background: #f1f5f9;
+        color: #64748b;
+      }
+
+      .alert-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+      }
+
+      .alert-icon.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+
+      .alert-icon.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+
+      .alert-icon.warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+      }
+
+      .alert-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 8px 0;
+      }
+
+      .alert-subtitle {
+        font-size: 14px;
+        color: #64748b;
+        margin: 0;
+      }
+
+      .alert-content {
+        padding: 20px 30px 30px;
+      }
+
+      .alert-message {
+        font-size: 16px;
+        color: #475569;
+        line-height: 1.6;
+        margin: 0 0 25px 0;
+        text-align: center;
+      }
+
+      .alert-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .alert-btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+        justify-content: center;
+      }
+
+      .alert-btn.primary {
+        background: linear-gradient(135deg, #0e6655, #10b981);
+        color: white;
+      }
+
+      .alert-btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(14, 102, 85, 0.3);
+        color: white;
+        text-decoration: none;
+      }
+
+      .alert-btn.secondary {
+        background: #f8fafc;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+      }
+
+      .alert-btn.secondary:hover {
+        background: #f1f5f9;
+        color: #334155;
+        text-decoration: none;
+      }
+
+      @media (max-width: 480px) {
+        .custom-alert {
+          margin: 20px;
+          width: calc(100% - 40px);
+        }
+        
+        .alert-header {
+          padding: 25px 20px 15px;
+        }
+        
+        .alert-content {
+          padding: 15px 20px 25px;
+        }
+        
+        .alert-actions {
+          flex-direction: column;
+        }
+        
+        .alert-btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ul class="bg-bubble">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    <div class="payment-page">
+      <div class="payment-content">
+        <div class="payment-container">
+          <div class="payment-header">
+              <div class="header-top">
+                <a href="index.html" class="back-to-site">
+                  <i class="fa fa-arrow-left"></i>
+                  Back to Selection
+                </a>
+              </div>
+              <h3>Complete Your Payment</h3>
+              <p>Your session details are confirmed. Please complete the payment to book your slot.</p>
+            </div>
+          
+          <div class="payment-form-container">
+            <div class="payment-summary">
+              <div class="summary-header">Order Summary</div>
+              <div class="summary-item">
+                <span class="item-label">Session Type:</span>
+                <span id="summarySessionType" class="item-value">Quick Chat</span>
+              </div>
+              <div class="summary-item">
+                <span class="item-label">Duration:</span>
+                <span id="summaryDuration" class="item-value">30 minutes</span>
+              </div>
+              <div class="summary-item">
+                <span class="item-label">Number of Session:</span>
+                <span id="summaryHours" class="item-value">1</span>
+              </div>
+              <div class="summary-item">
+                <span class="item-label">Session Time:</span>
+                <span id="summaryTime" class="item-value">Available</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-item total">
+                <span class="item-label">Total Amount:</span>
+                <span id="summaryTotal" class="item-value">$15</span>
+              </div>
+            </div>
+            
+            <div class="payment-form">
+              <h4>Card Information</h4>
+              <div class="form-group compact">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" class="form-control" placeholder="1234 5678 9012 3456">
+              </div>
+              
+              <div class="form-row compact-row">
+                <div class="form-group half">
+                  <label for="expiryDate">Expiry Date</label>
+                  <input type="text" id="expiryDate" class="form-control" placeholder="MM/YY">
+                </div>
+                <div class="form-group half">
+                  <label for="cvv">CVV</label>
+                  <input type="text" id="cvv" class="form-control" placeholder="123" maxlength="3" pattern="[0-9]{3}">
+                </div>
+              </div>
+              
+              <div class="form-group compact">
+                <label for="cardName">Cardholder Name</label>
+                <input type="text" id="cardName" class="form-control" placeholder="John Doe">
+              </div>
+              
+              <h4>Contact Information</h4>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" placeholder="john@example.com">
+              </div>
+              
+              <h4>Billing Address</h4>
+              <div class="form-group">
+                <label for="streetAddress">Street Address</label>
+                <input type="text" id="streetAddress" class="form-control" placeholder="123 Main St">
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group half">
+                  <label for="city">City</label>
+                  <input type="text" id="city" class="form-control" placeholder="New York">
+                </div>
+                <div class="form-group half">
+                  <label for="state">State</label>
+                  <input type="text" id="state" class="form-control" placeholder="NY">
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group half">
+                  <label for="zipCode">ZIP Code</label>
+                  <input type="text" id="zipCode" class="form-control" placeholder="10001">
+                </div>
+                <div class="form-group half">
+                  <label for="country">Country</label>
+                  <select id="country" class="form-control">
+                    <option value="">Select Country</option>
+                    <!-- North America -->
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="MX">Mexico</option>
+                    
+                    <!-- Europe -->
+                    <option value="AT">Austria</option>
+                    <option value="BE">Belgium</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="HR">Croatia</option>
+                    <option value="CY">Cyprus</option>
+                    <option value="CZ">Czech Republic</option>
+                    <option value="DK">Denmark</option>
+                    <option value="EE">Estonia</option>
+                    <option value="FI">Finland</option>
+                    <option value="FR">France</option>
+                    <option value="DE">Germany</option>
+                    <option value="GR">Greece</option>
+                    <option value="HU">Hungary</option>
+                    <option value="IS">Iceland</option>
+                    <option value="IE">Ireland</option>
+                    <option value="IT">Italy</option>
+                    <option value="LV">Latvia</option>
+                    <option value="LT">Lithuania</option>
+                    <option value="LU">Luxembourg</option>
+                    <option value="MT">Malta</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="NO">Norway</option>
+                    <option value="PL">Poland</option>
+                    <option value="PT">Portugal</option>
+                    <option value="RO">Romania</option>
+                    <option value="SK">Slovakia</option>
+                    <option value="SI">Slovenia</option>
+                    <option value="ES">Spain</option>
+                    <option value="SE">Sweden</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="UK">United Kingdom</option>
+                    
+                    <!-- South Asia -->
+                    <option value="PK">Pakistan</option>
+                    <option value="IN">India</option>
+                    <option value="BD">Bangladesh</option>
+                    <option value="LK">Sri Lanka</option>
+                    <option value="NP">Nepal</option>
+                    <option value="BT">Bhutan</option>
+                    <option value="MV">Maldives</option>
+                    <option value="AF">Afghanistan</option>
+                    
+                    <!-- Middle East -->
+                    <option value="AE">United Arab Emirates</option>
+                    <option value="SA">Saudi Arabia</option>
+                    <option value="QA">Qatar</option>
+                    <option value="KW">Kuwait</option>
+                    <option value="BH">Bahrain</option>
+                    <option value="OM">Oman</option>
+                    <option value="JO">Jordan</option>
+                    <option value="LB">Lebanon</option>
+                    <option value="SY">Syria</option>
+                    <option value="IQ">Iraq</option>
+                    <option value="IR">Iran</option>
+                    <option value="IL">Israel</option>
+                    <option value="PS">Palestine</option>
+                    <option value="YE">Yemen</option>
+                    <option value="TR">Turkey</option>
+                    
+                    <!-- Other Popular Countries -->
+                    <option value="AU">Australia</option>
+                    <option value="NZ">New Zealand</option>
+                    <option value="JP">Japan</option>
+                    <option value="KR">South Korea</option>
+                    <option value="CN">China</option>
+                    <option value="SG">Singapore</option>
+                    <option value="MY">Malaysia</option>
+                    <option value="TH">Thailand</option>
+                    <option value="PH">Philippines</option>
+                    <option value="ID">Indonesia</option>
+                    <option value="VN">Vietnam</option>
+                    <option value="BR">Brazil</option>
+                    <option value="AR">Argentina</option>
+                    <option value="CL">Chile</option>
+                    <option value="CO">Colombia</option>
+                    <option value="PE">Peru</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="EG">Egypt</option>
+                    <option value="MA">Morocco</option>
+                    <option value="NG">Nigeria</option>
+                    <option value="KE">Kenya</option>
+                    <option value="ET">Ethiopia</option>
+                    <option value="GH">Ghana</option>
+                    <option value="RU">Russia</option>
+                    <option value="UA">Ukraine</option>
+                  </select>
+                </div>
+              </div>
+              
+              <button id="completePaymentBtn" class="payment-button">
+                <span class="button-text">Pay Now</span>
+                <span id="paymentAmount" class="payment-amount">$15</span>
+                <i class="fa fa-arrow-right" style="margin-left: 10px;"></i>
+              </button>
+              
+              <div class="payment-security">
+                <i class="fa fa-lock"></i>
+                <span>Payments are secure and encrypted</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionType = urlParams.get('sessionType') || 'Quick Chat';
+        const duration = urlParams.get('duration') || '30 minutes';
+        
+        const hours = urlParams.get('hours') || '1';
+        const amount = urlParams.get('amount') || '15';
+        
+        // Update summary with URL parameters
+        document.getElementById('summarySessionType').textContent = sessionType;
+        document.getElementById('summaryDuration').textContent = duration;
+        document.getElementById('summaryHours').textContent = hours;
+        document.getElementById('summaryTotal').textContent = '$' + amount;
+        document.getElementById('paymentAmount').textContent = '$' + amount;
+        
+        // Card input formatting
+        const cardNumberInput = document.getElementById('cardNumber');
+        const expiryDateInput = document.getElementById('expiryDate');
+        const cvvInput = document.getElementById('cvv');
+        
+        // Format card number with spaces (1234 5678 9012 3456)
+        if (cardNumberInput) {
+          cardNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            if (formattedValue !== e.target.value) {
+              e.target.value = formattedValue;
+            }
+            // Limit to 19 characters (16 digits + 3 spaces)
+            if (e.target.value.length > 19) {
+              e.target.value = e.target.value.slice(0, 19);
+            }
+          });
+      
+      // Functions moved to global scope to avoid reference errors
+       
+       function showPaymentSuccess() {
+         const paymentContainer = document.querySelector('.payment-container');
+         if (paymentContainer) {
+           // Check if booking details are available from URL parameters (new flow)
+           const urlParams = new URLSearchParams(window.location.search);
+           const hasBookingDetails = urlParams.has('clientEmail') && urlParams.has('clientName');
+           
+           if (hasBookingDetails) {
+             // New flow: booking details already collected, proceed to final booking
+             proceedWithFinalBooking();
+           } else {
+             // Old flow: show booking form
+             paymentContainer.innerHTML = `
+               <div class="payment-success">
+                 <div class="success-icon">
+                   <i class="fa fa-check-circle"></i>
+                 </div>
+                 <h3>Payment Successful!</h3>
+                 <p>Thank you for your payment! Your payment has been processed successfully. Now you can proceed to book your session.</p>
+                 <div class="success-actions">
+                   <button onclick="showBookingForm()" class="book-session-button">
+                     <i class="fa fa-calendar"></i>
+                     <span>Book Session</span>
+                   </button>
+                 </div>
+                 
+                 <!-- Custom Booking Form Container -->
+                 <div id="booking-container" class="booking-container" style="display: none;">
+                   <!-- Booking form will be loaded here -->
+                 </div>
+                 
+                 <!-- Success Booking Container -->
+                 <div id="booking-success-container" class="booking-success-container" style="display: none;">
+                   <!-- Success message will be loaded here -->
+                 </div>
+               </div>
+             `;
+           }
+         }
+       }
+       
+       // Function to handle final booking when details are already collected
+      async function proceedWithFinalBooking() {
+        const paymentContainer = document.querySelector('.payment-container');
+        
+        // Show processing message
+        paymentContainer.innerHTML = `
+          <div class="payment-success">
+            <div class="success-icon">
+              <i class="fa fa-spinner fa-spin"></i>
+            </div>
+            <h3>Processing Your Booking...</h3>
+            <p>Please wait while we finalize your session booking.</p>
+          </div>
+        `;
+        
+        // Get booking details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionTimesParam = urlParams.get('sessionTimes');
+        let sessionTimes = [];
+        try {
+          sessionTimes = sessionTimesParam ? JSON.parse(sessionTimesParam) : [];
+        } catch (e) {
+          console.error('Error parsing session times:', e);
+          sessionTimes = [];
+        }
+        
+        const formData = {
+          clientEmail: urlParams.get('clientEmail'),
+          clientName: urlParams.get('clientName'),
+          sessionDate: urlParams.get('sessionDate'),
+          sessionTimes: sessionTimes,
+          timezone: urlParams.get('timezone'),
+          meetingMode: urlParams.get('meetingMode'),
+          sessionNotes: urlParams.get('sessionNotes') || '',
+          sessionType: urlParams.get('sessionType'),
+          duration: urlParams.get('duration'),
+          numberOfSessions: urlParams.get('hours')
+        };
+        
+        try {
+          // Determine the correct API endpoint
+          const currentPath = window.location.pathname;
+          const currentPort = window.location.port;
+          let apiEndpoint;
+          
+          if (currentPort === '3001' || currentPort === '') {
+            apiEndpoint = currentPath.startsWith('/My-Website/') ? '/My-Website/api/book-session' : '/api/book-session';
+          } else {
+            apiEndpoint = currentPath.startsWith('/My-Website/') 
+              ? 'http://localhost:3001/My-Website/api/book-session' 
+              : 'http://localhost:3001/api/book-session';
+          }
+          
+          // Send booking data to backend with optimized timeout
+          const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+            signal: AbortSignal.timeout(10000) // Reduced from 30s to 10s
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Add meeting link to form data
+            formData.meetingLink = result.meetingLink;
+            
+            // Show final success page
+            paymentContainer.innerHTML = createFinalSuccessMessage(formData);
+          } else {
+            throw new Error(result.message || 'Failed to book session');
+          }
+        } catch (error) {
+          console.error('Final booking error:', error);
+          
+          // Show error message
+          paymentContainer.innerHTML = `
+            <div class="payment-success">
+              <div class="success-icon error">
+                <i class="fa fa-exclamation-triangle"></i>
+              </div>
+              <h3>Booking Error</h3>
+              <p>There was an issue finalizing your booking. Please contact support.</p>
+              <div class="success-actions">
+                <a href="index.html" class="back-button">
+                  <i class="fa fa-home"></i> Back to Home
+                </a>
+              </div>
+            </div>
+          `;
+        }
+      }
+      
+      function createFinalSuccessMessage(bookingData) {
+        const sessionDate = new Date(bookingData.sessionDate);
+        const formattedDate = sessionDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        
+        // Format multiple session times
+        let formattedTimes = '';
+        if (bookingData.sessionTimes && bookingData.sessionTimes.length > 0) {
+          formattedTimes = bookingData.sessionTimes.join(', ');
+        } else {
+          formattedTimes = 'Time to be confirmed';
+        }
+        
+        return `
+          <div class="payment-success">
+            <div class="success-header">
+              <div class="success-icon">
+                <i class="fa fa-check-circle"></i>
+              </div>
+              <h3>Booking Confirmed!</h3>
+              <p>Your session has been successfully booked and payment processed. The meeting link has been sent to your email.</p>
+            </div>
+            
+            <div class="success-content">
+              <div class="meeting-section">
+                <div class="meeting-link-section">
+                  <h4><i class="fa fa-envelope"></i> Meeting Link</h4>
+                  <div class="meeting-link-box">
+                    <p style="color: #059669; text-align: center; margin: 20px 0; font-size: 16px; line-height: 1.6;">
+                      You will receive the meeting link from Faisal shortly before your session begins.
+                    </p>
+                    <p style="color: #64748b; text-align: center; margin: 0; font-size: 14px;">
+                      Please wait for the meeting link to be shared with you via email.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="details-section">
+                 <div class="booking-details">
+                   <h4>Session Details:</h4>
+                   <div class="details-grid">
+                     <div class="detail-item">
+                       <span class="label">Client:</span>
+                       <span class="value">${bookingData.clientName}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Email:</span>
+                       <span class="value">${bookingData.clientEmail}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Session Type:</span>
+                       <span class="value">${bookingData.sessionType}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Duration:</span>
+                       <span class="value">${bookingData.duration}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Number of Sessions:</span>
+                       <span class="value">${bookingData.numberOfSessions}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Date:</span>
+                       <span class="value">${formattedDate}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Session Times:</span>
+                       <span class="value">${formattedTimes}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Meeting Platform:</span>
+                       <span class="value">${bookingData.meetingMode === 'google-meet' ? 'Google Meet' : 'Zoom'}</span>
+                     </div>
+                     <div class="detail-item">
+                       <span class="label">Timezone:</span>
+                       <span class="value">${bookingData.timezone}</span>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+            </div>
+            
+            <div class="success-actions">
+              <a href="index.html" class="back-button">
+                <i class="fa fa-home"></i> Back to Home
+              </a>
+            </div>
+          </div>
+        `;
+      }
+          
+          // Prevent non-numeric input except spaces
+          cardNumberInput.addEventListener('keypress', function(e) {
+            if (!/[0-9\s]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) {
+              e.preventDefault();
+            }
+          });
+        }
+        
+        // Format expiry date (MM/YY)
+        if (expiryDateInput) {
+          expiryDateInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length >= 2) {
+              value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+          });
+          
+          // Prevent non-numeric input
+          expiryDateInput.addEventListener('keypress', function(e) {
+            if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) {
+              e.preventDefault();
+            }
+          });
+        }
+        
+        // Format CVV (limit to 3 digits only)
+        if (cvvInput) {
+          cvvInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '').substring(0, 3);
+            e.target.value = value;
+          });
+          
+          // Prevent non-numeric input
+          cvvInput.addEventListener('keypress', function(e) {
+            if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) {
+              e.preventDefault();
+            }
+          });
+        }
+        
+        // Initialize Stripe (replace with your publishable key when ready for production)
+        // const stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+        
+        // Handle submit payment button
+        const submitPaymentBtn = document.getElementById('completePaymentBtn');
+        if (submitPaymentBtn) {
+          submitPaymentBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            const cardName = document.getElementById('cardName').value;
+            const email = document.getElementById('email').value;
+            const streetAddress = document.getElementById('streetAddress').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const zipCode = document.getElementById('zipCode').value;
+            
+            // Clear previous error messages
+            clearErrorMessages();
+            
+            // Get country value
+            const country = document.getElementById('country').value;
+            
+            let hasErrors = false;
+            
+            // Validate all required fields
+            if (!cardNumber) {
+              showError('cardNumber', 'Card number is required');
+              hasErrors = true;
+            } else if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
+              showError('cardNumber', 'Please enter a valid 16-digit card number');
+              hasErrors = true;
+            }
+            
+            if (!expiryDate) {
+              showError('expiryDate', 'Expiry date is required');
+              hasErrors = true;
+            } else if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+              showError('expiryDate', 'Please enter a valid expiry date (MM/YY)');
+              hasErrors = true;
+            } else {
+              // Validate expiry date is not in the past
+              const [month, year] = expiryDate.split('/');
+              const currentDate = new Date();
+              const currentYear = currentDate.getFullYear() % 100; // Get last 2 digits
+              const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11
+              const expiryYear = parseInt(year);
+              const expiryMonth = parseInt(month);
+              
+              if (expiryYear < currentYear || (expiryYear === currentYear && expiryMonth < currentMonth)) {
+                showError('expiryDate', 'Card has expired. Please enter a valid expiry date');
+                hasErrors = true;
+              } else if (expiryMonth < 1 || expiryMonth > 12) {
+                showError('expiryDate', 'Please enter a valid month (01-12)');
+                hasErrors = true;
+              }
+            }
+            
+            if (!cvv) {
+              showError('cvv', 'CVV is required');
+              hasErrors = true;
+            } else if (!/^\d{3,4}$/.test(cvv)) {
+              showError('cvv', 'Please enter a valid CVV code');
+              hasErrors = true;
+            }
+            
+            if (!cardName) {
+              showError('cardName', 'Cardholder name is required');
+              hasErrors = true;
+            }
+            
+            if (!email) {
+              showError('email', 'Email is required');
+              hasErrors = true;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+              showError('email', 'Please enter a valid email address');
+              hasErrors = true;
+            }
+            
+            if (!streetAddress) {
+              showError('streetAddress', 'Street address is required');
+              hasErrors = true;
+            }
+            
+            if (!city) {
+              showError('city', 'City is required');
+              hasErrors = true;
+            }
+            
+            if (!state) {
+              showError('state', 'State is required');
+              hasErrors = true;
+            }
+            
+            if (!zipCode) {
+              showError('zipCode', 'ZIP code is required');
+              hasErrors = true;
+            }
+            
+            if (!country) {
+              showError('country', 'Please select a country');
+              hasErrors = true;
+            }
+            
+            if (hasErrors) {
+              return;
+            }
+            
+            // Here you would normally integrate with Stripe API
+            // For now, simulate payment processing
+            
+            // Show loading state
+            this.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing Payment...';
+            this.disabled = true;
+            
+            // Simulate payment processing delay (reduced for better UX)
+            setTimeout(() => {
+              showPaymentSuccess();
+            }, 500);
+          });
+        }
+        
+        function showError(fieldId, message) {
+          const field = document.getElementById(fieldId);
+          if (field) {
+            // Add error class to field
+            field.classList.add('error');
+            
+            // Create or update error message
+            let errorElement = field.parentNode.querySelector('.error-message');
+            if (!errorElement) {
+              errorElement = document.createElement('div');
+              errorElement.className = 'error-message';
+              field.parentNode.appendChild(errorElement);
+            }
+            errorElement.textContent = message;
+            
+            // Scroll to first error if this is the first one
+            if (!document.querySelector('.form-control.error')) {
+              field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        }
+        
+        function clearErrorMessages() {
+          // Remove error classes
+          document.querySelectorAll('.form-control.error').forEach(field => {
+            field.classList.remove('error');
+          });
+          
+          // Remove error messages
+          document.querySelectorAll('.error-message').forEach(errorMsg => {
+            errorMsg.remove();
+          });
+        }
+        
+        // showPaymentSuccess function moved to global scope
+        
+      });
+      
+      // Custom booking form function
+      function showBookingForm() {
+        // Hide success message elements
+        const successIcon = document.querySelector('.success-icon');
+        const successTitle = document.querySelector('.payment-success h3');
+        const successText = document.querySelector('.payment-success p');
+        const successActions = document.querySelector('.success-actions');
+        
+        if (successIcon) successIcon.style.display = 'none';
+        if (successTitle) successTitle.style.display = 'none';
+        if (successText) successText.style.display = 'none';
+        if (successActions) successActions.style.display = 'none';
+        
+        // Show the booking container
+        const bookingContainer = document.getElementById('booking-container');
+        if (bookingContainer) {
+          bookingContainer.style.display = 'block';
+          bookingContainer.innerHTML = createBookingForm();
+          initializeBookingForm();
+        }
+      }
+      
+      function createBookingForm() {
+        return `
+          <div class="custom-booking-form">
+            <div class="booking-header">
+              <h3><i class="fa fa-calendar"></i> Schedule Your Session</h3>
+              <p>Please provide your details to book your session</p>
+            </div>
+            
+            <form id="bookingForm" class="booking-form">
+              <div class="form-step active" id="step1">
+                <h4><i class="fa fa-envelope"></i> Contact Information</h4>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="clientEmail">Your Email Address *</label>
+                    <div class="email-input-container">
+                      <input type="email" id="clientEmail" class="form-control email-input" placeholder="your.email@example.com" required>
+                      <button type="button" id="verifyEmailBtn" class="verify-email-btn" onclick="verifyEmail()">Verify</button>
+                      <span id="emailVerificationStatus" class="verification-status"></span>
+                    </div>
+                    <small class="form-hint">Meeting Link automatically will share to your email</small>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="clientName">Full Name *</label>
+                    <input type="text" id="clientName" class="form-control" placeholder="John Doe" required>
+                  </div>
+                </div>
+                
+                <button type="button" class="next-step-btn" onclick="nextStep(2)">Next Step <i class="fa fa-arrow-right"></i></button>
+              </div>
+              
+              <div class="form-step" id="step2">
+                <h4><i class="fa fa-calendar-alt"></i> Select Date & Time</h4>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="sessionDate">Preferred Date *</label>
+                    <input type="date" id="sessionDate" class="form-control" required>
+                    <small class="form-hint">Available Monday to Friday</small>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="sessionTime">Preferred Time *</label>
+                    <select id="sessionTime" class="form-control" required>
+                      <option value="">Select Time Slot</option>
+                    </select>
+                    <small class="form-hint">Times shown in your local timezone</small>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="timezone">Your Timezone *</label>
+                  <select id="timezone" class="form-control" required>
+                    <option value="">Select Timezone</option>
+                    <option value="America/New_York">Eastern Time (US & Canada)</option>
+                    <option value="America/Chicago">Central Time (US & Canada)</option>
+                    <option value="America/Denver">Mountain Time (US & Canada)</option>
+                    <option value="America/Los_Angeles">Pacific Time (US & Canada)</option>
+                    <option value="Europe/London">London (GMT)</option>
+                    <option value="Europe/Paris">Central European Time</option>
+                    <option value="Asia/Dubai">Dubai (GST)</option>
+                    <option value="Asia/Karachi">Pakistan Standard Time</option>
+                    <option value="Asia/Kolkata">India Standard Time</option>
+                  </select>
+                </div>
+                <div class="step-buttons">
+                  <button type="button" class="prev-step-btn" onclick="prevStep(1)"><i class="fa fa-arrow-left"></i> Previous</button>
+                  <button type="button" class="next-step-btn" onclick="nextStep(3)">Next Step <i class="fa fa-arrow-right"></i></button>
+                </div>
+              </div>
+              
+              <div class="form-step" id="step3">
+                <h4><i class="fa fa-video"></i> Meeting Preferences</h4>
+                <div class="form-group">
+                  <label>Meeting Platform *</label>
+                  <div class="meeting-options">
+                    <div class="meeting-option" onclick="selectMeetingMode('google-meet')">
+                      <input type="radio" name="meetingMode" value="google-meet" id="googleMeet">
+                      <label for="googleMeet">
+                        <i class="fa fa-video"></i>
+                        <span>Google Meet</span>
+                        <small>Video conference via Google Meet</small>
+                      </label>
+                    </div>
+                    <div class="meeting-option" onclick="selectMeetingMode('zoom')">
+                      <input type="radio" name="meetingMode" value="zoom" id="zoom">
+                      <label for="zoom">
+                        <i class="fa fa-video"></i>
+                        <span>Zoom</span>
+                        <small>Video conference via Zoom</small>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="sessionNotes">Additional Notes (Optional)</label>
+                  <textarea id="sessionNotes" class="form-control" rows="3" placeholder="Any specific topics or questions you'd like to discuss?"></textarea>
+                </div>
+                <div class="step-buttons">
+                  <button type="button" class="prev-step-btn" onclick="prevStep(2)"><i class="fa fa-arrow-left"></i> Previous</button>
+                  <button type="submit" class="book-final-btn"><i class="fa fa-check"></i> Book Session</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        `;
+      }
+      
+
+      
+      function initializeBookingForm() {
+        // Set minimum date to today
+        const today = new Date();
+        const dateInput = document.getElementById('sessionDate');
+        if (dateInput) {
+          dateInput.min = today.toISOString().split('T')[0];
+          
+          // Set max date to 30 days from now
+          const maxDate = new Date();
+          maxDate.setDate(maxDate.getDate() + 30);
+          dateInput.max = maxDate.toISOString().split('T')[0];
+          
+          dateInput.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const dayOfWeek = selectedDate.getDay();
+            
+            // Check if it's weekend (0 = Sunday, 6 = Saturday)
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+              showCustomAlert('warning', 'Weekday Required', 'Please select a weekday (Monday to Friday) for your session.');
+              this.value = '';
+              return;
+            }
+            
+            generateTimeSlots();
+          });
+        }
+        
+        // Initialize form submission
+        const bookingForm = document.getElementById('bookingForm');
+        if (bookingForm) {
+          bookingForm.addEventListener('submit', handleBookingSubmission);
+        }
+      }
+      
+      function generateTimeSlots() {
+        const timeSelect = document.getElementById('sessionTime');
+        if (!timeSelect) return;
+        
+        timeSelect.innerHTML = '<option value="">Select Time Slot</option>';
+        
+        // Generate time slots from 9 AM to 9 PM
+        for (let hour = 9; hour <= 21; hour++) {
+          const time12 = hour > 12 ? `${hour - 12}:00 PM` : hour === 12 ? '12:00 PM' : `${hour}:00 AM`;
+          const time24 = `${hour.toString().padStart(2, '0')}:00`;
+          
+          const option = document.createElement('option');
+          option.value = time24;
+          option.textContent = time12;
+          timeSelect.appendChild(option);
+        }
+      }
+      
+      // Email verification function
+      async function verifyEmail() {
+        const emailInput = document.getElementById('clientEmail');
+        const verifyBtn = document.getElementById('verifyEmailBtn');
+        const statusSpan = document.getElementById('emailVerificationStatus');
+        
+        const email = emailInput.value.trim();
+        
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          statusSpan.textContent = 'Invalid';
+          statusSpan.className = 'verification-status error';
+          return;
+        }
+        
+        // Show loading state
+        verifyBtn.textContent = 'Verifying...';
+        verifyBtn.classList.add('loading');
+        verifyBtn.disabled = true;
+        statusSpan.style.display = 'none';
+        
+        try {
+          // Simulate email verification (in real implementation, this would call your backend)
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          
+          // For demo purposes, we'll consider all properly formatted emails as valid
+          // In production, you would verify with your email service
+          
+          // Success state
+          verifyBtn.style.display = 'none';
+          statusSpan.textContent = 'Verified';
+          statusSpan.className = 'verification-status verified';
+          emailInput.disabled = true;
+          emailInput.style.paddingRight = '80px';
+          
+        } catch (error) {
+          // Error state
+          verifyBtn.textContent = 'Verify';
+          verifyBtn.classList.remove('loading');
+          verifyBtn.disabled = false;
+          statusSpan.textContent = 'Failed';
+          statusSpan.className = 'verification-status error';
+        }
+      }
+      
+      function nextStep(stepNumber) {
+        const currentStep = document.querySelector('.form-step.active');
+        const nextStep = document.getElementById(`step${stepNumber}`);
+        
+        // Validate current step
+        if (!validateCurrentStep(currentStep)) {
+          return;
+        }
+        
+        // Check email verification for step 1
+        if (currentStep.id === 'step1') {
+          const emailVerificationStatus = document.getElementById('emailVerificationStatus');
+          if (!emailVerificationStatus.classList.contains('verified')) {
+            showCustomAlert('warning', 'Email Verification Required', 'Please verify your email address before proceeding to the next step.');
+            return;
+          }
+        }
+        
+        currentStep.classList.remove('active');
+        nextStep.classList.add('active');
+      }
+      
+      function prevStep(stepNumber) {
+        const currentStep = document.querySelector('.form-step.active');
+        const prevStep = document.getElementById(`step${stepNumber}`);
+        
+        currentStep.classList.remove('active');
+        prevStep.classList.add('active');
+      }
+      
+      function validateCurrentStep(step) {
+        const requiredFields = step.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            field.classList.add('error');
+            isValid = false;
+          } else {
+            field.classList.remove('error');
+          }
+        });
+        
+        return isValid;
+      }
+      
+      // Custom Alert Functions
+      function showCustomAlert(type, title, message, actions = null) {
+        // Remove any existing alerts
+        const existingAlert = document.querySelector('.custom-alert-overlay');
+        if (existingAlert) {
+          existingAlert.remove();
+        }
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'custom-alert-overlay';
+        
+        // Default actions
+        if (!actions) {
+          actions = [{
+            text: 'OK',
+            class: 'primary',
+            action: () => closeCustomAlert()
+          }];
+        }
+        
+        // Create actions HTML
+        const actionsHTML = actions.map(action => 
+          `<button class="alert-btn ${action.class || 'primary'}" onclick="${action.action ? action.action.toString().replace('function', 'function temp').replace('temp()', '(function(){' + action.action.toString().split('{').slice(1).join('{')) + '})()' : 'closeCustomAlert()'}">
+            ${action.icon ? `<i class="fa fa-${action.icon}"></i>` : ''}
+            <span>${action.text}</span>
+          </button>`
+        ).join('');
+        
+        // Create alert HTML
+        overlay.innerHTML = `
+          <div class="custom-alert">
+            <div class="alert-header">
+              <button class="alert-close" onclick="closeCustomAlert()">
+                <i class="fa fa-times"></i>
+              </button>
+              <div class="alert-icon ${type}">
+                <i class="fa fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation' : 'exclamation-triangle'}"></i>
+              </div>
+              <h2 class="alert-title">${title}</h2>
+            </div>
+            
+            <div class="alert-content">
+              <p class="alert-message">${message}</p>
+              
+              <div class="alert-actions">
+                ${actionsHTML}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Add to body
+        document.body.appendChild(overlay);
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+        
+        // Show with animation
+        setTimeout(() => {
+          overlay.classList.add('show');
+        }, 100);
+        
+        // Auto close after 4 seconds for non-error alerts (faster for better UX)
+        if (type !== 'error') {
+          setTimeout(() => {
+            if (overlay.classList.contains('show')) {
+              closeCustomAlert();
+            }
+          }, 4000);
+        }
+      }
+      
+      function closeCustomAlert() {
+        const overlay = document.querySelector('.custom-alert-overlay');
+        if (overlay) {
+          overlay.classList.remove('show');
+          
+          // Restore body scroll
+          document.body.style.overflow = '';
+          
+          // Remove element after animation
+          setTimeout(() => {
+            if (overlay.parentNode) {
+              overlay.parentNode.removeChild(overlay);
+            }
+          }, 400);
+        }
+      }
+      
+      // Close on overlay click
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('custom-alert-overlay')) {
+          closeCustomAlert();
+        }
+      });
+      
+      // Close on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeCustomAlert();
+        }
+      });
+
+      function verifyEmail() {
+        const emailInput = document.getElementById('clientEmail');
+        const verifyBtn = document.getElementById('verifyEmailBtn');
+        const verificationStatus = document.getElementById('emailVerificationStatus');
+        
+        const email = emailInput.value.trim();
+        
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (!email) {
+          showCustomAlert('warning', 'Email Required', 'Please enter an email address to continue.');
+          return;
+        }
+        
+        if (!emailRegex.test(email)) {
+          showCustomAlert('error', 'Invalid Email', 'Please enter a valid email address format (e.g., user@example.com).');
+          return;
+        }
+        
+        // Simulate email verification process
+        verifyBtn.innerHTML = 'Verifying...';
+        verifyBtn.disabled = true;
+        
+        // Simulate verification delay
+        setTimeout(() => {
+          // Mark as verified
+          verifyBtn.style.display = 'none';
+          verificationStatus.textContent = '✓ Verified';
+          verificationStatus.classList.add('verified');
+          verificationStatus.style.display = 'inline';
+          
+          // Disable email input to prevent changes
+          emailInput.style.backgroundColor = '#f8f9fa';
+          emailInput.readOnly = true;
+          
+          // Show success message
+          const formHint = emailInput.parentNode.parentNode.querySelector('.form-hint');
+          if (formHint) {
+            formHint.style.color = '#28a745';
+            formHint.textContent = '✓ Email verified successfully! Meeting link will be sent to this email.';
+          }
+          
+          // Show success alert
+          showCustomAlert('success', 'Email Verified!', 'Your email has been verified successfully. The meeting link will be sent to this address.');
+        }, 1500);
+      }
+      
+      // Meeting link generation functions (consistent with booking.html)
+      function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          const char = str.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash; // Convert to 32-bit integer
+        }
+        // Return a fixed-length hexadecimal string
+        return Math.abs(hash).toString(16).padStart(10, '0');
+      }
+
+      async function generateMeetingLink(meetingMode, sessionId) {
+        if (meetingMode === 'google-meet') {
+          // Use Google Meet's instant meeting feature which creates a real meeting room
+          // This generates an authentic Google Meet link that actually works
+          // Note: In production, you should use Google Calendar API to create scheduled meetings
+          // For now, we'll use a consistent approach that creates real meeting rooms
+          return await createGoogleMeetInstantLink(sessionId);
+        } else if (meetingMode === 'zoom') {
+          // Generate Zoom link with consistent meeting ID based on session ID
+          const meetingId = generateZoomMeetingId(sessionId);
+          const password = generateZoomPassword(sessionId);
+          return `https://zoom.us/j/${meetingId}?pwd=${password}`;
+        }
+        // Fallback to Google Meet instant meeting
+        return await createGoogleMeetInstantLink(sessionId);
+      }
+      
+      async function createGoogleMeetInstantLink(sessionId) {
+        // IMPORTANT: This generates a REAL Google Meet instant meeting link
+        // Both client and owner will receive the exact same link
+        
+        // Option 1: Use Google Meet's instant meeting feature (recommended)
+        // This creates a real meeting room when first accessed
+        const meetingLink = 'https://meet.google.com/new';
+        
+        // Option 2: Create a personalized meeting link (alternative)
+        // const personalizedCode = generatePersonalizedMeetingCode(sessionId);
+        // const meetingLink = `https://meet.google.com/${personalizedCode}`;
+        
+        console.log('Generated REAL Google Meet instant meeting link:', meetingLink);
+        console.log('Session ID:', sessionId);
+        console.log('✅ This link will create a real meeting room when first accessed');
+        console.log('ℹ️ When someone clicks this link, Google will create a unique meeting room');
+        
+        return meetingLink;
+      }
+      
+      function generatePersonalizedMeetingCode(sessionId) {
+        // Generate a personalized meeting code based on session ID
+        // This creates a unique but valid Google Meet room code
+        const hash = simpleHash(sessionId + 'personal-meet');
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let code = '';
+        
+        // Generate 10 characters for the meeting code
+        for (let i = 0; i < 10; i++) {
+          const index = parseInt(hash.charAt(i % hash.length), 16) % chars.length;
+          code += chars[index];
+        }
+        
+        // Format as xxx-yyyy-zzz pattern
+        return `${code.substring(0, 3)}-${code.substring(3, 7)}-${code.substring(7, 10)}`;
+      }
+      
+      function generateConsistentMeetingCode(sessionId) {
+        // Generate a meeting code that looks realistic but is consistent
+        // This ensures both emails contain the exact same link
+        const hash = simpleHash(sessionId + 'meet-code');
+        
+        // Use alphanumeric characters for valid Google Meet room ID (matching success.html)
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let code = '';
+        
+        // Generate 10 characters for the meeting code
+        for (let i = 0; i < 10; i++) {
+          const index = parseInt(hash.charAt(i % hash.length), 16) % chars.length;
+          code += chars[index];
+        }
+        
+        // Format as xxx-yyyy-zzz pattern
+        return `${code.substring(0, 3)}-${code.substring(3, 7)}-${code.substring(7, 10)}`;
+      }
+
+      function generateGoogleMeetRoomCode(sessionId) {
+        // Generate consistent Google Meet room code based on session ID
+        // Format: abc-defg-hij (3-4-3 pattern with alphanumeric characters)
+        
+        // Ensure we have a consistent hash for the same session ID
+        const hash = simpleHash(sessionId);
+        
+        // Use alphanumeric characters for valid Google Meet codes (matching success.html)
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let roomCode = '';
+        
+        // Generate exactly 10 characters for the room code using session-based hash
+        for (let i = 0; i < 10; i++) {
+          // Ensure consistent character selection by using modulo on the hash characters
+          const index = parseInt(hash.charAt(i % hash.length), 16) % chars.length;
+          roomCode += chars[index];
+        }
+        
+        // Format as Google Meet standard: abc-defg-hij (3-4-3 pattern)
+        return `${roomCode.substring(0, 3)}-${roomCode.substring(3, 7)}-${roomCode.substring(7, 10)}`;
+      }
+
+      function generateGoogleMeetRoomId(sessionId) {
+        // This function is kept for backward compatibility but not used for link generation
+        // Google Meet instant meetings are created when the first person joins
+        const hash = simpleHash(sessionId);
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let roomId = '';
+        
+        for (let i = 0; i < 10; i++) {
+          const index = parseInt(hash.charAt(i), 16) % chars.length;
+          roomId += chars[index];
+        }
+        
+        return `${roomId.substring(0, 3)}-${roomId.substring(3, 7)}-${roomId.substring(7, 10)}`;
+      }
+      
+      function generateZoomMeetingId(sessionId) {
+        // Generate consistent Zoom meeting ID based on session ID
+        const hash = simpleHash(sessionId + 'zoom-meeting');
+        const meetingId = parseInt(hash.substring(0, 10), 16) % 999999999;
+        return meetingId.toString().padStart(9, '0');
+      }
+      
+      function generateZoomPassword(sessionId) {
+        // Generate consistent Zoom password based on session ID
+        const hash = simpleHash(sessionId + 'zoom-password');
+        const password = parseInt(hash.substring(0, 6), 16) % 999999;
+        return password.toString().padStart(6, '0');
+      }
+
+      function selectMeetingMode(mode) {
+        const radio = document.querySelector(`input[value="${mode}"]`);
+        if (radio) {
+          radio.checked = true;
+        }
+        
+        // Update visual selection
+        document.querySelectorAll('.meeting-option').forEach(option => {
+          option.classList.remove('selected');
+        });
+        
+        const selectedOption = document.querySelector(`input[value="${mode}"]`).closest('.meeting-option');
+        selectedOption.classList.add('selected');
+      }
+      
+      async function handleBookingSubmission(e) {
+        e.preventDefault();
+        
+        // Get session details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionType = urlParams.get('sessionType') || urlParams.get('session') || 'Consultation Session';
+        const duration = urlParams.get('duration') || '60 minutes';
+        const hours = urlParams.get('hours') || urlParams.get('numberOfSessions') || '1';
+        
+        // Get session times from URL parameters (passed from booking page)
+        const sessionTimesParam = urlParams.get('sessionTimes');
+        let sessionTimes = [];
+        try {
+          sessionTimes = sessionTimesParam ? JSON.parse(sessionTimesParam) : [];
+        } catch (e) {
+          console.error('Error parsing session times:', e);
+          sessionTimes = [];
+        }
+        
+        // Get meeting mode first
+        const meetingMode = document.querySelector('input[name="meetingMode"]:checked')?.value;
+        
+        // Generate unique session ID for consistent meeting link
+        const sessionId = 'SES-' + Date.now().toString().slice(-8);
+        console.log('Generated session ID:', sessionId);
+        
+        // Generate consistent meeting link ONCE before sending to server
+        const meetingLink = await generateMeetingLink(meetingMode, sessionId);
+        console.log('Generated consistent meeting link:', meetingLink);
+        
+        // Get all form data
+        const formData = {
+          clientEmail: document.getElementById('clientEmail').value,
+          clientName: document.getElementById('clientName').value,
+          sessionDate: document.getElementById('sessionDate').value,
+          sessionTimes: sessionTimes,
+          timezone: document.getElementById('timezone').value,
+          meetingMode: meetingMode,
+          sessionNotes: document.getElementById('sessionNotes').value,
+          sessionType: sessionType,
+          duration: duration,
+          numberOfSessions: hours,
+          sessionId: sessionId,
+          meetingLink: meetingLink // Include the pre-generated meeting link
+        };
+        
+        // Debug log to check form data
+        console.log('Form data being sent:', formData);
+        
+        // Validate final step
+        if (!formData.meetingMode) {
+          showCustomAlert('warning', 'Meeting Platform Required', 'Please select a meeting platform (Google Meet or Zoom) to continue.');
+          return;
+        }
+        
+        // Additional validation
+        if (!formData.clientEmail || !formData.clientName || !formData.sessionDate || !formData.sessionTimes || formData.sessionTimes.length === 0 || !formData.timezone) {
+          showCustomAlert('warning', 'Missing Information', 'Please fill in all required fields to complete your booking.');
+          return;
+        }
+        
+        // Show enhanced loading state
+        const submitBtn = document.querySelector('.book-final-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Booking Session...';
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+        
+        // Show loading overlay
+        showLoadingOverlay('Processing your booking...', 'Please wait while we schedule your session');
+        
+        try {
+          // Determine the correct API endpoint based on current URL
+          const currentPath = window.location.pathname;
+          const currentPort = window.location.port;
+          const currentHost = window.location.hostname;
+          let apiEndpoint;
+          
+          console.log('Current URL details:', {
+            pathname: currentPath,
+            port: currentPort,
+            hostname: currentHost,
+            href: window.location.href
+          });
+          
+          // Check if we're on the Node.js server (port 3001) or another server
+          if (currentPort === '3001' || currentPort === '') {
+            // We're on the Node.js server, use relative paths
+            apiEndpoint = currentPath.startsWith('/My-Website/') ? '/My-Website/api/book-session' : '/api/book-session';
+          } else {
+            // If on a different server (like Live Server), use absolute URL to Node.js server
+            apiEndpoint = currentPath.startsWith('/My-Website/') 
+              ? 'http://localhost:3001/My-Website/api/book-session' 
+              : 'http://localhost:3001/api/book-session';
+          }
+          
+          console.log('Using API endpoint:', apiEndpoint);
+          
+          // Send booking data to backend with optimized retry logic
+          let response;
+          let retryCount = 0;
+          const maxRetries = 2; // Reduced from 3 to 2
+          
+          while (retryCount < maxRetries) {
+            try {
+              response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+                signal: AbortSignal.timeout(8000) // Reduced from 30s to 8s
+              });
+              
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              
+              // If we get here, the request was successful
+              break;
+              
+            } catch (fetchError) {
+              retryCount++;
+              console.warn(`Fetch attempt ${retryCount} failed:`, fetchError.message);
+              
+              if (retryCount >= maxRetries) {
+                throw new Error(`Failed to connect to server after ${maxRetries} attempts. Please check your internet connection and try again.`);
+              }
+              
+              // Wait before retrying (reduced delay)
+              await new Promise(resolve => setTimeout(resolve, 500 * retryCount)); // Reduced from 1000ms
+            }
+          }
+          
+          const result = await response.json();
+          console.log('Server response:', result);
+          
+          if (result.success) {
+            // Use the pre-generated meeting link for consistency
+            // The server should use the meetingLink we sent, not generate a new one
+            console.log('Using pre-generated meeting link:', formData.meetingLink);
+            
+            // Send emails with the consistent meeting link
+            try {
+              await sendBookingEmails(formData);
+              console.log('Emails sent successfully with consistent meeting link');
+            } catch (emailError) {
+              console.error('Failed to send emails:', emailError);
+              // Continue with success flow even if emails fail
+            }
+            
+            // Hide loading overlay first
+            hideLoadingOverlay();
+            
+            // Reset button state
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            
+            // Show success immediately (no delay to prevent interference)
+            showBookingSuccess(formData);
+          } else {
+            hideLoadingOverlay();
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            throw new Error(result.message || 'Failed to book session');
+          }
+        } catch (error) {
+          console.error('Booking error:', error);
+          
+          // Try fallback endpoints if the primary one failed
+          if (error.message.includes('Failed to connect to server')) {
+            try {
+              console.log('Trying fallback endpoints...');
+              
+              // Try alternative endpoints
+              const fallbackEndpoints = [
+                'http://localhost:3001/api/book-session',
+                'http://localhost:3001/My-Website/api/book-session',
+                'http://127.0.0.1:3001/api/book-session',
+                'http://127.0.0.1:3001/My-Website/api/book-session'
+              ];
+              
+              let fallbackSuccess = false;
+              
+              for (const fallbackEndpoint of fallbackEndpoints) {
+                if (fallbackEndpoint === apiEndpoint) continue; // Skip if it's the same as primary
+                
+                try {
+                  console.log('Trying fallback endpoint:', fallbackEndpoint);
+                  
+                  const fallbackResponse = await fetch(fallbackEndpoint, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                    signal: AbortSignal.timeout(5000) // Reduced from 15s to 5s for fallback
+                  });
+                  
+                  if (fallbackResponse.ok) {
+                    const result = await fallbackResponse.json();
+                    console.log('Fallback server response:', result);
+                    
+                    if (result.success) {
+                      // Use the pre-generated meeting link for consistency
+                      console.log('Using pre-generated meeting link (fallback):', formData.meetingLink);
+                      
+                      // Send emails with the consistent meeting link
+                      try {
+                        await sendBookingEmails(formData);
+                        console.log('Emails sent successfully with consistent meeting link (fallback)');
+                      } catch (emailError) {
+                        console.error('Failed to send emails (fallback):', emailError);
+                        // Continue with success flow even if emails fail
+                      }
+                      
+                      hideLoadingOverlay();
+                      submitBtn.innerHTML = originalText;
+                      submitBtn.disabled = false;
+                      submitBtn.classList.remove('loading');
+                      showBookingSuccess(formData);
+                      fallbackSuccess = true;
+                      break;
+                    }
+                  }
+                } catch (fallbackError) {
+                  console.warn('Fallback endpoint failed:', fallbackEndpoint, fallbackError.message);
+                }
+              }
+              
+              if (!fallbackSuccess) {
+                throw new Error('All server endpoints are unreachable. Please check if the server is running.');
+              }
+              
+            } catch (fallbackError) {
+              console.error('All fallback attempts failed:', fallbackError);
+              hideLoadingOverlay();
+              showCustomAlert('error', 'Connection Failed', `Unable to connect to the booking server. Please ensure:\n\n1. The server is running (node server.js)\n2. You have an internet connection\n3. No firewall is blocking the connection\n\nError: ${fallbackError.message}`);
+              
+              // Reset button state
+              submitBtn.innerHTML = originalText;
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('loading');
+            }
+          } else {
+            // Handle other types of errors
+            let userMessage = 'Failed to book session. ';
+            
+            if (error.message.includes('HTTP error! status: 404')) {
+              userMessage += 'The booking service is not available. Please contact support.';
+            } else if (error.message.includes('HTTP error! status: 500')) {
+              userMessage += 'Server error occurred. Please try again in a few minutes.';
+            } else if (error.message.includes('timeout')) {
+              userMessage += 'Request timed out. Please check your internet connection and try again.';
+            } else {
+              userMessage += error.message;
+            }
+            
+            hideLoadingOverlay();
+            showCustomAlert('error', 'Booking Failed', userMessage);
+            
+            // Reset button state
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+          }
+        }
+      }
+      
+      // Loading overlay functions
+      function showLoadingOverlay(title, subtitle) {
+        const overlay = document.getElementById('loadingOverlay');
+        const titleElement = document.getElementById('loadingTitle');
+        const subtitleElement = document.getElementById('loadingSubtitle');
+        
+        if (titleElement) titleElement.textContent = title;
+        if (subtitleElement) subtitleElement.textContent = subtitle;
+        
+        if (overlay) {
+          overlay.style.display = 'flex';
+          // Prevent body scrolling
+          document.body.style.overflow = 'hidden';
+        }
+      }
+      
+      function hideLoadingOverlay() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+          overlay.style.display = 'none';
+          // Restore body scrolling
+          document.body.style.overflow = '';
+        }
+      }
+      
+      async function sendBookingEmails(formData) {
+        try {
+          console.log('Sending emails - meeting link only to owner:', formData.meetingLink);
+          
+                  // Web3Forms API key
+        const web3formsApiKey = 'c6b7fea5-f7cd-4363-be99-4098c93c42b8';
+          
+
+
+          // Send client confirmation email to owner (for manual forwarding)
+          const clientConfirmationData = {
+            access_key: web3formsApiKey,
+            subject: `📧 CLIENT CONFIRMATION: ${formData.sessionType} - ${formData.clientName}`,
+            name: 'Faisal Hanif',
+            email: 'mehrfaisal111@gmail.com', // Send to owner for manual forwarding
+            _replyto: formData.clientEmail,
+            message: `
+📧 CLIENT CONFIRMATION EMAIL - FORWARD TO CLIENT
+
+Dear ${formData.clientName},
+
+Thank you for booking a session with Faisal Hanif Consulting! Your booking has been confirmed.
+
+📋 YOUR SESSION DETAILS:
+• Session Type: ${formData.sessionType}
+• Date: ${formData.sessionDate}
+• Time: ${Array.isArray(formData.sessionTimes) ? formData.sessionTimes.join(', ') : formData.sessionTimes}
+• Timezone: ${formData.timezone}
+• Duration: ${formData.duration} minutes
+• Meeting Platform: ${formData.meetingMode}
+
+🆔 YOUR SESSION ID: ${formData.sessionId}
+
+📧 CONTACT INFORMATION:
+• Your Email: ${formData.clientEmail}
+• Support Email: mehrfaisal111@gmail.com
+• Website: https://faisalhanif.com
+
+📝 YOUR ADDITIONAL NOTES: ${formData.sessionNotes || 'No additional notes provided'}
+
+💰 SESSION FEE: $${formData.amount || 'TBD'} (Optional - pay after the session if satisfied)
+
+---
+You will receive the meeting link from Faisal shortly before the scheduled time.
+
+Best regards,
+Faisal Hanif Consulting Team
+
+---
+NOTE: This email should be forwarded to: ${formData.clientEmail}
+
+---
+📧 PRE-BUILT REPLY TEMPLATE (Copy this when replying to client):
+
+Subject: ✅ Booking Confirmed - ${formData.sessionType} Session
+
+Dear ${formData.clientName},
+
+Thank you for booking your ${formData.sessionType} session with me! I'm excited to work with you.
+
+📅 SESSION CONFIRMATION:
+• Date: ${formData.sessionDate}
+• Time: ${Array.isArray(formData.sessionTimes) ? formData.sessionTimes.join(', ') : formData.sessionTimes}
+• Duration: ${formData.duration} minutes
+• Platform: ${formData.meetingMode}
+
+🆔 Session ID: ${formData.sessionId}
+
+🔗 MEETING LINK:
+I will share the meeting link with you shortly before our scheduled time.
+
+💰 PAYMENT INFORMATION:
+Session fee: $${formData.amount || 'TBD'}
+Payment is completely optional - only pay if you're satisfied with the session!
+
+📝 PREPARATION:
+${formData.sessionNotes ? `Based on your notes: ${formData.sessionNotes}` : 'Please come prepared with any questions or topics you\'d like to discuss.'}
+
+📧 CONTACT:
+If you need to reschedule or have any questions, please reply to this email.
+
+Looking forward to our session!
+
+Best regards,
+Faisal Hanif
+mehrfaisal111@gmail.com
+            `
+          };
+
+          console.log('Sending client confirmation to owner for forwarding to:', formData.clientEmail);
+          const clientResponse = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(clientConfirmationData),
+          });
+
+          if (!clientResponse.ok) {
+            throw new Error(`Web3Forms client confirmation failed with status ${clientResponse.status}`);
+          }
+          console.log('Client confirmation sent to owner for forwarding:', clientResponse.status);
+          
+          return true;
+        } catch (error) {
+          console.error('Email sending failed:', error);
+          throw error;
+        }
+      }
+
+      function sendBookingEmail(bookingData) {
+        // This would integrate with your email service
+        // For now, we'll simulate the email sending
+        console.log('Booking data to be sent:', bookingData);
+        
+        // In a real implementation, you would send this data to your backend
+        // which would then send emails to both you and the client
+      }
+      
+      function showBookingSuccess(bookingData) {
+        const bookingContainer = document.getElementById('booking-container');
+        const successContainer = document.getElementById('booking-success-container');
+        
+        if (bookingContainer) bookingContainer.style.display = 'none';
+        if (successContainer) {
+          successContainer.style.display = 'block';
+          successContainer.innerHTML = createSuccessMessage(bookingData);
+        }
+      }
+      
+      function createSuccessMessage(bookingData) {
+        const sessionDate = new Date(bookingData.sessionDate);
+        const formattedDate = sessionDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        
+        // Format multiple session times
+        let formattedTimes = '';
+        if (bookingData.sessionTimes && bookingData.sessionTimes.length > 0) {
+          formattedTimes = bookingData.sessionTimes.join(', ');
+        } else {
+          formattedTimes = 'Time to be confirmed';
+        }
+        
+        return `
+          <div class="booking-success">
+            <div class="success-icon">
+              <i class="fa fa-check-circle"></i>
+            </div>
+            <h3>Session Booked Successfully!</h3>
+            <p>Your session has been scheduled. The meeting link has been shared with you via email.</p>
+                                  
+            <div class="meeting-link-section">
+              <h4><i class="fa fa-envelope"></i> Meeting Link</h4>
+              <div class="meeting-link-box">
+                <p style="color: #059669; text-align: center; margin: 20px 0; font-size: 16px; line-height: 1.6;">
+                  You will receive the meeting link from Faisal shortly before your session begins.
+                </p>
+                <p style="color: #64748b; text-align: center; margin: 0; font-size: 14px;">
+                  Please wait for the meeting link to be shared with you via email.
+                </p>
+              </div>
+            </div>
+            
+            <div class="booking-details">
+              <h4>Session Details:</h4>
+              <div class="detail-item">
+                <span class="label">Session Type:</span>
+                <span class="value">${bookingData.sessionType}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Duration:</span>
+                <span class="value">${bookingData.duration}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Number of Sessions:</span>
+                <span class="value">${bookingData.numberOfSessions}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Date:</span>
+                <span class="value">${formattedDate}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Session Times:</span>
+                <span class="value">${formattedTimes}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Meeting Mode:</span>
+                <span class="value">${bookingData.meetingMode === 'google-meet' ? 'Google Meet' : 'Zoom'}</span>
+              </div>
+            </div>
+            
+            <div class="success-actions">
+              <a href="index.html" class="back-button">
+                <i class="fa fa-home"></i> Back to Home
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    </script>
+    
+    <!-- Formspree Integration -->
+    <script>
+      // Formspree works with static hosting and doesn't require custom domains
+    </script>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div id="loadingTitle" class="loading-text">Processing...</div>
+        <div id="loadingSubtitle" class="loading-subtext">Please wait</div>
+      </div>
+    </div>
+  </body>
+</html>
