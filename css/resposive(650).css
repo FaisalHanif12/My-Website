@@ -41,6 +41,7 @@ header {
 .profile-photo {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
+    margin-left: 5px !important;
 }
 
 .menu-list-wrap {
@@ -201,7 +202,7 @@ header {
 .profile-container {
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 5px;
 }
 
 .profileText {
