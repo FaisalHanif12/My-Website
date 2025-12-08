@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Faisal Hanif - Frontend Developer Portfolio" />
+  <meta name="description" content="Faisal Hanif - Software Engineer Portfolio" />
   <title>Faisal-Portfolio</title>
   <!-- Preload critical assets -->
   <link rel="preload" href="css/style.css" as="style" />
@@ -300,7 +300,7 @@
                 </div>
                 <div>
                   <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #0e6655;">Faisal Hanif</h4>
-                  <p style="margin: 0; font-size: 11px; color: #666;">Frontend Developer</p>
+                  <p style="margin: 0; font-size: 11px; color: #666;">Software Engineer</p>
                 </div>
               </div>
               
@@ -382,7 +382,7 @@
         var marker = new google.maps.Marker({
           position: myLocation,
           map: map,
-          title: 'Faisal Hanif - Frontend Developer',
+          title: 'Faisal Hanif - Software Engineer',
         });
 
         // Add info window
@@ -390,7 +390,7 @@
           content: `
               <div style="font-family: 'Poppins', sans-serif; padding: 10px; max-width: 250px;">
                 <h3 style="margin: 0 0 8px 0; color: #0e6655; font-size: 16px; font-weight: 600;">Faisal Hanif</h3>
-                <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">Frontend Developer</p>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">Software Engineer</p>
                 <p style="margin: 0 0 8px 0; color: #666; font-size: 13px;"><strong>Location:</strong> Lahore, Pakistan</p>
                 <p style="margin: 0 0 12px 0; color: #666; font-size: 13px;"><strong>Timezone:</strong> GMT+5 (PKT)</p>
                 <a href="mailto:mehrfaisal111@gmail.com" style="background: #0e6655; color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 500; display: inline-block;">
@@ -1489,11 +1489,10 @@
             // Text fully typed - pause before starting to delete
             delta = pauseAfterTyping;
             isDeleting = true;
-          } else if (isDeleting && txt.length === 1 && txt === 'F') {
-            // Only delete back to 'F' - then start typing again
+          } else if (isDeleting && txt === '') {
+            // Text fully deleted - move to next item in array
             isDeleting = false;
-            // Don't increment loopNum to stay on the same phrase
-            // Pause before typing the rest of the word again
+            loopNum++;
             delta = pauseAfterDeleting;
           }
 
@@ -1677,7 +1676,7 @@
             <img src="imgs/Faisal15.webp" alt="Profile Photo" class="profile-photo" />
             <div class="text-container">
               <span>Faisal Hanif</span>
-              <p href="" class="typewrite" data-period="2000" data-type='["Frontend Developer"]'>
+              <p href="" class="typewrite" data-period="2000" data-type='["Frontend development", "Backend development", "Database management", "Cloud Orchestration", "System design"]'>
                 <span class="wrap"></span>
               </p>
             </div>
@@ -1700,7 +1699,7 @@
                 <div class="logo-circle">FH</div>
                 <div class="logo-text">
                   <h3>Faisal Hanif</h3>
-                  <p>Frontend Developer</p>
+                  <p>Software Engineer</p>
                 </div>
               </div>
               <button class="sidebar-close" onclick="closeMobileMenu()">
@@ -1755,7 +1754,7 @@
             <h2 class="name">Faisal Hanif</h2>
 
             <p href="" class="typewrite hide-on-mobile" style="margin-bottom: 10px;" data-period="2000"
-              data-type='["Frontend Developer"]'>
+              data-type='["Frontend development", "Backend development", "Database management", "Cloud Orchestration", "System design"]'>
               <span class="wrap"></span>
             </p>
             <ul class="socialLinks">
@@ -1815,7 +1814,7 @@
 
                 <div class="role-tag">
                   <i class="fa fa-code"></i>
-                  <span>Frontend Developer</span>
+                  <span>Software Engineer</span>
                 </div>
 
 
@@ -2285,7 +2284,7 @@
                       <div class="timeline-badge current">Current</div>
                       <span class="timeline-period">2021 - 2025</span>
                     </div>
-                    <h3 class="timeline-title">Frontend Developer</h3>
+                    <h3 class="timeline-title">Software Engineer</h3>
                     <div class="timeline-company">
                       <i class="fa fa-building"></i>
                       <span>DevSinC</span>
