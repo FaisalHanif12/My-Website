@@ -382,7 +382,7 @@
         var marker = new google.maps.Marker({
           position: myLocation,
           map: map,
-          title: 'Faisal Hanif - Frontend Developer',
+          title: 'Faisal Hanif - Software Engineer',
         });
 
         // Add info window
@@ -1489,11 +1489,10 @@
             // Text fully typed - pause before starting to delete
             delta = pauseAfterTyping;
             isDeleting = true;
-          } else if (isDeleting && txt.length === 0) {
+          } else if (isDeleting && txt === '') {
             // Text fully deleted - move to next item in array
             isDeleting = false;
             loopNum++;
-            // Pause before typing the next phrase
             delta = pauseAfterDeleting;
           }
 
@@ -1677,7 +1676,7 @@
             <img src="imgs/Faisal15.webp" alt="Profile Photo" class="profile-photo" />
             <div class="text-container">
               <span>Faisal Hanif</span>
-              <p href="" class="typewrite" data-period="2000" data-type='["Frontend Development", "Backend Development", "Cloud Orchestration", "System Design"]'>
+              <p href="" class="typewrite" data-period="2000" data-type='["Frontend development", "Backend development", "Database management", "Cloud Orchestration", "System design"]'>
                 <span class="wrap"></span>
               </p>
             </div>
@@ -1755,7 +1754,7 @@
             <h2 class="name">Faisal Hanif</h2>
 
             <p href="" class="typewrite hide-on-mobile" style="margin-bottom: 10px;" data-period="2000"
-              data-type='["Frontend Development", "Backend Development", "Cloud Orchestration", "System Design"]'>
+              data-type='["Frontend development", "Backend development", "Database management", "Cloud Orchestration", "System design"]'>
               <span class="wrap"></span>
             </p>
             <ul class="socialLinks">
