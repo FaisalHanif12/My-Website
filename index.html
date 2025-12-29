@@ -103,6 +103,242 @@
         display: none !important;
       }
     }
+
+    /* Chat Support Button Styles */
+    .chat-support-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(14, 102, 85, 0.3);
+      z-index: 9998;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .chat-support-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(14, 102, 85, 0.4);
+    }
+
+    .chat-support-button i {
+      color: white;
+      font-size: 28px;
+    }
+
+    .chat-support-button.active {
+      background: #dc3545;
+    }
+
+    /* Chatbot Modal Styles */
+    .chatbot-modal {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 380px;
+      height: 500px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: slideUp 0.3s ease;
+    }
+
+    .chatbot-modal.active {
+      display: flex;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chatbot-header {
+      background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+      padding: 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .chatbot-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f8fffe;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chatbot-message {
+      display: flex;
+      gap: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chatbot-message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .chatbot-message.bot .message-avatar {
+      background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+      color: white;
+    }
+
+    .chatbot-message.user .message-avatar {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .message-content {
+      max-width: 75%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .chatbot-message.bot .message-content {
+      background: white;
+      color: #333;
+      border: 1px solid #e0e0e0;
+    }
+
+    .chatbot-message.user .message-content {
+      background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+      color: white;
+    }
+
+    .chatbot-input-container {
+      padding: 16px;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chatbot-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 24px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chatbot-input:focus {
+      border-color: #0e6655;
+    }
+
+    .chatbot-send {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .chatbot-send:hover {
+      transform: scale(1.05);
+    }
+
+    .chatbot-send:active {
+      transform: scale(0.95);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 650px) {
+      .chat-support-button {
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+      }
+
+      .chatbot-modal {
+        bottom: 90px;
+        right: 20px;
+        left: 20px;
+        width: auto;
+        height: 450px;
+      }
+    }
   </style>
 
   <script defer>
@@ -382,7 +618,7 @@
         var marker = new google.maps.Marker({
           position: myLocation,
           map: map,
-          title: 'Faisal Hanif - Software Engineer',
+          title: 'Faisal Hanif - Frontend Developer',
         });
 
         // Add info window
@@ -1489,10 +1725,11 @@
             // Text fully typed - pause before starting to delete
             delta = pauseAfterTyping;
             isDeleting = true;
-          } else if (isDeleting && txt === '') {
+          } else if (isDeleting && txt.length === 0) {
             // Text fully deleted - move to next item in array
             isDeleting = false;
             loopNum++;
+            // Pause before typing the next phrase
             delta = pauseAfterDeleting;
           }
 
@@ -1676,7 +1913,7 @@
             <img src="imgs/Faisal15.webp" alt="Profile Photo" class="profile-photo" />
             <div class="text-container">
               <span>Faisal Hanif</span>
-              <p href="" class="typewrite" data-period="2000" data-type='["Frontend development", "Backend development", "Database management", "Cloud Orchestration", "System design"]'>
+              <p href="" class="typewrite" data-period="2000" data-type='["Frontend Development", "Backend Development", "Cloud Orchestration", "System Design"]'>
                 <span class="wrap"></span>
               </p>
             </div>
@@ -1754,7 +1991,7 @@
             <h2 class="name">Faisal Hanif</h2>
 
             <p href="" class="typewrite hide-on-mobile" style="margin-bottom: 10px;" data-period="2000"
-              data-type='["Frontend development", "Backend development", "Database management", "Cloud Orchestration", "System design"]'>
+              data-type='["Frontend Development", "Backend Development", "Cloud Orchestration", "System Design"]'>
               <span class="wrap"></span>
             </p>
             <ul class="socialLinks">
@@ -4253,70 +4490,35 @@
     </div>
   </div>
 
-  <!-- Chat Widget -->
-  <div class="chat-widget-container" id="chatWidget">
-    <!-- Chat Toggle Button -->
-    <button class="chat-toggle-btn" id="chatToggleBtn" aria-label="Open chat">
-      <i class="fa fa-comments"></i>
-      <span class="chat-notification-badge" id="chatNotificationBadge" style="display: none;">1</span>
-    </button>
+  <!-- Chat Support Button -->
+  <button class="chat-support-button" id="chatSupportButton" aria-label="Open chat support">
+    <i class="fa fa-comments"></i>
+  </button>
 
-    <!-- Chat Window -->
-    <div class="chat-window" id="chatWindow">
-      <!-- Chat Header -->
-      <div class="chat-header">
-        <div class="chat-header-info">
-          <div class="chat-avatar">
-            <i class="fa fa-user"></i>
-          </div>
-          <div class="chat-header-text">
-            <h3 class="chat-title">Chat with Faisal</h3>
-            <span class="chat-status">
-              <span class="status-dot"></span>
-              <span>Online</span>
-            </span>
-          </div>
-        </div>
-        <button class="chat-close-btn" id="chatCloseBtn" aria-label="Close chat">
-          <i class="fa fa-times"></i>
-        </button>
-      </div>
-
-      <!-- Chat Messages Area -->
-      <div class="chat-messages" id="chatMessages">
-        <div class="chat-welcome-message">
-          <div class="welcome-icon">
-            <i class="fa fa-comments"></i>
-          </div>
-          <h4>Welcome!</h4>
-          <p>Hi there! 👋 I'm Faisal. How can I help you today?</p>
-        </div>
-        <!-- Messages will be dynamically added here -->
-      </div>
-
-      <!-- Chat Input Area -->
-      <div class="chat-input-area">
-        <div class="chat-input-container">
-          <input 
-            type="text" 
-            class="chat-input" 
-            id="chatInput" 
-            placeholder="Type your message..." 
-            autocomplete="off"
-            aria-label="Type your message"
-          />
-          <button class="chat-send-btn" id="chatSendBtn" aria-label="Send message">
-            <i class="fa fa-paper-plane"></i>
-          </button>
-        </div>
-        <div class="chat-typing-indicator" id="chatTypingIndicator" style="display: none;">
-          <span></span>
-          <span></span>
-          <span></span>
+  <!-- Chatbot Modal -->
+  <div class="chatbot-modal" id="chatbotModal">
+    <div class="chatbot-header">
+      <h3>Chat Support</h3>
+      <button class="chatbot-close" id="chatbotClose" aria-label="Close chat">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="chatbot-messages" id="chatbotMessages">
+      <div class="chatbot-message bot">
+        <div class="message-avatar">FH</div>
+        <div class="message-content">
+          Hi! I'm Faisal's assistant. How can I help you today?
         </div>
       </div>
     </div>
+    <div class="chatbot-input-container">
+      <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message..." />
+      <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
+        <i class="fa fa-paper-plane"></i>
+      </button>
+    </div>
   </div>
+
 </body>
 <script defer src="js/animation-effect.js"></script>
 <script defer src="js/Elements.js"></script>
@@ -4386,50 +4588,114 @@
   });
 </script>
 
-<!-- Chat Widget Toggle Script -->
+<!-- Chatbot Functionality -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const chatWidget = document.getElementById('chatWidget');
-    const chatToggleBtn = document.getElementById('chatToggleBtn');
-    const chatCloseBtn = document.getElementById('chatCloseBtn');
-    const chatInput = document.getElementById('chatInput');
-    const chatSendBtn = document.getElementById('chatSendBtn');
-    
-    // Toggle chat window
-    if (chatToggleBtn) {
-      chatToggleBtn.addEventListener('click', function() {
-        chatWidget.classList.toggle('active');
-        if (chatWidget.classList.contains('active')) {
-          chatInput.focus();
-        }
-      });
+    const chatSupportButton = document.getElementById('chatSupportButton');
+    const chatbotModal = document.getElementById('chatbotModal');
+    const chatbotClose = document.getElementById('chatbotClose');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const chatbotSend = document.getElementById('chatbotSend');
+    const chatbotMessages = document.getElementById('chatbotMessages');
+
+    // Open chatbot
+    chatSupportButton.addEventListener('click', function() {
+      chatbotModal.classList.add('active');
+      chatSupportButton.classList.add('active');
+      chatbotInput.focus();
+    });
+
+    // Close chatbot
+    chatbotClose.addEventListener('click', function() {
+      chatbotModal.classList.remove('active');
+      chatSupportButton.classList.remove('active');
+    });
+
+    // Close chatbot when clicking outside
+    chatbotModal.addEventListener('click', function(e) {
+      if (e.target === chatbotModal) {
+        chatbotModal.classList.remove('active');
+        chatSupportButton.classList.remove('active');
+      }
+    });
+
+    // Send message function
+    function sendMessage() {
+      const message = chatbotInput.value.trim();
+      if (!message) return;
+
+      // Add user message
+      addMessage(message, 'user');
+      chatbotInput.value = '';
+
+      // Simulate bot response (you can replace this with actual API call)
+      setTimeout(() => {
+        const botResponse = getBotResponse(message);
+        addMessage(botResponse, 'bot');
+      }, 500);
     }
-    
-    // Close chat window
-    if (chatCloseBtn) {
-      chatCloseBtn.addEventListener('click', function() {
-        chatWidget.classList.remove('active');
-      });
+
+    // Add message to chat
+    function addMessage(text, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chatbot-message ${sender}`;
+
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.textContent = sender === 'bot' ? 'FH' : 'You';
+
+      const content = document.createElement('div');
+      content.className = 'message-content';
+      content.textContent = text;
+
+      messageDiv.appendChild(avatar);
+      messageDiv.appendChild(content);
+      chatbotMessages.appendChild(messageDiv);
+
+      // Scroll to bottom
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
-    
-    // Send message (UI only - no backend functionality yet)
-    if (chatSendBtn && chatInput) {
-      chatSendBtn.addEventListener('click', function() {
-        const message = chatInput.value.trim();
-        if (message) {
-          // Message sending functionality will be added later
-          console.log('Message:', message);
-          chatInput.value = '';
-        }
-      });
-      
-      // Send on Enter key
-      chatInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          chatSendBtn.click();
-        }
-      });
+
+    // Simple bot response logic (replace with actual API integration)
+    function getBotResponse(userMessage) {
+      const message = userMessage.toLowerCase();
+
+      if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+        return "Hello! Thanks for reaching out. How can I assist you today?";
+      } else if (message.includes('portfolio') || message.includes('work') || message.includes('project')) {
+        return "Great question! You can check out my portfolio and projects in the 'WORKS' section. Would you like to know more about any specific project?";
+      } else if (message.includes('contact') || message.includes('email') || message.includes('reach')) {
+        return "You can contact me through the 'CONTACT' section or email me directly at mehrfaisal111@gmail.com. I'd love to hear from you!";
+      } else if (message.includes('hire') || message.includes('available') || message.includes('work')) {
+        return "Yes, I'm available for work! You can book a meeting with me using the 'Book Meeting' button or check my availability in the CONTACT section.";
+      } else if (message.includes('skill') || message.includes('technology') || message.includes('tech')) {
+        return "I'm a Software Engineer specializing in backend development. I work with various technologies including Node.js, MongoDB, and more. Check the 'PROFILE' section for details!";
+      } else if (message.includes('cv') || message.includes('resume')) {
+        return "You can download my CV by clicking the 'Download CV' button on my profile page. Feel free to reach out if you have any questions!";
+      } else if (message.includes('thank') || message.includes('thanks')) {
+        return "You're welcome! If you have any more questions, feel free to ask. Have a great day!";
+      } else {
+        return "Thanks for your message! For more detailed information, please check out my portfolio sections or feel free to contact me directly. How else can I help?";
+      }
     }
+
+    // Send on button click
+    chatbotSend.addEventListener('click', sendMessage);
+
+    // Send on Enter key
+    chatbotInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && chatbotModal.classList.contains('active')) {
+        chatbotModal.classList.remove('active');
+        chatSupportButton.classList.remove('active');
+      }
+    });
   });
 </script>
 
