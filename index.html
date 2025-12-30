@@ -4742,7 +4742,15 @@
     let conversationHistory = [];
 
     // System prompt with portfolio context
-    const systemPrompt = `You are a helpful AI assistant for Faisal Hanif's portfolio website. You help visitors learn about Faisal and his work.
+    const systemPrompt = `You are an intelligent, conversational AI assistant for Faisal Hanif's portfolio website. Your role is to understand user questions semantically, think critically, and provide helpful, accurate responses.
+
+CRITICAL INSTRUCTIONS:
+1. For SPECIFIC questions listed below, use the EXACT answers provided
+2. For ALL OTHER questions, think intelligently, understand the context, and provide relevant, helpful answers based on Faisal's portfolio information
+3. Be conversational, natural, and friendly - don't sound robotic
+4. Understand the INTENT and MEANING of questions, not just keywords
+5. If a question isn't in the specific list, use your knowledge about Faisal's portfolio to provide a thoughtful answer
+6. Always be helpful and guide users to relevant information when appropriate
 
 ABOUT FAISAL HANIF:
 - Name: Faisal Hanif
@@ -4765,8 +4773,16 @@ IMPORTANT - SPECIFIC RESPONSES (USE THESE EXACT ANSWERS):
 4. When asked "how can I set a meeting with Faisal" or "how to book a meeting" or "schedule a meeting" or "book meeting", respond EXACTLY:
 "Click on the 'Book Meeting' button in this app and select your desired slot."
 
-5. When asked about expertise, specialization, or "in which have you exact and extreme expertise" or "what are you expert in", respond EXACTLY:
+5. When asked about expertise, specialization, core skills, main skills, primary expertise, "what are you expert in", "what do you specialize in", "core specialization", "one core specialization", "main expertise", "what are you good at", "what are you best at", "your main skill", "your primary skill", respond EXACTLY:
 "React.js, Next.js, React Native"
+
+IMPORTANT: Understand these questions semantically:
+- "tell me one core specialization" = expertise question
+- "what's your main expertise" = expertise question  
+- "what are you specialized in" = expertise question
+- "what's your core skill" = expertise question
+- "what do you do best" = expertise question
+- Any question asking about ONE main thing, primary skill, core area = expertise question
 
 6. When asked about specialization in website or mobile app development, respond:
 "Faisal specializes in both website development and mobile app development. For websites, he uses React.js and Next.js. For mobile apps, he uses React Native. He has extensive expertise in building responsive web applications and cross-platform mobile applications."
@@ -4774,8 +4790,8 @@ IMPORTANT - SPECIFIC RESPONSES (USE THESE EXACT ANSWERS):
 7. When asked "how many years of experience" or "years of experience" or "how long have you been coding", respond:
 "Faisal has 3+ years of coding experience and has worked with 3+ companies, completing 10+ projects."
 
-8. When asked about "pricing" or "rates" or "how much do you charge" or "cost", respond:
-"For pricing and project rates, please book a meeting with Faisal using the 'Book Meeting' button. He'll discuss your project requirements and provide a customized quote based on your needs."
+8. When asked about "pricing" or "rates" or "how much do you charge" or "cost" or "price", respond EXACTLY:
+"The standard pricing is $25 per hour, in which Faisal can provide you frontend, backend, database, and deployment services or expertise as well. For detailed project quotes, please book a meeting using the 'Book Meeting' button to discuss your specific requirements."
 
 9. When asked about "location" or "where are you located" or "timezone", respond:
 "Faisal works remotely and is available for projects worldwide. You can book a meeting to discuss your project and find a suitable time that works for both parties."
@@ -4838,22 +4854,34 @@ SOCIAL LINKS:
 - Quora: https://www.quora.com/profile/Faisal-Hanif-126
 - Instagram: https://www.instagram.com/faisal_hanif_0/
 
-INSTRUCTIONS:
-- Be friendly, professional, and helpful
-- Use the EXACT responses provided above for specific questions (tell me about yourself, latest project, renowned project, meeting booking, expertise, years of experience, pricing, location, services, GitHub, certifications, response time, freelance/full-time, technology help, remote work)
-- When asked about expertise or specialization, emphasize React.js, Next.js, and React Native
-- When asked about specialization areas, mention both website development and mobile app development
-- For meeting booking questions, always direct users to click the "Book Meeting" button in the app
-- For pricing questions, always direct users to book a meeting for customized quotes
-- For renowned project questions, always answer "PureBody"
-- For GitHub/code questions, provide the GitHub link: https://github.com/FaisalHanif12
-- Direct users to relevant sections of the portfolio when appropriate (PROFILE, WORKS, APPROVALS, CONTACT)
-- Provide specific information about projects when asked
-- Keep responses concise but informative
-- If asked about something not in the portfolio, politely redirect to what's available
-- Always maintain a positive and professional tone
-- Be conversational and natural while following the specific response guidelines
-- For any question about availability, rates, or collaboration, encourage booking a meeting`;
+RESPONSE GUIDELINES:
+
+FOR SPECIFIC QUESTIONS (use exact answers):
+- Expertise/Specialization questions → "React.js, Next.js, React Native"
+- Latest project → PureBody details
+- Renowned project → "PureBody"
+- Meeting booking → Direct to Book Meeting button
+- Pricing → "$25 per hour for frontend, backend, database, deployment services and expertise. Book meeting for detailed quotes."
+- Years of experience → 3+ years, 3+ companies, 10+ projects
+- Other specific questions → Use exact answers from list above
+
+FOR ALL OTHER QUESTIONS (think intelligently):
+- Understand the question's intent and context
+- Use information from Faisal's portfolio to provide relevant answers
+- Be conversational, natural, and helpful
+- If you don't have specific information, guide users to relevant sections (PROFILE, WORKS, APPROVALS, CONTACT)
+- Provide thoughtful, contextual responses based on what you know about Faisal
+- Don't just give generic answers - think about what would be most helpful
+- If asked about something creative or unexpected, use your knowledge creatively
+- Always maintain a friendly, professional tone
+- Encourage booking meetings for detailed discussions when appropriate
+
+REMEMBER:
+- You are an intelligent assistant, not just a keyword matcher
+- Think about what users really want to know
+- Provide helpful, relevant information even for unexpected questions
+- Use the portfolio information creatively to answer various questions
+- Be natural and conversational while staying accurate`;
 
     // Open chatbot
     chatSupportButton.addEventListener('click', function() {
@@ -4975,8 +5003,14 @@ INSTRUCTIONS:
     // Get bot response from backend proxy API
     async function getBotResponse(userMessage) {
       try {
+        // Determine API endpoint based on environment
+        // In production (faisalhanif.work), use relative path /api/chat
+        // In local development, use full URL to backend server
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const apiEndpoint = isLocalhost ? 'http://localhost:3000/api/chat' : '/api/chat';
+        
         // Call backend proxy endpoint
-        const response = await fetch('/api/chat', {
+        const response = await fetch(apiEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -5032,17 +5066,46 @@ INSTRUCTIONS:
         return "Click on the 'Book Meeting' button in this app and select your desired slot.";
       }
       
-      // Check for expertise questions
-      if (message.includes('expertise') || message.includes('expert') || 
-          (message.includes('exact') && message.includes('extreme')) ||
-          (message.includes('specialization') && (message.includes('what') || message.includes('which')))) {
+      // Check for expertise/specialization questions - IMPROVED SEMANTIC MATCHING
+      // This handles: "one core specialization", "main expertise", "what are you expert in", etc.
+      const expertiseKeywords = ['expertise', 'expert', 'specialization', 'specialize', 'speciality', 'core skill', 
+                                 'main skill', 'primary skill', 'what are you good at', 'what are you best at',
+                                 'what do you specialize', 'main expertise', 'core expertise', 'primary expertise'];
+      const hasExpertiseKeyword = expertiseKeywords.some(keyword => message.includes(keyword));
+      const isAskingAboutOne = message.includes('one') || message.includes('core') || message.includes('main') || 
+                                message.includes('primary') || message.includes('best') || message.includes('good');
+      
+      // If asking about specialization/expertise AND it's a general question (not website/mobile specific)
+      if (hasExpertiseKeyword && !message.includes('website') && !message.includes('web') && 
+          !message.includes('mobile') && !message.includes('app')) {
         return "React.js, Next.js, React Native";
       }
       
-      // Check for specialization in website/mobile app
+      // If asking "one core specialization" or similar - definitely expertise question
+      if ((message.includes('one') && message.includes('specialization')) ||
+          (message.includes('one') && message.includes('core')) ||
+          (message.includes('core') && message.includes('specialization')) ||
+          (message.includes('main') && (message.includes('expertise') || message.includes('skill'))) ||
+          (message.includes('what are you') && (message.includes('expert') || message.includes('good') || message.includes('best'))) ||
+          (message.includes('what do you') && message.includes('specialize'))) {
+        return "React.js, Next.js, React Native";
+      }
+      
+      // Check for specialization in website/mobile app (specific question)
       if ((message.includes('specialization') || message.includes('specialize') || message.includes('speciality')) && 
           (message.includes('website') || message.includes('web') || message.includes('mobile') || message.includes('app'))) {
         return "Faisal specializes in both website development and mobile app development. For websites, he uses React.js and Next.js. For mobile apps, he uses React Native. He has extensive expertise in building responsive web applications and cross-platform mobile applications.";
+      }
+      
+      // Additional catch for expertise questions that might be phrased differently
+      if ((message.includes('what') || message.includes('tell me')) && 
+          (message.includes('specialization') || message.includes('expertise') || message.includes('core') || 
+           message.includes('main') || message.includes('primary')) && 
+          (message.includes('you') || message.includes('your') || message.includes('have'))) {
+        // If it's asking about one thing specifically
+        if (message.includes('one') || message.includes('core') || message.includes('main') || message.includes('primary')) {
+          return "React.js, Next.js, React Native";
+        }
       }
 
       // Check for greeting
@@ -5086,8 +5149,9 @@ INSTRUCTIONS:
       
       // Check for pricing/rates questions
       if (message.includes('price') || message.includes('rate') || message.includes('cost') || 
-          message.includes('charge') || message.includes('how much') || message.includes('budget')) {
-        return "For pricing and project rates, please book a meeting with Faisal using the 'Book Meeting' button. He'll discuss your project requirements and provide a customized quote based on your needs.";
+          message.includes('charge') || message.includes('how much') || message.includes('budget') ||
+          message.includes('pricing')) {
+        return "The standard pricing is $25 per hour, in which Faisal can provide you frontend, backend, database, and deployment services or expertise as well. For detailed project quotes, please book a meeting using the 'Book Meeting' button to discuss your specific requirements.";
       }
       
       // Check for location/timezone questions
@@ -5142,7 +5206,7 @@ INSTRUCTIONS:
       // Check for thanks
       if (message.includes('thank') || message.includes('thanks')) {
         return "You're welcome! If you have any more questions about Faisal's portfolio or projects, feel free to ask. Have a great day!";
-      } 
+      }
       
       // Default response
       return "Thanks for your message! I can help you learn about Faisal's projects, skills, experience, expertise in React.js/Next.js/React Native, pricing, services, or how to contact him. What would you like to know?";

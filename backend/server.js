@@ -117,8 +117,11 @@ app.post('/api/chat', async (req, res) => {
       body: JSON.stringify({
         model: model,
         messages: messages,
-        temperature: 0.7,
-        max_tokens: 500
+        temperature: 0.6, // Balanced temperature: focused for specific questions, creative for others
+        max_tokens: 500,
+        top_p: 0.9, // Nucleus sampling for better understanding
+        frequency_penalty: 0.1, // Slight penalty to avoid repetition
+        presence_penalty: 0.1 // Slight penalty to encourage diverse responses
       })
     });
 
