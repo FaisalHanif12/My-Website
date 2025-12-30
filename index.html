@@ -134,7 +134,7 @@
     }
 
     .chat-support-button.active {
-      background: #dc3545;
+      background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
     }
 
     /* Chatbot Modal Styles */
@@ -174,7 +174,7 @@
       padding: 20px;
       color: white;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
     }
 
@@ -389,6 +389,124 @@
         left: 20px;
         width: auto;
         height: 450px;
+      }
+    }
+
+    /* Toast Notification Styles */
+    .toast-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      padding: 20px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(220, 53, 69, 0.3);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 320px;
+      max-width: 400px;
+      animation: toastSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .toast-notification.success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      box-shadow: 0 8px 24px rgba(40, 167, 69, 0.3);
+    }
+
+    .toast-notification.warning {
+      background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+      box-shadow: 0 8px 24px rgba(255, 193, 7, 0.3);
+    }
+
+    .toast-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin: 0 0 4px 0;
+      line-height: 1.3;
+    }
+
+    .toast-message {
+      font-size: 14px;
+      margin: 0;
+      opacity: 0.95;
+      line-height: 1.4;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toast-close:hover {
+      opacity: 1;
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(400px) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes toastSlideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(400px) scale(0.8);
+      }
+    }
+
+    .toast-notification.hiding {
+      animation: toastSlideOut 0.3s ease-in forwards;
+    }
+
+    @media (max-width: 650px) {
+      .toast-notification {
+        top: 15px;
+        right: 15px;
+        left: 15px;
+        min-width: auto;
+        max-width: none;
       }
     }
   </style>
@@ -3142,8 +3260,8 @@
                   <div class="mobile-filter-option active" data-category="All">
                     <div class="option-content">
                       <i class="fa fa-th-large"></i>
-                    <span>All Projects</span>
-                  </div>
+                      <span>All Projects</span>
+                    </div>
                   <span class="option-count">12</span>
                   </div>
                   <div class="mobile-filter-option" data-category="Reactjs">
@@ -4719,16 +4837,14 @@
 
   <!-- Chat Support Button -->
   <button class="chat-support-button" id="chatSupportButton" aria-label="Open chat support">
-    <i class="fa fa-comments"></i>
+    <i class="fa fa-comments" id="chatIcon"></i>
+    <i class="fa fa-times" id="closeIcon" style="display: none;"></i>
   </button>
 
   <!-- Chatbot Modal -->
   <div class="chatbot-modal" id="chatbotModal">
     <div class="chatbot-header">
-      <h3>Chat Support</h3>
-      <button class="chatbot-close" id="chatbotClose" aria-label="Close chat">
-        <i class="fa fa-times"></i>
-      </button>
+      <h3>Faisal's Assistant</h3>
     </div>
     <div class="chatbot-messages" id="chatbotMessages">
       <div class="chatbot-message bot">
@@ -4823,10 +4939,11 @@
   document.addEventListener('DOMContentLoaded', function() {
     const chatSupportButton = document.getElementById('chatSupportButton');
     const chatbotModal = document.getElementById('chatbotModal');
-    const chatbotClose = document.getElementById('chatbotClose');
     const chatbotInput = document.getElementById('chatbotInput');
     const chatbotSend = document.getElementById('chatbotSend');
     const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatIcon = document.getElementById('chatIcon');
+    const closeIcon = document.getElementById('closeIcon');
 
     // Conversation history for context
     let conversationHistory = [];
@@ -4973,17 +5090,32 @@ REMEMBER:
 - Use the portfolio information creatively to answer various questions
 - Be natural and conversational while staying accurate`;
 
-    // Open chatbot
-    chatSupportButton.addEventListener('click', function() {
-      chatbotModal.classList.add('active');
-      chatSupportButton.classList.add('active');
-      chatbotInput.focus();
-    });
+    // Function to toggle icons
+    function toggleChatIcons(isOpen) {
+      if (isOpen) {
+        chatIcon.style.display = 'none';
+        closeIcon.style.display = 'block';
+      } else {
+        chatIcon.style.display = 'block';
+        closeIcon.style.display = 'none';
+      }
+    }
 
-    // Close chatbot
-    chatbotClose.addEventListener('click', function() {
-      chatbotModal.classList.remove('active');
-      chatSupportButton.classList.remove('active');
+    // Toggle chatbot open/close
+    chatSupportButton.addEventListener('click', function() {
+      const isOpen = chatbotModal.classList.contains('active');
+      if (isOpen) {
+        // Close chatbot
+        chatbotModal.classList.remove('active');
+        chatSupportButton.classList.remove('active');
+        toggleChatIcons(false);
+      } else {
+        // Open chatbot
+        chatbotModal.classList.add('active');
+        chatSupportButton.classList.add('active');
+        toggleChatIcons(true);
+        chatbotInput.focus();
+      }
     });
 
     // Close chatbot when clicking outside
@@ -4991,6 +5123,7 @@ REMEMBER:
       if (e.target === chatbotModal) {
         chatbotModal.classList.remove('active');
         chatSupportButton.classList.remove('active');
+        toggleChatIcons(false);
       }
     });
 
@@ -5011,6 +5144,8 @@ REMEMBER:
       // Show typing indicator
       const typingIndicator = addTypingIndicator();
 
+      let dailyLimitReached = false;
+
       try {
         // Call AI API
         const botResponse = await getBotResponse(message);
@@ -5020,12 +5155,26 @@ REMEMBER:
       } catch (error) {
         console.error('Chatbot error:', error);
         removeTypingIndicator(typingIndicator);
+        
+        // Handle daily limit error differently
+        if (error.message === 'DAILY_LIMIT_REACHED') {
+          dailyLimitReached = true;
+          // Don't add a message, toast already shown
+          // Disable input to prevent further attempts
+          chatbotInput.disabled = true;
+          chatbotSend.disabled = true;
+          chatbotInput.placeholder = 'Daily limit reached. Try again tomorrow.';
+        } else {
+          // Other errors - show fallback message
         addMessage("I'm sorry, I'm having trouble connecting right now. Please try again later or contact Faisal directly at mehrfaisal111@gmail.com", 'bot');
+        }
       } finally {
-        // Re-enable input
+        // Only re-enable if not disabled due to daily limit
+        if (!dailyLimitReached) {
         chatbotInput.disabled = false;
         chatbotSend.disabled = false;
         chatbotInput.focus();
+        }
       }
     }
 
@@ -5318,6 +5467,7 @@ REMEMBER:
       if (e.key === 'Escape' && chatbotModal.classList.contains('active')) {
         chatbotModal.classList.remove('active');
         chatSupportButton.classList.remove('active');
+        toggleChatIcons(false);
       }
     });
   });
