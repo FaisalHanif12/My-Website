@@ -35,8 +35,8 @@ app.set('trust proxy', true);
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Daily rate limiting - 4 requests per day per IP
-// Store: { ip: { count: number, date: string } }
+// Daily rate limiting - 4 messages per day per browser
+// Store: { browserId: { count: number, date: string, firstMessageTime: string } }
 const dailyLimitStore = new Map();
 
 // Helper function to get today's date string (YYYY-MM-DD)
@@ -44,64 +44,97 @@ function getTodayDateString() {
   return new Date().toISOString().split('T')[0];
 }
 
-// Helper function to get client IP
-function getClientIP(req) {
-  // Check for forwarded IP (when behind proxy/load balancer)
-  const forwarded = req.headers['x-forwarded-for'];
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
+// Helper function to get browser ID from request
+function getBrowserId(req) {
+  // Try header first (more reliable)
+  let browserId = req.headers['x-browser-id'];
+  
+  // If not in header, try body (body should be parsed by express.json() at this point)
+  if (!browserId && req.body && req.body.browserId) {
+    browserId = req.body.browserId;
   }
   
-  // Check for real IP header
-  if (req.headers['x-real-ip']) {
-    return req.headers['x-real-ip'];
+  // Validate browser ID
+  if (!browserId || typeof browserId !== 'string' || browserId.trim().length === 0) {
+    console.log('[Rate Limit] No valid browser ID found. Header:', req.headers['x-browser-id'], 'Body:', req.body?.browserId);
+    return null;
   }
   
-  // Fallback to connection IP
-  return req.ip || 
-         req.connection?.remoteAddress || 
-         req.socket?.remoteAddress ||
-         '127.0.0.1';
+  return browserId.trim();
 }
 
 // Daily rate limit middleware
 function dailyRateLimit(req, res, next) {
-  const clientIP = getClientIP(req);
-  const today = getTodayDateString();
-  const dailyLimit = 4; // 4 requests per day
-
-  // Get or initialize user's daily record
-  const userRecord = dailyLimitStore.get(clientIP);
-  
-  if (!userRecord || userRecord.date !== today) {
-    // New day or new user - reset count
-    dailyLimitStore.set(clientIP, { count: 1, date: today });
+  // Only apply to POST requests
+  if (req.method !== 'POST') {
     return next();
   }
 
-  // Check if limit exceeded
-  if (userRecord.count >= dailyLimit) {
-    return res.status(429).json({
-      error: 'Daily limit reached',
-      message: 'You have reached your daily limit of 4 interactions. Please try again tomorrow.',
-      limit: dailyLimit,
-      resetDate: today
+  console.log(`[Rate Limit] Middleware triggered for ${req.method} ${req.path}`);
+  console.log(`[Rate Limit] Request headers:`, {
+    'x-browser-id': req.headers['x-browser-id'] ? req.headers['x-browser-id'].substring(0, 20) + '...' : 'not present',
+    'content-type': req.headers['content-type']
+  });
+
+  const browserId = getBrowserId(req);
+  const today = getTodayDateString();
+  const dailyLimit = 4; // 4 messages per day per user
+
+  // Reject if no browser ID provided
+  if (!browserId) {
+    console.log('[Rate Limit] REJECTED - No browser ID provided');
+    return res.status(400).json({
+      error: 'Browser ID required',
+      message: 'Browser identifier is required for rate limiting.'
     });
   }
 
-  // Increment count
-  userRecord.count++;
-  dailyLimitStore.set(clientIP, userRecord);
+  // Get or initialize user's daily record
+  let userRecord = dailyLimitStore.get(browserId);
   
+  // Reset if new day or new user
+  if (!userRecord || userRecord.date !== today) {
+    userRecord = { count: 0, date: today, firstMessageTime: null };
+    console.log(`[Rate Limit] ✅ New browser/day detected. Browser ID: ${browserId.substring(0, 12)}..., Date: ${today}`);
+  }
+
+  // Log current request count for debugging
+  console.log(`[Rate Limit] 📊 Browser ID: ${browserId.substring(0, 12)}..., Current count: ${userRecord.count}/${dailyLimit}, Date: ${today}`);
+
+  // Check if limit exceeded BEFORE incrementing
+  if (userRecord.count >= dailyLimit) {
+    console.log(`[Rate Limit] 🚫 BLOCKED - Browser ID: ${browserId.substring(0, 12)}... has reached daily limit of ${dailyLimit} messages`);
+    const resetTime = new Date(today);
+    resetTime.setDate(resetTime.getDate() + 1);
+    resetTime.setHours(0, 0, 0, 0);
+    
+    return res.status(429).json({
+      error: 'Daily limit reached',
+      message: 'You have reached your daily limit of 4 messages. Please try again tomorrow.',
+      limit: dailyLimit,
+      resetDate: today,
+      resetTime: resetTime.toISOString()
+    });
+  }
+
+  // Increment count for this request and record first message time
+  userRecord.count++;
+  if (!userRecord.firstMessageTime) {
+    userRecord.firstMessageTime = new Date().toISOString();
+  }
+  dailyLimitStore.set(browserId, userRecord);
+  console.log(`[Rate Limit] ✅ ALLOWED - Browser ID: ${browserId.substring(0, 12)}..., Count incremented to: ${userRecord.count}/${dailyLimit}`);
+  
+  // Allow the request
   next();
 }
 
 // Clean up old entries daily (keep store size manageable)
 setInterval(() => {
   const today = getTodayDateString();
-  for (const [ip, record] of dailyLimitStore.entries()) {
+  for (const [browserId, record] of dailyLimitStore.entries()) {
     if (record.date !== today) {
-      dailyLimitStore.delete(ip);
+      dailyLimitStore.delete(browserId);
     }
   }
 }, 24 * 60 * 60 * 1000); // Run once per day
@@ -180,11 +213,11 @@ app.post('/api/chat', async (req, res) => {
       body: JSON.stringify({
         model: model,
         messages: messages,
-        temperature: 0.6, // Balanced temperature: focused for specific questions, creative for others
-        max_tokens: 500,
-        top_p: 0.9, // Nucleus sampling for better understanding
-        frequency_penalty: 0.1, // Slight penalty to avoid repetition
-        presence_penalty: 0.1 // Slight penalty to encourage diverse responses
+        temperature: 0.7, // Slightly higher for better understanding and more natural responses
+        max_tokens: 800, // Increased for more detailed, comprehensive responses
+        top_p: 0.95, // Higher nucleus sampling for better context understanding
+        frequency_penalty: 0.2, // Reduced repetition
+        presence_penalty: 0.2 // Encourages more diverse and contextual responses
       })
     });
 
