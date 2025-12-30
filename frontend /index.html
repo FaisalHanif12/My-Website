@@ -204,6 +204,10 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
+    .chatbot-close-mobile {
+      display: none;
+    }
+
     .chatbot-messages {
       flex: 1;
       padding: 20px;
@@ -212,6 +216,8 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      min-height: 0;
+      overflow-x: hidden;
     }
 
     .chatbot-message {
@@ -290,6 +296,8 @@
       border-top: 1px solid #e0e0e0;
       display: flex;
       gap: 10px;
+      flex-shrink: 0;
+      align-items: center;
     }
 
     .chatbot-input {
@@ -375,7 +383,7 @@
     /* Mobile Responsive */
     @media (max-width: 650px) {
       .chat-support-button {
-        top: 560px;
+        top: 570px;
         bottom: auto;
         right: 20px;
         width: 56px;
@@ -383,14 +391,79 @@
       }
 
       .chatbot-modal {
-        top: 90px;
-        bottom: auto;
+        bottom: 100px;
         right: 20px;
-        left: 20px;
-        width: auto;
-        height: 450px;
+        width: calc(100% - 40px);
+        max-width: 380px;
+        height: 500px;
+        max-height: calc(100vh - 120px);
+      }
+
+      .chatbot-messages {
+        flex: 1;
+        min-height: 0;
+        padding-bottom: 10px;
+      }
+
+      .chatbot-input-container {
+        flex-shrink: 0;
+        padding: 12px;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .chatbot-input {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+
+      .chatbot-send {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+      }
+
+      .chatbot-header {
+        justify-content: space-between;
+        padding: 16px 20px;
+      }
+
+      .chatbot-close-mobile {
+        display: flex;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+
+      .chatbot-close-mobile:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .chatbot-close-mobile:active {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .chatbot-header h3 {
+        font-size: 16px;
+        margin: 0;
       }
     }
+
 
     /* Toast Notification Styles */
     .toast-notification {
@@ -4828,6 +4901,9 @@
   <div class="chatbot-modal" id="chatbotModal">
     <div class="chatbot-header">
       <h3>Faisal's Assistant</h3>
+      <button class="chatbot-close-mobile" id="chatbotCloseMobile" aria-label="Close chatbot">
+        <i class="fa fa-times"></i>
+      </button>
     </div>
     <div class="chatbot-messages" id="chatbotMessages">
       <div class="chatbot-message bot">
@@ -4925,6 +5001,7 @@
     const chatbotInput = document.getElementById('chatbotInput');
     const chatbotSend = document.getElementById('chatbotSend');
     const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatbotCloseMobile = document.getElementById('chatbotCloseMobile');
     const chatIcon = document.getElementById('chatIcon');
     const closeIcon = document.getElementById('closeIcon');
 
@@ -5350,6 +5427,15 @@ REMEMBER:
         toggleChatIcons(false);
       }
     });
+
+    // Close chatbot when clicking mobile close button
+    if (chatbotCloseMobile) {
+      chatbotCloseMobile.addEventListener('click', function() {
+        chatbotModal.classList.remove('active');
+        chatSupportButton.classList.remove('active');
+        toggleChatIcons(false);
+      });
+    }
 
     // Check if user has reached daily message limit (client-side check)
     function hasReachedDailyLimit() {
