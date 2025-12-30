@@ -1145,17 +1145,8 @@
       mobileFilterOptions.forEach(option => {
         option.addEventListener('click', function(e) {
           const category = this.getAttribute('data-category');
-          const shouldNavigate = this.getAttribute('data-navigate') === 'true';
 
-          // Check if this option should navigate to a separate page
-          if (shouldNavigate && category === 'SassApp') {
-            e.preventDefault();
-            // Navigate to Sass App page
-            window.location.href = 'sass-app.html';
-            return;
-          }
-
-          // Otherwise, handle normal filtering
+          // Handle normal filtering
           const radio = document.getElementById(category);
           if (radio) {
             radio.checked = true;
@@ -1200,14 +1191,6 @@
         e.preventDefault();
         const button = e.currentTarget;
         const category = button.getAttribute('data-category');
-        const shouldNavigate = button.getAttribute('data-navigate') === 'true';
-
-        // Check if this button should navigate to a separate page
-        if (shouldNavigate && category === 'SassApp') {
-          // Navigate to Sass App page
-          window.location.href = 'sass-app.html';
-          return;
-        }
 
         const radio = document.getElementById(category);
 
@@ -3292,7 +3275,7 @@
                     </div>
                     <span class="option-count">3</span>
                   </div>
-                  <div class="mobile-filter-option" data-category="SassApp" data-navigate="true">
+                  <div class="mobile-filter-option" data-category="SassApp">
                     <div class="option-content">
                       <i class="fa fa-cloud"></i>
                       <span>Sass App</span>
@@ -3345,7 +3328,7 @@
               </div>
               <div class="filter-item">
                 <input type="radio" name="menu-list" id="SassApp" style="display: none;" />
-                <label class="filter-btn" for="SassApp" data-category="SassApp" data-navigate="true">
+                <label class="filter-btn" for="SassApp" data-category="SassApp">
                   <i class="fa fa-cloud"></i>
                   <span>Sass App</span>
                   <span class="filter-count">1</span>
@@ -4945,6 +4928,57 @@
     const chatIcon = document.getElementById('chatIcon');
     const closeIcon = document.getElementById('closeIcon');
 
+    // Generate or retrieve unique browser ID using browser fingerprinting
+    function getBrowserId() {
+      let browserId = localStorage.getItem('chatBrowserId');
+      
+      if (!browserId) {
+        // Create a more stable browser fingerprint using multiple browser characteristics
+        const fingerprint = {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          screenResolution: `${screen.width}x${screen.height}`,
+          colorDepth: screen.colorDepth,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          // Use canvas fingerprinting for additional uniqueness
+          canvas: getCanvasFingerprint()
+        };
+        
+        // Create a hash-like string from fingerprint
+        const fingerprintString = JSON.stringify(fingerprint);
+        browserId = 'browser_' + btoa(fingerprintString).substring(0, 32) + '_' + Date.now().toString(36);
+        
+        // Store in localStorage for persistence
+        localStorage.setItem('chatBrowserId', browserId);
+        console.log('[Frontend] New browser ID generated:', browserId.substring(0, 20) + '...');
+      } else {
+        console.log('[Frontend] Using existing browser ID:', browserId.substring(0, 20) + '...');
+      }
+      
+      return browserId;
+    }
+
+    // Generate canvas fingerprint for additional uniqueness
+    function getCanvasFingerprint() {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = '#f60';
+        ctx.fillRect(125, 1, 62, 20);
+        ctx.fillStyle = '#069';
+        ctx.fillText('Browser fingerprint', 2, 15);
+        ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+        ctx.fillText('Browser fingerprint', 4, 17);
+        return canvas.toDataURL();
+      } catch (e) {
+        return 'canvas_not_available';
+      }
+    }
+
     // Conversation history for context
     let conversationHistory = [];
 
@@ -4952,19 +4986,45 @@
     const systemPrompt = `You are an intelligent, conversational AI assistant for Faisal Hanif's portfolio website. Your role is to understand user questions semantically, think critically, and provide helpful, accurate responses.
 
 CRITICAL INSTRUCTIONS:
-1. For SPECIFIC questions listed below, use the EXACT answers provided
-2. For ALL OTHER questions, think intelligently, understand the context, and provide relevant, helpful answers based on Faisal's portfolio information
-3. Be conversational, natural, and friendly - don't sound robotic
-4. Understand the INTENT and MEANING of questions, not just keywords
-5. If a question isn't in the specific list, use your knowledge about Faisal's portfolio to provide a thoughtful answer
-6. Always be helpful and guide users to relevant information when appropriate
+1. ALWAYS understand CONTEXT from conversation history - if user mentions "this project", "that project", "inside project", they're referring to the LAST PROJECT mentioned in the conversation
+2. For SPECIFIC questions listed below, use the EXACT answers provided
+3. For ALL OTHER questions, think intelligently, understand the context, and provide relevant, helpful answers based on Faisal's portfolio information
+4. Be conversational, natural, and friendly - don't sound robotic
+5. Understand the INTENT and MEANING of questions, not just keywords
+6. When asked about "what's inside" a project, provide DETAILED technical and feature information
+7. Always be helpful and guide users to relevant information when appropriate
+8. If user asks about a project without naming it, check conversation history for the most recently mentioned project
 
 ABOUT FAISAL HANIF:
 - Name: Faisal Hanif
 - Role: Software Engineer specializing in Frontend Development, Backend Development, Cloud Orchestration, and System Design
-- Experience: 3+ years of coding experience, worked with 3+ companies, completed 10+ projects
+- Experience: 3+ years of coding experience, worked with 4 companies, completed 11+ projects
 - Email: mehrfaisal111@gmail.com
 - Available for work: Yes
+- Education: Bachelor's Degree in Software Engineering (BS-SE) from University of Management & Technology, Lahore (2017-2021)
+
+COMPANIES FAISAL WORKED WITH:
+1. DevSinC (2021-2025, Current) - Software Engineer
+   - Leading frontend development with React.js and Next.js
+   - Achieved 20% performance improvements
+   - Delivered responsive, user-centric web applications
+   - Technologies: React.js, Next.js, Performance Optimization
+
+2. Upwork Platform (2022-2024, Ongoing) - Freelance Developer
+   - Collaborating with diverse international clients
+   - Delivering custom web solutions across various industries
+   - Building strong client relationships globally
+   - Focus: Client Relations, Custom Solutions, Global Projects
+
+3. TechXelo (2023-2024) - Outsourcing Engineer
+   - Orchestrated project acquisition and client engagement strategies
+   - Expertly identified opportunities and aligned them with company capabilities
+   - Focus: Project Management, Client Acquisition, Strategy
+
+4. Viral Square (2020-2021) - React Native Developer
+   - Specialized in cross-platform mobile development
+   - Created seamless user experiences for iOS and Android applications
+   - Technologies: React Native, Mobile Apps, Cross-Platform Development
 
 IMPORTANT - SPECIFIC RESPONSES (USE THESE EXACT ANSWERS):
 
@@ -5024,20 +5084,148 @@ IMPORTANT: Understand these questions semantically:
 16. When asked "do you work remotely" or "remote work" or "work from home", respond:
 "Yes, Faisal works remotely and is available for remote projects and collaborations worldwide. He's experienced in working with distributed teams."
 
+DETAILED PROJECT INFORMATION - WHAT'S INSIDE EACH PROJECT:
+
+1. PUREBODY (Latest Project - SaaS App)
+   - Type: AI-powered mobile fitness application (SaaS platform)
+   - Deployment: Available on Android and App Store, serving real-time users
+   - Core Features Inside:
+     * AI-based diet management system - personalized meal plans and nutrition tracking
+     * Workout tracking and management - exercise routines, progress monitoring
+     * AI Teacher/Coach - intelligent fitness guidance and recommendations
+     * Real-time user data synchronization
+     * User profile and progress analytics
+     * Subscription-based SaaS model
+   - Technologies: React Native, AI Integration, Cloud Services
+   - GitHub: https://github.com/FaisalHanif12/PrimeForm
+   - Status: Latest project, actively serving users
+
+2. SMART HEALTH CARE (Full Stack)
+   - Type: Comprehensive fitness tracker platform
+   - Core Features Inside:
+     * User activity monitoring and tracking
+     * Workout scheduling and management
+     * Progress analytics and visualization
+     * User dashboard with health metrics
+     * Data persistence and user accounts
+   - Technologies: React, Node.js, MongoDB, Express
+   - Live: https://smart-health-care.vercel.app/
+   - GitHub: https://github.com/FaisalHanif12/Smart-health-Care
+
+3. SMART GALLERY APP (React Native)
+   - Type: Intelligent photo gallery application
+   - Core Features Inside:
+     * Advanced photo sorting and organization
+     * AI-powered image recognition using OpenAI
+     * Filtering by categories, dates, or AI-detected content
+     * Local storage with Async Storage
+     * Cross-platform mobile experience
+   - Technologies: React Native, Expo, Async Storage, OpenAI API
+   - Live: https://smartgallery-display.netlify.app/
+   - GitHub: https://github.com/FaisalHanif12/SmartGallery
+
+4. ECHO AI (React.js)
+   - Type: Advanced AI conversational interface
+   - Core Features Inside:
+     * Natural language processing and understanding
+     * Intelligent response generation using OpenAI
+     * Real-time chat interface
+     * Conversation history management
+     * Modern UI with TypeScript and Tailwind CSS
+   - Technologies: React, OpenAI API, TypeScript, Tailwind CSS
+   - Live: https://echoaai.netlify.app/
+   - GitHub: https://github.com/FaisalHanif12/Echoai
+
+5. MEDICINE STORE APP (React Native)
+   - Type: Pet healthcare management system
+   - Core Features Inside:
+     * Medication tracking and scheduling for pets
+     * Medical records management
+     * Pet profile management
+     * Reminder notifications
+     * Local data storage
+   - Technologies: React Native, Expo, Async Storage
+   - Live: https://medicaredisplay.netlify.app/
+   - GitHub: https://github.com/FaisalHanif12/medicine-tracker-
+
+6. SOLEDECK (E-commerce)
+   - Type: Modern sneaker e-commerce platform
+   - Core Features Inside:
+     * Advanced product filtering and search
+     * Shopping cart and checkout system
+     * Payment integration with Stripe
+     * Inventory management
+     * User authentication and accounts
+     * Product catalog with images and details
+   - Technologies: Next.js, Stripe, MongoDB, Redux
+   - Live: https://soledeckf.vercel.app/
+   - GitHub: https://github.com/FaisalHanif12/Soledeck
+
+7. FINANCIAL FUSION (FinTech)
+   - Type: Comprehensive financial management application
+   - Core Features Inside:
+     * Expense tracking and categorization
+     * Budget planning and management
+     * Investment analytics and visualization
+     * Financial charts and reports using Charts.js
+     * Data persistence with SQLite
+     * Transaction history
+   - Technologies: React Native, Charts.js, SQLite, Redux
+   - Live: https://financial-fusion.netlify.app/
+   - GitHub: https://github.com/FaisalHanif12/FinancialFusion
+
+8. YOOM (Communication)
+   - Type: Modern video conferencing platform
+   - Core Features Inside:
+     * Real-time video conferencing using WebRTC
+     * Screen sharing capabilities
+     * Meeting management and scheduling
+     * Real-time collaboration features
+     * User authentication with Clerk Auth
+     * Socket.io for real-time communication
+   - Technologies: Next.js, WebRTC, Socket.io, Clerk Auth
+   - Live: https://faisal-yoom.netlify.app/
+   - GitHub: https://github.com/FaisalHanif12/YOOM
+
+9. DOSNEXA (Healthcare)
+   - Type: Comprehensive medical platform
+   - Core Features Inside:
+     * Patient-doctor connection system
+     * Appointment booking and management
+     * Telemedicine capabilities
+     * Medical records management
+     * User profiles for patients and doctors
+     * Database with Prisma ORM and PostgreSQL
+   - Technologies: Next.js, Prisma, PostgreSQL, Shadcn/ui
+   - Live: https://dosnexa.vercel.app/
+   - GitHub: https://github.com/FaisalHanif12/Dosnexa
+
+10. DSA TRACKER (React.js)
+    - Type: Data structures and algorithms tracking tool
+    - Core Features Inside:
+      * Track progress on DSA problems
+      * Problem categorization and organization
+      * Progress visualization
+      * Learning path management
+    - Technologies: React.js
+
+HOW FAISAL CAN HELP BUILD YOUR PROJECT EASILY:
+- Full-Stack Expertise: Faisal can handle entire project lifecycle from frontend to backend, database design, and deployment
+- Rapid Development: With 3+ years experience and 11+ completed projects, Faisal delivers projects efficiently
+- Modern Tech Stack: Uses latest technologies (React.js, Next.js, React Native, Node.js) for scalable, maintainable solutions
+- Real-time Applications: Experienced in building real-time features (WebRTC, Socket.io) for collaborative applications
+- AI Integration: Skilled in integrating AI services (OpenAI) for intelligent features
+- Mobile & Web: Can build both mobile apps (React Native) and web applications (React.js, Next.js)
+- Payment Integration: Experienced with Stripe and payment systems for e-commerce
+- Cloud & Deployment: Knowledgeable in cloud orchestration and deployment strategies
+- System Design: Can architect scalable systems and design efficient database schemas
+- Client Communication: Strong experience working with international clients and understanding requirements
+- Performance Optimization: Achieved 20% performance improvements in previous projects
+- End-to-End Solutions: Can provide complete solutions including frontend, backend, database, and deployment services
+
 PORTFOLIO SECTIONS:
 1. PROFILE/ABOUT - Contains personal information, skills, and experience
-2. WORKS - Showcases projects (11 total projects):
-   - PureBody (Latest Project) - SaaS mobile fitness app deployed on Android and App Store, AI-based diet and workout management with AI teacher, serving real-time users
-   - Smart Health Care (Full Stack) - Fitness tracker platform with React, Node.js, MongoDB, Express
-   - Smart Gallery App (React Native) - Photo gallery with AI recognition
-   - Echo AI (React.js) - AI conversational interface with OpenAI
-   - Medicine Store App (React Native) - Pet healthcare management
-   - Soledeck (E-commerce) - Sneaker e-commerce with Next.js, Stripe, MongoDB
-   - Financial Fusion (FinTech) - Financial management app with React Native
-   - YOOM (Communication) - Video conferencing with Next.js, WebRTC, Socket.io
-   - Dosnexa (Healthcare) - Medical platform with Next.js, Prisma, PostgreSQL
-   - DSA Tracker (React.js) - Data structures and algorithms tracker
-   - And more projects
+2. WORKS - Showcases 11 projects with detailed information
 3. APPROVALS - Certifications and achievements
 4. CONTACT - Contact information and meeting booking
 
@@ -5072,10 +5260,26 @@ FOR SPECIFIC QUESTIONS (use exact answers):
 - Years of experience → 3+ years, 3+ companies, 10+ projects
 - Other specific questions → Use exact answers from list above
 
+FOR PROJECT-RELATED QUESTIONS:
+- When user asks "what's inside this project", "what is inside that project", "tell me about this project", "what does this project do":
+  * FIRST: Check conversation history for the most recently mentioned project name
+  * If PureBody was mentioned: Provide detailed PureBody features and technologies
+  * If Smart Health Care was mentioned: Provide detailed Smart Health Care features
+  * If any other project was mentioned: Provide detailed information about THAT specific project
+  * If no project mentioned: Ask which project they're interested in, or mention PureBody as the latest project
+- When user asks about a specific project by name: Provide comprehensive details about that project's features, technologies, and capabilities
+- When user asks "how can Faisal help build my project": Explain Faisal's full-stack capabilities, experience, and how he can deliver projects efficiently
+
+FOR COMPANY-RELATED QUESTIONS:
+- When asked "where has Faisal worked", "companies", "work experience": List all 4 companies (DevSinC, Upwork, TechXelo, Viral Square) with details
+- When asked about specific company: Provide detailed information about that company and Faisal's role there
+
 FOR ALL OTHER QUESTIONS (think intelligently):
-- Understand the question's intent and context
-- Use information from Faisal's portfolio to provide relevant answers
+- ALWAYS check conversation history for context - if user says "this project" or "that project", they're referring to the last project mentioned
+- Understand the question's intent and context deeply
+- Use information from Faisal's portfolio to provide relevant, detailed answers
 - Be conversational, natural, and helpful
+- Provide SPECIFIC details, not generic answers
 - If you don't have specific information, guide users to relevant sections (PROFILE, WORKS, APPROVALS, CONTACT)
 - Provide thoughtful, contextual responses based on what you know about Faisal
 - Don't just give generic answers - think about what would be most helpful
@@ -5083,12 +5287,20 @@ FOR ALL OTHER QUESTIONS (think intelligently):
 - Always maintain a friendly, professional tone
 - Encourage booking meetings for detailed discussions when appropriate
 
+CONTEXT UNDERSTANDING EXAMPLES:
+- User: "Tell me about PureBody" → You: [Detailed PureBody information]
+- User: "What's inside that project?" → You: [Check history - if PureBody was last mentioned, give PureBody details]
+- User: "How can Faisal help me?" → You: [Explain full-stack capabilities and how Faisal can build projects easily]
+- User: "Where has Faisal worked?" → You: [List all 4 companies with details]
+
 REMEMBER:
-- You are an intelligent assistant, not just a keyword matcher
+- You are an intelligent assistant with deep knowledge of Faisal's portfolio
+- ALWAYS check conversation history for context when user says "this", "that", "it"
 - Think about what users really want to know
-- Provide helpful, relevant information even for unexpected questions
+- Provide detailed, specific information, not generic responses
 - Use the portfolio information creatively to answer various questions
-- Be natural and conversational while staying accurate`;
+- Be natural and conversational while staying accurate
+- When in doubt about which project, ask for clarification or mention the most relevant one`;
 
     // Function to toggle icons
     function toggleChatIcons(isOpen) {
@@ -5114,6 +5326,18 @@ REMEMBER:
         chatbotModal.classList.add('active');
         chatSupportButton.classList.add('active');
         toggleChatIcons(true);
+        
+        // Check if user has reached daily limit and disable input if so
+        if (hasReachedDailyLimit()) {
+          chatbotInput.disabled = true;
+          chatbotSend.disabled = true;
+          chatbotInput.placeholder = 'Daily limit reached. Try again tomorrow.';
+        } else {
+          chatbotInput.disabled = false;
+          chatbotSend.disabled = false;
+          chatbotInput.placeholder = 'Type your message...';
+        }
+        
         chatbotInput.focus();
       }
     });
@@ -5127,10 +5351,65 @@ REMEMBER:
       }
     });
 
+    // Check if user has reached daily message limit (client-side check)
+    function hasReachedDailyLimit() {
+      const messageData = localStorage.getItem('chatMessageData');  
+      const today = new Date().toISOString().split('T')[0];
+      
+      if (!messageData) {
+        return false;
+      }
+      
+      try {
+        const data = JSON.parse(messageData);
+        // Check if it's the same day and count is 4 or more
+        if (data.date === today && data.count >= 4) {
+          return true;
+        }
+      } catch (e) {
+        console.error('Error parsing message data:', e);
+      }
+      
+      return false;
+    }
+
+    // Store message count for today
+    function incrementMessageCount() {
+      const today = new Date().toISOString().split('T')[0];
+      const messageData = localStorage.getItem('chatMessageData');
+      
+      let data = { date: today, count: 0 };
+      if (messageData) {
+        try {
+          data = JSON.parse(messageData);
+          // Reset count if it's a new day
+          if (data.date !== today) {
+            data = { date: today, count: 0 };
+          }
+        } catch (e) {
+          console.error('Error parsing message data:', e);
+          data = { date: today, count: 0 };
+        }
+      }
+      
+      data.count++;
+      localStorage.setItem('chatMessageData', JSON.stringify(data));
+      return data.count;
+    }
+
     // Send message function
     async function sendMessage() {
       const message = chatbotInput.value.trim();
       if (!message) return;
+
+      // Check if user has reached daily message limit (client-side check)
+      if (hasReachedDailyLimit()) {
+        addMessage('You have reached your daily limit of 4 messages. Please try again tomorrow.', 'bot');
+        chatbotInput.disabled = true;
+        chatbotSend.disabled = true;
+        chatbotInput.placeholder = 'Daily limit reached. Try again tomorrow.';
+        return;
+      }
 
       // Disable input while processing
       chatbotInput.disabled = true;
@@ -5152,21 +5431,33 @@ REMEMBER:
         removeTypingIndicator(typingIndicator);
         addMessage(botResponse, 'bot');
         conversationHistory.push({ role: 'assistant', content: botResponse });
+        
+        // Increment message count (only on successful response)
+        const currentCount = incrementMessageCount();
+        console.log(`[Frontend] Message count for today: ${currentCount}/4`);
       } catch (error) {
         console.error('Chatbot error:', error);
         removeTypingIndicator(typingIndicator);
         
         // Handle daily limit error differently
-        if (error.message === 'DAILY_LIMIT_REACHED') {
+        if (error.message === 'DAILY_LIMIT_REACHED' || error.status === 429) {
           dailyLimitReached = true;
-          // Don't add a message, toast already shown
+          // Mark that user has reached limit (even if message wasn't processed)
+          incrementMessageCount();
+          
+          // Show the rate limit message to the user
+          // error.rateLimitMessage contains the backend's message
+          const rateLimitMessage = error.rateLimitMessage || 
+            'You have reached your daily limit of 4 messages. Please try again tomorrow.';
+          
+          addMessage(rateLimitMessage, 'bot');
           // Disable input to prevent further attempts
           chatbotInput.disabled = true;
           chatbotSend.disabled = true;
           chatbotInput.placeholder = 'Daily limit reached. Try again tomorrow.';
         } else {
           // Other errors - show fallback message
-        addMessage("I'm sorry, I'm having trouble connecting right now. Please try again later or contact Faisal directly at mehrfaisal111@gmail.com", 'bot');
+          addMessage("Your message limit has been reached", 'Faisals Assistant');
         }
       } finally {
         // Only re-enable if not disabled due to daily limit
@@ -5248,21 +5539,38 @@ REMEMBER:
         const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const apiEndpoint = isLocalhost ? 'http://localhost:3000/api/chat' : '/api/chat';
         
+        // Get browser ID for rate limiting
+        const browserId = getBrowserId();
+        console.log('[Frontend] Sending request with browser ID:', browserId.substring(0, 20) + '...');
+        
         // Call backend proxy endpoint
         const response = await fetch(apiEndpoint, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-Browser-ID': browserId
           },
           body: JSON.stringify({
             message: userMessage,
             conversationHistory: conversationHistory.slice(-10), // Keep last 10 messages for context
-            systemPrompt: systemPrompt
+            systemPrompt: systemPrompt,
+            browserId: browserId // Also send in body as backup
           })
         });
+        
+        console.log('[Frontend] Response status:', response.status);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
+          
+          // Check for rate limit error (429)
+          if (response.status === 429) {
+            const rateLimitError = new Error('DAILY_LIMIT_REACHED');
+            rateLimitError.status = 429;
+            rateLimitError.rateLimitMessage = errorData.message || errorData.error || 'You have reached your daily limit of 4 messages. Please try again tomorrow.';
+            throw rateLimitError;
+          }
+          
           throw new Error(errorData.error || `API error: ${response.status}`);
         }
 
@@ -5270,6 +5578,12 @@ REMEMBER:
         return data.reply || "I'm sorry, I couldn't generate a response. Please try again.";
       } catch (error) {
         console.error('API Error:', error);
+        
+        // Re-throw rate limit errors so they can be handled in sendMessage
+        if (error.message === 'DAILY_LIMIT_REACHED' || error.status === 429) {
+          throw error;
+        }
+        
         // Fallback to simple responses if API fails
         return getFallbackResponse(userMessage);
       }
