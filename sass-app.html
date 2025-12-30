@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PureBody Mobile App - Project Showcase" />
+  <title>PureBody - Project Showcase</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animation.style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="imgs/F-Logo3.png" type="image/png" />
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8f5f3 100%);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    /* Back Button - Upper Left Corner */
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--dark-blue, #0e6655);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(14, 102, 85, 0.15);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+    }
+
+    .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(14, 102, 85, 0.25);
+      background: rgba(255, 255, 255, 1);
+    }
+
+    /* Header Section */
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+      margin-top: 20px;
+      padding: 20px 0;
+      animation: fadeInDown 0.8s ease-out;
+      overflow: visible;
+    }
+
+    .back-button i {
+      font-size: 14px;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--dark-blue, #0e6655);
+      margin: 0 0 15px 0;
+      padding: 10px 0;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #0e6655 0%, #10b981 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      overflow: visible;
+      display: inline-block;
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      color: #6b7280;
+      font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Videos Grid - 3 per row */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 50px;
+      justify-items: center;
+    }
+
+    .video-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      animation: fadeInUp 0.8s ease-out;
+      animation-fill-mode: both;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(14, 102, 85, 0.05);
+      width: 100%;
+    }
+
+    .video-card:nth-child(1) { animation-delay: 0.1s; }
+    .video-card:nth-child(2) { animation-delay: 0.2s; }
+    .video-card:nth-child(3) { animation-delay: 0.3s; }
+    .video-card:nth-child(4) { animation-delay: 0.4s; }
+    .video-card:nth-child(5) { animation-delay: 0.5s; }
+    .video-card:nth-child(6) { animation-delay: 0.6s; }
+
+    .video-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(14, 102, 85, 0.2);
+      border-color: rgba(14, 102, 85, 0.2);
+    }
+
+    .video-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent 0%, var(--dark-blue, #0e6655) 50%, transparent 100%);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+      z-index: 10;
+    }
+
+    .video-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 177.78%; /* 9:16 Portrait Aspect Ratio for Mobile */
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Show full mobile screen without cropping */
+      transition: transform 0.4s ease;
+      pointer-events: none; /* Prevent any user interaction */
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .video-card:hover .video-wrapper video {
+      transform: scale(1.05);
+    }
+
+    /* Hide video controls */
+    .video-wrapper video::-webkit-media-controls {
+      display: none !important;
+    }
+
+    .video-wrapper video::-webkit-media-controls-enclosure {
+      display: none !important;
+    }
+
+    .video-wrapper video::-webkit-media-controls-panel {
+      display: none !important;
+    }
+
+    /* Loading Animation */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .videos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      .back-button {
+        top: 15px;
+        left: 15px;
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+
+      .header {
+        margin-top: 20px;
+        padding: 10px 0;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        padding: 5px 0;
+        margin-top: 0;
+      }
+
+      .header p {
+        font-size: 1rem;
+      }
+
+      .videos-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        margin-top: 15px;
+        padding: 5px 0;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+        padding: 5px 0;
+        margin-top: 0;
+      }
+
+      .back-button {
+        top: 10px;
+        left: 10px;
+        font-size: 12px;
+        padding: 8px 16px;
+      }
+    }
+
+
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Back Button - Fixed Upper Left -->
+  <a href="index.html" class="back-button">
+    <i class="fa fa-arrow-left"></i>
+    <span>Back to Portfolio</span>
+  </a>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>PureBody</h1>
+      <p>Explore the functionality and features of our PureBody mobile application through interactive video demonstrations</p>
+    </div>
+
+    <!-- Videos Grid -->
+    <div class="videos-grid">
+      <!-- Video 1 -->
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video 
+            src="vedioes /ScreenRecording1.mov" 
+            autoplay 
+            muted 
+            loop 
+            playsinline
+            preload="auto">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Video 2 -->
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video 
+            src="vedioes /ScreenRecording2.mov" 
+            autoplay 
+            muted 
+            loop 
+            playsinline
+            preload="auto">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Video 3 -->
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video 
+            src="vedioes /ScreenRecording3.mov" 
+            autoplay 
+            muted 
+            loop 
+            playsinline
+            preload="auto">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Video 4 -->
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video 
+            src="vedioes /ScreenRecording4.mov" 
+            autoplay 
+            muted 
+            loop 
+            playsinline
+            preload="auto">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Video 5 -->
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video 
+            src="vedioes /ScreenRecording5.mov" 
+            autoplay 
+            muted 
+            loop 
+            playsinline
+            preload="auto">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Video 6 -->
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video 
+            src="vedioes /ScreenRecording6.mov" 
+            autoplay 
+            muted 
+            loop 
+            playsinline
+            preload="auto">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Autoplay all videos when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const videos = document.querySelectorAll('video');
+      
+      // Force autoplay for all videos
+      videos.forEach((video, index) => {
+        // Remove any controls
+        video.controls = false;
+        video.setAttribute('controls', 'false');
+        
+        // Try to play immediately
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // If autoplay fails, try again after a short delay
+            setTimeout(() => {
+              video.play().catch(err => {
+                console.log(`Video ${index + 1} autoplay failed:`, err);
+              });
+            }, 500);
+          });
+        }
+        
+        // Ensure video stays muted and loops
+        video.muted = true;
+        video.loop = true;
+        
+        // Prevent any user interaction with videos
+        video.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+        
+        video.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+        });
+        
+        // Restart video if it ends (backup for loop)
+        video.addEventListener('ended', function() {
+          this.currentTime = 0;
+          this.play();
+        });
+      });
+    });
+
+    // Smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
+
