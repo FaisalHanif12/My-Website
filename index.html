@@ -1124,12 +1124,47 @@
         requestAnimationFrame(() => {
           setTimeout(() => {
             let visibleCount = 0;
+            const visibleItems = [];
 
-            allWorksItems.forEach((item, index) => {
+            // First, collect all visible items
+            allWorksItems.forEach((item) => {
               const itemCategory = item.getAttribute("data-category");
               const shouldShow = category === "All" || itemCategory === category;
 
               if (shouldShow) {
+                visibleItems.push(item);
+              }
+            });
+
+            // Sort items: SassApp projects first when showing "All"
+            if (category === "All") {
+              visibleItems.sort((a, b) => {
+                const aCategory = a.getAttribute("data-category");
+                const bCategory = b.getAttribute("data-category");
+                const aPriority = parseInt(a.getAttribute("data-priority") || "999");
+                const bPriority = parseInt(b.getAttribute("data-priority") || "999");
+                
+                // SassApp projects first
+                if (aCategory === "SassApp" && bCategory !== "SassApp") return -1;
+                if (aCategory !== "SassApp" && bCategory === "SassApp") return 1;
+                
+                // Then by priority
+                if (aPriority !== bPriority) return aPriority - bPriority;
+                
+                return 0;
+              });
+            }
+
+            // Reorder DOM elements to match sorted order
+            const projectsGrid = document.querySelector('.projects-grid');
+            if (projectsGrid && category === "All") {
+              visibleItems.forEach(item => {
+                projectsGrid.appendChild(item);
+              });
+            }
+
+            // Show/hide items with animation
+            visibleItems.forEach((item, index) => {
                 visibleCount++;
                 item.classList.remove('fade-out');
                 item.classList.add('fade-in');
@@ -1140,7 +1175,14 @@
                   item.style.opacity = '1';
                   item.style.transform = 'translateY(0) scale(1)';
                 }, index * 100);
-              } else {
+            });
+
+            // Hide items that shouldn't be shown
+            allWorksItems.forEach((item) => {
+              const itemCategory = item.getAttribute("data-category");
+              const shouldShow = category === "All" || itemCategory === category;
+
+              if (!shouldShow) {
                 item.classList.remove('fade-in');
                 item.classList.add('fade-out');
                 item.style.opacity = '0';
@@ -3100,9 +3142,9 @@
                   <div class="mobile-filter-option active" data-category="All">
                     <div class="option-content">
                       <i class="fa fa-th-large"></i>
-                      <span>All Projects</span>
-                    </div>
-                    <span class="option-count">11</span>
+                    <span>All Projects</span>
+                  </div>
+                  <span class="option-count">12</span>
                   </div>
                   <div class="mobile-filter-option" data-category="Reactjs">
                     <div class="option-content">
@@ -3198,6 +3240,54 @@
           <div class="section-content works-section-content">
             <div class="projects-grid">
 
+              <!-- PureBody Project (SASS App) -->
+              <div class="works-item featured" data-category="SassApp" data-priority="1">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="sass-app.html">
+                      <img src="imgs/purebody.jpeg" alt="PureBody Mobile App" loading="lazy" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="sass-app.html"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Latest</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">PureBody</h3>
+                    <span class="project-category">SaaS App</span>
+                  </div>
+                  <p class="project-description">
+                    AI-powered mobile fitness app deployed on Android and App Store. SaaS platform serving real-time users with diet management, workout tracking, and AI teacher features.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">AI Integration</span>
+                    <span class="tech-tag">SaaS</span>
+                    <span class="tech-tag">Mobile</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="sass-app.html"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/PrimeForm" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
               <!-- Smart Health Care Project -->
               <div class="works-item" data-category="FullStack">
                 <div class="project-image-container">
@@ -3236,12 +3326,12 @@
                     <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/Smart-health-Care" target="_blank"
                       rel="noopener noreferrer" class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3285,12 +3375,12 @@
                     <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/SmartGallery" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3334,12 +3424,12 @@
                     <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/Echoai" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3383,12 +3473,12 @@
                     <a href="https://medicaredisplay.netlify.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/medicine-tracker-" target="_blank"
                       rel="noopener noreferrer" class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3433,12 +3523,12 @@
                     <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/Soledeck" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3482,12 +3572,12 @@
                     <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/FinancialFusion" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3531,12 +3621,12 @@
                     <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/YOOM" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3580,12 +3670,12 @@
                     <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/Dosnexa" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3629,12 +3719,12 @@
                     <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/DSA-Tracker-" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
@@ -3678,12 +3768,12 @@
                     <a href="https://weather-faisal.netlify.app/" target="_blank" rel="noopener noreferrer"
                       class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
-                      <span>Live Demo</span>
+                      <span>Live</span>
                     </a>
                     <a href="https://github.com/FaisalHanif12/Live-search-weather" target="_blank"
                       rel="noopener noreferrer" class="project-btn btn-secondary">
                       <i class="fa fa-github"></i>
-                      <span>Source Code</span>
+                      <span>Source</span>
                     </a>
                   </div>
                 </div>
