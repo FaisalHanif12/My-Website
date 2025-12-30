@@ -107,7 +107,7 @@
     /* Chat Support Button Styles */
     .chat-support-button {
       position: fixed;
-      bottom: 30px;
+      bottom: 40px;
       right: 30px;
       width: 60px;
       height: 60px;
@@ -245,6 +245,14 @@
       flex-shrink: 0;
       font-weight: 600;
       font-size: 14px;
+      overflow: hidden;
+    }
+
+    .message-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
 
     .chatbot-message.bot .message-avatar {
@@ -325,14 +333,16 @@
     /* Mobile Responsive */
     @media (max-width: 650px) {
       .chat-support-button {
-        bottom: 20px;
+        top: 620px;
+        bottom: auto;
         right: 20px;
         width: 56px;
         height: 56px;
       }
 
       .chatbot-modal {
-        bottom: 90px;
+        top: 90px;
+        bottom: auto;
         right: 20px;
         left: 20px;
         width: auto;
@@ -970,6 +980,50 @@
       // Initialize filter system
       initializeFilters();
 
+      // Handle mobile filter options
+      const mobileFilterOptions = document.querySelectorAll('.works-filter-section .mobile-filter-option');
+      mobileFilterOptions.forEach(option => {
+        option.addEventListener('click', function(e) {
+          const category = this.getAttribute('data-category');
+          const shouldNavigate = this.getAttribute('data-navigate') === 'true';
+
+          // Check if this option should navigate to a separate page
+          if (shouldNavigate && category === 'SassApp') {
+            e.preventDefault();
+            // Navigate to Sass App page
+            window.location.href = 'sass-app.html';
+            return;
+          }
+
+          // Otherwise, handle normal filtering
+          const radio = document.getElementById(category);
+          if (radio) {
+            radio.checked = true;
+            const button = document.querySelector(`[data-category="${category}"]`);
+            if (button) {
+              updateActiveFilter(button);
+            }
+            filterWorks(category);
+          }
+
+          // Update mobile dropdown trigger
+          const dropdown = this.closest('.mobile-filter-dropdown');
+          if (dropdown) {
+            const trigger = dropdown.querySelector('.mobile-filter-trigger');
+            const currentFilterSpan = trigger.querySelector('.current-filter span');
+            const currentFilterIcon = trigger.querySelector('.current-filter i');
+            const optionIcon = this.querySelector('.option-content i');
+            const optionText = this.querySelector('.option-content span').textContent;
+
+            if (currentFilterSpan) currentFilterSpan.textContent = optionText;
+            if (currentFilterIcon && optionIcon) {
+              currentFilterIcon.className = optionIcon.className;
+            }
+            dropdown.classList.remove('active');
+          }
+        });
+      });
+
       function initializeFilters() {
         // Add click event listeners to filter buttons
         filterButtons.forEach((button) => {
@@ -986,6 +1040,15 @@
         e.preventDefault();
         const button = e.currentTarget;
         const category = button.getAttribute('data-category');
+        const shouldNavigate = button.getAttribute('data-navigate') === 'true';
+
+        // Check if this button should navigate to a separate page
+        if (shouldNavigate && category === 'SassApp') {
+          // Navigate to Sass App page
+          window.location.href = 'sass-app.html';
+          return;
+        }
+
         const radio = document.getElementById(category);
 
         if (radio) {
@@ -1697,13 +1760,36 @@
         const tick = function () {
           const i = loopNum % toRotate.length;
           const fullTxt = toRotate[i];
+          const nextIndex = (loopNum + 1) % toRotate.length;
+          const nextTxt = toRotate[nextIndex];
 
           if (isDeleting) {
-            // Smooth deletion - one character at a time with consistent timing
-            txt = fullTxt.substring(0, txt.length - 1);
+            // Smooth deletion in reverse order - keep last character to prevent icon movement
+            if (txt.length > 1) {
+              // Continue deleting from the end (reverse order)
+              txt = fullTxt.substring(0, txt.length - 1);
+            } else {
+              // Stop at 1 character - keep it to maintain line height (icons stay in place)
+              // Then immediately transition to typing new text
+              isDeleting = false;
+              loopNum++;
+              const currentTarget = toRotate[loopNum % toRotate.length];
+              // Keep the last char if it matches new text start, otherwise start fresh
+              // But always keep at least one character visible
+              if (txt.length > 0 && txt === currentTarget.charAt(0)) {
+                // Last char matches first char of new text - keep it
+                txt = currentTarget.substring(0, 1);
+              } else {
+                // Replace with first char of new text (but keep something visible)
+                txt = currentTarget.substring(0, 1);
+              }
+            }
           } else {
-            // Smooth typing - one character at a time with consistent timing
-            txt = fullTxt.substring(0, txt.length + 1);
+            // Smooth typing - continue typing the current target text
+            const currentTarget = toRotate[loopNum % toRotate.length];
+            if (txt.length < currentTarget.length) {
+              txt = currentTarget.substring(0, txt.length + 1);
+            }
           }
 
           // Update text with smooth rendering
@@ -1725,12 +1811,6 @@
             // Text fully typed - pause before starting to delete
             delta = pauseAfterTyping;
             isDeleting = true;
-          } else if (isDeleting && txt.length === 0) {
-            // Text fully deleted - move to next item in array
-            isDeleting = false;
-            loopNum++;
-            // Pause before typing the next phrase
-            delta = pauseAfterDeleting;
           }
 
           // Schedule next frame with calculated timing
@@ -2980,7 +3060,7 @@
                       <i class="fa fa-th-large"></i>
                       <span>All Projects</span>
                     </div>
-                    <span class="option-count">10</span>
+                    <span class="option-count">11</span>
                   </div>
                   <div class="mobile-filter-option" data-category="Reactjs">
                     <div class="option-content">
@@ -3010,6 +3090,13 @@
                     </div>
                     <span class="option-count">3</span>
                   </div>
+                  <div class="mobile-filter-option" data-category="SassApp" data-navigate="true">
+                    <div class="option-content">
+                      <i class="fa fa-cloud"></i>
+                      <span>Sass App</span>
+                    </div>
+                    <span class="option-count">1</span>
+                  </div>
                 </div>
               </div>
 
@@ -3019,7 +3106,7 @@
                 <label class="filter-btn active" for="All" data-category="All">
                   <i class="fa fa-th-large"></i>
                   <span>All Projects</span>
-                  <span class="filter-count">10</span>
+                  <span class="filter-count">11</span>
                 </label>
               </div>
               <div class="filter-item">
@@ -3052,6 +3139,14 @@
                   <i class="fa fa-mobile"></i>
                   <span>React Native</span>
                   <span class="filter-count">3</span>
+                </label>
+              </div>
+              <div class="filter-item">
+                <input type="radio" name="menu-list" id="SassApp" style="display: none;" />
+                <label class="filter-btn" for="SassApp" data-category="SassApp" data-navigate="true">
+                  <i class="fa fa-cloud"></i>
+                  <span>Sass App</span>
+                  <span class="filter-count">1</span>
                 </label>
               </div>
             </div>
@@ -3230,7 +3325,7 @@
                 </div>
                 <div class="project-content">
                   <div class="project-header">
-                    <h3 class="project-title">Smart Gallery App</h3>
+                    <h3 class="project-title">Medicine Store App</h3>
                     <span class="project-category">React Native</span>
                   </div>
                   <p class="project-description">
@@ -4505,7 +4600,9 @@
     </div>
     <div class="chatbot-messages" id="chatbotMessages">
       <div class="chatbot-message bot">
-        <div class="message-avatar">FH</div>
+        <div class="message-avatar">
+          <img src="imgs/Faisal15.webp" alt="Faisal Hanif" />
+        </div>
         <div class="message-content">
           Hi! I'm Faisal's assistant. How can I help you today?
         </div>
@@ -4642,7 +4739,15 @@
 
       const avatar = document.createElement('div');
       avatar.className = 'message-avatar';
-      avatar.textContent = sender === 'bot' ? 'FH' : 'You';
+      
+      if (sender === 'bot') {
+        const img = document.createElement('img');
+        img.src = 'imgs/Faisal15.webp';
+        img.alt = 'Faisal Hanif';
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = 'You';
+      }
 
       const content = document.createElement('div');
       content.className = 'message-content';
