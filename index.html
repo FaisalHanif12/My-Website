@@ -330,6 +330,48 @@
       transform: scale(0.95);
     }
 
+    .chatbot-input:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .chatbot-send:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .typing-indicator .typing-dots {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .typing-indicator .typing-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0e6655;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.7;
+      }
+      30% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+    }
+
     /* Mobile Responsive */
     @media (max-width: 650px) {
       .chat-support-button {
@@ -4686,6 +4728,7 @@
 </script>
 
 <!-- Chatbot Functionality -->
+<script src="js/config.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const chatSupportButton = document.getElementById('chatSupportButton');
@@ -4694,6 +4737,123 @@
     const chatbotInput = document.getElementById('chatbotInput');
     const chatbotSend = document.getElementById('chatbotSend');
     const chatbotMessages = document.getElementById('chatbotMessages');
+
+    // Conversation history for context
+    let conversationHistory = [];
+
+    // System prompt with portfolio context
+    const systemPrompt = `You are a helpful AI assistant for Faisal Hanif's portfolio website. You help visitors learn about Faisal and his work.
+
+ABOUT FAISAL HANIF:
+- Name: Faisal Hanif
+- Role: Software Engineer specializing in Frontend Development, Backend Development, Cloud Orchestration, and System Design
+- Experience: 3+ years of coding experience, worked with 3+ companies, completed 10+ projects
+- Email: mehrfaisal111@gmail.com
+- Available for work: Yes
+
+IMPORTANT - SPECIFIC RESPONSES (USE THESE EXACT ANSWERS):
+
+1. When asked "tell me about yourself" or "tell me about your self" or similar variations, respond EXACTLY:
+"I'm a software engineer experienced in Frontend and Backend as well. I have also worked on real-time projects. I have worked on system design and cloud computing as well."
+
+2. When asked "what's your latest project" or "what is your latest project" or similar variations, respond EXACTLY:
+"PureBody is my latest project and it's deployed on Android and App Store as well. It is serving real-time users as Software as a Service. It's AI-based to manage your diet or workout. Also there is an AI teacher."
+
+3. When asked "what's your renowned project" or "renowned project" or "famous project" or "best project", respond EXACTLY:
+"PureBody"
+
+4. When asked "how can I set a meeting with Faisal" or "how to book a meeting" or "schedule a meeting" or "book meeting", respond EXACTLY:
+"Click on the 'Book Meeting' button in this app and select your desired slot."
+
+5. When asked about expertise, specialization, or "in which have you exact and extreme expertise" or "what are you expert in", respond EXACTLY:
+"React.js, Next.js, React Native"
+
+6. When asked about specialization in website or mobile app development, respond:
+"Faisal specializes in both website development and mobile app development. For websites, he uses React.js and Next.js. For mobile apps, he uses React Native. He has extensive expertise in building responsive web applications and cross-platform mobile applications."
+
+7. When asked "how many years of experience" or "years of experience" or "how long have you been coding", respond:
+"Faisal has 3+ years of coding experience and has worked with 3+ companies, completing 10+ projects."
+
+8. When asked about "pricing" or "rates" or "how much do you charge" or "cost", respond:
+"For pricing and project rates, please book a meeting with Faisal using the 'Book Meeting' button. He'll discuss your project requirements and provide a customized quote based on your needs."
+
+9. When asked about "location" or "where are you located" or "timezone", respond:
+"Faisal works remotely and is available for projects worldwide. You can book a meeting to discuss your project and find a suitable time that works for both parties."
+
+10. When asked about "services" or "what services do you offer" or "what can you do", respond:
+"Faisal offers full-stack development services including website development (React.js, Next.js), mobile app development (React Native), backend development (Node.js, Express), database design (MongoDB, PostgreSQL), cloud orchestration, and system design. Check the 'WORKS' section to see examples of his projects."
+
+11. When asked about "GitHub" or "code samples" or "portfolio code" or "source code", respond:
+"You can find Faisal's code repositories and projects on GitHub at https://github.com/FaisalHanif12. Check out his profile to see his contributions and project code."
+
+12. When asked about "certifications" or "qualifications" or "education", respond:
+"You can find Faisal's certifications and achievements in the 'APPROVALS' section of this portfolio. He has completed various certifications and has 3+ years of professional experience."
+
+13. When asked about "response time" or "how quickly do you respond" or "availability hours", respond:
+"Faisal typically responds within 24-48 hours. For urgent inquiries, you can book a meeting directly using the 'Book Meeting' button to schedule a call."
+
+14. When asked about "freelance" or "full-time" or "type of work" or "employment type", respond:
+"Faisal is available for both freelance projects and full-time opportunities. He's open to discussing various collaboration models. Book a meeting to discuss your specific requirements."
+
+15. When asked "can you help with [technology]" or "do you know [technology]" or "experience with [technology]", respond:
+"Faisal has extensive experience with React.js, Next.js, React Native, Node.js, MongoDB, PostgreSQL, and many other technologies. Check the 'PROFILE' section for a complete list of skills, or book a meeting to discuss your specific technology requirements."
+
+16. When asked "do you work remotely" or "remote work" or "work from home", respond:
+"Yes, Faisal works remotely and is available for remote projects and collaborations worldwide. He's experienced in working with distributed teams."
+
+PORTFOLIO SECTIONS:
+1. PROFILE/ABOUT - Contains personal information, skills, and experience
+2. WORKS - Showcases projects (11 total projects):
+   - PureBody (Latest Project) - SaaS mobile fitness app deployed on Android and App Store, AI-based diet and workout management with AI teacher, serving real-time users
+   - Smart Health Care (Full Stack) - Fitness tracker platform with React, Node.js, MongoDB, Express
+   - Smart Gallery App (React Native) - Photo gallery with AI recognition
+   - Echo AI (React.js) - AI conversational interface with OpenAI
+   - Medicine Store App (React Native) - Pet healthcare management
+   - Soledeck (E-commerce) - Sneaker e-commerce with Next.js, Stripe, MongoDB
+   - Financial Fusion (FinTech) - Financial management app with React Native
+   - YOOM (Communication) - Video conferencing with Next.js, WebRTC, Socket.io
+   - Dosnexa (Healthcare) - Medical platform with Next.js, Prisma, PostgreSQL
+   - DSA Tracker (React.js) - Data structures and algorithms tracker
+   - And more projects
+3. APPROVALS - Certifications and achievements
+4. CONTACT - Contact information and meeting booking
+
+TECHNOLOGIES & SKILLS:
+- Frontend: React.js, React Native, Next.js, TypeScript, Tailwind CSS
+- Backend: Node.js, Express, MongoDB, PostgreSQL, Prisma
+- Cloud & Tools: Cloud orchestration, system design
+- Other: Stripe, WebRTC, Socket.io, OpenAI integration
+
+EXPERTISE & SPECIALIZATION:
+- Extreme Expertise: React.js, Next.js, React Native
+- Website Development: Specialized in building responsive, modern web applications using React.js and Next.js
+- Mobile App Development: Specialized in cross-platform mobile applications using React Native
+- Full Stack: Experienced in both frontend and backend development
+- Real-time Applications: Experienced in building real-time features and applications
+
+SOCIAL LINKS:
+- LinkedIn: https://www.linkedin.com/in/faisal-frontend-developer/
+- Twitter: https://x.com/FaisalHanif333
+- GitHub: https://github.com/FaisalHanif12
+- Quora: https://www.quora.com/profile/Faisal-Hanif-126
+- Instagram: https://www.instagram.com/faisal_hanif_0/
+
+INSTRUCTIONS:
+- Be friendly, professional, and helpful
+- Use the EXACT responses provided above for specific questions (tell me about yourself, latest project, renowned project, meeting booking, expertise, years of experience, pricing, location, services, GitHub, certifications, response time, freelance/full-time, technology help, remote work)
+- When asked about expertise or specialization, emphasize React.js, Next.js, and React Native
+- When asked about specialization areas, mention both website development and mobile app development
+- For meeting booking questions, always direct users to click the "Book Meeting" button in the app
+- For pricing questions, always direct users to book a meeting for customized quotes
+- For renowned project questions, always answer "PureBody"
+- For GitHub/code questions, provide the GitHub link: https://github.com/FaisalHanif12
+- Direct users to relevant sections of the portfolio when appropriate (PROFILE, WORKS, APPROVALS, CONTACT)
+- Provide specific information about projects when asked
+- Keep responses concise but informative
+- If asked about something not in the portfolio, politely redirect to what's available
+- Always maintain a positive and professional tone
+- Be conversational and natural while following the specific response guidelines
+- For any question about availability, rates, or collaboration, encourage booking a meeting`;
 
     // Open chatbot
     chatSupportButton.addEventListener('click', function() {
@@ -4717,19 +4877,70 @@
     });
 
     // Send message function
-    function sendMessage() {
+    async function sendMessage() {
       const message = chatbotInput.value.trim();
       if (!message) return;
 
+      // Disable input while processing
+      chatbotInput.disabled = true;
+      chatbotSend.disabled = true;
+
       // Add user message
       addMessage(message, 'user');
+      conversationHistory.push({ role: 'user', content: message });
       chatbotInput.value = '';
 
-      // Simulate bot response (you can replace this with actual API call)
-      setTimeout(() => {
-        const botResponse = getBotResponse(message);
+      // Show typing indicator
+      const typingIndicator = addTypingIndicator();
+
+      try {
+        // Call AI API
+        const botResponse = await getBotResponse(message);
+        removeTypingIndicator(typingIndicator);
         addMessage(botResponse, 'bot');
-      }, 500);
+        conversationHistory.push({ role: 'assistant', content: botResponse });
+      } catch (error) {
+        console.error('Chatbot error:', error);
+        removeTypingIndicator(typingIndicator);
+        addMessage("I'm sorry, I'm having trouble connecting right now. Please try again later or contact Faisal directly at mehrfaisal111@gmail.com", 'bot');
+      } finally {
+        // Re-enable input
+        chatbotInput.disabled = false;
+        chatbotSend.disabled = false;
+        chatbotInput.focus();
+      }
+    }
+
+    // Add typing indicator
+    function addTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'chatbot-message bot typing-indicator';
+      typingDiv.id = 'typing-indicator';
+      
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      const img = document.createElement('img');
+      img.src = 'imgs/Faisal15.webp';
+      img.alt = 'Faisal Hanif';
+      avatar.appendChild(img);
+
+      const content = document.createElement('div');
+      content.className = 'message-content';
+      content.innerHTML = '<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>';
+
+      typingDiv.appendChild(avatar);
+      typingDiv.appendChild(content);
+      chatbotMessages.appendChild(typingDiv);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      
+      return typingDiv;
+    }
+
+    // Remove typing indicator
+    function removeTypingIndicator(indicator) {
+      if (indicator && indicator.parentNode) {
+        indicator.parentNode.removeChild(indicator);
+      }
     }
 
     // Add message to chat
@@ -4761,27 +4972,180 @@
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
-    // Simple bot response logic (replace with actual API integration)
-    function getBotResponse(userMessage) {
+    // Get bot response from backend proxy API
+    async function getBotResponse(userMessage) {
+      try {
+        // Call backend proxy endpoint
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: userMessage,
+            conversationHistory: conversationHistory.slice(-10), // Keep last 10 messages for context
+            systemPrompt: systemPrompt
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.reply || "I'm sorry, I couldn't generate a response. Please try again.";
+      } catch (error) {
+        console.error('API Error:', error);
+        // Fallback to simple responses if API fails
+        return getFallbackResponse(userMessage);
+      }
+    }
+
+    // Fallback response function
+    function getFallbackResponse(userMessage) {
       const message = userMessage.toLowerCase();
 
-      if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-        return "Hello! Thanks for reaching out. How can I assist you today?";
-      } else if (message.includes('portfolio') || message.includes('work') || message.includes('project')) {
-        return "Great question! You can check out my portfolio and projects in the 'WORKS' section. Would you like to know more about any specific project?";
-      } else if (message.includes('contact') || message.includes('email') || message.includes('reach')) {
-        return "You can contact me through the 'CONTACT' section or email me directly at mehrfaisal111@gmail.com. I'd love to hear from you!";
-      } else if (message.includes('hire') || message.includes('available') || message.includes('work')) {
-        return "Yes, I'm available for work! You can book a meeting with me using the 'Book Meeting' button or check my availability in the CONTACT section.";
-      } else if (message.includes('skill') || message.includes('technology') || message.includes('tech')) {
-        return "I'm a Software Engineer specializing in backend development. I work with various technologies including Node.js, MongoDB, and more. Check the 'PROFILE' section for details!";
-      } else if (message.includes('cv') || message.includes('resume')) {
-        return "You can download my CV by clicking the 'Download CV' button on my profile page. Feel free to reach out if you have any questions!";
-      } else if (message.includes('thank') || message.includes('thanks')) {
-        return "You're welcome! If you have any more questions, feel free to ask. Have a great day!";
-      } else {
-        return "Thanks for your message! For more detailed information, please check out my portfolio sections or feel free to contact me directly. How else can I help?";
+      // Check for "tell me about yourself" variations
+      if (message.includes('tell me about your') || 
+          message.includes('tell me about yourself') ||
+          message.includes('tell me about your self') ||
+          (message.includes('about') && (message.includes('you') || message.includes('yourself')))) {
+        return "I'm a software engineer experienced in Frontend and Backend as well. I have also worked on real-time projects. I have worked on system design and cloud computing as well.";
       }
+      
+      // Check for "latest project" variations
+      if ((message.includes('latest') || message.includes('recent')) && 
+          (message.includes('project') || message.includes('work'))) {
+        return "PureBody is my latest project and it's deployed on Android and App Store as well. It is serving real-time users as Software as a Service. It's AI-based to manage your diet or workout. Also there is an AI teacher.";
+      }
+      
+      // Check for "renowned project" or "famous project" or "best project"
+      if ((message.includes('renowned') || message.includes('famous') || message.includes('best') || message.includes('popular')) && 
+          message.includes('project')) {
+        return "PureBody";
+      }
+      
+      // Check for meeting booking questions
+      if ((message.includes('meeting') || message.includes('book') || message.includes('schedule') || message.includes('appointment')) && 
+          (message.includes('how') || message.includes('set') || message.includes('with') || message.includes('faisal'))) {
+        return "Click on the 'Book Meeting' button in this app and select your desired slot.";
+      }
+      
+      // Check for expertise questions
+      if (message.includes('expertise') || message.includes('expert') || 
+          (message.includes('exact') && message.includes('extreme')) ||
+          (message.includes('specialization') && (message.includes('what') || message.includes('which')))) {
+        return "React.js, Next.js, React Native";
+      }
+      
+      // Check for specialization in website/mobile app
+      if ((message.includes('specialization') || message.includes('specialize') || message.includes('speciality')) && 
+          (message.includes('website') || message.includes('web') || message.includes('mobile') || message.includes('app'))) {
+        return "Faisal specializes in both website development and mobile app development. For websites, he uses React.js and Next.js. For mobile apps, he uses React Native. He has extensive expertise in building responsive web applications and cross-platform mobile applications.";
+      }
+
+      // Check for greeting
+      if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+        return "Hello! Thanks for reaching out. I'm Faisal's AI assistant. How can I help you learn more about his portfolio today?";
+      } 
+      
+      // Check for portfolio/projects (excluding latest/renowned)
+      if (message.includes('portfolio') || 
+          (message.includes('work') && !message.includes('latest') && !message.includes('recent') && !message.includes('renowned')) || 
+          (message.includes('project') && !message.includes('latest') && !message.includes('recent') && !message.includes('renowned') && !message.includes('famous') && !message.includes('best'))) {
+        return "Great question! Faisal has 11+ amazing projects in the 'WORKS' section, including Smart Health Care, Echo AI, Soledeck, YOOM, Dosnexa, and PureBody. Would you like to know more about any specific project?";
+      } 
+      
+      // Check for contact information
+      if (message.includes('contact') || message.includes('email') || message.includes('reach')) {
+        return "You can contact Faisal through the 'CONTACT' section on this website or email him directly at mehrfaisal111@gmail.com. He'd love to hear from you!";
+      } 
+      
+      // Check for hiring/availability
+      if (message.includes('hire') || message.includes('available')) {
+        return "Yes, Faisal is available for work! You can book a meeting with him using the 'Book Meeting' button or check his availability in the CONTACT section.";
+      } 
+      
+      // Check for skills/technologies (but not expertise-specific questions)
+      if ((message.includes('skill') || message.includes('technology') || message.includes('tech')) && 
+          !message.includes('expertise') && !message.includes('expert') && !message.includes('specialization')) {
+        return "Faisal is a Software Engineer specializing in Frontend Development, Backend Development, Cloud Orchestration, and System Design. He works with React.js, React Native, Next.js, Node.js, MongoDB, PostgreSQL, and more. Check the 'PROFILE' section for detailed skills!";
+      } 
+      
+      // Check for CV/resume
+      if (message.includes('cv') || message.includes('resume')) {
+        return "You can download Faisal's CV by clicking the 'Download CV' button on his profile page. Feel free to reach out if you have any questions!";
+      } 
+      
+      // Check for years of experience
+      if ((message.includes('year') || message.includes('experience')) && 
+          (message.includes('how many') || message.includes('how long') || message.includes('long'))) {
+        return "Faisal has 3+ years of coding experience and has worked with 3+ companies, completing 10+ projects.";
+      }
+      
+      // Check for pricing/rates questions
+      if (message.includes('price') || message.includes('rate') || message.includes('cost') || 
+          message.includes('charge') || message.includes('how much') || message.includes('budget')) {
+        return "For pricing and project rates, please book a meeting with Faisal using the 'Book Meeting' button. He'll discuss your project requirements and provide a customized quote based on your needs.";
+      }
+      
+      // Check for location/timezone questions
+      if (message.includes('location') || message.includes('where') || message.includes('timezone') || 
+          message.includes('based') || message.includes('country') || message.includes('city')) {
+        return "Faisal works remotely and is available for projects worldwide. You can book a meeting to discuss your project and find a suitable time that works for both parties.";
+      }
+      
+      // Check for services questions
+      if ((message.includes('service') || message.includes('what can you') || message.includes('what do you')) && 
+          !message.includes('contact')) {
+        return "Faisal offers full-stack development services including website development (React.js, Next.js), mobile app development (React Native), backend development (Node.js, Express), database design (MongoDB, PostgreSQL), cloud orchestration, and system design. Check the 'WORKS' section to see examples of his projects.";
+      }
+      
+      // Check for GitHub/code questions
+      if (message.includes('github') || message.includes('code') || message.includes('source') || 
+          message.includes('repository') || message.includes('repo') || message.includes('portfolio code')) {
+        return "You can find Faisal's code repositories and projects on GitHub at https://github.com/FaisalHanif12. Check out his profile to see his contributions and project code.";
+      }
+      
+      // Check for certifications/education questions
+      if (message.includes('certification') || message.includes('qualification') || message.includes('education') || 
+          message.includes('degree') || message.includes('background')) {
+        return "You can find Faisal's certifications and achievements in the 'APPROVALS' section of this portfolio. He has completed various certifications and has 3+ years of professional experience.";
+      }
+      
+      // Check for response time/availability questions
+      if ((message.includes('response') || message.includes('respond') || message.includes('available')) && 
+          (message.includes('how') || message.includes('when') || message.includes('quickly') || message.includes('fast'))) {
+        return "Faisal typically responds within 24-48 hours. For urgent inquiries, you can book a meeting directly using the 'Book Meeting' button to schedule a call.";
+      }
+      
+      // Check for freelance/full-time questions
+      if (message.includes('freelance') || message.includes('full-time') || message.includes('fulltime') || 
+          message.includes('employment') || message.includes('type of work') || message.includes('collaboration')) {
+        return "Faisal is available for both freelance projects and full-time opportunities. He's open to discussing various collaboration models. Book a meeting to discuss your specific requirements.";
+      }
+      
+      // Check for technology help questions
+      if ((message.includes('can you help') || message.includes('do you know') || message.includes('experience with') || 
+           message.includes('can you do')) && (message.includes('react') || message.includes('node') || message.includes('mongodb') || 
+           message.includes('next') || message.includes('mobile') || message.includes('app') || message.includes('web'))) {
+        return "Faisal has extensive experience with React.js, Next.js, React Native, Node.js, MongoDB, PostgreSQL, and many other technologies. Check the 'PROFILE' section for a complete list of skills, or book a meeting to discuss your specific technology requirements.";
+      }
+      
+      // Check for remote work questions
+      if (message.includes('remote') || message.includes('work from home') || message.includes('wfh') || 
+          message.includes('distributed')) {
+        return "Yes, Faisal works remotely and is available for remote projects and collaborations worldwide. He's experienced in working with distributed teams.";
+      }
+      
+      // Check for thanks
+      if (message.includes('thank') || message.includes('thanks')) {
+        return "You're welcome! If you have any more questions about Faisal's portfolio or projects, feel free to ask. Have a great day!";
+      } 
+      
+      // Default response
+      return "Thanks for your message! I can help you learn about Faisal's projects, skills, experience, expertise in React.js/Next.js/React Native, pricing, services, or how to contact him. What would you like to know?";
     }
 
     // Send on button click
@@ -4789,7 +5153,8 @@
 
     // Send on Enter key
     chatbotInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
         sendMessage();
       }
     });
