@@ -29,22 +29,85 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+// Trust proxy to get correct IP address (important for rate limiting)
+app.set('trust proxy', true);
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Rate limiting - 20 requests per 15 minutes per IP
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // Limit each IP to 20 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.'
-  },
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
+// Daily rate limiting - 4 requests per day per IP
+// Store: { ip: { count: number, date: string } }
+const dailyLimitStore = new Map();
 
-// Apply rate limiting to all requests
-app.use('/api/', limiter);
+// Helper function to get today's date string (YYYY-MM-DD)
+function getTodayDateString() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// Helper function to get client IP
+function getClientIP(req) {
+  // Check for forwarded IP (when behind proxy/load balancer)
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  
+  // Check for real IP header
+  if (req.headers['x-real-ip']) {
+    return req.headers['x-real-ip'];
+  }
+  
+  // Fallback to connection IP
+  return req.ip || 
+         req.connection?.remoteAddress || 
+         req.socket?.remoteAddress ||
+         '127.0.0.1';
+}
+
+// Daily rate limit middleware
+function dailyRateLimit(req, res, next) {
+  const clientIP = getClientIP(req);
+  const today = getTodayDateString();
+  const dailyLimit = 4; // 4 requests per day
+
+  // Get or initialize user's daily record
+  const userRecord = dailyLimitStore.get(clientIP);
+  
+  if (!userRecord || userRecord.date !== today) {
+    // New day or new user - reset count
+    dailyLimitStore.set(clientIP, { count: 1, date: today });
+    return next();
+  }
+
+  // Check if limit exceeded
+  if (userRecord.count >= dailyLimit) {
+    return res.status(429).json({
+      error: 'Daily limit reached',
+      message: 'You have reached your daily limit of 4 interactions. Please try again tomorrow.',
+      limit: dailyLimit,
+      resetDate: today
+    });
+  }
+
+  // Increment count
+  userRecord.count++;
+  dailyLimitStore.set(clientIP, userRecord);
+  
+  next();
+}
+
+// Clean up old entries daily (keep store size manageable)
+setInterval(() => {
+  const today = getTodayDateString();
+  for (const [ip, record] of dailyLimitStore.entries()) {
+    if (record.date !== today) {
+      dailyLimitStore.delete(ip);
+    }
+  }
+}, 24 * 60 * 60 * 1000); // Run once per day
+
+// Apply daily rate limiting to chat endpoint
+app.use('/api/chat', dailyRateLimit);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
