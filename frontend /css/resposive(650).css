@@ -50,33 +50,39 @@ header {
 }
 
 /* ========================================
-   🎨 ELEGANT LIGHT-THEMED MOBILE SIDEBAR
-   Matches Website Color Scheme
+   🎨 ELEGANT TOP-SLIDING MOBILE SIDEBAR
+   Slides from Above - Matches Website Color Scheme
    ======================================== */
 
 .menu-list {
     position: fixed;
-    top: 0;
-    left: -100%;
-    width: min(88vw, 340px);
-    height: 100dvh;
-    height: 100vh;
-    max-height: 100dvh;
-    max-height: 100vh;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    width: 100vw;
+    max-width: 100%;
+    height: auto;
+    max-height: 90vh;
+    min-height: 60vh;
     background: #ffffff;
-    background: linear-gradient(180deg, #f8fffe 0%, #ffffff 50%, #f5f9f8 100%);
-    box-shadow: 4px 0 40px rgba(14, 102, 85, 0.15),
-        inset -1px 0 0 rgba(14, 102, 85, 0.05);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fffe 30%, #f5f9f8 100%);
+    box-shadow: 0 8px 40px rgba(14, 102, 85, 0.2),
+        0 4px 16px rgba(14, 102, 85, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     z-index: 1000;
-    transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.4s ease,
+        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;
     flex-direction: column;
     padding: 0;
     overflow: hidden;
-    border-radius: 0 28px 28px 0;
+    border-radius: 0 0 32px 32px;
+    opacity: 0;
+    transform: translateY(-20px);
 }
 
-/* Subtle decorative pattern */
+/* Elegant decorative pattern */
 .menu-list::before {
     content: '';
     position: absolute;
@@ -85,42 +91,52 @@ header {
     right: 0;
     bottom: 0;
     background:
-        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 20% 80%, rgba(14, 102, 85, 0.02) 0%, transparent 50%);
+        radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 20% 100%, rgba(14, 102, 85, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
     z-index: 0;
     pointer-events: none;
 }
 
-/* Elegant top accent line */
+/* Elegant top accent line with gradient */
 .menu-list::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #10b981 0%, #0e6655 50%, #10b981 100%);
+    height: 4px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #10b981 20%, 
+        #0e6655 50%, 
+        #10b981 80%, 
+        transparent 100%);
     z-index: 1;
     pointer-events: none;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .menu-list.active {
-    left: 0;
+    top: 0;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* Overlay for sidebar */
+/* Overlay for sidebar - Enhanced for top slide */
 .menu-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     z-index: 999;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menu-overlay.active {
@@ -195,7 +211,9 @@ header {
 }
 
 .hamburger-menu.active {
-    display: none;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) rotate(90deg) scale(0.8);
 }
 
 /* Profile Container & Text for Header */
@@ -230,7 +248,7 @@ header {
 
 /* ========================================
    ✨ ELEGANT PROFILE CARD HEADER
-   Light Theme with Teal Accents
+   Redesigned for Top Slide - Light Theme with Teal Accents
    ======================================== */
 
 .sidebar-header {
@@ -238,45 +256,58 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 28px 20px 24px;
+    padding: 24px 20px 20px;
     border: none;
     background: transparent;
     position: relative;
-    margin: 16px 16px 24px;
-    margin-top: max(env(safe-area-inset-top, 0px) + 3px, 19px);
+    margin: 0;
+    margin-top: max(env(safe-area-inset-top, 0px) + 8px, 12px);
+    margin-bottom: 20px;
     flex-shrink: 0;
-    border-radius: 20px;
+    border-radius: 0;
     z-index: 2;
+    animation: slideDownFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.1s;
+    opacity: 0;
+    transform: translateY(-20px);
 }
 
-/* Elegant light card background */
+@keyframes slideDownFade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Elegant light card background - Redesigned */
 .sidebar-header::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: #ffffff;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.95) 0%,
-            rgba(248, 255, 254, 0.9) 100%);
-    border-radius: 20px;
-    border: 2px solid rgba(16, 185, 129, 0.15);
-    box-shadow: 0 8px 32px rgba(14, 102, 85, 0.12),
-        0 2px 8px rgba(14, 102, 85, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(248, 255, 254, 0.95) 50%,
+            rgba(255, 255, 255, 0.98) 100%);
+    border-radius: 0;
+    border: none;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.12);
+    box-shadow: 0 4px 20px rgba(14, 102, 85, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     z-index: -1;
 }
 
-/* Subtle glow effect */
+/* Subtle glow effect - Updated for top slide */
 .sidebar-header::after {
     content: '';
     position: absolute;
-    inset: -1px;
-    background: linear-gradient(135deg,
-            rgba(16, 185, 129, 0.1) 0%,
-            transparent 50%);
-    border-radius: 21px;
-    filter: blur(8px);
-    opacity: 0.5;
+    inset: -2px;
+    bottom: 0;
+    background: linear-gradient(180deg,
+            rgba(16, 185, 129, 0.08) 0%,
+            transparent 60%);
+    border-radius: 0;
+    filter: blur(10px);
+    opacity: 0.6;
     z-index: -2;
 }
 
@@ -290,7 +321,7 @@ header {
     z-index: 1;
 }
 
-/* Modern teal gradient logo circle */
+/* Modern teal gradient logo circle - Enhanced */
 .logo-circle {
     width: 76px;
     height: 76px;
@@ -311,6 +342,24 @@ header {
     overflow: hidden;
     transition: all 0.3s ease;
     border: 3px solid rgba(255, 255, 255, 0.9);
+    animation: logoPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+}
+
+@keyframes logoPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(-10px);
+    }
+    60% {
+        transform: scale(1.05) translateY(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 /* Subtle shimmer effect */
@@ -355,6 +404,10 @@ header {
     color: #1a202c;
     line-height: 1.2;
     letter-spacing: 0.3px;
+    animation: slideDownFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.25s;
+    opacity: 0;
+    transform: translateY(-10px);
 }
 
 .logo-text p {
@@ -365,6 +418,10 @@ header {
     letter-spacing: 0.3px;
     position: relative;
     display: inline-block;
+    animation: slideDownFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.3s;
+    opacity: 0;
+    transform: translateY(-10px);
 }
 
 /* Elegant underline accent */
@@ -382,10 +439,10 @@ header {
     transform: translateX(-50%);
 }
 
-/* Modern teal close button */
+/* Modern teal close button - Repositioned for top slide */
 .sidebar-close {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border: none;
     background: #ffffff;
     border-radius: 50%;
@@ -394,15 +451,19 @@ header {
     align-items: center;
     justify-content: center;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    font-size: 20px;
+    font-size: 22px;
     color: #666;
     position: absolute;
-    top: 18px;
-    right: 18px;
-    box-shadow: 0 4px 12px rgba(14, 102, 85, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    border: 2px solid rgba(14, 102, 85, 0.1);
+    top: 16px;
+    right: 16px;
+    box-shadow: 0 4px 16px rgba(14, 102, 85, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(14, 102, 85, 0.12);
     z-index: 10;
+    animation: slideDownFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.15s;
+    opacity: 0;
+    transform: translateY(-15px);
 }
 
 .sidebar-close span {
@@ -429,20 +490,21 @@ header {
    Clean cards with teal accents & icons
    ======================================== */
 
-/* Sidebar Content Container */
+/* Sidebar Content Container - Enhanced for top slide */
 .sidebar-content {
     flex: 1;
-    padding: 0 18px calc(env(safe-area-inset-bottom, 0px) + 20px) 18px;
+    padding: 0 20px calc(env(safe-area-inset-bottom, 0px) + 24px) 20px;
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     justify-content: flex-start;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
     position: relative;
     z-index: 1;
+    max-height: calc(90vh - 200px);
 }
 
 /* Custom scrollbar */
@@ -465,59 +527,54 @@ header {
     background: linear-gradient(180deg, rgba(16, 185, 129, 0.5), rgba(14, 102, 85, 0.5));
 }
 
-/* Elegant Menu Card Items */
+/* Elegant Menu Card Items - Redesigned for top slide */
 .menu {
     width: 100%;
     margin: 0;
     padding: 0;
     border: none;
     background: #ffffff;
-    box-shadow: 0 2px 8px rgba(14, 102, 85, 0.08),
-        0 1px 3px rgba(14, 102, 85, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    animation: slideInRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    box-shadow: 0 3px 12px rgba(14, 102, 85, 0.1),
+        0 1px 4px rgba(14, 102, 85, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    animation: slideDownFade 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     opacity: 0;
-    transform: translateX(-20px);
-    border-radius: 16px;
-    border: 2px solid rgba(16, 185, 129, 0.08);
-    height: 66px;
+    transform: translateY(-15px);
+    border-radius: 18px;
+    border: 2px solid rgba(16, 185, 129, 0.1);
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     position: relative;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-/* Staggered animation */
+/* Staggered animation - Updated for top slide */
 .menu:nth-child(1) {
-    animation-delay: 0.05s;
-}
-
-.menu:nth-child(2) {
-    animation-delay: 0.1s;
-}
-
-.menu:nth-child(3) {
-    animation-delay: 0.15s;
-}
-
-.menu:nth-child(4) {
     animation-delay: 0.2s;
 }
 
-.menu:nth-child(5) {
+.menu:nth-child(2) {
     animation-delay: 0.25s;
 }
 
-@keyframes slideInRight {
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.menu:nth-child(3) {
+    animation-delay: 0.3s;
 }
 
-/* Left accent bar */
+.menu:nth-child(4) {
+    animation-delay: 0.35s;
+}
+
+.menu:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+/* Top accent bar - Redesigned for elegance */
 .menu::before {
     content: '';
     position: absolute;
@@ -525,10 +582,10 @@ header {
     top: 0;
     height: 100%;
     width: 4px;
-    background: linear-gradient(180deg, #10b981, #0e6655);
+    background: linear-gradient(180deg, #10b981 0%, #0e6655 100%);
     border-radius: 4px 0 0 4px;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, width 0.3s ease;
 }
 
 /* Hover shimmer effect */
@@ -547,17 +604,17 @@ header {
 }
 
 .menu:hover {
-    background: #ffffff;
     background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
-    transform: translateX(4px) scale(1.01);
-    box-shadow: 0 4px 16px rgba(14, 102, 85, 0.15),
-        0 2px 8px rgba(14, 102, 85, 0.08),
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(14, 102, 85, 0.18),
+        0 3px 10px rgba(14, 102, 85, 0.12),
         inset 0 1px 0 rgba(255, 255, 255, 1);
-    border-color: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.25);
 }
 
 .menu:hover::before {
     opacity: 1;
+    width: 5px;
 }
 
 .menu:hover::after {
@@ -565,8 +622,8 @@ header {
 }
 
 .menu:active {
-    transform: translateX(2px) scale(0.99);
-    box-shadow: 0 2px 6px rgba(14, 102, 85, 0.1);
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 8px rgba(14, 102, 85, 0.12);
 }
 
 /* Menu Label with Proper Icon Display */
@@ -797,6 +854,8 @@ header {
         padding: 13px 5px !important;
         overflow: visible !important;
         border-radius: 5px !important;
+        opacity: 1 !important;
+        transform: none !important;
     }
 
     .menu-list::before {
