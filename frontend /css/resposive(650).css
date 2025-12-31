@@ -70,9 +70,9 @@ header {
         0 4px 16px rgba(14, 102, 85, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
     z-index: 1000;
-    transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-        opacity 0.4s ease,
-        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s ease-out,
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -80,6 +80,9 @@ header {
     border-radius: 0 0 32px 32px;
     opacity: 0;
     transform: translateY(-20px);
+    will-change: transform, opacity, top;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 /* Elegant decorative pattern */
@@ -136,7 +139,7 @@ header {
     z-index: 999;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.2s ease-out, visibility 0.2s ease-out, backdrop-filter 0.2s ease-out;
 }
 
 .menu-overlay.active {
@@ -164,7 +167,7 @@ header {
     z-index: 1001;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
     border-radius: 14px;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
