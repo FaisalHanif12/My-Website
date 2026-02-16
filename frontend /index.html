@@ -163,6 +163,7 @@
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -231,6 +232,7 @@
         opacity: 0;
         transform: translateY(10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -370,10 +372,14 @@
     }
 
     @keyframes typing {
-      0%, 60%, 100% {
+
+      0%,
+      60%,
+      100% {
         transform: translateY(0);
         opacity: 0.7;
       }
+
       30% {
         transform: translateY(-10px);
         opacity: 1;
@@ -557,6 +563,7 @@
         opacity: 0;
         transform: translateX(400px) scale(0.8);
       }
+
       to {
         opacity: 1;
         transform: translateX(0) scale(1);
@@ -568,6 +575,7 @@
         opacity: 1;
         transform: translateX(0) scale(1);
       }
+
       to {
         opacity: 0;
         transform: translateX(400px) scale(0.8);
@@ -1221,7 +1229,7 @@
       // Handle mobile filter options
       const mobileFilterOptions = document.querySelectorAll('.works-filter-section .mobile-filter-option');
       mobileFilterOptions.forEach(option => {
-        option.addEventListener('click', function(e) {
+        option.addEventListener('click', function (e) {
           const category = this.getAttribute('data-category');
 
           // Handle normal filtering
@@ -1322,14 +1330,14 @@
                 const bCategory = b.getAttribute("data-category");
                 const aPriority = parseInt(a.getAttribute("data-priority") || "999");
                 const bPriority = parseInt(b.getAttribute("data-priority") || "999");
-                
+
                 // SassApp projects first
                 if (aCategory === "SassApp" && bCategory !== "SassApp") return -1;
                 if (aCategory !== "SassApp" && bCategory === "SassApp") return 1;
-                
+
                 // Then by priority
                 if (aPriority !== bPriority) return aPriority - bPriority;
-                
+
                 return 0;
               });
             }
@@ -1344,16 +1352,16 @@
 
             // Show/hide items with animation
             visibleItems.forEach((item, index) => {
-                visibleCount++;
-                item.classList.remove('fade-out');
-                item.classList.add('fade-in');
-                item.style.display = "block";
+              visibleCount++;
+              item.classList.remove('fade-out');
+              item.classList.add('fade-in');
+              item.style.display = "block";
 
-                // Add staggered animation delay
-                setTimeout(() => {
-                  item.style.opacity = '1';
-                  item.style.transform = 'translateY(0) scale(1)';
-                }, index * 100);
+              // Add staggered animation delay
+              setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0) scale(1)';
+              }, index * 100);
             });
 
             // Hide items that shouldn't be shown
@@ -2256,7 +2264,8 @@
             <img src="imgs/Faisal15.webp" alt="Profile Photo" class="profile-photo" />
             <div class="text-container">
               <span>Faisal Hanif</span>
-              <p href="" class="typewrite" data-period="2000" data-type='["Frontend Development", "Backend Development", "Cloud Orchestration", "System Design"]'>
+              <p href="" class="typewrite" data-period="2000"
+                data-type='["Frontend Development", "Backend Development", "Cloud Orchestration", "System Design"]'>
                 <span class="wrap"></span>
               </p>
             </div>
@@ -3323,7 +3332,7 @@
                       <i class="fa fa-th-large"></i>
                       <span>All Projects</span>
                     </div>
-                  <span class="option-count">12</span>
+                    <span class="option-count">12</span>
                   </div>
                   <div class="mobile-filter-option" data-category="Reactjs">
                     <div class="option-content">
@@ -3429,8 +3438,7 @@
                   </div>
                   <div class="project-overlay">
                     <div class="overlay-content">
-                      <a href="sass-app.html"
-                        class="preview-btn">
+                      <a href="sass-app.html" class="preview-btn">
                         <i class="fa fa-eye"></i>
                         <span>Live Preview</span>
                       </a>
@@ -3444,7 +3452,8 @@
                     <span class="project-category">SaaS App</span>
                   </div>
                   <p class="project-description">
-                    AI-powered mobile fitness app deployed on Android and App Store. SaaS platform serving real-time users with diet management, workout tracking, and AI teacher features.
+                    AI-powered mobile fitness app deployed on Android and App Store. SaaS platform serving real-time
+                    users with diet management, workout tracking, and AI teacher features.
                   </p>
                   <div class="project-tech">
                     <span class="tech-tag">React Native</span>
@@ -3453,8 +3462,7 @@
                     <span class="tech-tag">Mobile</span>
                   </div>
                   <div class="project-actions">
-                    <a href="sass-app.html"
-                      class="project-btn btn-primary">
+                    <a href="sass-app.html" class="project-btn btn-primary">
                       <i class="fa fa-external-link"></i>
                       <span>Live</span>
                     </a>
@@ -4751,131 +4759,1318 @@
           </div>
 
 
-          <!-- Meeting Types Grid -->
-          <div class="meeting-types">
-            <div class="meeting-type-card active" data-duration="30" data-price="15">
-              <div class="meeting-icon">
-                <i class="fa fa-comments"></i>
+          <div id="scheduleSelectionContent">
+            <!-- Meeting Types Grid -->
+            <div class="meeting-types">
+              <div class="meeting-type-card active" data-duration="30" data-price="15">
+                <div class="meeting-icon">
+                  <i class="fa fa-comments"></i>
+                </div>
+                <h3>Quick Chat</h3>
+                <p class="duration">30 minutes</p>
+                <div class="price-tag">15 per session</div>
+                <p class="description">Perfect for initial discussions and project exploration</p>
+                <ul class="features">
+                  <li><i class="fa fa-check"></i> Project overview</li>
+                  <li><i class="fa fa-check"></i> Requirements discussion</li>
+                  <li><i class="fa fa-check"></i> Technology suggestions</li>
+                </ul>
               </div>
-              <h3>Quick Chat</h3>
-              <p class="duration">30 minutes</p>
-              <div class="price-tag">15 per session</div>
-              <p class="description">Perfect for initial discussions and project exploration</p>
-              <ul class="features">
-                <li><i class="fa fa-check"></i> Project overview</li>
-                <li><i class="fa fa-check"></i> Requirements discussion</li>
-                <li><i class="fa fa-check"></i> Technology suggestions</li>
-              </ul>
+
+              <div class="meeting-type-card" data-duration="60" data-price="25">
+                <div class="meeting-icon">
+                  <i class="fa fa-cogs"></i>
+                </div>
+                <h3>Technical Deep Dive</h3>
+                <p class="duration">60 minutes</p>
+                <div class="price-tag">25 per session</div>
+                <p class="description">Comprehensive discussion for complex projects</p>
+                <ul class="features">
+                  <li><i class="fa fa-check"></i> Detailed planning</li>
+                  <li><i class="fa fa-check"></i> Architecture review</li>
+                  <li><i class="fa fa-check"></i> Timeline & budget</li>
+                </ul>
+              </div>
             </div>
 
-            <div class="meeting-type-card" data-duration="60" data-price="25">
-              <div class="meeting-icon">
-                <i class="fa fa-cogs"></i>
+            <!-- Hours Selection and Total Calculation Section -->
+            <div class="hours-selection-section">
+              <h3>Select Number of Session</h3>
+              <div class="hours-input-container">
+                <div class="hours-control">
+                  <button type="button" id="decreaseHours" class="hours-btn">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <input type="number" id="hoursInput" min="1" max="10" value="1" class="hours-input">
+                  <button type="button" id="increaseHours" class="hours-btn">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <div class="hours-label">Session (s)</div>
               </div>
-              <h3>Technical Deep Dive</h3>
-              <p class="duration">60 minutes</p>
-              <div class="price-tag">25 per session</div>
-              <p class="description">Comprehensive discussion for complex projects</p>
-              <ul class="features">
-                <li><i class="fa fa-check"></i> Detailed planning</li>
-                <li><i class="fa fa-check"></i> Architecture review</li>
-                <li><i class="fa fa-check"></i> Timeline & budget</li>
-              </ul>
+
+              <div class="total-calculation">
+                <div class="calculation-row">
+                  <span class="calculation-label">Session Type:</span>
+                  <span id="selectedSessionType" class="calculation-value">Quick Chat</span>
+                </div>
+                <div class="calculation-row">
+                  <span class="calculation-label">Price per Session:</span>
+                  <span id="pricePerSession" class="calculation-value">$15</span>
+                </div>
+                <div class="calculation-row">
+                  <span class="calculation-label">Number of Sessions:</span>
+                  <span id="numberOfHours" class="calculation-value">1</span>
+                </div>
+                <div class="calculation-divider"></div>
+                <div class="calculation-row total">
+                  <span class="calculation-label">Total Amount:</span>
+                  <span id="totalAmount" class="calculation-value">$15</span>
+                </div>
+
+                <!-- Payment Button inside the calculation card -->
+                <div class="calculation-row payment-button-row">
+                  <button id="proceedToPaymentButton" class="payment-proceed-button">
+                    <i class="fa fa-credit-card"></i>
+                    Book Session
+                  </button>
+                </div>
+
+
+              </div>
+            </div>
+
+
+            <!-- What to Expect Section -->
+            <div class="expectations-section">
+              <h3>What to Expect</h3>
+              <div class="expectations-grid">
+                <div class="expectation-item">
+                  <div class="expectation-icon">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <h4>Personal Consultation</h4>
+                  <p>One-on-one discussion tailored to your specific needs and goals</p>
+                </div>
+                <div class="expectation-item">
+                  <div class="expectation-icon">
+                    <i class="fa fa-lightbulb-o"></i>
+                  </div>
+                  <h4>Expert Insights</h4>
+                  <p>Professional recommendations and innovative solutions for your project</p>
+                </div>
+                <div class="expectation-item">
+                  <div class="expectation-icon">
+                    <i class="fa fa-clock-o"></i>
+                  </div>
+                  <h4>Flexible Timing</h4>
+                  <p>Choose a time that works best for your schedule across different time zones</p>
+                </div>
+                <div class="expectation-item">
+                  <div class="expectation-icon">
+                    <i class="fa fa-shield"></i>
+                  </div>
+                  <h4>Confidential & Secure</h4>
+                  <p>Your information and project details are kept private and secure at all times</p>
+                </div>
+              </div>
+            </div> <!-- end expectations-section -->
+
+          </div> <!-- end scheduleSelectionContent -->
+
+          <!-- Inline Booking Form (hidden by default, shown when Book Session is clicked) -->
+          <div id="inlineBookingForm" style="display: none;">
+            <style>
+              /* ===== PREMIUM INLINE BOOKING FORM REDESIGN ===== */
+              #inlineBookingForm {
+                --ibf-primary: #0e6655;
+                --ibf-primary-light: #10b981;
+                --ibf-primary-glow: rgba(14, 102, 85, 0.15);
+                --ibf-dark: #0f172a;
+                --ibf-text: #334155;
+                --ibf-text-light: #64748b;
+                --ibf-border: #e2e8f0;
+                --ibf-bg: #f8fafc;
+                --ibf-white: #ffffff;
+                --ibf-radius: 16px;
+                --ibf-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+                --ibf-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+                font-family: 'Poppins', 'Inter', -apple-system, sans-serif;
+              }
+
+              #inlineBookingForm .booking-container {
+                background: var(--ibf-white);
+                border-radius: var(--ibf-radius);
+                box-shadow: var(--ibf-shadow-lg);
+                overflow: hidden;
+              }
+
+              /* --- HEADER --- */
+              #inlineBookingForm .booking-header {
+                background: linear-gradient(135deg, #0a4f42 0%, #0e6655 30%, #10b981 70%, #34d399 100%);
+                background-size: 200% 200%;
+                animation: ibfGradientShift 8s ease infinite;
+                color: var(--ibf-white);
+                padding: 32px 30px 28px;
+                position: relative;
+                overflow: hidden;
+              }
+
+              @keyframes ibfGradientShift {
+
+                0%,
+                100% {
+                  background-position: 0% 50%;
+                }
+
+                50% {
+                  background-position: 100% 50%;
+                }
+              }
+
+              #inlineBookingForm .booking-header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -20%;
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+              }
+
+              #inlineBookingForm .booking-header::after {
+                content: '';
+                position: absolute;
+                bottom: -30%;
+                left: -10%;
+                width: 200px;
+                height: 200px;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+              }
+
+              #inlineBookingForm .ibf-header-content {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                gap: 20px;
+              }
+
+              #inlineBookingForm .ibf-header-icon {
+                width: 52px;
+                height: 52px;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                flex-shrink: 0;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              }
+
+              #inlineBookingForm .ibf-header-text h3 {
+                font-size: 22px;
+                font-weight: 700;
+                margin: 0 0 4px 0;
+                letter-spacing: -0.3px;
+                line-height: 1.2;
+              }
+
+              #inlineBookingForm .ibf-header-text p {
+                font-size: 13px;
+                opacity: 0.85;
+                margin: 0;
+                font-weight: 400;
+              }
+
+              #inlineBookingForm .back-to-selection {
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                color: white;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-weight: 500;
+                padding: 8px 14px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(10px);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 3;
+                font-size: 12px;
+                cursor: pointer;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+              }
+
+              #inlineBookingForm .back-to-selection:hover {
+                background: rgba(255, 255, 255, 0.22);
+                transform: translateX(-2px);
+              }
+
+              /* --- STEP PROGRESS BAR --- */
+              #inlineBookingForm .ibf-progress-bar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 22px 30px 18px;
+                background: linear-gradient(180deg, rgba(14, 102, 85, 0.03) 0%, var(--ibf-white) 100%);
+                gap: 0;
+                border-bottom: 1px solid var(--ibf-border);
+              }
+
+              #inlineBookingForm .ibf-step-indicator {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                position: relative;
+                z-index: 1;
+              }
+
+              #inlineBookingForm .ibf-step-dot {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--ibf-bg);
+                border: 2px solid var(--ibf-border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 700;
+                color: var(--ibf-text-light);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+              }
+
+              #inlineBookingForm .ibf-step-dot.active {
+                background: linear-gradient(135deg, var(--ibf-primary), var(--ibf-primary-light));
+                border-color: var(--ibf-primary);
+                color: white;
+                box-shadow: 0 0 0 4px var(--ibf-primary-glow), 0 4px 12px rgba(14, 102, 85, 0.25);
+                transform: scale(1.1);
+              }
+
+              #inlineBookingForm .ibf-step-dot.completed {
+                background: linear-gradient(135deg, var(--ibf-primary), var(--ibf-primary-light));
+                border-color: var(--ibf-primary);
+                color: white;
+              }
+
+              #inlineBookingForm .ibf-step-label {
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--ibf-text-light);
+                transition: color 0.3s;
+                white-space: nowrap;
+              }
+
+              #inlineBookingForm .ibf-step-indicator.active .ibf-step-label {
+                color: var(--ibf-primary);
+              }
+
+              #inlineBookingForm .ibf-step-line {
+                width: 40px;
+                height: 2px;
+                background: var(--ibf-border);
+                margin: 0 6px;
+                border-radius: 2px;
+                transition: background 0.4s;
+                flex-shrink: 0;
+              }
+
+              #inlineBookingForm .ibf-step-line.completed {
+                background: linear-gradient(90deg, var(--ibf-primary), var(--ibf-primary-light));
+              }
+
+              /* --- FORM BODY --- */
+              #inlineBookingForm .custom-booking-form {
+                padding: 28px 30px 30px;
+              }
+
+              #inlineBookingForm .inline-form-step {
+                display: none;
+              }
+
+              #inlineBookingForm .inline-form-step.active {
+                display: block;
+                animation: ibfStepSlideIn 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+              }
+
+              @keyframes ibfStepSlideIn {
+                from {
+                  opacity: 0;
+                  transform: translateY(16px);
+                }
+
+                to {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
+
+              #inlineBookingForm .inline-form-step h4 {
+                color: var(--ibf-dark);
+                font-size: 18px;
+                font-weight: 700;
+                margin: 0 0 22px 0;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                letter-spacing: -0.2px;
+              }
+
+              #inlineBookingForm .inline-form-step h4 i {
+                width: 36px;
+                height: 36px;
+                background: linear-gradient(135deg, var(--ibf-primary-glow), rgba(16, 185, 129, 0.1));
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--ibf-primary);
+                font-size: 15px;
+                flex-shrink: 0;
+              }
+
+              /* --- FORM FIELDS --- */
+              #inlineBookingForm .inline-form-group {
+                margin-bottom: 20px;
+              }
+
+              #inlineBookingForm .inline-form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: var(--ibf-dark);
+                font-size: 13px;
+                letter-spacing: 0.2px;
+              }
+
+              #inlineBookingForm .inline-form-control {
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid var(--ibf-border);
+                border-radius: 12px;
+                font-size: 14px;
+                font-family: 'Poppins', sans-serif;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                background: var(--ibf-bg);
+                box-sizing: border-box;
+                color: var(--ibf-dark);
+              }
+
+              #inlineBookingForm .inline-form-control:focus {
+                outline: none;
+                border-color: var(--ibf-primary);
+                background: var(--ibf-white);
+                box-shadow: 0 0 0 4px var(--ibf-primary-glow);
+              }
+
+              #inlineBookingForm .inline-form-control::placeholder {
+                color: #94a3b8;
+              }
+
+              #inlineBookingForm .inline-form-control.error {
+                border-color: #ef4444;
+                background: #fef2f2;
+                box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+              }
+
+              #inlineBookingForm .inline-error-message {
+                color: #ef4444;
+                font-size: 12px;
+                margin-top: 6px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-weight: 500;
+              }
+
+              #inlineBookingForm .inline-form-hint {
+                font-size: 11px;
+                color: var(--ibf-text-light);
+                margin-top: 6px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+              }
+
+              /* --- EMAIL FIELD --- */
+              #inlineBookingForm .inline-email-container {
+                position: relative;
+                display: block;
+                width: 100%;
+              }
+
+              #inlineBookingForm .inline-email-input {
+                padding-right: 90px !important;
+              }
+
+              #inlineBookingForm .inline-verify-btn {
+                position: absolute;
+                right: 6px;
+                top: 50%;
+                transform: translateY(-50%);
+                padding: 8px 16px;
+                background: linear-gradient(135deg, var(--ibf-primary), var(--ibf-primary-light));
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 11px;
+                white-space: nowrap;
+                z-index: 10;
+                letter-spacing: 0.3px;
+                text-transform: uppercase;
+              }
+
+              #inlineBookingForm .inline-verify-btn:hover {
+                box-shadow: 0 4px 16px rgba(14, 102, 85, 0.35);
+                transform: translateY(-50%) scale(1.02);
+              }
+
+              #inlineBookingForm .inline-verify-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: translateY(-50%);
+              }
+
+              #inlineBookingForm .inline-verification-status {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 18px;
+                display: none;
+                z-index: 15;
+              }
+
+              #inlineBookingForm .inline-verification-status.verified {
+                color: var(--ibf-primary-light);
+                display: block !important;
+              }
+
+              /* --- FORM ROW --- */
+              #inlineBookingForm .inline-form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+              }
+
+              /* --- TIME SLOTS --- */
+              #inlineBookingForm .inline-time-slots {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 8px;
+                margin: 12px auto;
+                max-width: 100%;
+              }
+
+              #inlineBookingForm .inline-time-slot {
+                padding: 10px 6px;
+                border: 2px solid var(--ibf-border);
+                border-radius: 10px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                background: var(--ibf-bg);
+                font-weight: 600;
+                font-size: 12px;
+                min-height: 38px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+              }
+
+              #inlineBookingForm .inline-time-slot::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, var(--ibf-primary), var(--ibf-primary-light));
+                opacity: 0;
+                transition: opacity 0.25s;
+                border-radius: 8px;
+              }
+
+              #inlineBookingForm .inline-time-slot span {
+                position: relative;
+                z-index: 1;
+              }
+
+              #inlineBookingForm .inline-time-slot:hover {
+                border-color: var(--ibf-primary);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px var(--ibf-primary-glow);
+              }
+
+              #inlineBookingForm .inline-time-slot.selected {
+                border-color: var(--ibf-primary);
+                background: linear-gradient(135deg, var(--ibf-primary), var(--ibf-primary-light));
+                color: white;
+              }
+
+              #inlineBookingForm .inline-time-slot.selected::before {
+                opacity: 0;
+              }
+
+              /* --- MEETING OPTIONS --- */
+              #inlineBookingForm .inline-meeting-options {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                margin: 16px auto;
+                max-width: 100%;
+              }
+
+              #inlineBookingForm .inline-meeting-option {
+                padding: 20px 16px;
+                border: 2px solid var(--ibf-border);
+                border-radius: var(--ibf-radius);
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                background: var(--ibf-bg);
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+              }
+
+              #inlineBookingForm .inline-meeting-option::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, var(--ibf-primary), var(--ibf-primary-light));
+                transform: scaleX(0);
+                transition: transform 0.3s;
+                transform-origin: left;
+              }
+
+              #inlineBookingForm .inline-meeting-option:hover {
+                border-color: var(--ibf-primary);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 24px var(--ibf-primary-glow);
+              }
+
+              #inlineBookingForm .inline-meeting-option:hover::after {
+                transform: scaleX(1);
+              }
+
+              #inlineBookingForm .inline-meeting-option.selected {
+                border-color: var(--ibf-primary);
+                background: linear-gradient(135deg, rgba(14, 102, 85, 0.04), rgba(16, 185, 129, 0.06));
+                box-shadow: 0 0 0 4px var(--ibf-primary-glow);
+              }
+
+              #inlineBookingForm .inline-meeting-option.selected::after {
+                transform: scaleX(1);
+              }
+
+              #inlineBookingForm .inline-meeting-option h5 {
+                margin: 0 0 6px 0;
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--ibf-dark);
+              }
+
+              #inlineBookingForm .inline-meeting-option p {
+                margin: 0;
+                font-size: 12px;
+                color: var(--ibf-text-light);
+                line-height: 1.4;
+              }
+
+              #inlineBookingForm .inline-meeting-option i,
+              #inlineBookingForm .inline-meeting-option svg {
+                font-size: 22px;
+                color: var(--ibf-primary);
+                margin-bottom: 10px;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+              }
+
+              /* --- STEP BUTTONS --- */
+              #inlineBookingForm .inline-step-buttons {
+                display: flex;
+                gap: 12px;
+                margin-top: 28px;
+                justify-content: space-between;
+              }
+
+              #inlineBookingForm .inline-next-btn,
+              #inlineBookingForm .inline-prev-btn,
+              #inlineBookingForm .inline-complete-btn {
+                padding: 13px 24px;
+                border: none;
+                border-radius: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
+                font-family: 'Poppins', sans-serif;
+                letter-spacing: 0.2px;
+              }
+
+              #inlineBookingForm .inline-next-btn,
+              #inlineBookingForm .inline-complete-btn {
+                background: linear-gradient(135deg, var(--ibf-primary), var(--ibf-primary-light));
+                color: white;
+                flex: 1;
+                justify-content: center;
+                box-shadow: 0 4px 16px rgba(14, 102, 85, 0.2);
+              }
+
+              #inlineBookingForm .inline-prev-btn {
+                background: var(--ibf-white);
+                color: var(--ibf-text-light);
+                border: 2px solid var(--ibf-border);
+              }
+
+              #inlineBookingForm .inline-next-btn:hover,
+              #inlineBookingForm .inline-complete-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 28px rgba(14, 102, 85, 0.35);
+              }
+
+              #inlineBookingForm .inline-prev-btn:hover {
+                background: var(--ibf-bg);
+                border-color: #cbd5e1;
+                color: var(--ibf-text);
+              }
+
+              #inlineBookingForm .inline-complete-btn {
+                background: linear-gradient(135deg, #059669, var(--ibf-primary-light));
+                font-size: 15px;
+                padding: 14px 28px;
+              }
+
+              #inlineBookingForm .inline-complete-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+              }
+
+              /* --- PAYMENT OPTIONAL --- */
+              #inlineBookingForm .inline-payment-optional {
+                background: linear-gradient(135deg, #fefce8, #fef9c3);
+                border: 1px solid #fde047;
+                border-radius: 14px;
+                padding: 18px 20px;
+                margin: 22px 0;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                box-shadow: 0 4px 16px rgba(250, 204, 21, 0.1);
+              }
+
+              #inlineBookingForm .inline-payment-optional-icon {
+                background: linear-gradient(135deg, #eab308, #ca8a04);
+                color: white;
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                flex-shrink: 0;
+              }
+
+              #inlineBookingForm .inline-payment-optional h4 {
+                color: #854d0e;
+                font-size: 15px;
+                font-weight: 700;
+                margin: 0 0 4px 0;
+                display: block;
+                background: none;
+                width: auto;
+                height: auto;
+                border-radius: 0;
+              }
+
+              #inlineBookingForm .inline-payment-optional p {
+                color: #92400e;
+                font-size: 13px;
+                margin: 0;
+                line-height: 1.5;
+                font-weight: 400;
+              }
+
+              /* --- ALERTS --- */
+              .inline-booking-alert {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 14px 20px;
+                border-radius: 12px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                transform: translateX(400px);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+                max-width: 340px;
+                font-size: 14px;
+                backdrop-filter: blur(10px);
+              }
+
+              .inline-booking-alert.show {
+                transform: translateX(0);
+              }
+
+              .inline-booking-alert.success {
+                background: linear-gradient(135deg, #10b981, #059669);
+              }
+
+              .inline-booking-alert.error {
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+              }
+
+              .inline-booking-alert.warning {
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+              }
+
+              /* --- RESPONSIVE --- */
+              @media (max-width: 1024px) {
+                #inlineBookingForm .inline-time-slots {
+                  grid-template-columns: repeat(4, 1fr);
+                }
+              }
+
+              @media (max-width: 768px) {
+                #inlineBookingForm .booking-header {
+                  padding: 24px 20px 20px;
+                }
+
+                #inlineBookingForm .back-to-selection {
+                  position: absolute;
+                  top: 10px;
+                  right: 10px;
+                  padding: 6px 12px;
+                  font-size: 11px;
+                }
+
+                #inlineBookingForm .ibf-header-icon {
+                  width: 42px;
+                  height: 42px;
+                  font-size: 18px;
+                  border-radius: 10px;
+                }
+
+                #inlineBookingForm .ibf-header-text h3 {
+                  font-size: 18px;
+                }
+
+                #inlineBookingForm .ibf-header-text p {
+                  font-size: 12px;
+                }
+
+                #inlineBookingForm .custom-booking-form {
+                  padding: 22px 18px 26px;
+                }
+
+                #inlineBookingForm .inline-form-row {
+                  grid-template-columns: 1fr;
+                  gap: 0;
+                }
+
+                #inlineBookingForm .inline-meeting-options {
+                  grid-template-columns: 1fr;
+                  max-width: 100%;
+                }
+
+                #inlineBookingForm .inline-step-buttons {
+                  flex-direction: column;
+                }
+
+                #inlineBookingForm .inline-prev-btn {
+                  order: 2;
+                }
+
+                #inlineBookingForm .inline-next-btn,
+                #inlineBookingForm .inline-complete-btn {
+                  order: 1;
+                }
+
+                #inlineBookingForm .inline-email-input {
+                  padding-right: 80px !important;
+                }
+
+                #inlineBookingForm .inline-verify-btn {
+                  right: 5px;
+                  padding: 6px 12px;
+                  font-size: 10px;
+                }
+
+                #inlineBookingForm .inline-time-slots {
+                  grid-template-columns: repeat(3, 1fr);
+                }
+
+                #inlineBookingForm .ibf-progress-bar {
+                  padding: 16px 18px 14px;
+                  gap: 0;
+                }
+
+                #inlineBookingForm .ibf-step-label {
+                  font-size: 10px;
+                  display: none;
+                }
+
+                #inlineBookingForm .ibf-step-line {
+                  width: 28px;
+                }
+
+                #inlineBookingForm .ibf-step-dot {
+                  width: 28px;
+                  height: 28px;
+                  font-size: 11px;
+                }
+              }
+
+              @media (max-width: 480px) {
+                #inlineBookingForm .ibf-header-text h3 {
+                  font-size: 16px;
+                }
+
+                #inlineBookingForm .inline-form-step h4 {
+                  font-size: 16px;
+                }
+
+                #inlineBookingForm .inline-form-step h4 i {
+                  width: 30px;
+                  height: 30px;
+                  font-size: 13px;
+                }
+
+                #inlineBookingForm .inline-time-slots {
+                  grid-template-columns: repeat(2, 1fr);
+                  gap: 6px;
+                }
+
+                #inlineBookingForm .inline-payment-optional {
+                  flex-direction: column;
+                  text-align: center;
+                  padding: 14px;
+                  gap: 10px;
+                }
+
+                #inlineBookingForm .custom-booking-form {
+                  padding: 18px 14px 22px;
+                }
+              }
+            </style>
+
+            <div class="booking-container">
+              <div class="booking-header">
+                <button type="button" class="back-to-selection" id="inlineBackToSelection">
+                  <i class="fa fa-arrow-left"></i> Back
+                </button>
+                <div class="ibf-header-content">
+                  <div class="ibf-header-icon">
+                    <i class="fa fa-calendar-check-o"></i>
+                  </div>
+                  <div class="ibf-header-text">
+                    <h3>Book Your Session</h3>
+                    <p>Complete the steps below to schedule your meeting</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step Progress Bar -->
+              <div class="ibf-progress-bar">
+                <div class="ibf-step-indicator active" data-step="1">
+                  <div class="ibf-step-dot active">1</div>
+                  <span class="ibf-step-label">Details</span>
+                </div>
+                <div class="ibf-step-line"></div>
+                <div class="ibf-step-indicator" data-step="2">
+                  <div class="ibf-step-dot">2</div>
+                  <span class="ibf-step-label">Schedule</span>
+                </div>
+                <div class="ibf-step-line"></div>
+                <div class="ibf-step-indicator" data-step="3">
+                  <div class="ibf-step-dot">3</div>
+                  <span class="ibf-step-label">Confirm</span>
+                </div>
+              </div>
+
+              <div class="custom-booking-form">
+                <form id="inlineBookingFormEl">
+                  <!-- Step 1: Contact Information -->
+                  <div class="inline-form-step active" id="inlineStep1">
+                    <h4><i class="fa fa-user"></i> Contact Information</h4>
+                    <div class="inline-form-row">
+                      <div class="inline-form-group">
+                        <label for="inlineClientEmail">Email Address *</label>
+                        <div class="inline-email-container">
+                          <input type="email" id="inlineClientEmail" class="inline-form-control inline-email-input"
+                            placeholder="your.email@example.com" required>
+                          <button type="button" id="inlineVerifyEmailBtn" class="inline-verify-btn">Verify</button>
+                          <span id="inlineEmailStatus" class="inline-verification-status"></span>
+                        </div>
+                        <small class="inline-form-hint"><i class="fa fa-info-circle"></i> Meeting link will be sent
+                          here</small>
+                      </div>
+                      <div class="inline-form-group">
+                        <label for="inlineClientName">Full Name *</label>
+                        <input type="text" id="inlineClientName" class="inline-form-control"
+                          placeholder="Your full name" required>
+                      </div>
+                    </div>
+                    <div class="inline-form-row">
+                      <div class="inline-form-group">
+                        <label for="inlineClientPhone">Phone Number <span
+                            style="font-weight:400;color:#94a3b8;">(Optional)</span></label>
+                        <input type="tel" id="inlineClientPhone" class="inline-form-control"
+                          placeholder="+1 (555) 123-4567">
+                        <small class="inline-form-hint"><i class="fa fa-info-circle"></i> For urgent
+                          communication</small>
+                      </div>
+                      <div class="inline-form-group">
+                        <label for="inlineClientCompany">Company <span
+                            style="font-weight:400;color:#94a3b8;">(Optional)</span></label>
+                        <input type="text" id="inlineClientCompany" class="inline-form-control"
+                          placeholder="Your company name">
+                        <small class="inline-form-hint"><i class="fa fa-info-circle"></i> Business context helps</small>
+                      </div>
+                    </div>
+                    <div class="inline-step-buttons">
+                      <div></div>
+                      <button type="button" class="inline-next-btn" id="inlineNextStep1"><span>Continue</span> <i
+                          class="fa fa-arrow-right"></i></button>
+                    </div>
+                  </div>
+
+                  <!-- Step 2: Date & Time Selection -->
+                  <div class="inline-form-step" id="inlineStep2">
+                    <h4><i class="fa fa-clock-o"></i> Select Date & Time</h4>
+                    <div class="inline-form-row">
+                      <div class="inline-form-group">
+                        <label for="inlineSessionDate">Preferred Date *</label>
+                        <input type="date" id="inlineSessionDate" class="inline-form-control" required>
+                        <small class="inline-form-hint"><i class="fa fa-info-circle"></i> Monday – Friday</small>
+                      </div>
+                      <div class="inline-form-group">
+                        <label for="inlineTimezone">Your Timezone *</label>
+                        <select id="inlineTimezone" class="inline-form-control" required>
+                          <option value="">Select timezone</option>
+                          <option value="UTC-12:00">(UTC-12:00) Date Line West</option>
+                          <option value="UTC-11:00">(UTC-11:00) UTC-11</option>
+                          <option value="UTC-10:00">(UTC-10:00) Hawaii</option>
+                          <option value="UTC-09:00">(UTC-09:00) Alaska</option>
+                          <option value="UTC-08:00">(UTC-08:00) Pacific Time</option>
+                          <option value="UTC-07:00">(UTC-07:00) Mountain Time</option>
+                          <option value="UTC-06:00">(UTC-06:00) Central Time</option>
+                          <option value="UTC-05:00" selected>(UTC-05:00) Eastern Time</option>
+                          <option value="UTC-04:00">(UTC-04:00) Atlantic Time</option>
+                          <option value="UTC-03:00">(UTC-03:00) Brasilia</option>
+                          <option value="UTC-02:00">(UTC-02:00) UTC-02</option>
+                          <option value="UTC-01:00">(UTC-01:00) Azores</option>
+                          <option value="UTC+00:00">(UTC+00:00) London</option>
+                          <option value="UTC+01:00">(UTC+01:00) Berlin, Paris</option>
+                          <option value="UTC+02:00">(UTC+02:00) Cairo</option>
+                          <option value="UTC+03:00">(UTC+03:00) Moscow</option>
+                          <option value="UTC+04:00">(UTC+04:00) Abu Dhabi</option>
+                          <option value="UTC+05:00">(UTC+05:00) Karachi</option>
+                          <option value="UTC+05:30">(UTC+05:30) Mumbai</option>
+                          <option value="UTC+06:00">(UTC+06:00) Dhaka</option>
+                          <option value="UTC+07:00">(UTC+07:00) Bangkok</option>
+                          <option value="UTC+08:00">(UTC+08:00) Singapore</option>
+                          <option value="UTC+09:00">(UTC+09:00) Tokyo</option>
+                          <option value="UTC+10:00">(UTC+10:00) Sydney</option>
+                          <option value="UTC+11:00">(UTC+11:00) Solomon Is.</option>
+                          <option value="UTC+12:00">(UTC+12:00) Auckland</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="inline-form-group">
+                      <label>Available Time Slots *</label>
+                      <div id="inlineTimeSlots" class="inline-time-slots"></div>
+                      <small class="inline-form-hint" id="inlineTimeSlotsHint"><i class="fa fa-info-circle"></i> Times
+                        shown in your timezone</small>
+                    </div>
+                    <div class="inline-step-buttons">
+                      <button type="button" class="inline-prev-btn" id="inlinePrevStep2"><i
+                          class="fa fa-arrow-left"></i> <span>Back</span></button>
+                      <button type="button" class="inline-next-btn" id="inlineNextStep2"><span>Continue</span> <i
+                          class="fa fa-arrow-right"></i></button>
+                    </div>
+                  </div>
+
+                  <!-- Step 3: Meeting Preferences -->
+                  <div class="inline-form-step" id="inlineStep3">
+                    <h4><i class="fa fa-video-camera"></i> Meeting Preferences</h4>
+                    <div class="inline-form-group">
+                      <label>Choose Platform *</label>
+                      <div class="inline-meeting-options">
+                        <div class="inline-meeting-option" data-mode="google-meet">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.09 0 2.16-.17 3.16-.5l-1.5-1.5c-.54.13-1.1.2-1.66.2-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8c0 .56-.07 1.12-.2 1.66l1.5 1.5c.33-1 .5-2.07.5-3.16 0-5.52-4.48-10-10-10z"
+                              fill="#0e6655" />
+                            <path d="M15 9h-3v3h3V9zm2 0v6l4-2-4-4z" fill="#0e6655" />
+                            <circle cx="9" cy="12" r="2" fill="#0e6655" />
+                          </svg>
+                          <h5>Google Meet</h5>
+                          <p>No downloads needed</p>
+                        </div>
+                        <div class="inline-meeting-option" data-mode="zoom">
+                          <i class="fa fa-video-camera"></i>
+                          <h5>Zoom</h5>
+                          <p>Professional conferencing</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="inline-form-group">
+                      <label for="inlineSessionNotes">Notes <span
+                          style="font-weight:400;color:#94a3b8;">(Optional)</span></label>
+                      <textarea id="inlineSessionNotes" class="inline-form-control" rows="3"
+                        placeholder="Topics you'd like to discuss or questions..."></textarea>
+                      <small class="inline-form-hint"><i class="fa fa-info-circle"></i> Helps me prepare for our
+                        session</small>
+                    </div>
+
+                    <div class="inline-step-buttons">
+                      <button type="button" class="inline-prev-btn" id="inlinePrevStep3"><i
+                          class="fa fa-arrow-left"></i> <span>Back</span></button>
+                      <button type="button" class="inline-complete-btn" id="inlineCompleteBooking"><i
+                          class="fa fa-check"></i> <span>Complete Booking</span></button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
+          <script>
+            (function () {
+              var inlineCurrentStep = 1;
+              var inlineEmailVerified = false;
+              var inlineSelectedMode = null;
 
-          <!-- Hours Selection and Total Calculation Section -->
-          <div class="hours-selection-section">
-            <h3>Select Number of Session</h3>
-            <div class="hours-input-container">
-              <div class="hours-control">
-                <button type="button" id="decreaseHours" class="hours-btn">
-                  <i class="fa fa-minus"></i>
-                </button>
-                <input type="number" id="hoursInput" min="1" max="10" value="1" class="hours-input">
-                <button type="button" id="increaseHours" class="hours-btn">
-                  <i class="fa fa-plus"></i>
-                </button>
-              </div>
-              <div class="hours-label">Session (s)</div>
-            </div>
+              function showAlert(type, title, msg) {
+                var el = document.createElement('div');
+                el.className = 'inline-booking-alert ' + type;
+                el.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><i class="fa fa-' +
+                  (type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'exclamation-triangle') +
+                  '"></i><div><div style="font-weight:600;margin-bottom:2px;">' + title +
+                  '</div><div style="font-size:14px;opacity:0.9;">' + msg + '</div></div></div>';
+                document.body.appendChild(el);
+                setTimeout(function () { el.classList.add('show'); }, 100);
+                setTimeout(function () { el.classList.remove('show'); setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 300); }, 4000);
+              }
 
-            <div class="total-calculation">
-              <div class="calculation-row">
-                <span class="calculation-label">Session Type:</span>
-                <span id="selectedSessionType" class="calculation-value">Quick Chat</span>
-              </div>
-              <div class="calculation-row">
-                <span class="calculation-label">Price per Session:</span>
-                <span id="pricePerSession" class="calculation-value">$15</span>
-              </div>
-              <div class="calculation-row">
-                <span class="calculation-label">Number of Sessions:</span>
-                <span id="numberOfHours" class="calculation-value">1</span>
-              </div>
-              <div class="calculation-divider"></div>
-              <div class="calculation-row total">
-                <span class="calculation-label">Total Amount:</span>
-                <span id="totalAmount" class="calculation-value">$15</span>
-              </div>
+              function getData() {
+                if (typeof window.getBookingSessionData === 'function') return window.getBookingSessionData();
+                return { sessionType: 'Quick Chat', duration: '30 minutes', hours: 1, price: 15, amount: 15 };
+              }
 
-              <!-- Payment Button inside the calculation card -->
-              <div class="calculation-row payment-button-row">
-                <button id="proceedToPaymentButton" class="payment-proceed-button">
-                  <i class="fa fa-credit-card"></i>
-                  Book Session
-                </button>
-              </div>
+              function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 
-              <!-- Optional Payment Message -->
-              <div class="optional-payment-message">
-                <div class="optional-payment-icon">
-                  <i class="fa fa-heart"></i>
-                </div>
-                <div class="optional-payment-content">
-                  <h4>💝 Payment is Optional</h4>
-                  <p>If you like my meeting service, you can pay me after the meeting, but it's totally up to you. Your
-                    satisfaction is my priority!</p>
-                </div>
-              </div>
-            </div>
-          </div>
+              function fieldErr(id, msg) {
+                var f = document.getElementById(id); if (!f) return;
+                f.classList.add('error');
+                var d = document.createElement('div'); d.className = 'inline-error-message';
+                d.innerHTML = '<i class="fa fa-exclamation-circle"></i> ' + msg;
+                f.parentNode.appendChild(d); f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
 
+              function clearErr() {
+                document.querySelectorAll('#inlineBookingForm .inline-form-control.error').forEach(function (f) { f.classList.remove('error'); });
+                document.querySelectorAll('#inlineBookingForm .inline-error-message').forEach(function (m) { m.remove(); });
+              }
 
-          <!-- What to Expect Section -->
-          <div class="expectations-section">
-            <h3>What to Expect</h3>
-            <div class="expectations-grid">
-              <div class="expectation-item">
-                <div class="expectation-icon">
-                  <i class="fa fa-user"></i>
-                </div>
-                <h4>Personal Consultation</h4>
-                <p>One-on-one discussion tailored to your specific needs and goals</p>
-              </div>
-              <div class="expectation-item">
-                <div class="expectation-icon">
-                  <i class="fa fa-lightbulb-o"></i>
-                </div>
-                <h4>Expert Insights</h4>
-                <p>Professional recommendations and innovative solutions for your project</p>
-              </div>
-              <div class="expectation-item">
-                <div class="expectation-icon">
-                  <i class="fa fa-clock-o"></i>
-                </div>
-                <h4>Flexible Timing</h4>
-                <p>Choose a time that works best for your schedule across different time zones</p>
-              </div>
-              <div class="expectation-item">
-                <div class="expectation-icon">
-                  <i class="fa fa-shield"></i>
-                </div>
-                <h4>Confidential & Secure</h4>
-                <p>Your information and project details are kept private and secure at all times</p>
-              </div>
-            </div>
-          </div>
+              function validate() {
+                clearErr(); var ok = true, data = getData();
+                if (inlineCurrentStep === 1) {
+                  var em = document.getElementById('inlineClientEmail').value;
+                  var nm = document.getElementById('inlineClientName').value;
+                  if (!em) { fieldErr('inlineClientEmail', 'Email is required'); ok = false; }
+                  else if (!isValidEmail(em)) { fieldErr('inlineClientEmail', 'Enter a valid email'); ok = false; }
+                  if (!inlineEmailVerified) { showAlert('warning', 'Verify Email', 'Please verify your email first.'); ok = false; }
+                  if (!nm.trim()) { fieldErr('inlineClientName', 'Name is required'); ok = false; }
+                } else if (inlineCurrentStep === 2) {
+                  var dt = document.getElementById('inlineSessionDate').value;
+                  var tz = document.getElementById('inlineTimezone').value;
+                  var sel = document.querySelectorAll('#inlineBookingForm .inline-time-slot.selected');
+                  var req = data.hours || 1;
+                  if (!dt) { fieldErr('inlineSessionDate', 'Select a date'); ok = false; }
+                  if (!tz) { fieldErr('inlineTimezone', 'Select timezone'); ok = false; }
+                  if (sel.length === 0) { showAlert('warning', 'Select Time', 'Pick ' + req + ' time slot(s).'); ok = false; }
+                  else if (sel.length !== req) { showAlert('warning', 'Incomplete', 'Select ' + req + ' slot(s), you picked ' + sel.length + '.'); ok = false; }
+                }
+                return ok;
+              }
+
+              function goStep(s) {
+                document.getElementById('inlineStep' + inlineCurrentStep).classList.remove('active');
+                inlineCurrentStep = s;
+                document.getElementById('inlineStep' + inlineCurrentStep).classList.add('active');
+                // Update progress bar
+                var indicators = document.querySelectorAll('#inlineBookingForm .ibf-step-indicator');
+                var lines = document.querySelectorAll('#inlineBookingForm .ibf-step-line');
+                indicators.forEach(function (ind) {
+                  var step = parseInt(ind.getAttribute('data-step'));
+                  var dot = ind.querySelector('.ibf-step-dot');
+                  ind.classList.remove('active');
+                  dot.classList.remove('active', 'completed');
+                  if (step === s) { ind.classList.add('active'); dot.classList.add('active'); }
+                  else if (step < s) { dot.classList.add('completed'); dot.innerHTML = '✓'; }
+                  else { dot.innerHTML = step; }
+                });
+                lines.forEach(function (line, i) {
+                  if (i < s - 1) line.classList.add('completed');
+                  else line.classList.remove('completed');
+                });
+                var c = document.querySelector('#inlineBookingForm .booking-container');
+                if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+
+              function next() { if (validate()) { if (inlineCurrentStep < 3) { goStep(inlineCurrentStep + 1); if (inlineCurrentStep === 2) genSlots(); } } }
+              function prev() { if (inlineCurrentStep > 1) goStep(inlineCurrentStep - 1); }
+
+              function genSlots() {
+                var c = document.getElementById('inlineTimeSlots'); if (!c) return; c.innerHTML = '';
+                var data = getData(), dur = parseInt(data.duration) || 30, slots = [];
+                if (dur <= 30) slots = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM', '08:00 PM', '08:30 PM'];
+                else slots = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM'];
+                slots.forEach(function (t) { var s = document.createElement('div'); s.className = 'inline-time-slot'; s.textContent = t; s.addEventListener('click', function () { pickSlot(s); }); c.appendChild(s); });
+                var h = document.getElementById('inlineTimeSlotsHint');
+                if (h) h.textContent = 'Each slot is ' + dur + ' min for ' + data.sessionType + '. Select ' + data.hours + ' slot(s).';
+              }
+
+              function pickSlot(slot) {
+                var data = getData(), req = data.hours || 1;
+                var sel = document.querySelectorAll('#inlineBookingForm .inline-time-slot.selected');
+                if (slot.classList.contains('selected')) { slot.classList.remove('selected'); }
+                else { if (sel.length >= req) { showAlert('warning', 'Max Reached', 'Only ' + req + ' slot(s) allowed.'); return; } slot.classList.add('selected'); }
+                var cur = document.querySelectorAll('#inlineBookingForm .inline-time-slot.selected').length;
+                var h = document.getElementById('inlineTimeSlotsHint');
+                if (h) {
+                  if (cur === 0) { h.textContent = 'Select ' + req + ' slot(s).'; h.style.color = '#6b7280'; }
+                  else if (cur < req) { h.textContent = cur + '/' + req + ' selected. Pick ' + (req - cur) + ' more.'; h.style.color = '#f59e0b'; }
+                  else { h.textContent = '✓ All ' + req + ' slot(s) selected!'; h.style.color = '#10b981'; }
+                }
+              }
+
+              function sHash(s) { var h = 0; for (var i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h = h & h; } return Math.abs(h).toString(16).padStart(10, '0'); }
+
+              async function complete() {
+                if (!validate()) return;
+                if (!inlineSelectedMode) { showAlert('warning', 'Platform Required', 'Select a meeting platform.'); return; }
+                var data = getData();
+                var times = Array.from(document.querySelectorAll('#inlineBookingForm .inline-time-slot.selected')).map(function (s) { return s.textContent; });
+                var fd = {
+                  sessionType: data.sessionType, duration: data.duration, hours: data.hours, amount: data.amount,
+                  clientEmail: document.getElementById('inlineClientEmail').value,
+                  clientName: document.getElementById('inlineClientName').value,
+                  clientPhone: document.getElementById('inlineClientPhone').value,
+                  clientCompany: document.getElementById('inlineClientCompany').value,
+                  sessionDate: document.getElementById('inlineSessionDate').value,
+                  sessionTimes: JSON.stringify(times),
+                  timezone: document.getElementById('inlineTimezone').value,
+                  meetingMode: inlineSelectedMode,
+                  sessionNotes: document.getElementById('inlineSessionNotes').value
+                };
+                var btn = document.getElementById('inlineCompleteBooking'), orig = btn.innerHTML;
+                btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> <span>Sending...</span>';
+                var sid = 'SES-' + Date.now().toString().slice(-8);
+                var ml = inlineSelectedMode === 'zoom' ? 'https://zoom.us/j/' + ((parseInt(sHash(sid), 16) % 900000000) + 100000000) + '?pwd=' + sHash(sid + 'pwd').substring(0, 6).toUpperCase() : 'https://meet.google.com/new';
+                try {
+                  var r = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      access_key: 'c6b7fea5-f7cd-4363-be99-4098c93c42b8',
+                      subject: '📧 BOOKING: ' + fd.sessionType + ' – ' + fd.clientName, name: 'Faisal Hanif',
+                      email: 'mehrfaisal111@gmail.com', _replyto: fd.clientEmail,
+                      message: 'Booking from ' + fd.clientName + '\nEmail: ' + fd.clientEmail + '\nType: ' + fd.sessionType + '\nDate: ' + fd.sessionDate + '\nTime: ' + times.join(', ') + '\nDuration: ' + fd.duration + '\nPlatform: ' + (fd.meetingMode === 'google-meet' ? 'Google Meet' : 'Zoom') + '\nSession ID: ' + sid + '\nAmount: $' + fd.amount + ' (Optional)\nNotes: ' + (fd.sessionNotes || 'None')
+                    })
+                  });
+                  if (!r.ok) throw new Error('Failed');
+                  showAlert('success', 'Booking Confirmed!', 'Confirmation sent.');
+                  btn.disabled = false; btn.innerHTML = orig;
+                  setTimeout(function () {
+                    var u = new URL('success.html', window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'));
+                    Object.keys(fd).forEach(function (k) { if (fd[k]) u.searchParams.append(k, fd[k]); });
+                    u.searchParams.append('meetingLink', ml); u.searchParams.append('sessionId', sid);
+                    window.location.href = u.toString();
+                  }, 2000);
+                } catch (e) { showAlert('error', 'Failed', 'Please try again.'); btn.disabled = false; btn.innerHTML = orig; }
+              }
+
+              window.initInlineBookingForm = function () {
+                inlineCurrentStep = 1; inlineEmailVerified = false; inlineSelectedMode = null;
+                var form = document.getElementById('inlineBookingFormEl'); if (form) form.reset();
+                document.querySelectorAll('#inlineBookingForm .inline-form-step').forEach(function (s) { s.classList.remove('active'); });
+                document.getElementById('inlineStep1').classList.add('active');
+                var vb = document.getElementById('inlineVerifyEmailBtn'), st = document.getElementById('inlineEmailStatus'), ei = document.getElementById('inlineClientEmail');
+                if (vb) { vb.style.display = ''; vb.disabled = false; vb.textContent = 'Verify'; }
+                if (st) { st.classList.remove('verified'); st.style.display = 'none'; }
+                if (ei) { ei.readOnly = false; ei.style.borderColor = ''; ei.style.backgroundColor = ''; ei.style.paddingRight = ''; }
+                document.querySelectorAll('#inlineBookingForm .inline-meeting-option').forEach(function (o) { o.classList.remove('selected'); });
+                var tc = document.getElementById('inlineTimeSlots'); if (tc) tc.innerHTML = '';
+                var di = document.getElementById('inlineSessionDate');
+                if (di) { var today = new Date(); di.min = today.toISOString().split('T')[0]; var mx = new Date(); mx.setDate(mx.getDate() + 30); di.max = mx.toISOString().split('T')[0]; }
+                var h = document.getElementById('inlineTimeSlotsHint'); if (h) { h.textContent = 'All times shown in your selected timezone'; h.style.color = '#6b7280'; }
+              };
+
+              document.addEventListener('DOMContentLoaded', function () {
+                var bb = document.getElementById('inlineBackToSelection');
+                if (bb) bb.addEventListener('click', function () {
+                  document.getElementById('inlineBookingForm').style.display = 'none';
+                  document.getElementById('scheduleSelectionContent').style.display = '';
+                  var sh = document.querySelector('.schedule-card .section-header'); if (sh) sh.style.display = '';
+                  var sc = document.querySelector('.schedule-card'); if (sc) sc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+                var n1 = document.getElementById('inlineNextStep1'); if (n1) n1.addEventListener('click', next);
+                var n2 = document.getElementById('inlineNextStep2'); if (n2) n2.addEventListener('click', next);
+                var p2 = document.getElementById('inlinePrevStep2'); if (p2) p2.addEventListener('click', prev);
+                var p3 = document.getElementById('inlinePrevStep3'); if (p3) p3.addEventListener('click', prev);
+                var cb = document.getElementById('inlineCompleteBooking'); if (cb) cb.addEventListener('click', complete);
+                var vb = document.getElementById('inlineVerifyEmailBtn');
+                if (vb) vb.addEventListener('click', function () {
+                  var ei = document.getElementById('inlineClientEmail'), em = ei.value;
+                  if (!em || !isValidEmail(em)) { showAlert('error', 'Invalid Email', 'Enter a valid email.'); return; }
+                  vb.disabled = true; vb.textContent = 'Verifying...';
+                  setTimeout(function () {
+                    inlineEmailVerified = true; vb.style.display = 'none';
+                    var si = document.getElementById('inlineEmailStatus');
+                    si.innerHTML = '<i class="fa fa-check-circle"></i>'; si.classList.add('verified'); si.style.display = 'block'; si.style.color = '#10b981';
+                    ei.style.borderColor = '#10b981'; ei.style.backgroundColor = '#f0fdf4'; ei.style.paddingRight = '40px'; ei.readOnly = true;
+                    var fh = ei.closest('.inline-form-group').querySelector('.inline-form-hint');
+                    if (fh) { fh.style.color = '#10b981'; fh.textContent = '✓ Email verified! Meeting link will be sent here.'; }
+                    showAlert('success', 'Verified!', 'Email verified successfully.');
+                  }, 1500);
+                });
+                document.querySelectorAll('#inlineBookingForm .inline-meeting-option').forEach(function (opt) {
+                  opt.addEventListener('click', function () {
+                    document.querySelectorAll('#inlineBookingForm .inline-meeting-option').forEach(function (o) { o.classList.remove('selected'); });
+                    opt.classList.add('selected'); inlineSelectedMode = opt.getAttribute('data-mode');
+                  });
+                });
+                var di = document.getElementById('inlineSessionDate');
+                if (di) di.addEventListener('change', function () { genSlots(); });
+              });
+            })();
+          </script>
 
           <!-- Payment Section (Now redirects to payment.html) -->
           <!-- The payment section has been moved to a separate page (payment.html) -->
@@ -5000,7 +6195,7 @@
 <!-- Chatbot Functionality -->
 <script src="js/config.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const chatSupportButton = document.getElementById('chatSupportButton');
     const chatbotModal = document.getElementById('chatbotModal');
     const chatbotInput = document.getElementById('chatbotInput');
@@ -5013,7 +6208,7 @@
     // Generate or retrieve unique browser ID using browser fingerprinting
     function getBrowserId() {
       let browserId = localStorage.getItem('chatBrowserId');
-      
+
       if (!browserId) {
         // Create a more stable browser fingerprint using multiple browser characteristics
         const fingerprint = {
@@ -5026,18 +6221,18 @@
           // Use canvas fingerprinting for additional uniqueness
           canvas: getCanvasFingerprint()
         };
-        
+
         // Create a hash-like string from fingerprint
         const fingerprintString = JSON.stringify(fingerprint);
         browserId = 'browser_' + btoa(fingerprintString).substring(0, 32) + '_' + Date.now().toString(36);
-        
+
         // Store in localStorage for persistence
         localStorage.setItem('chatBrowserId', browserId);
         console.log('[Frontend] New browser ID generated:', browserId.substring(0, 20) + '...');
       } else {
         console.log('[Frontend] Using existing browser ID:', browserId.substring(0, 20) + '...');
       }
-      
+
       return browserId;
     }
 
@@ -5396,7 +6591,7 @@ REMEMBER:
     }
 
     // Toggle chatbot open/close
-    chatSupportButton.addEventListener('click', function() {
+    chatSupportButton.addEventListener('click', function () {
       const isOpen = chatbotModal.classList.contains('active');
       if (isOpen) {
         // Close chatbot
@@ -5408,7 +6603,7 @@ REMEMBER:
         chatbotModal.classList.add('active');
         chatSupportButton.classList.add('active');
         toggleChatIcons(true);
-        
+
         // Check if user has reached daily limit and disable input if so
         if (hasReachedDailyLimit()) {
           chatbotInput.disabled = true;
@@ -5419,13 +6614,13 @@ REMEMBER:
           chatbotSend.disabled = false;
           chatbotInput.placeholder = 'Type your message...';
         }
-        
+
         chatbotInput.focus();
       }
     });
 
     // Close chatbot when clicking outside
-    chatbotModal.addEventListener('click', function(e) {
+    chatbotModal.addEventListener('click', function (e) {
       if (e.target === chatbotModal) {
         chatbotModal.classList.remove('active');
         chatSupportButton.classList.remove('active');
@@ -5435,7 +6630,7 @@ REMEMBER:
 
     // Close chatbot when clicking mobile close button
     if (chatbotCloseMobile) {
-      chatbotCloseMobile.addEventListener('click', function() {
+      chatbotCloseMobile.addEventListener('click', function () {
         chatbotModal.classList.remove('active');
         chatSupportButton.classList.remove('active');
         toggleChatIcons(false);
@@ -5444,13 +6639,13 @@ REMEMBER:
 
     // Check if user has reached daily message limit (client-side check)
     function hasReachedDailyLimit() {
-      const messageData = localStorage.getItem('chatMessageData');  
+      const messageData = localStorage.getItem('chatMessageData');
       const today = new Date().toISOString().split('T')[0];
-      
+
       if (!messageData) {
         return false;
       }
-      
+
       try {
         const data = JSON.parse(messageData);
         // Check if it's the same day and count is 4 or more
@@ -5460,7 +6655,7 @@ REMEMBER:
       } catch (e) {
         console.error('Error parsing message data:', e);
       }
-      
+
       return false;
     }
 
@@ -5468,7 +6663,7 @@ REMEMBER:
     function incrementMessageCount() {
       const today = new Date().toISOString().split('T')[0];
       const messageData = localStorage.getItem('chatMessageData');
-      
+
       let data = { date: today, count: 0 };
       if (messageData) {
         try {
@@ -5482,7 +6677,7 @@ REMEMBER:
           data = { date: today, count: 0 };
         }
       }
-      
+
       data.count++;
       localStorage.setItem('chatMessageData', JSON.stringify(data));
       return data.count;
@@ -5522,25 +6717,25 @@ REMEMBER:
         removeTypingIndicator(typingIndicator);
         addMessage(botResponse, 'bot');
         conversationHistory.push({ role: 'assistant', content: botResponse });
-        
+
         // Increment message count (only on successful response)
         const currentCount = incrementMessageCount();
         console.log(`[Frontend] Message count for today: ${currentCount}/4`);
       } catch (error) {
         console.error('Chatbot error:', error);
         removeTypingIndicator(typingIndicator);
-        
+
         // Handle daily limit error differently
         if (error.message === 'DAILY_LIMIT_REACHED' || error.status === 429) {
           dailyLimitReached = true;
           // Mark that user has reached limit (even if message wasn't processed)
           incrementMessageCount();
-          
+
           // Show the rate limit message to the user
           // error.rateLimitMessage contains the backend's message
-          const rateLimitMessage = error.rateLimitMessage || 
+          const rateLimitMessage = error.rateLimitMessage ||
             'You have reached your daily limit of 4 messages. Please try again tomorrow.';
-          
+
           addMessage(rateLimitMessage, 'bot');
           // Disable input to prevent further attempts
           chatbotInput.disabled = true;
@@ -5553,9 +6748,9 @@ REMEMBER:
       } finally {
         // Only re-enable if not disabled due to daily limit
         if (!dailyLimitReached) {
-        chatbotInput.disabled = false;
-        chatbotSend.disabled = false;
-        chatbotInput.focus();
+          chatbotInput.disabled = false;
+          chatbotSend.disabled = false;
+          chatbotInput.focus();
         }
       }
     }
@@ -5565,7 +6760,7 @@ REMEMBER:
       const typingDiv = document.createElement('div');
       typingDiv.className = 'chatbot-message bot typing-indicator';
       typingDiv.id = 'typing-indicator';
-      
+
       const avatar = document.createElement('div');
       avatar.className = 'message-avatar';
       const img = document.createElement('img');
@@ -5581,7 +6776,7 @@ REMEMBER:
       typingDiv.appendChild(content);
       chatbotMessages.appendChild(typingDiv);
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-      
+
       return typingDiv;
     }
 
@@ -5599,7 +6794,7 @@ REMEMBER:
 
       const avatar = document.createElement('div');
       avatar.className = 'message-avatar';
-      
+
       if (sender === 'bot') {
         const img = document.createElement('img');
         img.src = 'imgs/Faisal15.webp';
@@ -5629,11 +6824,11 @@ REMEMBER:
         // In local development, use full URL to backend server
         const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const apiEndpoint = isLocalhost ? 'http://localhost:3000/api/chat' : '/api/chat';
-        
+
         // Get browser ID for rate limiting
         const browserId = getBrowserId();
         console.log('[Frontend] Sending request with browser ID:', browserId.substring(0, 20) + '...');
-        
+
         // Call backend proxy endpoint
         const response = await fetch(apiEndpoint, {
           method: 'POST',
@@ -5648,12 +6843,12 @@ REMEMBER:
             browserId: browserId // Also send in body as backup
           })
         });
-        
+
         console.log('[Frontend] Response status:', response.status);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          
+
           // Check for rate limit error (429)
           if (response.status === 429) {
             const rateLimitError = new Error('DAILY_LIMIT_REACHED');
@@ -5661,7 +6856,7 @@ REMEMBER:
             rateLimitError.rateLimitMessage = errorData.message || errorData.error || 'You have reached your daily limit of 4 messages. Please try again tomorrow.';
             throw rateLimitError;
           }
-          
+
           throw new Error(errorData.error || `API error: ${response.status}`);
         }
 
@@ -5669,12 +6864,12 @@ REMEMBER:
         return data.reply || "I'm sorry, I couldn't generate a response. Please try again.";
       } catch (error) {
         console.error('API Error:', error);
-        
+
         // Re-throw rate limit errors so they can be handled in sendMessage
         if (error.message === 'DAILY_LIMIT_REACHED' || error.status === 429) {
           throw error;
         }
-        
+
         // Fallback to simple responses if API fails
         return getFallbackResponse(userMessage);
       }
@@ -5685,67 +6880,67 @@ REMEMBER:
       const message = userMessage.toLowerCase();
 
       // Check for "tell me about yourself" variations
-      if (message.includes('tell me about your') || 
-          message.includes('tell me about yourself') ||
-          message.includes('tell me about your self') ||
-          (message.includes('about') && (message.includes('you') || message.includes('yourself')))) {
+      if (message.includes('tell me about your') ||
+        message.includes('tell me about yourself') ||
+        message.includes('tell me about your self') ||
+        (message.includes('about') && (message.includes('you') || message.includes('yourself')))) {
         return "I'm a software engineer experienced in Frontend and Backend as well. I have also worked on real-time projects. I have worked on system design and cloud computing as well.";
       }
-      
+
       // Check for "latest project" variations
-      if ((message.includes('latest') || message.includes('recent')) && 
-          (message.includes('project') || message.includes('work'))) {
+      if ((message.includes('latest') || message.includes('recent')) &&
+        (message.includes('project') || message.includes('work'))) {
         return "PureBody is my latest project and it's deployed on Android and App Store as well. It is serving real-time users as Software as a Service. It's AI-based to manage your diet or workout. Also there is an AI teacher.";
       }
-      
+
       // Check for "renowned project" or "famous project" or "best project"
-      if ((message.includes('renowned') || message.includes('famous') || message.includes('best') || message.includes('popular')) && 
-          message.includes('project')) {
+      if ((message.includes('renowned') || message.includes('famous') || message.includes('best') || message.includes('popular')) &&
+        message.includes('project')) {
         return "PureBody";
       }
-      
+
       // Check for meeting booking questions
-      if ((message.includes('meeting') || message.includes('book') || message.includes('schedule') || message.includes('appointment')) && 
-          (message.includes('how') || message.includes('set') || message.includes('with') || message.includes('faisal'))) {
+      if ((message.includes('meeting') || message.includes('book') || message.includes('schedule') || message.includes('appointment')) &&
+        (message.includes('how') || message.includes('set') || message.includes('with') || message.includes('faisal'))) {
         return "Click on the 'Book Meeting' button in this app and select your desired slot.";
       }
-      
+
       // Check for expertise/specialization questions - IMPROVED SEMANTIC MATCHING
       // This handles: "one core specialization", "main expertise", "what are you expert in", etc.
-      const expertiseKeywords = ['expertise', 'expert', 'specialization', 'specialize', 'speciality', 'core skill', 
-                                 'main skill', 'primary skill', 'what are you good at', 'what are you best at',
-                                 'what do you specialize', 'main expertise', 'core expertise', 'primary expertise'];
+      const expertiseKeywords = ['expertise', 'expert', 'specialization', 'specialize', 'speciality', 'core skill',
+        'main skill', 'primary skill', 'what are you good at', 'what are you best at',
+        'what do you specialize', 'main expertise', 'core expertise', 'primary expertise'];
       const hasExpertiseKeyword = expertiseKeywords.some(keyword => message.includes(keyword));
-      const isAskingAboutOne = message.includes('one') || message.includes('core') || message.includes('main') || 
-                                message.includes('primary') || message.includes('best') || message.includes('good');
-      
+      const isAskingAboutOne = message.includes('one') || message.includes('core') || message.includes('main') ||
+        message.includes('primary') || message.includes('best') || message.includes('good');
+
       // If asking about specialization/expertise AND it's a general question (not website/mobile specific)
-      if (hasExpertiseKeyword && !message.includes('website') && !message.includes('web') && 
-          !message.includes('mobile') && !message.includes('app')) {
+      if (hasExpertiseKeyword && !message.includes('website') && !message.includes('web') &&
+        !message.includes('mobile') && !message.includes('app')) {
         return "React.js, Next.js, React Native";
       }
-      
+
       // If asking "one core specialization" or similar - definitely expertise question
       if ((message.includes('one') && message.includes('specialization')) ||
-          (message.includes('one') && message.includes('core')) ||
-          (message.includes('core') && message.includes('specialization')) ||
-          (message.includes('main') && (message.includes('expertise') || message.includes('skill'))) ||
-          (message.includes('what are you') && (message.includes('expert') || message.includes('good') || message.includes('best'))) ||
-          (message.includes('what do you') && message.includes('specialize'))) {
+        (message.includes('one') && message.includes('core')) ||
+        (message.includes('core') && message.includes('specialization')) ||
+        (message.includes('main') && (message.includes('expertise') || message.includes('skill'))) ||
+        (message.includes('what are you') && (message.includes('expert') || message.includes('good') || message.includes('best'))) ||
+        (message.includes('what do you') && message.includes('specialize'))) {
         return "React.js, Next.js, React Native";
       }
-      
+
       // Check for specialization in website/mobile app (specific question)
-      if ((message.includes('specialization') || message.includes('specialize') || message.includes('speciality')) && 
-          (message.includes('website') || message.includes('web') || message.includes('mobile') || message.includes('app'))) {
+      if ((message.includes('specialization') || message.includes('specialize') || message.includes('speciality')) &&
+        (message.includes('website') || message.includes('web') || message.includes('mobile') || message.includes('app'))) {
         return "Faisal specializes in both website development and mobile app development. For websites, he uses React.js and Next.js. For mobile apps, he uses React Native. He has extensive expertise in building responsive web applications and cross-platform mobile applications.";
       }
-      
+
       // Additional catch for expertise questions that might be phrased differently
-      if ((message.includes('what') || message.includes('tell me')) && 
-          (message.includes('specialization') || message.includes('expertise') || message.includes('core') || 
-           message.includes('main') || message.includes('primary')) && 
-          (message.includes('you') || message.includes('your') || message.includes('have'))) {
+      if ((message.includes('what') || message.includes('tell me')) &&
+        (message.includes('specialization') || message.includes('expertise') || message.includes('core') ||
+          message.includes('main') || message.includes('primary')) &&
+        (message.includes('you') || message.includes('your') || message.includes('have'))) {
         // If it's asking about one thing specifically
         if (message.includes('one') || message.includes('core') || message.includes('main') || message.includes('primary')) {
           return "React.js, Next.js, React Native";
@@ -5755,103 +6950,103 @@ REMEMBER:
       // Check for greeting
       if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
         return "Hello! Thanks for reaching out. I'm Faisal's AI assistant. How can I help you learn more about his portfolio today?";
-      } 
-      
+      }
+
       // Check for portfolio/projects (excluding latest/renowned)
-      if (message.includes('portfolio') || 
-          (message.includes('work') && !message.includes('latest') && !message.includes('recent') && !message.includes('renowned')) || 
-          (message.includes('project') && !message.includes('latest') && !message.includes('recent') && !message.includes('renowned') && !message.includes('famous') && !message.includes('best'))) {
+      if (message.includes('portfolio') ||
+        (message.includes('work') && !message.includes('latest') && !message.includes('recent') && !message.includes('renowned')) ||
+        (message.includes('project') && !message.includes('latest') && !message.includes('recent') && !message.includes('renowned') && !message.includes('famous') && !message.includes('best'))) {
         return "Great question! Faisal has 11+ amazing projects in the 'WORKS' section, including Smart Health Care, Echo AI, Soledeck, YOOM, Dosnexa, and PureBody. Would you like to know more about any specific project?";
-      } 
-      
+      }
+
       // Check for contact information
       if (message.includes('contact') || message.includes('email') || message.includes('reach')) {
         return "You can contact Faisal through the 'CONTACT' section on this website or email him directly at mehrfaisal111@gmail.com. He'd love to hear from you!";
-      } 
-      
+      }
+
       // Check for hiring/availability
       if (message.includes('hire') || message.includes('available')) {
         return "Yes, Faisal is available for work! You can book a meeting with him using the 'Book Meeting' button or check his availability in the CONTACT section.";
-      } 
-      
+      }
+
       // Check for skills/technologies (but not expertise-specific questions)
-      if ((message.includes('skill') || message.includes('technology') || message.includes('tech')) && 
-          !message.includes('expertise') && !message.includes('expert') && !message.includes('specialization')) {
+      if ((message.includes('skill') || message.includes('technology') || message.includes('tech')) &&
+        !message.includes('expertise') && !message.includes('expert') && !message.includes('specialization')) {
         return "Faisal is a Software Engineer specializing in Frontend Development, Backend Development, Cloud Orchestration, and System Design. He works with React.js, React Native, Next.js, Node.js, MongoDB, PostgreSQL, and more. Check the 'PROFILE' section for detailed skills!";
-      } 
-      
+      }
+
       // Check for CV/resume
       if (message.includes('cv') || message.includes('resume')) {
         return "You can download Faisal's CV by clicking the 'Download CV' button on his profile page. Feel free to reach out if you have any questions!";
-      } 
-      
+      }
+
       // Check for years of experience
-      if ((message.includes('year') || message.includes('experience')) && 
-          (message.includes('how many') || message.includes('how long') || message.includes('long'))) {
+      if ((message.includes('year') || message.includes('experience')) &&
+        (message.includes('how many') || message.includes('how long') || message.includes('long'))) {
         return "Faisal has 3+ years of coding experience and has worked with 3+ companies, completing 10+ projects.";
       }
-      
+
       // Check for pricing/rates questions
-      if (message.includes('price') || message.includes('rate') || message.includes('cost') || 
-          message.includes('charge') || message.includes('how much') || message.includes('budget') ||
-          message.includes('pricing')) {
+      if (message.includes('price') || message.includes('rate') || message.includes('cost') ||
+        message.includes('charge') || message.includes('how much') || message.includes('budget') ||
+        message.includes('pricing')) {
         return "The standard pricing is $25 per hour, in which Faisal can provide you frontend, backend, database, and deployment services or expertise as well. For detailed project quotes, please book a meeting using the 'Book Meeting' button to discuss your specific requirements.";
       }
-      
+
       // Check for location/timezone questions
-      if (message.includes('location') || message.includes('where') || message.includes('timezone') || 
-          message.includes('based') || message.includes('country') || message.includes('city')) {
+      if (message.includes('location') || message.includes('where') || message.includes('timezone') ||
+        message.includes('based') || message.includes('country') || message.includes('city')) {
         return "Faisal works remotely and is available for projects worldwide. You can book a meeting to discuss your project and find a suitable time that works for both parties.";
       }
-      
+
       // Check for services questions
-      if ((message.includes('service') || message.includes('what can you') || message.includes('what do you')) && 
-          !message.includes('contact')) {
+      if ((message.includes('service') || message.includes('what can you') || message.includes('what do you')) &&
+        !message.includes('contact')) {
         return "Faisal offers full-stack development services including website development (React.js, Next.js), mobile app development (React Native), backend development (Node.js, Express), database design (MongoDB, PostgreSQL), cloud orchestration, and system design. Check the 'WORKS' section to see examples of his projects.";
       }
-      
+
       // Check for GitHub/code questions
-      if (message.includes('github') || message.includes('code') || message.includes('source') || 
-          message.includes('repository') || message.includes('repo') || message.includes('portfolio code')) {
+      if (message.includes('github') || message.includes('code') || message.includes('source') ||
+        message.includes('repository') || message.includes('repo') || message.includes('portfolio code')) {
         return "You can find Faisal's code repositories and projects on GitHub at https://github.com/FaisalHanif12. Check out his profile to see his contributions and project code.";
       }
-      
+
       // Check for certifications/education questions
-      if (message.includes('certification') || message.includes('qualification') || message.includes('education') || 
-          message.includes('degree') || message.includes('background')) {
+      if (message.includes('certification') || message.includes('qualification') || message.includes('education') ||
+        message.includes('degree') || message.includes('background')) {
         return "You can find Faisal's certifications and achievements in the 'APPROVALS' section of this portfolio. He has completed various certifications and has 3+ years of professional experience.";
       }
-      
+
       // Check for response time/availability questions
-      if ((message.includes('response') || message.includes('respond') || message.includes('available')) && 
-          (message.includes('how') || message.includes('when') || message.includes('quickly') || message.includes('fast'))) {
+      if ((message.includes('response') || message.includes('respond') || message.includes('available')) &&
+        (message.includes('how') || message.includes('when') || message.includes('quickly') || message.includes('fast'))) {
         return "Faisal typically responds within 24-48 hours. For urgent inquiries, you can book a meeting directly using the 'Book Meeting' button to schedule a call.";
       }
-      
+
       // Check for freelance/full-time questions
-      if (message.includes('freelance') || message.includes('full-time') || message.includes('fulltime') || 
-          message.includes('employment') || message.includes('type of work') || message.includes('collaboration')) {
+      if (message.includes('freelance') || message.includes('full-time') || message.includes('fulltime') ||
+        message.includes('employment') || message.includes('type of work') || message.includes('collaboration')) {
         return "Faisal is available for both freelance projects and full-time opportunities. He's open to discussing various collaboration models. Book a meeting to discuss your specific requirements.";
       }
-      
+
       // Check for technology help questions
-      if ((message.includes('can you help') || message.includes('do you know') || message.includes('experience with') || 
-           message.includes('can you do')) && (message.includes('react') || message.includes('node') || message.includes('mongodb') || 
-           message.includes('next') || message.includes('mobile') || message.includes('app') || message.includes('web'))) {
+      if ((message.includes('can you help') || message.includes('do you know') || message.includes('experience with') ||
+        message.includes('can you do')) && (message.includes('react') || message.includes('node') || message.includes('mongodb') ||
+          message.includes('next') || message.includes('mobile') || message.includes('app') || message.includes('web'))) {
         return "Faisal has extensive experience with React.js, Next.js, React Native, Node.js, MongoDB, PostgreSQL, and many other technologies. Check the 'PROFILE' section for a complete list of skills, or book a meeting to discuss your specific technology requirements.";
       }
-      
+
       // Check for remote work questions
-      if (message.includes('remote') || message.includes('work from home') || message.includes('wfh') || 
-          message.includes('distributed')) {
+      if (message.includes('remote') || message.includes('work from home') || message.includes('wfh') ||
+        message.includes('distributed')) {
         return "Yes, Faisal works remotely and is available for remote projects and collaborations worldwide. He's experienced in working with distributed teams.";
       }
-      
+
       // Check for thanks
       if (message.includes('thank') || message.includes('thanks')) {
         return "You're welcome! If you have any more questions about Faisal's portfolio or projects, feel free to ask. Have a great day!";
       }
-      
+
       // Default response
       return "Thanks for your message! I can help you learn about Faisal's projects, skills, experience, expertise in React.js/Next.js/React Native, pricing, services, or how to contact him. What would you like to know?";
     }
@@ -5860,7 +7055,7 @@ REMEMBER:
     chatbotSend.addEventListener('click', sendMessage);
 
     // Send on Enter key
-    chatbotInput.addEventListener('keypress', function(e) {
+    chatbotInput.addEventListener('keypress', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
@@ -5868,7 +7063,7 @@ REMEMBER:
     });
 
     // Close on Escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && chatbotModal.classList.contains('active')) {
         chatbotModal.classList.remove('active');
         chatSupportButton.classList.remove('active');

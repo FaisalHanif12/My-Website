@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(callback, 100);
         }
     };
-    
+
     // Meeting pricing calculation functionality
     function initMeetingPricingCalculator() {
         const meetingTypeCards = document.querySelectorAll('.meeting-type-card');
@@ -23,27 +23,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const paymentSection = document.getElementById('paymentSection');
         const backToSelectionBtn = document.getElementById('backToSelectionButton');
         const submitPaymentBtn = document.getElementById('submitPaymentButton');
-        
+
         // Payment summary elements
         const summarySessionTypeEl = document.getElementById('summarySessionType');
         const summaryDurationEl = document.getElementById('summaryDuration');
         const summaryHoursEl = document.getElementById('summaryHours');
         const summaryTotalEl = document.getElementById('summaryTotal');
         const paymentAmountEl = document.getElementById('paymentAmount');
-        
+
         // Initialize with default values
         let selectedPrice = 15; // Default price for Quick Chat
         let selectedType = 'Quick Chat';
         let selectedDuration = '30 minutes';
         let hours = 1;
-        
+
         // Update the calculation display
         function updateCalculation() {
             selectedSessionTypeEl.textContent = selectedType;
             pricePerSessionEl.textContent = `${selectedPrice}`;
             numberOfHoursEl.textContent = hours;
             totalAmountEl.textContent = `$${selectedPrice * hours}`;
-            
+
             // Update payment summary if elements exist
             if (summarySessionTypeEl) summarySessionTypeEl.textContent = selectedType;
             if (summaryDurationEl) summaryDurationEl.textContent = selectedDuration;
@@ -51,26 +51,26 @@ document.addEventListener("DOMContentLoaded", function () {
             if (summaryTotalEl) summaryTotalEl.textContent = `$${selectedPrice * hours}`;
             if (paymentAmountEl) paymentAmountEl.textContent = `$${selectedPrice * hours}`;
         }
-        
+
         // Handle meeting type selection
         meetingTypeCards.forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', function () {
                 // Update active state
                 meetingTypeCards.forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
-                
+
                 // Update selected values
                 selectedPrice = parseInt(this.dataset.price);
                 selectedType = this.querySelector('h3').textContent;
                 selectedDuration = this.querySelector('.duration').textContent;
-                
+
                 // Update calculation
                 updateCalculation();
             });
         });
-        
+
         // Handle hours input changes
-        hoursInput.addEventListener('change', function() {
+        hoursInput.addEventListener('change', function () {
             hours = parseInt(this.value);
             if (hours < 1) {
                 hours = 1;
@@ -81,77 +81,97 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             updateCalculation();
         });
-        
+
         // Handle decrease hours button
-        decreaseHoursBtn.addEventListener('click', function() {
+        decreaseHoursBtn.addEventListener('click', function () {
             if (hours > 1) {
                 hours--;
                 hoursInput.value = hours;
                 updateCalculation();
             }
         });
-        
+
         // Handle increase hours button
-        increaseHoursBtn.addEventListener('click', function() {
+        increaseHoursBtn.addEventListener('click', function () {
             if (hours < 10) {
                 hours++;
                 hoursInput.value = hours;
                 updateCalculation();
             }
         });
-        
+
         // Initialize calculation display
         updateCalculation();
-        
+
+        // Expose session variables to window for inline booking form
+        window.getBookingSessionData = function () {
+            return {
+                sessionType: selectedType,
+                duration: selectedDuration,
+                hours: hours,
+                price: selectedPrice,
+                amount: selectedPrice * hours
+            };
+        };
+
         // Handle proceed to payment button
         if (proceedToPaymentBtn) {
-            proceedToPaymentBtn.addEventListener('click', function() {
-                // Redirect to booking page with parameters
-                // Use relative path to work with the current server
-                const bookingUrl = new URL('booking.html', window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'));
-                
-                // Add parameters to URL
-                bookingUrl.searchParams.append('sessionType', selectedType);
-                bookingUrl.searchParams.append('duration', selectedDuration);
-                bookingUrl.searchParams.append('hours', hours);
-                bookingUrl.searchParams.append('amount', selectedPrice * hours);
-                
-                // Navigate to booking page
-                window.location.href = bookingUrl.toString();
+            proceedToPaymentBtn.addEventListener('click', function () {
+                // Show inline booking form instead of navigating
+                const scheduleContent = document.getElementById('scheduleSelectionContent');
+                const inlineBookingForm = document.getElementById('inlineBookingForm');
+                const sectionHeader = document.querySelector('.schedule-card .section-header');
+
+                if (scheduleContent && inlineBookingForm) {
+                    scheduleContent.style.display = 'none';
+                    inlineBookingForm.style.display = 'block';
+                    if (sectionHeader) sectionHeader.style.display = 'none';
+
+                    // Scroll to top of schedule card
+                    const scheduleCard = document.querySelector('.schedule-card');
+                    if (scheduleCard) {
+                        scheduleCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+
+                    // Initialize the inline booking form with current session data
+                    if (typeof window.initInlineBookingForm === 'function') {
+                        window.initInlineBookingForm();
+                    }
+                }
             });
         }
-        
+
         // Handle close payment button
         const closePaymentBtn = document.getElementById('closePaymentBtn');
         if (closePaymentBtn) {
-            closePaymentBtn.addEventListener('click', function() {
+            closePaymentBtn.addEventListener('click', function () {
                 if (paymentSection) {
                     paymentSection.classList.remove('active');
-                    
+
                     // Re-enable body scrolling
                     document.body.style.overflow = '';
                 }
             });
         }
-        
+
         // Handle back to selection button
         if (backToSelectionBtn) {
-            backToSelectionBtn.addEventListener('click', function() {
+            backToSelectionBtn.addEventListener('click', function () {
                 // Hide payment section
                 if (paymentSection) {
                     paymentSection.classList.remove('active');
-                    
+
                     // Re-enable body scrolling
                     document.body.style.overflow = '';
                 }
             });
         }
-        
+
         // Handle submit payment button
         if (submitPaymentBtn) {
-            submitPaymentBtn.addEventListener('click', function(e) {
+            submitPaymentBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                
+
                 // Get form values
                 const cardNumber = document.getElementById('cardNumber').value;
                 const expiryDate = document.getElementById('expiryDate').value;
@@ -162,41 +182,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 const city = document.getElementById('city').value;
                 const state = document.getElementById('state').value;
                 const zipCode = document.getElementById('zipCode').value;
-                
+
                 // Basic validation
                 if (!cardNumber || !expiryDate || !cvv || !cardName || !email || !streetAddress || !city || !state || !zipCode) {
                     alert('Please fill in all required fields');
                     return;
                 }
-                
+
                 // Simple card number validation
                 if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
                     alert('Please enter a valid 16-digit card number');
                     return;
                 }
-                
+
                 // Simple expiry date validation
                 if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
                     alert('Please enter a valid expiry date (MM/YY)');
                     return;
                 }
-                
+
                 // Simple CVV validation
                 if (!/^\d{3,4}$/.test(cvv)) {
                     alert('Please enter a valid CVV code');
                     return;
                 }
-                
+
                 // Simple email validation
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                     alert('Please enter a valid email address');
                     return;
                 }
-                
+
                 // Here you would normally integrate with Stripe API
                 // For now, show a success message
                 alert('Payment successful! Your session has been booked.');
-                
+
                 // Show a confirmation message within the modal
                 const paymentContainer = paymentSection.querySelector('.payment-container');
                 if (paymentContainer) {
@@ -230,12 +250,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
                 `;
-                    
+
                     // Add event listener for the close success button
                     setTimeout(() => {
                         const closeSuccessBtn = document.getElementById('closeSuccessBtn');
                         if (closeSuccessBtn) {
-                            closeSuccessBtn.addEventListener('click', function() {
+                            closeSuccessBtn.addEventListener('click', function () {
                                 if (paymentSection) {
                                     paymentSection.classList.remove('active');
                                     document.body.style.overflow = '';
@@ -247,15 +267,15 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     }
-    
+
     // Initialize meeting pricing calculator if elements exist
     // Only initialize the meeting pricing calculator if we're on the schedule meeting page
-    if (document.querySelector('.meeting-types') && 
-        document.getElementById('hoursInput') && 
+    if (document.querySelector('.meeting-types') &&
+        document.getElementById('hoursInput') &&
         document.getElementById('selectedSessionType')) {
         initMeetingPricingCalculator();
     }
-    
+
     // Hide the preloader when the window fully loads
     window.addEventListener("load", () => {
         const preloader = document.querySelector(".preloader");
@@ -274,13 +294,13 @@ document.addEventListener("DOMContentLoaded", function () {
         menuLabels.forEach(label => {
             label.classList.remove('active-menu');
         });
-        
+
         // Add active class to the current menu label
         const activeLabel = document.querySelector(`label[for="${activeId}"]`);
         if (activeLabel) {
             activeLabel.classList.add('active-menu');
         }
-        
+
         // Update URL hash based on section
         updateURLHash(activeId);
     }
@@ -290,12 +310,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const hashMap = {
             'about-card': '',  // Home/About section (no hash)
             'resume-card': '#profile',
-            'works-card': '#works', 
+            'works-card': '#works',
             'blogs-card': '#approvals',
             'contact-card': '#contact',
             'schedule-card': '#schedule-section'
         };
-        
+
         const hash = hashMap[sectionId];
         if (hash !== undefined) {
             // Update URL without triggering page reload
@@ -326,9 +346,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         card.style.display = '';
                     });
                 }
-                
+
                 targetCard.scrollIntoView({ behavior: "smooth" });
-                
+
                 // Update active menu state
                 updateActiveMenuState(targetId);
             }
@@ -338,24 +358,24 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle initial page load with hash
     function handleInitialHash() {
         const hash = window.location.hash;
-        
+
         // Map hash values back to section IDs
         const sectionMap = {
             '': 'about-card',
             '#profile': 'resume-card',
             '#works': 'works-card',
-            '#approvals': 'blogs-card', 
+            '#approvals': 'blogs-card',
             '#contact': 'contact-card',
             '#schedule-section': 'schedule-card'
         };
-        
+
         const targetSectionId = sectionMap[hash];
         if (targetSectionId) {
             const targetRadio = document.getElementById(targetSectionId);
             if (targetRadio) {
                 targetRadio.checked = true;
                 updateActiveMenuState(targetSectionId);
-                
+
                 // Trigger the change event to show the correct section
                 const changeEvent = new Event('change', { bubbles: true });
                 targetRadio.dispatchEvent(changeEvent);
@@ -365,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize active menu state on page load
     handleInitialHash();
-    
+
     // Fallback: if no hash matched, ensure about is selected
     const checkedInput = document.querySelector("input[name='menu']:checked");
     if (!checkedInput) {
@@ -379,12 +399,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Handle browser back/forward navigation
-    window.addEventListener('hashchange', function() {
+    window.addEventListener('hashchange', function () {
         handleInitialHash();
     });
 
     // Handle window resize to ensure proper display behavior
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         const checkedInput = document.querySelector("input[name='menu']:checked");
         if (checkedInput) {
             const targetCard = document.querySelector(`.${checkedInput.id}`);
@@ -408,52 +428,52 @@ document.addEventListener("DOMContentLoaded", function () {
     // Mobile Filter Dropdown Functionality
     function initMobileFilterDropdowns() {
         const dropdowns = document.querySelectorAll('.mobile-filter-dropdown');
-        
+
         dropdowns.forEach(dropdown => {
             const trigger = dropdown.querySelector('.mobile-filter-trigger');
             const menu = dropdown.querySelector('.mobile-filter-dropdown-menu');
             const options = dropdown.querySelectorAll('.mobile-filter-option');
             const currentFilterSpan = trigger.querySelector('.current-filter span');
             const currentFilterIcon = trigger.querySelector('.current-filter i');
-            
+
             // Toggle dropdown
             trigger.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 // Close other dropdowns
                 dropdowns.forEach(otherDropdown => {
                     if (otherDropdown !== dropdown) {
                         otherDropdown.classList.remove('active');
                     }
                 });
-                
+
                 // Toggle current dropdown
                 dropdown.classList.toggle('active');
             });
-            
+
             // Handle option selection
             options.forEach(option => {
                 option.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     const category = option.dataset.category;
                     const optionText = option.querySelector('.option-content span').textContent;
                     const optionIcon = option.querySelector('.option-content i').className;
-                    
+
                     // Update active states
                     options.forEach(opt => opt.classList.remove('active'));
                     option.classList.add('active');
-                    
+
                     // Update trigger display
                     currentFilterSpan.textContent = optionText;
                     currentFilterIcon.className = optionIcon;
                     trigger.dataset.current = category;
-                    
+
                     // Close dropdown
                     dropdown.classList.remove('active');
-                    
+
                     // Trigger filtering
                     if (dropdown.closest('.works-filter-section')) {
                         filterProjects(category);
@@ -463,7 +483,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             });
         });
-        
+
         // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.mobile-filter-dropdown')) {
@@ -473,11 +493,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-    
+
     // Filter Projects Function
     function filterProjects(category) {
         const projects = document.querySelectorAll('.works-item');
-        
+
         projects.forEach(project => {
             if (category === 'All' || project.dataset.category === category) {
                 project.style.display = 'block';
@@ -490,7 +510,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }, 300);
             }
         });
-        
+
         // Update desktop filter buttons if they exist
         const desktopButtons = document.querySelectorAll('.works-filter-section .filter-btn');
         desktopButtons.forEach(btn => {
@@ -500,11 +520,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-    
+
     // Filter Certifications Function
     function filterCertifications(category) {
         const certifications = document.querySelectorAll('.certification-card');
-        
+
         certifications.forEach(cert => {
             if (category === 'all' || cert.dataset.category === category) {
                 cert.style.display = 'block';
@@ -517,7 +537,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }, 300);
             }
         });
-        
+
         // Update desktop filter buttons if they exist
         const desktopButtons = document.querySelectorAll('.certification-filter-section .filter-btn');
         desktopButtons.forEach(btn => {
@@ -527,23 +547,23 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-    
+
     // Initialize mobile dropdowns
     initMobileFilterDropdowns();
-    
+
     // Handle desktop filter buttons (existing functionality)
     const desktopFilterButtons = document.querySelectorAll('.filter-btn');
     desktopFilterButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             const category = button.dataset.category;
-            
+
             // Update active states
             const filterSection = button.closest('.works-filter-section, .certification-filter-section');
             const buttons = filterSection.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
-            
+
             // Trigger filtering
             if (filterSection.classList.contains('works-filter-section')) {
                 filterProjects(category);
@@ -554,12 +574,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     const currentFilterSpan = trigger.querySelector('.current-filter span');
                     const currentFilterIcon = trigger.querySelector('.current-filter i');
                     const targetOption = mobileDropdown.querySelector(`[data-category="${category}"]`);
-                    
+
                     if (targetOption) {
                         currentFilterSpan.textContent = targetOption.querySelector('.option-content span').textContent;
                         currentFilterIcon.className = targetOption.querySelector('.option-content i').className;
                         trigger.dataset.current = category;
-                        
+
                         // Update mobile option active states
                         const mobileOptions = mobileDropdown.querySelectorAll('.mobile-filter-option');
                         mobileOptions.forEach(opt => opt.classList.remove('active'));
@@ -575,12 +595,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     const currentFilterSpan = trigger.querySelector('.current-filter span');
                     const currentFilterIcon = trigger.querySelector('.current-filter i');
                     const targetOption = mobileDropdown.querySelector(`[data-category="${category}"]`);
-                    
+
                     if (targetOption) {
                         currentFilterSpan.textContent = targetOption.querySelector('.option-content span').textContent;
                         currentFilterIcon.className = targetOption.querySelector('.option-content i').className;
                         trigger.dataset.current = category;
-                        
+
                         // Update mobile option active states
                         const mobileOptions = mobileDropdown.querySelectorAll('.mobile-filter-option');
                         mobileOptions.forEach(opt => opt.classList.remove('active'));

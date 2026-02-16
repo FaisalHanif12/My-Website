@@ -6,20 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="PureBody Mobile App - Project Showcase" />
   <title>PureBody - Project Showcase</title>
-  
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/animation.style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+
   <!-- Favicon -->
   <link rel="icon" href="imgs/F-Logo3.png" type="image/png" />
-  
+
   <style>
     * {
       margin: 0;
@@ -38,7 +39,7 @@
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 20px 20px;
       position: relative;
     }
 
@@ -72,9 +73,9 @@
     /* Header Section */
     .header {
       text-align: center;
-      margin-bottom: 60px;
-      margin-top: 20px;
-      padding: 20px 0;
+      margin-bottom: 20px;
+      margin-top: 10px;
+      padding: 10px 0;
       animation: fadeInDown 0.8s ease-out;
       overflow: visible;
     }
@@ -112,80 +113,151 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 30px;
-      margin-top: 50px;
+      margin-top: 10px;
       justify-items: center;
     }
 
     .video-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       animation: fadeInUp 0.8s ease-out;
       animation-fill-mode: both;
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(14, 102, 85, 0.05);
       width: 100%;
     }
 
-    .video-card:nth-child(1) { animation-delay: 0.1s; }
-    .video-card:nth-child(2) { animation-delay: 0.2s; }
-    .video-card:nth-child(3) { animation-delay: 0.3s; }
-    .video-card:nth-child(4) { animation-delay: 0.4s; }
-    .video-card:nth-child(5) { animation-delay: 0.5s; }
-    .video-card:nth-child(6) { animation-delay: 0.6s; }
+    .video-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .video-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .video-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .video-card:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
+    .video-card:nth-child(5) {
+      animation-delay: 0.5s;
+    }
+
+    .video-card:nth-child(6) {
+      animation-delay: 0.6s;
+    }
 
     .video-card:hover {
       transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 20px 60px rgba(14, 102, 85, 0.2);
-      border-color: rgba(14, 102, 85, 0.2);
     }
 
-    .video-card::before {
+    /* Phone Frame */
+    .phone-frame {
+      position: relative;
+      background: linear-gradient(145deg, #1a1a2e, #2d2d44, #1a1a2e);
+      border-radius: 40px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.1),
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      width: 100%;
+      max-width: 300px;
+      transition: box-shadow 0.4s ease;
+    }
+
+    .video-card:hover .phone-frame {
+      box-shadow:
+        0 0 0 2px rgba(14, 102, 85, 0.3),
+        0 25px 80px rgba(14, 102, 85, 0.25),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    /* Notch */
+    .phone-frame::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, transparent 0%, var(--dark-blue, #0e6655) 50%, transparent 100%);
-      transform: scaleX(0);
-      transition: transform 0.4s ease;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 22px;
+      background: #0d0d15;
+      border-radius: 0 0 14px 14px;
       z-index: 10;
     }
 
-    .video-card:hover::before {
-      transform: scaleX(1);
+    /* Front camera dot */
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      top: 17px;
+      left: 50%;
+      transform: translateX(12px);
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #1e3a5f 40%, #0d1117 60%);
+      border-radius: 50%;
+      z-index: 11;
     }
 
-    .video-wrapper {
+    /* Side button accents */
+    .phone-button-right {
+      position: absolute;
+      right: -3px;
+      top: 100px;
+      width: 3px;
+      height: 40px;
+      background: linear-gradient(180deg, #3d3d5c, #2d2d44);
+      border-radius: 0 3px 3px 0;
+    }
+
+    .phone-button-left-1 {
+      position: absolute;
+      left: -3px;
+      top: 80px;
+      width: 3px;
+      height: 25px;
+      background: linear-gradient(180deg, #3d3d5c, #2d2d44);
+      border-radius: 3px 0 0 3px;
+    }
+
+    .phone-button-left-2 {
+      position: absolute;
+      left: -3px;
+      top: 120px;
+      width: 3px;
+      height: 45px;
+      background: linear-gradient(180deg, #3d3d5c, #2d2d44);
+      border-radius: 3px 0 0 3px;
+    }
+
+    .phone-screen {
       position: relative;
       width: 100%;
-      padding-top: 177.78%; /* 9:16 Portrait Aspect Ratio for Mobile */
-      background: #000;
+      border-radius: 28px;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: #000;
+      aspect-ratio: 9 / 19.5;
     }
 
-    .video-wrapper video {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .phone-screen video {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* Show full mobile screen without cropping */
-      transition: transform 0.4s ease;
-      pointer-events: none; /* Prevent any user interaction */
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
     }
 
-    .video-card:hover .video-wrapper video {
-      transform: scale(1.05);
+    .video-card:hover .phone-screen video {
+      /* No transform needed — the frame itself moves */
     }
 
     /* Hide video controls */
@@ -207,6 +279,7 @@
         opacity: 0;
         transform: translateY(-30px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -218,6 +291,7 @@
         opacity: 0;
         transform: translateY(30px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -285,6 +359,7 @@
         padding: 8px 16px;
       }
     }
+
     /* Smooth Scroll */
     html {
       scroll-behavior: smooth;
@@ -303,7 +378,8 @@
     <!-- Header -->
     <div class="header">
       <h1>PureBody</h1>
-      <p>Explore the functionality and features of our PureBody mobile application through interactive video demonstrations</p>
+      <p>Explore the functionality and features of our PureBody mobile application through interactive video
+        demonstrations</p>
     </div>
 
     <!-- Videos Grid -->
@@ -311,90 +387,96 @@
       <!-- Video 1 -->
       <div class="video-card">
         <div class="video-wrapper">
-          <video 
-            src="/vedioes/ScreenRecording1.mov" 
-            autoplay 
-            muted 
-            loop 
-            playsinline
-            preload="metadata">
-            Your browser does not support the video tag.
-          </video>
+          <div class="phone-frame">
+            <div class="phone-button-right"></div>
+            <div class="phone-button-left-1"></div>
+            <div class="phone-button-left-2"></div>
+            <div class="phone-screen">
+              <video src="vedioes /ScreenRecording1.mov" autoplay muted loop playsinline preload="metadata">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Video 2 -->
       <div class="video-card">
         <div class="video-wrapper">
-          <video 
-            src="/vedioes/ScreenRecording2.mov" 
-            autoplay 
-            muted 
-            loop 
-            playsinline
-            preload="metadata">
-            Your browser does not support the video tag.
-          </video>
+          <div class="phone-frame">
+            <div class="phone-button-right"></div>
+            <div class="phone-button-left-1"></div>
+            <div class="phone-button-left-2"></div>
+            <div class="phone-screen">
+              <video src="vedioes /ScreenRecording2.mov" autoplay muted loop playsinline preload="metadata">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Video 3 -->
       <div class="video-card">
         <div class="video-wrapper">
-          <video 
-            src="/vedioes/ScreenRecording3.mov" 
-            autoplay 
-            muted 
-            loop 
-            playsinline
-            preload="metadata">
-            Your browser does not support the video tag.
-          </video>
+          <div class="phone-frame">
+            <div class="phone-button-right"></div>
+            <div class="phone-button-left-1"></div>
+            <div class="phone-button-left-2"></div>
+            <div class="phone-screen">
+              <video src="vedioes /ScreenRecording3.mov" autoplay muted loop playsinline preload="metadata">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Video 4 -->
       <div class="video-card">
         <div class="video-wrapper">
-          <video 
-            src="/vedioes/ScreenRecording4.mov" 
-            autoplay 
-            muted 
-            loop 
-            playsinline
-            preload="metadata">
-            Your browser does not support the video tag.
-          </video>
+          <div class="phone-frame">
+            <div class="phone-button-right"></div>
+            <div class="phone-button-left-1"></div>
+            <div class="phone-button-left-2"></div>
+            <div class="phone-screen">
+              <video src="vedioes /ScreenRecording4.mov" autoplay muted loop playsinline preload="metadata">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Video 5 -->
       <div class="video-card">
         <div class="video-wrapper">
-          <video 
-            src="/vedioes/ScreenRecording5.mov" 
-            autoplay 
-            muted 
-            loop 
-            playsinline
-            preload="metadata">
-            Your browser does not support the video tag.
-          </video>
+          <div class="phone-frame">
+            <div class="phone-button-right"></div>
+            <div class="phone-button-left-1"></div>
+            <div class="phone-button-left-2"></div>
+            <div class="phone-screen">
+              <video src="vedioes /ScreenRecording5.mov" autoplay muted loop playsinline preload="metadata">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Video 6 -->
       <div class="video-card">
         <div class="video-wrapper">
-          <video 
-            src="/vedioes/ScreenRecording6.mov" 
-            autoplay 
-            muted 
-            loop 
-            playsinline
-            preload="metadata">
-            Your browser does not support the video tag.
-          </video>
+          <div class="phone-frame">
+            <div class="phone-button-right"></div>
+            <div class="phone-button-left-1"></div>
+            <div class="phone-button-left-2"></div>
+            <div class="phone-screen">
+              <video src="vedioes /ScreenRecording6.mov" autoplay muted loop playsinline preload="metadata">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -402,18 +484,18 @@
 
   <script>
     // Autoplay all videos when page loads
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const videos = document.querySelectorAll('video');
-      
+
       // Force autoplay for all videos
       videos.forEach((video, index) => {
         // Remove any controls
         video.controls = false;
         video.setAttribute('controls', 'false');
-        
+
         // Try to play immediately
         const playPromise = video.play();
-        
+
         if (playPromise !== undefined) {
           playPromise.catch(error => {
             // If autoplay fails, try again after a short delay
@@ -424,23 +506,23 @@
             }, 500);
           });
         }
-        
+
         // Ensure video stays muted and loops
         video.muted = true;
         video.loop = true;
-        
+
         // Prevent any user interaction with videos
-        video.addEventListener('click', function(e) {
+        video.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation();
         });
-        
-        video.addEventListener('contextmenu', function(e) {
+
+        video.addEventListener('contextmenu', function (e) {
           e.preventDefault();
         });
-        
+
         // Restart video if it ends (backup for loop)
-        video.addEventListener('ended', function() {
+        video.addEventListener('ended', function () {
           this.currentTime = 0;
           this.play();
         });
@@ -464,4 +546,3 @@
 </body>
 
 </html>
-
