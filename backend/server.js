@@ -17,8 +17,19 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests) - but restrict in production
-    if (!origin || allowedOrigins.includes(origin)) {
+    // FIX: Strict Origin Policy
+    // Allow requests with no origin ONLY if NOT in production
+    // This blocks headless scripts/bots in production
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (!origin) {
+      if (isProduction) {
+        return callback(new Error('Not allowed by CORS'));
+      }
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -26,7 +37,7 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Browser-ID']
 };
 
 // Trust proxy to get correct IP address (important for rate limiting)
@@ -35,32 +46,22 @@ app.set('trust proxy', true);
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Daily rate limiting - 4 messages per day per browser
-// Store: { browserId: { count: number, date: string, firstMessageTime: string } }
+// Daily rate limiting - 4 messages per day per user
+// Store: { ip: { count: number, date: string, firstMessageTime: string } }
 const dailyLimitStore = new Map();
+// FIX: Memory Protection
+const MAX_STORE_SIZE = 10000; // Limit max entries to prevent OOM DoS
 
 // Helper function to get today's date string (YYYY-MM-DD)
 function getTodayDateString() {
   return new Date().toISOString().split('T')[0];
 }
 
-// Helper function to get browser ID from request
-function getBrowserId(req) {
-  // Try header first (more reliable)
-  let browserId = req.headers['x-browser-id'];
-  
-  // If not in header, try body (body should be parsed by express.json() at this point)
-  if (!browserId && req.body && req.body.browserId) {
-    browserId = req.body.browserId;
-  }
-  
-  // Validate browser ID
-  if (!browserId || typeof browserId !== 'string' || browserId.trim().length === 0) {
-    console.log('[Rate Limit] No valid browser ID found. Header:', req.headers['x-browser-id'], 'Body:', req.body?.browserId);
-    return null;
-  }
-  
-  return browserId.trim();
+// FIX: Rate Limiting Key Strategy
+// Use IP address as the primary key instead of client-provided ID
+function getRateLimitKey(req) {
+  // trust proxy is enabled, so req.ip should be the client IP
+  return req.ip;
 }
 
 // Daily rate limit middleware
@@ -70,40 +71,49 @@ function dailyRateLimit(req, res, next) {
     return next();
   }
 
-  console.log(`[Rate Limit] Middleware triggered for ${req.method} ${req.path}`);
-  console.log(`[Rate Limit] Request headers:`, {
-    'x-browser-id': req.headers['x-browser-id'] ? req.headers['x-browser-id'].substring(0, 20) + '...' : 'not present',
-    'content-type': req.headers['content-type']
-  });
+  const clientIp = getRateLimitKey(req);
+  const browserId = req.headers['x-browser-id'] || (req.body && req.body.browserId) || 'unknown';
 
-  const browserId = getBrowserId(req);
+  console.log(`[Rate Limit] Middleware triggered for ${req.method} ${req.path}`);
+  console.log(`[Rate Limit] Client IP: ${clientIp}, Browser ID (Log only): ${browserId.substring(0, 20)}...`);
+
+  // FIX: Memory Protection - Check size before adding new entry
+  if (dailyLimitStore.size >= MAX_STORE_SIZE && !dailyLimitStore.has(clientIp)) {
+    console.warn('[Rate Limit] Store limit reached. Pruning old entries...');
+    const today = getTodayDateString();
+
+    // Prune entries not from today first
+    for (const [key, record] of dailyLimitStore.entries()) {
+      if (record.date !== today) {
+        dailyLimitStore.delete(key);
+      }
+    }
+
+    // If still full, clear all to ensure stability (fail-safe)
+    if (dailyLimitStore.size >= MAX_STORE_SIZE) {
+      console.warn('[Rate Limit] Store still full after prune. Clearing all to prevent OOM.');
+      dailyLimitStore.clear();
+    }
+  }
+
   const today = getTodayDateString();
   const dailyLimit = 4; // 4 messages per day per user
 
-  // Reject if no browser ID provided
-  if (!browserId) {
-    console.log('[Rate Limit] REJECTED - No browser ID provided');
-    return res.status(400).json({
-      error: 'Browser ID required',
-      message: 'Browser identifier is required for rate limiting.'
-    });
-  }
-
   // Get or initialize user's daily record
-  let userRecord = dailyLimitStore.get(browserId);
+  let userRecord = dailyLimitStore.get(clientIp);
   
   // Reset if new day or new user
   if (!userRecord || userRecord.date !== today) {
     userRecord = { count: 0, date: today, firstMessageTime: null };
-    console.log(`[Rate Limit] ✅ New browser/day detected. Browser ID: ${browserId.substring(0, 12)}..., Date: ${today}`);
+    console.log(`[Rate Limit] ✅ New user/day detected. IP: ${clientIp}, Date: ${today}`);
   }
 
   // Log current request count for debugging
-  console.log(`[Rate Limit] 📊 Browser ID: ${browserId.substring(0, 12)}..., Current count: ${userRecord.count}/${dailyLimit}, Date: ${today}`);
+  console.log(`[Rate Limit] 📊 IP: ${clientIp}, Current count: ${userRecord.count}/${dailyLimit}, Date: ${today}`);
 
   // Check if limit exceeded BEFORE incrementing
   if (userRecord.count >= dailyLimit) {
-    console.log(`[Rate Limit] 🚫 BLOCKED - Browser ID: ${browserId.substring(0, 12)}... has reached daily limit of ${dailyLimit} messages`);
+    console.log(`[Rate Limit] 🚫 BLOCKED - IP: ${clientIp} has reached daily limit of ${dailyLimit} messages`);
     const resetTime = new Date(today);
     resetTime.setDate(resetTime.getDate() + 1);
     resetTime.setHours(0, 0, 0, 0);
@@ -122,22 +132,28 @@ function dailyRateLimit(req, res, next) {
   if (!userRecord.firstMessageTime) {
     userRecord.firstMessageTime = new Date().toISOString();
   }
-  dailyLimitStore.set(browserId, userRecord);
-  console.log(`[Rate Limit] ✅ ALLOWED - Browser ID: ${browserId.substring(0, 12)}..., Count incremented to: ${userRecord.count}/${dailyLimit}`);
+  dailyLimitStore.set(clientIp, userRecord);
+  console.log(`[Rate Limit] ✅ ALLOWED - IP: ${clientIp}, Count incremented to: ${userRecord.count}/${dailyLimit}`);
   
   // Allow the request
   next();
 }
 
-// Clean up old entries daily (keep store size manageable)
+// Clean up old entries periodically (keep store size manageable)
+// FIX: Run more frequently (hourly instead of daily)
 setInterval(() => {
   const today = getTodayDateString();
-  for (const [browserId, record] of dailyLimitStore.entries()) {
+  let deletedCount = 0;
+  for (const [key, record] of dailyLimitStore.entries()) {
     if (record.date !== today) {
-      dailyLimitStore.delete(browserId);
+      dailyLimitStore.delete(key);
+      deletedCount++;
     }
   }
-}, 24 * 60 * 60 * 1000); // Run once per day
+  if (deletedCount > 0) {
+    console.log(`[Rate Limit] Cleanup: Removed ${deletedCount} old entries.`);
+  }
+}, 60 * 60 * 1000); // Run once per hour
 
 // Apply daily rate limiting to chat endpoint
 app.use('/api/chat', dailyRateLimit);
@@ -258,4 +274,3 @@ app.listen(PORT, () => {
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Allowed origins: ${allowedOrigins.join(', ')}`);
 });
-
