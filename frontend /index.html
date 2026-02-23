@@ -11,6 +11,18 @@
   <link rel="preload" href="css/animation.style.css" as="style" />
   <link rel="preload" href="imgs/FaisalN1.jpeg" as="image" fetchpriority="high" />
   <link rel="preload" href="imgs/F-logo2.png" as="image" fetchpriority="high" />
+  <!-- Preload works section project images so they render instantly when Works is opened -->
+  <link rel="preload" href="imgs/purebody.jpeg" as="image" />
+  <link rel="preload" href="imgs/UHA-Company website.png" as="image" />
+  <link rel="preload" href="imgs/Dashboard.webp" as="image" />
+  <link rel="preload" href="imgs/Echoai.webp" as="image" />
+  <link rel="preload" href="imgs/Smart Gallery.webp" as="image" />
+  <link rel="preload" href="imgs/medicare.png" as="image" />
+  <link rel="preload" href="imgs/Shop.webp" as="image" />
+  <link rel="preload" href="imgs/Financial-fusion.webp" as="image" />
+  <link rel="preload" href="imgs/Home.webp" as="image" />
+  <link rel="preload" href="imgs/doctors.png" as="image" />
+  <link rel="preload" href="imgs/dsa.webp" as="image" />
   <!-- Resource hints for better performance -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
@@ -2180,40 +2192,12 @@
       centerProfileContent();
       window.addEventListener('resize', centerProfileContent, { passive: true });
 
-      // Implement lazy loading for images
+      // Implement lazy loading for non-works images only
+      // Works-item images use loading="eager" so they are ready the moment the section is opened
       if ('loading' in HTMLImageElement.prototype) {
-        // Browser supports native lazy loading
-        const images = document.querySelectorAll('img:not([loading])');
+        const images = document.querySelectorAll('img:not([loading]):not(.works-item img)');
         images.forEach(img => {
           img.loading = 'lazy';
-        });
-      } else {
-        // Fallback for browsers that don't support lazy loading
-        // Load a lazy loading library dynamically if needed
-        const lazyImages = document.querySelectorAll('.works-item img, .my-photo');
-        const lazyImageObserver = new IntersectionObserver(function (entries, observer) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              const lazyImage = entry.target;
-              if (lazyImage.dataset.src) {
-                lazyImage.src = lazyImage.dataset.src;
-                lazyImage.removeAttribute('data-src');
-              }
-              if (lazyImage.dataset.srcset) {
-                lazyImage.srcset = lazyImage.dataset.srcset;
-                lazyImage.removeAttribute('data-srcset');
-              }
-              if (lazyImage.dataset.background) {
-                lazyImage.style.backgroundImage = `url('${lazyImage.dataset.background}')`;
-                lazyImage.removeAttribute('data-background');
-              }
-              lazyImageObserver.unobserve(lazyImage);
-            }
-          });
-        });
-
-        lazyImages.forEach(function (lazyImage) {
-          lazyImageObserver.observe(lazyImage);
         });
       }
     });
@@ -3332,14 +3316,14 @@
                       <i class="fa fa-th-large"></i>
                       <span>All Projects</span>
                     </div>
-                    <span class="option-count">12</span>
+                    <span class="option-count">13</span>
                   </div>
                   <div class="mobile-filter-option" data-category="Reactjs">
                     <div class="option-content">
                       <i class="fa fa-code"></i>
                       <span>React.js</span>
                     </div>
-                    <span class="option-count">2</span>
+                    <span class="option-count">3</span>
                   </div>
                   <div class="mobile-filter-option" data-category="Nextjs">
                     <div class="option-content">
@@ -3378,7 +3362,7 @@
                 <label class="filter-btn active" for="All" data-category="All">
                   <i class="fa fa-th-large"></i>
                   <span>All Projects</span>
-                  <span class="filter-count">11</span>
+                  <span class="filter-count">12</span>
                 </label>
               </div>
               <div class="filter-item">
@@ -3386,7 +3370,7 @@
                 <label class="filter-btn" for="Reactjs" data-category="Reactjs">
                   <i class="fa fa-code"></i>
                   <span>React.js</span>
-                  <span class="filter-count">2</span>
+                  <span class="filter-count">3</span>
                 </label>
               </div>
               <div class="filter-item">
@@ -3433,7 +3417,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="sass-app.html">
-                      <img src="imgs/purebody.jpeg" alt="PureBody Mobile App" loading="lazy" />
+                      <img src="imgs/purebody.jpeg" alt="PureBody Mobile App" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3475,12 +3459,58 @@
                 </div>
               </div>
 
+              <!-- UHA International Project -->
+              <div class="works-item featured" data-category="Reactjs" data-priority="2">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://github.com/FaisalHanif12/UHA-International-" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/UHA-Company website.png" alt="UHA International Company Website" loading="eager" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://github.com/FaisalHanif12/UHA-International-" target="_blank" rel="noopener noreferrer" class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">UHA International</h3>
+                    <span class="project-category">React.js</span>
+                  </div>
+                  <p class="project-description">
+                    Corporate website for UHA International — connecting global trade, real estate, and technology.
+                    Bridges physical assets with digital innovation through a modern, responsive interface.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">React.js</span>
+                    <span class="tech-tag">Tailwind CSS</span>
+                    <span class="tech-tag">Vite</span>
+                    <span class="tech-tag">JavaScript</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://github.com/FaisalHanif12/UHA-International-" target="_blank" rel="noopener noreferrer" class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/UHA-International-" target="_blank" rel="noopener noreferrer" class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
               <!-- Smart Health Care Project -->
               <div class="works-item" data-category="FullStack">
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://smart-health-care.vercel.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/Dashboard.webp" alt="Smart Health Care Dashboard" loading="lazy" />
+                      <img src="imgs/Dashboard.webp" alt="Smart Health Care Dashboard" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3529,7 +3559,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://smartgallery-display.netlify.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/Smart Gallery.webp" alt="Smart Gallery App" loading="lazy" />
+                      <img src="imgs/Smart Gallery.webp" alt="Smart Gallery App" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3578,7 +3608,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://echoaai.netlify.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/Echoai.webp" alt="Echo AI Application" loading="lazy" />
+                      <img src="imgs/Echoai.webp" alt="Echo AI Application" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3628,7 +3658,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://medicaredisplay.netlify.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/medicare.png" alt="Smart Gallery App" loading="lazy" />
+                      <img src="imgs/medicare.png" alt="Smart Gallery App" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3677,7 +3707,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://soledeckf.vercel.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/Shop.webp" alt="Soledeck E-commerce Platform" loading="lazy" />
+                      <img src="imgs/Shop.webp" alt="Soledeck E-commerce Platform" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3726,7 +3756,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://financial-fusion.netlify.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/Financial-fusion.webp" alt="Financial Fusion App" loading="lazy" />
+                      <img src="imgs/Financial-fusion.webp" alt="Financial Fusion App" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3775,7 +3805,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://faisal-yoom.netlify.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/Home.webp" alt="YOOM Video Conferencing" loading="lazy" />
+                      <img src="imgs/Home.webp" alt="YOOM Video Conferencing" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3824,7 +3854,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://dosnexa.vercel.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/doctors.png" alt="Dosnexa Medical Platform" loading="lazy" />
+                      <img src="imgs/doctors.png" alt="Dosnexa Medical Platform" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -3873,7 +3903,7 @@
                 <div class="project-image-container">
                   <div class="img">
                     <a href="https://faisal-dsa-tracker.netlify.app/" target="_blank" rel="noopener noreferrer">
-                      <img src="imgs/dsa.webp" alt="DSA Tracker Application" loading="lazy" />
+                      <img src="imgs/dsa.webp" alt="DSA Tracker Application" loading="eager" />
                     </a>
                   </div>
                   <div class="project-overlay">
@@ -5994,27 +6024,108 @@
                 btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> <span>Sending...</span>';
                 var sid = 'SES-' + Date.now().toString().slice(-8);
                 var ml = inlineSelectedMode === 'zoom' ? 'https://zoom.us/j/' + ((parseInt(sHash(sid), 16) % 900000000) + 100000000) + '?pwd=' + sHash(sid + 'pwd').substring(0, 6).toUpperCase() : 'https://meet.google.com/new';
+
+                // Determine correct API base (localhost vs production)
+                var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                var bookingApi = isLocal ? 'http://localhost:3000/api/booking' : '/api/booking';
+
                 try {
-                  var r = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  // Call backend — sends confirmation emails to both owner AND client
+                  var r = await fetch(bookingApi, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                      access_key: 'c6b7fea5-f7cd-4363-be99-4098c93c42b8',
-                      subject: '📧 BOOKING: ' + fd.sessionType + ' – ' + fd.clientName, name: 'Faisal Hanif',
-                      email: 'mehrfaisal111@gmail.com', _replyto: fd.clientEmail,
-                      message: 'Booking from ' + fd.clientName + '\nEmail: ' + fd.clientEmail + '\nType: ' + fd.sessionType + '\nDate: ' + fd.sessionDate + '\nTime: ' + times.join(', ') + '\nDuration: ' + fd.duration + '\nPlatform: ' + (fd.meetingMode === 'google-meet' ? 'Google Meet' : 'Zoom') + '\nSession ID: ' + sid + '\nAmount: $' + fd.amount + ' (Optional)\nNotes: ' + (fd.sessionNotes || 'None')
+                      clientName:    fd.clientName,
+                      clientEmail:   fd.clientEmail,
+                      clientPhone:   fd.clientPhone,
+                      clientCompany: fd.clientCompany,
+                      sessionType:   fd.sessionType,
+                      sessionDate:   fd.sessionDate,
+                      sessionTimes:  fd.sessionTimes,
+                      timezone:      fd.timezone,
+                      meetingMode:   fd.meetingMode,
+                      sessionNotes:  fd.sessionNotes,
+                      duration:      fd.duration,
+                      hours:         fd.hours,
+                      amount:        fd.amount,
+                      sessionId:     sid,
+                      meetingLink:   ml
                     })
                   });
-                  if (!r.ok) throw new Error('Failed');
-                  showAlert('success', 'Booking Confirmed!', 'Confirmation sent.');
+
+                  var result = await r.json().catch(function() { return {}; });
+
+                  if (!r.ok) {
+                    // Backend returned an error — surface a useful message
+                    var errMsg = result.error || 'Booking failed. Please try again.';
+                    throw new Error(errMsg);
+                  }
+
+                  showAlert('success', 'Booking Confirmed!', 'Confirmation emails sent to you and Faisal.');
                   btn.disabled = false; btn.innerHTML = orig;
                   setTimeout(function () {
-                    var u = new URL('success.html', window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/'));
-                    Object.keys(fd).forEach(function (k) { if (fd[k]) u.searchParams.append(k, fd[k]); });
-                    u.searchParams.append('meetingLink', ml); u.searchParams.append('sessionId', sid);
-                    window.location.href = u.toString();
+                    showInlineConfirmation(fd, ml, sid);
                   }, 2000);
-                } catch (e) { showAlert('error', 'Failed', 'Please try again.'); btn.disabled = false; btn.innerHTML = orig; }
+
+                } catch (e) {
+                  console.error('[Booking]', e);
+                  showAlert('error', 'Booking Failed', e.message || 'Could not send confirmation. Please try again.');
+                  btn.disabled = false; btn.innerHTML = orig;
+                }
               }
+
+              function showInlineConfirmation(fd, ml, sid) {
+                // Hide the form, reveal the confirmation panel
+                document.getElementById('inlineBookingForm').style.display = 'none';
+                var confirmView = document.getElementById('bookingConfirmationView');
+                confirmView.style.display = 'block';
+
+                // Scroll the confirmation into view
+                confirmView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Format session times
+                var times = fd.sessionTimes;
+                try { if (times && times.startsWith('[')) times = JSON.parse(times).join(', '); } catch(e) {}
+
+                // Format date
+                var dateStr = fd.sessionDate || 'Not specified';
+                if (dateStr && dateStr !== 'Not specified') {
+                  try {
+                    var d = new Date(dateStr);
+                    dateStr = d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+                  } catch(e) {}
+                }
+
+                var rows = [
+                  { icon:'fa-user',        label:'Client Name',  value: fd.clientName     || '—' },
+                  { icon:'fa-envelope',    label:'Email',        value: fd.clientEmail    || '—' },
+                  { icon:'fa-calendar',    label:'Session Type', value: fd.sessionType    || '—' },
+                  { icon:'fa-clock-o',     label:'Duration',     value: (fd.duration||'30') + ' minutes' },
+                  { icon:'fa-calendar-o',  label:'Date',         value: dateStr },
+                  { icon:'fa-clock-o',     label:'Time(s)',      value: times             || '—' },
+                  { icon:'fa-globe',       label:'Timezone',     value: fd.timezone       || '—' },
+                  { icon:'fa-video-camera',label:'Platform',     value: fd.meetingMode === 'zoom' ? 'Zoom' : 'Google Meet' },
+                  { icon:'fa-sticky-note', label:'Notes',        value: fd.sessionNotes   || 'No additional notes' }
+                ];
+
+                document.getElementById('ibcvDetails').innerHTML = rows.map(function(r) {
+                  return '<div class="ibcv-row">' +
+                    '<div class="ibcv-label"><i class="fa ' + r.icon + '"></i>' + r.label + '</div>' +
+                    '<div class="ibcv-value">' + r.value + '</div>' +
+                    '</div>';
+                }).join('');
+              }
+
+              window.resetToScheduleSelection = function () {
+                document.getElementById('bookingConfirmationView').style.display = 'none';
+                document.getElementById('inlineBookingForm').style.display = 'none';
+                document.getElementById('scheduleSelectionContent').style.display = '';
+                var sh = document.querySelector('.schedule-card .section-header');
+                if (sh) sh.style.display = '';
+                var sc = document.querySelector('.schedule-card');
+                if (sc) sc.scrollIntoView({ behavior:'smooth', block:'start' });
+                window.initInlineBookingForm && window.initInlineBookingForm();
+              };
 
               window.initInlineBookingForm = function () {
                 inlineCurrentStep = 1; inlineEmailVerified = false; inlineSelectedMode = null;
@@ -6072,9 +6183,148 @@
             })();
           </script>
 
-          <!-- Payment Section (Now redirects to payment.html) -->
-          <!-- The payment section has been moved to a separate page (payment.html) -->
-          <!-- The 'Proceed to Payment' button now redirects to payment.html with parameters -->
+          <!-- Inline Booking Confirmation (shown instead of navigating to success.html) -->
+          <div id="bookingConfirmationView" style="display:none;">
+            <style>
+              #bookingConfirmationView {
+                animation: ibcvFadeIn 0.5s cubic-bezier(0.4,0,0.2,1);
+              }
+              @keyframes ibcvFadeIn {
+                from { opacity:0; transform:translateY(20px); }
+                to   { opacity:1; transform:translateY(0); }
+              }
+              .ibcv-wrap {
+                text-align: center;
+                padding: 10px 4px 24px;
+              }
+              .ibcv-icon {
+                font-size: 72px;
+                color: #10b981;
+                margin-bottom: 16px;
+                display: block;
+                animation: ibcvBounce 0.8s ease-in-out;
+              }
+              @keyframes ibcvBounce {
+                0%,100% { transform:translateY(0); }
+                40%     { transform:translateY(-12px); }
+                70%     { transform:translateY(-6px); }
+              }
+              .ibcv-title {
+                font-size: 1.9rem;
+                font-weight: 800;
+                color: #1f2937;
+                margin-bottom: 10px;
+                letter-spacing: -0.02em;
+              }
+              .ibcv-subtitle {
+                font-size: 0.95rem;
+                color: #6b7280;
+                margin-bottom: 24px;
+                line-height: 1.6;
+              }
+              .ibcv-details {
+                background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+                border-radius: 16px;
+                padding: 20px 24px;
+                margin-bottom: 24px;
+                text-align: left;
+                border: 1px solid #e2e8f0;
+              }
+              .ibcv-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #e2e8f0;
+                gap: 12px;
+              }
+              .ibcv-row:last-child { border-bottom: none; }
+              .ibcv-label {
+                font-weight: 600;
+                color: #374151;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.9rem;
+                flex-shrink: 0;
+              }
+              .ibcv-label i { color: #0e6655; width: 16px; text-align: center; }
+              .ibcv-value {
+                color: #1f2937;
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-align: right;
+                word-break: break-word;
+              }
+              .ibcv-actions {
+                display: flex;
+                gap: 14px;
+                justify-content: center;
+                flex-wrap: wrap;
+              }
+              .ibcv-btn-primary {
+                background: linear-gradient(135deg, #0e6655, #10b981);
+                color: #fff;
+                border: none;
+                padding: 13px 26px;
+                border-radius: 10px;
+                font-weight: 700;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 6px 20px rgba(14,102,85,0.25);
+                font-family: inherit;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+              }
+              .ibcv-btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 28px rgba(14,102,85,0.35);
+              }
+              .ibcv-btn-secondary {
+                background: #f3f4f6;
+                color: #374151;
+                border: 2px solid #d1d5db;
+                padding: 13px 26px;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-family: inherit;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+              }
+              .ibcv-btn-secondary:hover {
+                background: #e5e7eb;
+                transform: translateY(-2px);
+              }
+              @media (max-width: 480px) {
+                .ibcv-title { font-size: 1.5rem; }
+                .ibcv-row { flex-direction: column; align-items: flex-start; }
+                .ibcv-value { text-align: left; }
+                .ibcv-actions { flex-direction: column; align-items: stretch; }
+              }
+            </style>
+            <div class="ibcv-wrap">
+              <span class="ibcv-icon"><i class="fa fa-check-circle"></i></span>
+              <h2 class="ibcv-title">Booking Confirmed!</h2>
+              <p class="ibcv-subtitle">Your session has been successfully scheduled.<br>A confirmation email is on its way to you.</p>
+              <div class="ibcv-details" id="ibcvDetails"></div>
+              <div class="ibcv-actions">
+                <button class="ibcv-btn-primary" onclick="resetToScheduleSelection()">
+                  <i class="fa fa-calendar-plus-o"></i> Book Another Meeting
+                </button>
+                <a href="mailto:mehrfaisal111@gmail.com" class="ibcv-btn-secondary">
+                  <i class="fa fa-envelope"></i> Contact Support
+                </a>
+              </div>
+            </div>
+          </div>
 
           <!-- Loading States -->
           <div id="loadingMessage" class="loading-container">

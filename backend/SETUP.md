@@ -56,24 +56,34 @@ npm install
 ## Step 5: Configure Environment Variables
 
 ```bash
-# Create .env file from example (or create manually)
 cp env.example .env
-
-# Edit .env file
 nano .env
 ```
 
-Add your OpenRouter API configuration:
+Fill in all values:
 ```
-OPENROUTER_API_KEY=sk-or-v1-0a856fc6f0ac16842650ddd48fa5dd685fd331
+OPENROUTER_API_KEY=sk-or-v1-your-actual-key
 OPENROUTER_API_URL=https://openrouter.ai/api/v1/chat/completions
 OPENROUTER_MODEL=openai/gpt-4o-mini
 PORT=3000
 NODE_ENV=production
+
+EMAIL_USER=mehrfaisal111@gmail.com
+EMAIL_PASS=your-16-char-gmail-app-password
 ```
 
-**Replace `sk-or-v1-0a856fc6f0ac16842650ddd48fa5dd685fd331` with your actual API key!**
-**The `OPENROUTER_API_URL` should match your OpenRouter API endpoint.**
+### Getting a Gmail App Password (required for booking emails)
+
+1. Make sure **2-Step Verification** is enabled on your Google Account:
+   → myaccount.google.com → Security → 2-Step Verification
+2. Generate an App Password:
+   → myaccount.google.com → Security → **App passwords**
+   → Select app: **Mail**, Select device: **Other (custom name)** → type "Portfolio"
+   → Click **Generate** and copy the 16-character code
+3. Paste it as `EMAIL_PASS` (no spaces)
+
+> This password allows the backend to send emails on behalf of `mehrfaisal111@gmail.com`
+> without exposing your real password.
 
 Save and exit (Ctrl+X, then Y, then Enter).
 
