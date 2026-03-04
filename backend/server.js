@@ -323,7 +323,7 @@ function ownerEmailHtml(d) {
         <tr><td class="lbl">📞 Phone</td><td class="val">${d.clientPhone || '—'}</td></tr>
         <tr><td class="lbl">🏢 Company</td><td class="val">${d.clientCompany || '—'}</td></tr>
         <tr><td class="lbl">🗂️ Session Type</td><td class="val">${d.sessionType}</td></tr>
-        <tr><td class="lbl">⏱️ Duration</td><td class="val">${d.duration} minutes × ${d.hours} session(s)</td></tr>
+        <tr><td class="lbl">⏱️ Duration</td><td class="val">${d.duration} × ${d.hours} session(s)</td></tr>
         <tr><td class="lbl">💰 Amount</td><td class="val">$${d.amount || '—'} (Optional)</td></tr>
         <tr><td class="lbl">📆 Date</td><td class="val">${d.formattedDate}</td></tr>
         <tr><td class="lbl">🕐 Time(s)</td><td class="val">${d.times}</td></tr>
@@ -345,77 +345,52 @@ function clientEmailHtml(d) {
   <style>
     body{margin:0;padding:0;background:#f4f4f5;font-family:'Segoe UI',Arial,sans-serif}
     .wrap{max-width:620px;margin:40px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.1)}
-    .hdr{background:linear-gradient(135deg,#0a4f42,#0e6655 50%,#10b981);padding:40px;text-align:center}
-    .hdr .icon{width:64px;height:64px;background:rgba(255,255,255,.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px}
+    .hdr{background:linear-gradient(135deg,#0a4f42,#0e6655 50%,#10b981);padding:36px 40px;text-align:center}
     .hdr h1{color:#fff;margin:0;font-size:26px;font-weight:700}
     .hdr p{color:rgba(255,255,255,.85);margin:8px 0 0;font-size:14px}
     .body{padding:36px 40px}
-    .greeting{font-size:16px;color:#374151;line-height:1.6;margin:0 0 28px}
-    table.details{width:100%;border-collapse:collapse;background:#f8fafc;border-radius:12px;overflow:hidden;margin-bottom:28px;border:1px solid #e2e8f0}
-    table.details td{padding:13px 18px;font-size:14px;border-bottom:1px solid #e2e8f0}
+    .greeting{font-size:15px;color:#374151;line-height:1.7;margin:0 0 28px}
+    .badge{display:inline-block;background:#f0fdf4;color:#065f46;border:1px solid #bbf7d0;border-radius:20px;padding:6px 16px;font-size:13px;font-weight:600;margin-bottom:24px}
+    table.details{width:100%;border-collapse:collapse;margin-bottom:24px}
+    table.details td{padding:12px 14px;font-size:14px;border-bottom:1px solid #f1f5f9}
     table.details tr:last-child td{border-bottom:none}
-    table.details .lbl{color:#6b7280;font-weight:600;width:42%;display:flex;align-items:center;gap:8px}
-    table.details .val{color:#1f2937;font-weight:600}
-    .note{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:18px 20px;margin-bottom:28px}
+    table.details .lbl{color:#6b7280;font-weight:600;width:40%;vertical-align:top}
+    table.details .val{color:#1f2937;font-weight:500}
+    .note{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px 18px;margin-bottom:24px}
     .note p{margin:0;color:#065f46;font-size:14px;line-height:1.6}
-    .contact{background:#f9fafb;border-radius:12px;padding:18px 20px;margin-bottom:0}
-    .contact p{margin:0;color:#6b7280;font-size:13px;line-height:1.6}
+    .contact{background:#f9fafb;border-radius:10px;padding:16px 18px;border:1px solid #e5e7eb}
+    .contact p{margin:0;color:#6b7280;font-size:13px;line-height:1.7}
     .contact a{color:#0e6655;font-weight:600;text-decoration:none}
     .ftr{background:#f9fafb;padding:20px 40px;text-align:center;border-top:1px solid #e5e7eb;font-size:12px;color:#9ca3af}
     .ftr a{color:#0e6655;text-decoration:none}
   </style></head><body>
   <div class="wrap">
     <div class="hdr">
-      <div class="icon">✅</div>
-      <h1>Booking Confirmed!</h1>
+      <h1>&#x2705; Booking Confirmed!</h1>
       <p>Your session with Faisal Hanif is all set</p>
     </div>
     <div class="body">
       <p class="greeting">
         Hi <strong>${d.clientName}</strong>,<br><br>
-        Thank you for booking a session! Your meeting has been confirmed and the details are listed below.
+        Thank you for booking a session! Your meeting has been confirmed and all the details are listed below.
         We look forward to connecting with you.
       </p>
-
+      <span class="badge">Session ID: ${d.sessionId}</span>
       <table class="details">
-        <tr>
-          <td class="lbl"><span>🗂️</span> Session Type</td>
-          <td class="val">${d.sessionType}</td>
-        </tr>
-        <tr>
-          <td class="lbl"><span>⏱️</span> Duration</td>
-          <td class="val">${d.duration} minutes × ${d.hours} session(s)</td>
-        </tr>
-        <tr>
-          <td class="lbl"><span>📆</span> Date</td>
-          <td class="val">${d.formattedDate}</td>
-        </tr>
-        <tr>
-          <td class="lbl"><span>🕐</span> Time(s)</td>
-          <td class="val">${d.times}</td>
-        </tr>
-        <tr>
-          <td class="lbl"><span>🌍</span> Timezone</td>
-          <td class="val">${d.timezone}</td>
-        </tr>
-        <tr>
-          <td class="lbl"><span>📹</span> Platform</td>
-          <td class="val">${d.platform}</td>
-        </tr>
-        <tr>
-          <td class="lbl"><span>🆔</span> Session ID</td>
-          <td class="val" style="font-family:monospace;font-size:13px">${d.sessionId}</td>
-        </tr>
+        <tr><td class="lbl">&#x1F5C2;&#xFE0F; Session Type</td><td class="val">${d.sessionType}</td></tr>
+        <tr><td class="lbl">&#x23F1;&#xFE0F; Duration</td><td class="val">${d.duration} &times; ${d.hours} session(s)</td></tr>
+        <tr><td class="lbl">&#x1F4C6; Date</td><td class="val">${d.formattedDate}</td></tr>
+        <tr><td class="lbl">&#x1F550; Time(s)</td><td class="val">${d.times}</td></tr>
+        <tr><td class="lbl">&#x1F30D; Timezone</td><td class="val">${d.timezone}</td></tr>
+        <tr><td class="lbl">&#x1F4F9; Platform</td><td class="val">${d.platform}</td></tr>
       </table>
-
       <div class="note">
         <p>
-          🔗 <strong>Meeting Link:</strong> Your ${d.platform} meeting link will be shared with you
+          &#x1F517; <strong>Meeting Link:</strong> Your ${d.platform} meeting link will be shared with you
           <strong>at least 30 minutes before</strong> the session start time via email.
           Please keep an eye on your inbox (and spam folder just in case).
         </p>
       </div>
-
       <div class="contact">
         <p>
           Have questions or need to reschedule? Feel free to reply to this email or reach out at
@@ -425,7 +400,7 @@ function clientEmailHtml(d) {
       </div>
     </div>
     <div class="ftr">
-      <a href="https://faisalhanif.work">faisalhanif.work</a> &nbsp;·&nbsp; Faisal Hanif – Software Engineer &nbsp;·&nbsp; Lahore, Pakistan
+      <a href="https://faisalhanif.work">faisalhanif.work</a> &nbsp;&middot;&nbsp; Faisal Hanif &ndash; Software Engineer &nbsp;&middot;&nbsp; Lahore, Pakistan
     </div>
   </div>
 </body></html>`;
