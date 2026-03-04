@@ -1315,97 +1315,70 @@
         activeButton.classList.add('active');
       }
 
-      function filterWorks(category) {
-        // Show loading state
-        showLoadingState();
+      function filterWorks(category, instant) {
+        let visibleCount = 0;
+        const visibleItems = [];
 
-        // Use requestAnimationFrame for smoother UI updates
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            let visibleCount = 0;
-            const visibleItems = [];
-
-            // First, collect all visible items
-            allWorksItems.forEach((item) => {
-              const itemCategory = item.getAttribute("data-category");
-              const shouldShow = category === "All" || itemCategory === category;
-
-              if (shouldShow) {
-                visibleItems.push(item);
-              }
-            });
-
-            // Sort items: SassApp projects first when showing "All"
-            if (category === "All") {
-              visibleItems.sort((a, b) => {
-                const aCategory = a.getAttribute("data-category");
-                const bCategory = b.getAttribute("data-category");
-                const aPriority = parseInt(a.getAttribute("data-priority") || "999");
-                const bPriority = parseInt(b.getAttribute("data-priority") || "999");
-
-                // SassApp projects first
-                if (aCategory === "SassApp" && bCategory !== "SassApp") return -1;
-                if (aCategory !== "SassApp" && bCategory === "SassApp") return 1;
-
-                // Then by priority
-                if (aPriority !== bPriority) return aPriority - bPriority;
-
-                return 0;
-              });
-            }
-
-            // Reorder DOM elements to match sorted order
-            const projectsGrid = document.querySelector('.projects-grid');
-            if (projectsGrid && category === "All") {
-              visibleItems.forEach(item => {
-                projectsGrid.appendChild(item);
-              });
-            }
-
-            // Show/hide items with animation
-            visibleItems.forEach((item, index) => {
-              visibleCount++;
-              item.classList.remove('fade-out');
-              item.classList.add('fade-in');
-              item.style.display = "block";
-
-              // Add staggered animation delay
-              setTimeout(() => {
-                item.style.opacity = '1';
-                item.style.transform = 'translateY(0) scale(1)';
-              }, index * 100);
-            });
-
-            // Hide items that shouldn't be shown
-            allWorksItems.forEach((item) => {
-              const itemCategory = item.getAttribute("data-category");
-              const shouldShow = category === "All" || itemCategory === category;
-
-              if (!shouldShow) {
-                item.classList.remove('fade-in');
-                item.classList.add('fade-out');
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(30px) scale(0.95)';
-
-                setTimeout(() => {
-                  item.style.display = "none";
-                }, 300);
-              }
-            });
-
-            // Hide loading state and show results
-            setTimeout(() => {
-              hideLoadingState();
-
-              // Show empty state if no items found
-              if (visibleCount === 0 && category !== "All") {
-                showEmptyState();
-              } else {
-                hideEmptyState();
-              }
-            }, 500);
-          }, 300);
+        // Collect visible items
+        allWorksItems.forEach((item) => {
+          const itemCategory = item.getAttribute("data-category");
+          if (category === "All" || itemCategory === category) {
+            visibleItems.push(item);
+          }
         });
+
+        // Sort: SassApp first, then by priority, when showing All
+        if (category === "All") {
+          visibleItems.sort((a, b) => {
+            const aCategory = a.getAttribute("data-category");
+            const bCategory = b.getAttribute("data-category");
+            const aPriority = parseInt(a.getAttribute("data-priority") || "999");
+            const bPriority = parseInt(b.getAttribute("data-priority") || "999");
+            if (aCategory === "SassApp" && bCategory !== "SassApp") return -1;
+            if (aCategory !== "SassApp" && bCategory === "SassApp") return 1;
+            if (aPriority !== bPriority) return aPriority - bPriority;
+            return 0;
+          });
+          // Re-order DOM to match sort
+          const projectsGrid = document.querySelector('.projects-grid');
+          if (projectsGrid) visibleItems.forEach(item => projectsGrid.appendChild(item));
+        }
+
+        // Show visible items — instantly on page load, animated on filter click
+        visibleItems.forEach((item) => {
+          visibleCount++;
+          item.classList.remove('fade-out');
+          item.style.display = "block";
+          if (instant) {
+            item.classList.remove('fade-in');
+            item.style.opacity = '1';
+            item.style.transform = '';
+          } else {
+            item.style.opacity = '';
+            item.style.transform = '';
+            item.classList.add('fade-in');
+          }
+        });
+
+        // Hide items that don't match
+        allWorksItems.forEach((item) => {
+          const itemCategory = item.getAttribute("data-category");
+          const shouldShow = category === "All" || itemCategory === category;
+          if (!shouldShow) {
+            item.classList.remove('fade-in');
+            item.classList.add('fade-out');
+            setTimeout(() => {
+              if (item.classList.contains('fade-out')) item.style.display = "none";
+            }, 300);
+          }
+        });
+
+        // Empty state
+        if (visibleCount === 0 && category !== "All") {
+          showEmptyState();
+        } else {
+          hideEmptyState();
+        }
       }
 
       function showLoadingState() {
@@ -1444,11 +1417,12 @@
         });
       });
 
-      // Initialize with "All" filter active
+      // Initialize: mark All active and show every project card instantly (no animation, no delay)
       const allFilter = document.querySelector('[data-category="All"]');
       if (allFilter) {
         allFilter.classList.add('active');
       }
+      filterWorks('All', true);
     });
   </script>
 

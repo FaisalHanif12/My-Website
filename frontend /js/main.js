@@ -476,7 +476,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Trigger filtering
                     if (dropdown.closest('.works-filter-section')) {
-                        filterProjects(category);
+                        // Works filtering handled by filterWorks() in index.html — skip here
                     } else if (dropdown.closest('.certification-filter-section')) {
                         filterCertifications(category);
                     }
@@ -566,7 +566,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Trigger filtering
             if (filterSection.classList.contains('works-filter-section')) {
-                filterProjects(category);
+                // Works filtering is handled entirely by filterWorks() in index.html.
+                // Calling filterProjects() here too caused a race condition that made
+                // cards disappear/flicker on every filter click.
                 // Update mobile dropdown if exists
                 const mobileDropdown = filterSection.querySelector('.mobile-filter-dropdown');
                 if (mobileDropdown) {
