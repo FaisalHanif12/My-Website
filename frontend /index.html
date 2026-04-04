@@ -7061,9 +7061,7 @@ REMEMBER:
           },
           body: JSON.stringify({
             message: userMessage,
-            conversationHistory: conversationHistory.slice(-10), // Keep last 10 messages for context
-            systemPrompt: systemPrompt,
-            browserId: browserId // Also send in body as backup
+            conversationHistory: conversationHistory.slice(-10)
           })
         });
 
@@ -7076,7 +7074,7 @@ REMEMBER:
           if (response.status === 429) {
             const rateLimitError = new Error('DAILY_LIMIT_REACHED');
             rateLimitError.status = 429;
-            rateLimitError.rateLimitMessage = errorData.message || errorData.error || 'You have reached your daily limit of 4 messages. Please try again tomorrow.';
+            rateLimitError.rateLimitMessage = errorData.message || errorData.error || 'You\'ve used all your messages for today. Come back tomorrow!';
             throw rateLimitError;
           }
 
