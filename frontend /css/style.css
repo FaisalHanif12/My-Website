@@ -362,6 +362,8 @@
     /* Removes default margin */
     color: #0e6655;
     /* Adjust text color as needed */
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .text-container p {
