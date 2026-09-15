@@ -44,7 +44,7 @@
 
   <!-- Fonts and icons (load asynchronously with display=swap) -->
   <link rel="stylesheet" id="ryancv-fonts-css"
-    href="//fonts.googleapis.com/css?family=Poppins%3A100%2C100i%2C200%2C200i%2C300%2C300i%2C400%2C400i%2C500%2C500i%2C600%2C600i%2C700%2C700i%2C800%2C800i%2C900%2C900i&amp&display=swap;subset=latin%2Clatin-ext"
+    href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin,latin-ext&amp;display=swap"
     media="print" onload="this.media='all'" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css" media="print"
     onload="this.media='all'" />
@@ -614,7 +614,7 @@
     function downloadCV() {
       event.preventDefault();
       const link = document.createElement("a");
-      link.href = "imgs/Faisal-Resume.pdf";
+      link.href = "imgs/Faisal-CVS.pdf";
       link.download = "Faisal-CV.pdf";
       link.style.display = "none";
       document.body.appendChild(link);
@@ -2329,7 +2329,7 @@
 
             <!-- Action Buttons -->
             <div class="profile-action-buttons">
-              <a href="imgs/Faisal-Resume.pdf" download="Faisal-Hanif-Resume.pdf" class="action-btn primary-btn">
+              <a href="imgs/Faisal-CVS.pdf" download="Faisal-Hanif-Resume.pdf" class="action-btn primary-btn">
                 <i class="fa fa-download"></i>
                 <span>Download CV</span>
               </a>
@@ -2530,52 +2530,55 @@
                   </div>
                 </div>
 
+                <div class="service-card" data-category="ai">
+                  <div class="service-header">
+                    <div class="service-icon">
+                      <i class="fa fa-magic"></i>
+                    </div>
+                    <div class="service-category">AI / LLM</div>
+                  </div>
+                  <h3>AI/LLM Integration</h3>
+                  <p>Integrating large language models into real products — intelligent assistants, AI-powered features,
+                    and automated workflows that make applications smarter.</p>
+                  <div class="service-technologies">
+                    <span class="tech-tag">OpenAI</span>
+                    <span class="tech-tag">Claude</span>
+                    <span class="tech-tag">LLM APIs</span>
+                    <span class="tech-tag">Prompt Engineering</span>
+                    <span class="tech-tag">RAG</span>
+                    <span class="tech-tag">MCP</span>
+                  </div>
+                  <div class="service-features">
+                    <ul>
+                      <li><i class="fa fa-check"></i> AI Chatbots &amp; Assistants</li>
+                      <li><i class="fa fa-check"></i> Agentic Workflows</li>
+                      <li><i class="fa fa-check"></i> Personalized AI Features</li>
+                    </ul>
+                  </div>
+                </div>
+
                 <div class="service-card" data-category="cloud">
                   <div class="service-header">
                     <div class="service-icon">
                       <i class="fa fa-cloud"></i>
                     </div>
-                    <div class="service-category">DevOps</div>
+                    <div class="service-category">Cloud</div>
                   </div>
-                  <h3>Cloud & Deployment</h3>
-                  <p>Streamlining deployment processes with containerization and modern DevOps practices for scalable
-                    solutions.</p>
+                  <h3>Cloud Orchestration</h3>
+                  <p>Orchestrating, deploying, and scaling cloud infrastructure with containerization, CI/CD pipelines,
+                    and modern DevOps practices for reliable production systems.</p>
                   <div class="service-technologies">
-                    <span class="tech-tag">Docker</span>
                     <span class="tech-tag">AWS</span>
-                    <span class="tech-tag">Vercel</span>
+                    <span class="tech-tag">Docker</span>
                     <span class="tech-tag">CI/CD</span>
+                    <span class="tech-tag">Vercel</span>
+                    <span class="tech-tag">Netlify</span>
                   </div>
                   <div class="service-features">
                     <ul>
-                      <li><i class="fa fa-check"></i> Container Management</li>
+                      <li><i class="fa fa-check"></i> Cloud Architecture</li>
                       <li><i class="fa fa-check"></i> Automated Deployment</li>
                       <li><i class="fa fa-check"></i> Scalable Infrastructure</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div class="service-card" data-category="frontend">
-                  <div class="service-header">
-                    <div class="service-icon">
-                      <i class="fa fa-desktop"></i>
-                    </div>
-                    <div class="service-category">Progressive</div>
-                  </div>
-                  <h3>Progressive Web Apps</h3>
-                  <p>Building PWAs that deliver app-like experiences with the reach of the web, optimized for
-                    performance and engagement.</p>
-                  <div class="service-technologies">
-                    <span class="tech-tag">PWA</span>
-                    <span class="tech-tag">Service Workers</span>
-                    <span class="tech-tag">Web Push</span>
-                    <span class="tech-tag">Offline Support</span>
-                  </div>
-                  <div class="service-features">
-                    <ul>
-                      <li><i class="fa fa-check"></i> Offline Functionality</li>
-                      <li><i class="fa fa-check"></i> Push Notifications</li>
-                      <li><i class="fa fa-check"></i> App-like Experience</li>
                     </ul>
                   </div>
                 </div>
@@ -2723,7 +2726,7 @@
                     </div>
                     <div class="plan-info">
                       <h3 class="plan-title">Professional</h3>
-                      <span class="plan-subtitle">Full Stack Power</span>
+                      <span class="plan-subtitle">Full Stack + AI Power</span>
                     </div>
                   </div>
 
@@ -2739,12 +2742,13 @@
                   <!-- Row 3: Services Grid 3x2 -->
                   <div class="pricing-center">
                     <div class="services-list">
+                      <span class="service-tag" style="grid-column: 1 / -1;"><i class="fa fa-magic"></i> AI/LLM Integration</span>
                       <span class="service-tag"><i class="fa fa-code"></i> Frontend</span>
                       <span class="service-tag"><i class="fa fa-server"></i> Backend API</span>
                       <span class="service-tag"><i class="fa fa-database"></i> Database</span>
-                      <span class="service-tag"><i class="fa fa-tachometer-alt"></i> Performance</span>
+                      <span class="service-tag"><i class="fa fa-tachometer"></i> Performance</span>
                       <span class="service-tag"><i class="fa fa-cloud"></i> Cloud</span>
-                      <span class="service-tag"><i class="fa fa-tools"></i> Maintenance</span>
+                      <span class="service-tag"><i class="fa fa-wrench"></i> Maintenance</span>
                     </div>
                   </div>
 
@@ -2783,7 +2787,7 @@
                 </h1>
                 <p class="works-description">
                   A comprehensive overview of my experience, education, and technical expertise
-                  in modern web development and software engineering.
+                  in software engineering and AI/LLM integration — building intelligent, production-ready applications.
                 </p>
 
                 <div class="profile-stats">
@@ -2847,9 +2851,9 @@
                       <span>TechXelo</span>
                     </div>
                     <p class="timeline-description">
-                      Building full-stack web and mobile applications using React.js, Next.js,
-                      Node.js, and MongoDB. Delivering scalable REST APIs, responsive frontends,
-                      and achieving 20% performance improvements across production systems.
+                      Integrating AI and LLMs into software engineering — building intelligent full-stack
+                      web and mobile applications with React.js, Next.js, Node.js, and MongoDB, powered by
+                      AI-driven features, smart automation, and scalable REST APIs across production systems.
                     </p>
                     <div class="timeline-tech">
                       <span class="tech-tag">React.js</span>
@@ -2861,14 +2865,14 @@
                   </div>
                 </div>
 
-                <div class="timeline-item current">
+                <div class="timeline-item">
                   <div class="timeline-marker">
-                    <div class="marker-dot active"></div>
+                    <div class="marker-dot"></div>
                     <div class="marker-line"></div>
                   </div>
                   <div class="timeline-content">
                     <div class="timeline-header">
-                      <div class="timeline-badge current">Ongoing</div>
+                      <div class="timeline-badge">Closed</div>
                       <span class="timeline-period">2023 - 2024</span>
                     </div>
                     <h3 class="timeline-title">Freelance Developer</h3>
@@ -2900,7 +2904,7 @@
                     <h3 class="timeline-title">Outsourcing Engineer</h3>
                     <div class="timeline-company">
                       <i class="fa fa-cogs"></i>
-                      <span>TechXelo</span>
+                      <span>UHA International</span>
                     </div>
                     <p class="timeline-description">
                       Orchestrated project acquisition and client engagement strategies,
@@ -3138,6 +3142,54 @@
                   </div>
                 </div>
 
+                <!-- AI & LLM Frameworks -->
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">
+                      <i class="fa fa-magic"></i>
+                    </div>
+                    <h3>AI & LLM Frameworks</h3>
+                  </div>
+                  <div class="skills-grid">
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">LangChain</span>
+                        <span class="skill-level">80%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 80%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">LangGraph</span>
+                        <span class="skill-level">75%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 75%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">OpenAI API</span>
+                        <span class="skill-level">85%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 85%"></div>
+                      </div>
+                    </div>
+                    <div class="skill-item">
+                      <div class="skill-info">
+                        <span class="skill-name">Claude API</span>
+                        <span class="skill-level">80%</span>
+                      </div>
+                      <div class="skill-bar">
+                        <div class="skill-progress" style="width: 80%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- CSS Frameworks -->
                 <div class="skill-category">
                   <div class="category-header">
@@ -3230,6 +3282,8 @@
                     Core Expertise
                   </h3>
                   <div class="expertise-tags">
+                    <span class="expertise-tag">AI/LLM Integration</span>
+                    <span class="expertise-tag">AI Agents & Workflows</span>
                     <span class="expertise-tag">Frontend Development</span>
                     <span class="expertise-tag">Backend Development</span>
                     <span class="expertise-tag">Mobile Development</span>
@@ -3264,8 +3318,8 @@
                 Featured <span class="highlight">Projects</span>
               </h1>
               <p class="works-description">
-                Explore my collection of modern web applications, mobile solutions, and full-stack projects that
-                showcase cutting-edge technology and innovative design.
+                Explore my collection of AI-powered web applications, mobile solutions, and full-stack projects that
+                blend LLM intelligence with cutting-edge technology and innovative design.
               </p>
               <div class="works-stats">
                 <div class="works-stat">
@@ -3302,7 +3356,7 @@
                       <i class="fa fa-th-large"></i>
                       <span>All Projects</span>
                     </div>
-                    <span class="option-count">13</span>
+                    <span class="option-count">14</span>
                   </div>
                   <div class="mobile-filter-option" data-category="Reactjs">
                     <div class="option-content">
@@ -3316,7 +3370,7 @@
                       <i class="fa fa-rocket"></i>
                       <span>Next.js</span>
                     </div>
-                    <span class="option-count">2</span>
+                    <span class="option-count">3</span>
                   </div>
                   <div class="mobile-filter-option" data-category="FullStack">
                     <div class="option-content">
@@ -3348,7 +3402,7 @@
                 <label class="filter-btn active" for="All" data-category="All">
                   <i class="fa fa-th-large"></i>
                   <span>All Projects</span>
-                  <span class="filter-count">12</span>
+                  <span class="filter-count">14</span>
                 </label>
               </div>
               <div class="filter-item">
@@ -3364,7 +3418,7 @@
                 <label class="filter-btn" for="Nextjs" data-category="Nextjs">
                   <i class="fa fa-rocket"></i>
                   <span>Next.js</span>
-                  <span class="filter-count">2</span>
+                  <span class="filter-count">3</span>
                 </label>
               </div>
               <div class="filter-item">
@@ -3488,6 +3542,104 @@
                       <i class="fa fa-lock"></i>
                       <span>Closed Source</span>
                     </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fit For Living Project -->
+              <div class="works-item" data-category="Website" data-priority="3">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://fitforliving.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/FitForLiving.webp" alt="Fit For Living Gym Website" loading="eager" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://fitforliving.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">Fit For Living</h3>
+                    <span class="project-category">Client Website</span>
+                  </div>
+                  <p class="project-description">
+                    Business website for a Geelong gym &amp; coaching studio — membership pricing, programs, and a
+                    live weekly class timetable that highlights the next session in local time.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">HTML5</span>
+                    <span class="tech-tag">CSS3</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Responsive Design</span>
+                    <span class="tech-tag">Netlify</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://fitforliving.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live</span>
+                    </a>
+                    <span class="project-btn btn-secondary" style="cursor:default;opacity:0.6;">
+                      <i class="fa fa-lock"></i>
+                      <span>Closed Source</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- GitPulse Project -->
+              <div class="works-item" data-category="Nextjs" data-priority="4">
+                <div class="project-image-container">
+                  <div class="img">
+                    <a href="https://gitpulseee.netlify.app/" target="_blank" rel="noopener noreferrer">
+                      <img src="imgs/GitPulse.webp" alt="GitPulse GitHub Activity Tracker" loading="eager" />
+                    </a>
+                  </div>
+                  <div class="project-overlay">
+                    <div class="overlay-content">
+                      <a href="https://gitpulseee.netlify.app/" target="_blank" rel="noopener noreferrer"
+                        class="preview-btn">
+                        <i class="fa fa-eye"></i>
+                        <span>Live Preview</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="project-status completed">Live</div>
+                </div>
+                <div class="project-content">
+                  <div class="project-header">
+                    <h3 class="project-title">GitPulse</h3>
+                    <span class="project-category">Next.js</span>
+                  </div>
+                  <p class="project-description">
+                    GitHub activity tracking platform for coding bootcamps — role-based dashboards for admins,
+                    coordinators, leadership, and learners with cohort management, scoring, and leaderboards.
+                  </p>
+                  <div class="project-tech">
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">GitHub API</span>
+                    <span class="tech-tag">Role-Based Access</span>
+                  </div>
+                  <div class="project-actions">
+                    <a href="https://gitpulseee.netlify.app/" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-primary">
+                      <i class="fa fa-external-link"></i>
+                      <span>Live</span>
+                    </a>
+                    <a href="https://github.com/FaisalHanif12/GitPulse-" target="_blank" rel="noopener noreferrer"
+                      class="project-btn btn-secondary">
+                      <i class="fa fa-github"></i>
+                      <span>Source</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -4023,7 +4175,7 @@
               </p>
               <div class="certification-stats">
                 <div class="certification-stat">
-                  <span class="stat-number">4+</span>
+                  <span class="stat-number">6+</span>
                   <span class="stat-label">Certifications</span>
                 </div>
                 <div class="certification-stat">
@@ -4056,7 +4208,14 @@
                       <i class="fa fa-th-large"></i>
                       <span>All Certifications</span>
                     </div>
-                    <span class="option-count">5</span>
+                    <span class="option-count">7</span>
+                  </div>
+                  <div class="mobile-filter-option" data-category="ai">
+                    <div class="option-content">
+                      <i class="fa fa-magic"></i>
+                      <span>AI</span>
+                    </div>
+                    <span class="option-count">2</span>
                   </div>
                   <div class="mobile-filter-option" data-category="frontend">
                     <div class="option-content">
@@ -4094,7 +4253,14 @@
                 <button class="filter-btn active" data-category="all">
                   <i class="fa fa-th-large"></i>
                   <span>All Certifications</span>
-                  <span class="filter-count">5</span>
+                  <span class="filter-count">7</span>
+                </button>
+              </div>
+              <div class="filter-item">
+                <button class="filter-btn" data-category="ai">
+                  <i class="fa fa-magic"></i>
+                  <span>AI</span>
+                  <span class="filter-count">2</span>
                 </button>
               </div>
               <div class="filter-item">
@@ -4131,6 +4297,92 @@
           <!-- Certifications Grid -->
           <div class="section-content certifications-section-content">
             <div class="certifications-grid">
+
+              <!-- Certification - Claude Code in Action (Anthropic) -->
+              <div class="certification-card" data-category="ai">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Anthropic</span>
+                    <span class="issuer-type">Certificate of Completion</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">2026</span>
+                  </div>
+                </div>
+
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Claude-Code-in-Action.webp" alt="Claude Code in Action Certificate - Anthropic"
+                      loading="lazy" />
+                    <div class="cert-overlay">
+                      <a href="https://verify.skilljar.com/c/ckyyu2785vdw" class="view-cert-btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                    <h3>Claude Code in Action</h3>
+                    <p class="cert-description">
+                      Hands-on training in AI-assisted software development with Claude Code, covering agentic coding
+                      workflows, context management, custom commands, MCP servers, and hooks for automating real-world
+                      engineering tasks.
+                    </p>
+                    <div class="cert-skills">
+                      <span class="skill-tag">Claude Code</span>
+                      <span class="skill-tag">Agentic Coding</span>
+                      <span class="skill-tag">MCP</span>
+                      <span class="skill-tag">AI Workflows</span>
+                    </div>
+                    <div class="cert-verification">
+                      <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Certification - Claude 101 (Anthropic) -->
+              <div class="certification-card" data-category="ai">
+                <div class="cert-header">
+                  <div class="cert-issuer">
+                    <span class="issuer-name">Anthropic</span>
+                    <span class="issuer-type">Certificate of Completion</span>
+                  </div>
+                  <div class="cert-date">
+                    <span class="date-badge">2026</span>
+                  </div>
+                </div>
+
+                <div class="cert-content">
+                  <div class="cert-image">
+                    <img src="imgs/Claude-101.webp" alt="Claude 101 Certificate - Anthropic" loading="lazy" />
+                    <div class="cert-overlay">
+                      <a href="https://verify.skilljar.com/c/drx9sbkavduo" class="view-cert-btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fa fa-external-link"></i>
+                        View Certificate
+                      </a>
+                    </div>
+                  </div>
+                  <div class="cert-details">
+                    <h3>Claude 101</h3>
+                    <p class="cert-description">
+                      Foundations of working effectively with Claude, including prompting techniques, projects,
+                      artifacts, and applying AI assistance to everyday research, writing, and development workflows.
+                    </p>
+                    <div class="cert-skills">
+                      <span class="skill-tag">Claude AI</span>
+                      <span class="skill-tag">Prompt Engineering</span>
+                      <span class="skill-tag">Generative AI</span>
+                      <span class="skill-tag">Productivity</span>
+                    </div>
+                    <div class="cert-verification">
+                      <i class="fa fa-certificate"></i>
+                      <span>Verified Certificate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <!-- Certification 1 - Frontend Development -->
               <div class="certification-card featured" data-category="frontend">
@@ -4378,8 +4630,9 @@
               </div>
               <h1 class="contact-title">Let's <span class="highlight">Connect</span> </h1>
               <p class="contact-description">
-                Ready to bring your ideas to life? Whether you need a stunning website, a powerful web application,
-                or expert consultation, I'm here to help turn your vision into reality.
+                Ready to bring your ideas to life with AI? Whether you need an intelligent web application, an
+                AI-powered product with LLM integration, or expert consultation, I'm here to help turn your vision
+                into reality.
               </p>
               <div class="contact-stats">
                 <div class="contact-stat">
@@ -6519,18 +6772,19 @@ ABOUT FAISAL HANIF:
 
 COMPANIES FAISAL WORKED WITH:
 1. TechXelo (2021-2025, Current) - Software Engineer
-   - Building full-stack web and mobile applications
+   - Integrating AI and LLMs into software engineering
+   - Building intelligent full-stack web and mobile applications with AI-driven features
    - Delivering scalable REST APIs and responsive frontends
    - Achieved 20% performance improvements across production systems
    - Technologies: React.js, Next.js, Node.js, Express.js, MongoDB
 
-2. Upwork Platform (2022-2024, Ongoing) - Freelance Developer
+2. Upwork Platform (2022-2024, Closed) - Freelance Developer
    - Collaborating with diverse international clients
    - Delivering custom web solutions across various industries
    - Building strong client relationships globally
    - Focus: Client Relations, Custom Solutions, Global Projects
 
-3. TechXelo (2023-2024) - Outsourcing Engineer
+3. UHA International (2023-2024) - Outsourcing Engineer
    - Orchestrated project acquisition and client engagement strategies
    - Expertly identified opportunities and aligned them with company capabilities
    - Focus: Project Management, Client Acquisition, Strategy
@@ -6785,7 +7039,7 @@ FOR PROJECT-RELATED QUESTIONS:
 - When user asks "how can Faisal help build my project": Explain Faisal's full-stack capabilities, experience, and how he can deliver projects efficiently
 
 FOR COMPANY-RELATED QUESTIONS:
-- When asked "where has Faisal worked", "companies", "work experience": List all 4 companies (TechXelo, Upwork, Viral Square, and freelance) with details
+- When asked "where has Faisal worked", "companies", "work experience": List all 4 companies (TechXelo, UHA International, Upwork, and Viral Square) with details
 - When asked about specific company: Provide detailed information about that company and Faisal's role there
 
 FOR ALL OTHER QUESTIONS (think intelligently):
@@ -6874,6 +7128,9 @@ REMEMBER:
       });
     }
 
+    // Client-side daily cap (UX only — the backend enforces the real burst, per-IP, and site-wide limits)
+    const CLIENT_DAILY_LIMIT = 4;
+
     // Check if user has reached daily message limit (client-side check)
     function hasReachedDailyLimit() {
       const messageData = localStorage.getItem('chatMessageData');
@@ -6885,8 +7142,7 @@ REMEMBER:
 
       try {
         const data = JSON.parse(messageData);
-        // Check if it's the same day and count is 4 or more
-        if (data.date === today && data.count >= 4) {
+        if (data.date === today && data.count >= CLIENT_DAILY_LIMIT) {
           return true;
         }
       } catch (e) {
@@ -6920,6 +7176,16 @@ REMEMBER:
       return data.count;
     }
 
+    // Lock the widget for the rest of the day once the server reports a daily limit
+    function markDailyLimitReached() {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        localStorage.setItem('chatMessageData', JSON.stringify({ date: today, count: CLIENT_DAILY_LIMIT }));
+      } catch (e) {
+        console.error('Error saving message data:', e);
+      }
+    }
+
     // Send message function
     async function sendMessage() {
       const message = chatbotInput.value.trim();
@@ -6927,7 +7193,7 @@ REMEMBER:
 
       // Check if user has reached daily message limit (client-side check)
       if (hasReachedDailyLimit()) {
-        addMessage('You have reached your daily limit of 4 messages. Please try again tomorrow.', 'bot');
+        addMessage(`You have reached your daily limit of ${CLIENT_DAILY_LIMIT} messages. Please try again tomorrow.`, 'bot');
         chatbotInput.disabled = true;
         chatbotSend.disabled = true;
         chatbotInput.placeholder = 'Daily limit reached. Try again tomorrow.';
@@ -6946,7 +7212,7 @@ REMEMBER:
       // Show typing indicator
       const typingIndicator = addTypingIndicator();
 
-      let dailyLimitReached = false;
+      let keepInputLocked = false;
 
       try {
         // Call AI API
@@ -6957,34 +7223,40 @@ REMEMBER:
 
         // Increment message count (only on successful response)
         const currentCount = incrementMessageCount();
-        console.log(`[Frontend] Message count for today: ${currentCount}/4`);
+        console.log(`[Frontend] Message count for today: ${currentCount}/${CLIENT_DAILY_LIMIT}`);
       } catch (error) {
         console.error('Chatbot error:', error);
         removeTypingIndicator(typingIndicator);
 
-        // Handle daily limit error differently
-        if (error.message === 'DAILY_LIMIT_REACHED' || error.status === 429) {
-          dailyLimitReached = true;
-          // Mark that user has reached limit (even if message wasn't processed)
-          incrementMessageCount();
+        if (error.status === 429) {
+          // The request was refused, so drop the unanswered message from the AI's context
+          const last = conversationHistory[conversationHistory.length - 1];
+          if (last && last.role === 'user' && last.content === message) conversationHistory.pop();
 
-          // Show the rate limit message to the user
-          // error.rateLimitMessage contains the backend's message
-          const rateLimitMessage = error.rateLimitMessage ||
-            'You have reached your daily limit of 4 messages. Please try again tomorrow.';
-
-          addMessage(rateLimitMessage, 'bot');
-          // Disable input to prevent further attempts
+          addMessage(error.rateLimitMessage, 'bot');
+          keepInputLocked = true;
           chatbotInput.disabled = true;
           chatbotSend.disabled = true;
-          chatbotInput.placeholder = 'Daily limit reached. Try again tomorrow.';
+
+          if (error.code === 'DAILY_LIMIT' || error.code === 'GLOBAL_LIMIT') {
+            markDailyLimitReached();
+            chatbotInput.placeholder = 'Daily limit reached. Try again tomorrow.';
+          } else {
+            // Short burst limit — pause briefly instead of locking the chat for the day
+            const originalPlaceholder = chatbotInput.placeholder;
+            chatbotInput.placeholder = `Too fast — try again in ${error.retryAfter}s`;
+            setTimeout(() => {
+              chatbotInput.disabled = false;
+              chatbotSend.disabled = false;
+              chatbotInput.placeholder = originalPlaceholder;
+            }, error.retryAfter * 1000);
+          }
         } else {
-          // Other errors - show fallback message
-          addMessage("Your message limit has been reached", 'Faisals Assistant');
+          addMessage("Sorry, something went wrong. Please try again in a moment.", 'bot');
         }
       } finally {
-        // Only re-enable if not disabled due to daily limit
-        if (!dailyLimitReached) {
+        // Re-enable unless a rate limit is holding the input
+        if (!keepInputLocked) {
           chatbotInput.disabled = false;
           chatbotSend.disabled = false;
           chatbotInput.focus();
@@ -7086,9 +7358,13 @@ REMEMBER:
 
           // Check for rate limit error (429)
           if (response.status === 429) {
-            const rateLimitError = new Error('DAILY_LIMIT_REACHED');
+            const rateLimitError = new Error('RATE_LIMITED');
             rateLimitError.status = 429;
-            rateLimitError.rateLimitMessage = errorData.message || errorData.error || 'You\'ve used all your messages for today. Come back tomorrow!';
+            // DAILY_LIMIT / GLOBAL_LIMIT lock the chat for the day; anything else is a short "slow down"
+            rateLimitError.code = errorData.code || 'BURST_LIMIT';
+            const retryAfter = Number(errorData.retryAfter || response.headers.get('Retry-After')) || 60;
+            rateLimitError.retryAfter = Math.min(Math.max(retryAfter, 1), 120);
+            rateLimitError.rateLimitMessage = errorData.message || errorData.error || 'Please slow down and try again in a minute.';
             throw rateLimitError;
           }
 
@@ -7101,7 +7377,7 @@ REMEMBER:
         console.error('API Error:', error);
 
         // Re-throw rate limit errors so they can be handled in sendMessage
-        if (error.message === 'DAILY_LIMIT_REACHED' || error.status === 429) {
+        if (error.status === 429) {
           throw error;
         }
 
