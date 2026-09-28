@@ -1,0 +1,48 @@
+# Tech stack
+
+Check the latest stable versions with `npm view <pkg> version` before installing, and pin exact versions.
+
+## Frontend (frontend/)
+- Next.js (latest stable, App Router), React and TypeScript strict. Node 20 LTS or newer.
+- Styling: port the reference CSS as it is, split to mirror its sections:
+  - `src/styles/tokens.css` (the `:root` and dark tokens)
+  - `base.css` (shared components)
+  - `layout.css` (rail, top bar, dock, curtain, preloader)
+  - one file per feature: `about.css`, `profile.css`, `works.css`, `approvals.css`, `contact.css`, `overlays.css`
+  All are imported once in the root layout. Class names and prefixes (`ab-`, `pf-`, `wk-`, `ct-`) stay unchanged so the result stays pixel identical. No Tailwind and no renamed classes.
+- Fonts: next/font for Plus Jakarta Sans (400 to 800), Instrument Serif (400 normal and italic) and JetBrains Mono (400, 500), exposed through the same CSS variables the reference uses.
+- Images: next/image (AVIF/WebP) with explicit sizes. Priority only on each route's LCP image.
+- Motion: port the reference's vanilla JS into small React hooks and components: useReveal, useMagnetic, useSpotlight, useTilt, useParallax, useSmoothScroll, usePageTransition, useCountUp. Use requestAnimationFrame, and animate transform and opacity only. Clean up in effects. Add no animation library unless it is needed to match the reference.
+- Theme: an inline script in the root layout sets `data-theme` before paint, plus a ThemeProvider.
+- State: React state and context only.
+- Content: typed data files in `src/content/` (site, profile, experience, education, skills, services, testimonials, pricing, projects, certificates, socials).
+- API client: `src/lib/api.ts` with typed chat, contact and booking calls, whose bodies are exactly the reference `FH_HOOKS` payloads (API_CONTRACT.md). Chat uses the JSON reply with the reference's 12 second timeout and falls back to the local responder, as the reference does. It reads `NEXT_PUBLIC_API_URL`; when that is not set, the forms use the reference mailto flow. It uses timeouts and fails gracefully.
+- Tooling: ESLint, Prettier, Vitest and Testing Library, Playwright with pixelmatch for visual diffs.
+- Structure:
+  - `src/app/` (layout, About page, profile/, works/, approvals/, contact/, sitemap, robots, opengraph-image)
+  - `src/components/layout/` (Rail, TopBar, Dock, Curtain, Preloader, AmbientBackground, NextPageLink)
+  - `src/components/ui/` (Button, Pill, Card, Modal, Toast, Icon, IconSprite)
+  - `src/components/motion/`
+  - `src/features/{about,profile,works,approvals,contact,booking,chat}/`
+  - `src/content/`, `src/lib/`, `src/hooks/`, `src/styles/`, `public/`, `tests/`
+
+## Backend (backend/)
+- Node.js 20 LTS or newer, TypeScript strict, Express (latest stable). Built with tsc and run with tsx in dev.
+- Packages: openai (official SDK, pointed at OpenRouter's base URL), nodemailer, googleapis (Calendar + Meet), zod, helmet, cors, express-rate-limit, pino + pino-http, dotenv, ics, date-fns + date-fns-tz. BACKEND_SPEC.md says how each is used.
+- Tests: Vitest and Supertest, with OpenRouter, Google and the mail transport mocked.
+- Structure:
+  - `src/app.ts`, `src/server.ts`
+  - `src/config/env.ts` (zod-validated env that fails fast)
+  - `src/routes/`, `src/controllers/`
+  - `src/services/` (chat (OpenRouter), mail, booking, meeting providers (Google Meet, Zoom), calendar, knowledge)
+  - `src/validators/`
+  - `src/middleware/` (error handler, not found, rate limit, request id)
+  - `src/templates/` (email HTML + text)
+  - `src/knowledge/portfolio.json`
+  - `tests/`
+- Env (`.env.example`): the full list is in BACKEND_SPEC.md (OpenRouter, Gmail SMTP, Google Calendar, optional Zoom, rate limits). Any SMTP provider must work by changing env only.
+
+## Hosting
+- Frontend: Vercel, with Root Directory `frontend`.
+- Backend: any Node host (Render, Railway or Fly), with `CORS_ORIGINS=https://faisalhanif.work`.
+- Config comes from env only.
