@@ -40,13 +40,13 @@ Now the old site can always come back.
 5. Only after the owner replies "yes, merge": merge with a normal merge commit (no squash). Because the old files were removed on the branch, main becomes exactly the new project.
 
 ## Step 6: switch the live site to the new app
-Write down the exact changes for the owner. The owner makes them; agents never change hosting or DNS. For example:
-- If the old site is on Vercel: set Root Directory to `frontend`, Framework to Next.js, and add the env vars.
-- Deploy the backend on a Node host with its env vars, and set `NEXT_PUBLIC_API_URL` on the frontend.
-- Point faisalhanif.work at the frontend if it is not already.
+Write down the exact changes for the owner. The owner makes them; agents never change hosting or DNS. The site stays on the owner's Ubuntu server with nginx (TECH_STACK.md "Hosting"):
+- Pull main on the server, set the env vars (backend `.env`, frontend `NEXT_PUBLIC_API_URL`), then build and start both apps under PM2 or systemd.
+- Change the nginx site for faisalhanif.work from serving the old static folder to proxying the Next.js server, and add the `/api/` (or `api.` subdomain) proxy to the Node API.
+- Reload nginx and check every route, the chat, the contact form and a booking.
 
 ## Rollback
-If anything goes wrong after the merge, the old site is on `backup/old-portfolio` and the tag `old-portfolio-final`. Give the owner the exact revert steps (revert the merge commit on main, or redeploy the previous deployment on the host). Do not act on your own.
+If anything goes wrong after the merge, the old site is on `backup/old-portfolio` and the tag `old-portfolio-final`. Give the owner the exact revert steps (revert the merge commit on main, or point nginx back at the old static folder from `backup/old-portfolio`). Do not act on your own.
 
 ## Never
 Push to main, force push, rewrite history, merge without "yes, merge", commit secrets, or change hosting and DNS settings.

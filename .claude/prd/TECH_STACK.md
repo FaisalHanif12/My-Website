@@ -42,7 +42,9 @@ Check the latest stable versions with `npm view <pkg> version` before installing
   - `tests/`
 - Env (`.env.example`): the full list is in BACKEND_SPEC.md (OpenRouter, Gmail SMTP, Google Calendar, optional Zoom, rate limits). Any SMTP provider must work by changing env only.
 
-## Hosting
-- Frontend: Vercel, with Root Directory `frontend`.
-- Backend: any Node host (Render, Railway or Fly), with `CORS_ORIGINS=https://faisalhanif.work`.
+## Hosting (owner decision: the same VPS that serves faisalhanif.work today)
+- The live site runs on an Ubuntu server with nginx. Both apps deploy there.
+- Frontend: `next.config` uses `output: 'standalone'`. On the server: `npm ci && npm run build`, copy `public/` and `.next/static` next to the standalone server, run `node .next/standalone/server.js` on a local port (for example 3000) under PM2 or systemd, and let nginx proxy faisalhanif.work to it.
+- Backend: `npm ci && npm run build`, run `node dist/server.js` on a local port (for example 8787) under PM2 or systemd, with `CORS_ORIGINS=https://faisalhanif.work`. nginx proxies `/api/` (same domain) or a subdomain such as `api.faisalhanif.work` to it; the frontend's `NEXT_PUBLIC_API_URL` points there. With `/api` on the same domain, disable nginx response buffering for the chat route.
+- Both READMEs include ready-to-use PM2 (or systemd) and nginx examples. Agents never change the server; the owner applies the steps.
 - Config comes from env only.
