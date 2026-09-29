@@ -27,7 +27,7 @@ Everything in this file is a summary. If a summary here differs from the referen
 - Desktop left rail: logo, 5 links with icons, theme toggle. Mobile top bar (logo, name, theme toggle, Book button) and bottom dock (5 links). Same breakpoints as the reference.
 - Light and dark themes with no flash on load (storage key `fh-theme`). Where the browser supports it, the toggle uses the circular View Transition reveal.
 - Motion system:
-  - scroll reveals: up, fade, scale, left, right, blur, mask, stagger, split text (by word) and count up
+  - scroll reveals: up, fade, scale, left, right, blur, mask, stagger, split text and count up
   - magnetic buttons, cursor spotlight cards, tilt and parallax, the lerped cursor glow and the top scroll progress bar
   - lerped smooth wheel scrolling wherever the pointer is fine and reduced motion is off (read once at start, at any width); native scrolling on touch and in inner scroll areas
   - all of it honours reduced motion
@@ -40,15 +40,15 @@ Everything in this file is a summary. If a summary here differs from the referen
 
 ## Pages (the full inventory is in REFERENCE_MAP.md)
 - About:
-  - hero: the greeting "Hi there! I'm"; the name on two rows, "Faisal" then "Hanif" (serif, gradient, with a line that draws in before it), split by word for the entrance (each word rises in turn); the role line with the rolling role; Download CV and Book Meeting; 5 socials (LinkedIn, X, GitHub, Quora, Instagram); stats that count up (3+, 10+, 3+); orbital portrait with 8 tech badges (React, Node.js, OpenAI, AWS, Next.js, Claude, MongoDB, React Native)
+  - hero (see REFERENCE_MAP.md 11.3): the greeting "Hi there! I'm" with the "Available for work" status pill; the name "Faisal Hanif" split into letters with a mask rise, "Hanif" in serif ink with the SVG flourish under it; the "Software Engineer" chip, a connector and the rolling focus words (Frontend Development, Backend Development, Database Management, System Design, Cloud Orchestration); Download CV and Book Meeting; 6 socials with tooltips (LinkedIn, X, GitHub, Quora, Instagram, Email); stats (Years coding 3+, Projects 10+, Companies 3+) with the gliding mark on their top rule; the orbital portrait with tech badges
   - below: marquee, Get to Know Me bento, services, testimonials carousel, pricing
 - Profile: hero "résumé as an object": a desk with 3 sheets (experience, education, skills); experience timeline; education; skills tabs.
 - Works:
-  - hero, "the studio wall": four featured projects shown as devices in soft 3D (three browser windows for GitPulse, UHA International and Fit For Living, and one phone for PureBody), with a seal on the stage, "Built with" stack chips that filter the grid, stats (10+ projects, 7+ technologies, 100% responsive), entrance, hover lift, tilt, a slow float and a scroll-linked exit on desktop. Clicking a device jumps to its project card. There is no orbit and no drag.
+  - hero (see REFERENCE_MAP.md 11.5): PureBody at the centre (a phone with two screens that opens the PureBody showcase) and six projects in orbit (UHA International, GitPulse, Fit For Living, Soledeck, Dosnexa, YOOM), with front and back orbit layers, a pill and a caption. Choosing an orbit card jumps to that project.
   - filters, 14 project cards, and the PureBody modal with 3 videos
 - Approvals: hero with seven real certificates fanned from one pivot and a "VERIFIED CREDENTIALS" seal; filters, grid and rail of 7 certificates.
 - Contact: hero with the live globe, 24h dial and Lahore clock card; contact form; booking; chat.
-- Small screens: each hero stacks exactly as the reference does. About stacks at 900px and below with the copy first and the orbit below it (text stays left aligned). The other pages stack at 1023px and below in the order the reference uses (REFERENCE_MAP.md section 11).
+- Small screens: each hero stacks exactly as the current reference does, at its own breakpoints (About at 900px and below puts the visual first; the other pages at 1023px and below). Follow the file's @media and @container rules for every width (REFERENCE_MAP.md section 11).
 
 ## Backend features (full detail in BACKEND_SPEC.md, which is binding)
 - AI chatbot:
@@ -67,7 +67,7 @@ Everything in this file is a summary. If a summary here differs from the referen
   - the done screen keeps the reference design and copy ("The confirmation and meeting link are on their way to ...")
 
 ## Assets
-- Extract every base64 image from the reference into `frontend/public/images/` as real files and serve them with next/image. There are exactly 5: the portrait (About) and the GitPulse, UHA, Fit For Living and PureBody screens in the Works hero. Every other image loads from `imgs/` (see REFERENCE_MAP.md section 8).
+- Extract every base64 image from the reference into `frontend/public/images/` as real files and serve them with next/image. There are exactly 9: the portrait (About), the two PureBody phone screens and the six orbit screenshots in the Works hero (UHA, GitPulse, Fit For Living, Soledeck, Dosnexa, YOOM). Every other image loads from `imgs/` (see REFERENCE_MAP.md section 8).
 - The PureBody modal's "Open full page" link points to `https://faisalhanif.work/sass-app.html`, a page of the OLD site. Keep the link exactly as in the reference, and keep that URL working: while the old files are still on the work branch (GIT_WORKFLOW.md step 3), copy `sass-app.html` and every file it loads into `frontend/public/` at the same paths, then check that `/sass-app.html` opens with no missing files. If it cannot be carried over cleanly, stop and ask the owner.
 - The old site assets sit in `frontend/imgs` and `frontend/vedioes`. During scaffolding, move them into `frontend/public/imgs` and `frontend/public/vedioes` with the same names, so `/imgs/Faisal-CVS.pdf` and the video paths keep working. Compare with the `imgs/` and `vedioes/` on the old repo's main branch and copy in anything missing. List anything still missing in `frontend/MISSING_ASSETS.md`.
 

@@ -32,5 +32,5 @@ These answer the questions the reference map readers raised. They apply the rule
 ## Content kept as the reference has it (the owner may change these later; list them in the final report)
 - Testimonials from Sarah Johnson (TechCorp) and Emily Rodriguez (AppSolutions): shipped, marked `needsConfirmation: true`, also in the chat knowledge.
 - Soledeck live link (returns 404): kept with its Live badge and link, flagged.
-- Hero stats: Works "10+ projects", Approvals "6+ certifications", About "3+", Contact "10+" and "100%". Captions "Four of fourteen" and "07". The " / 03" testimonial counter. Filter label "Sass App". Response times "2-4 hours" and "24 hours". Project descriptions word for word.
+- Hero stats, captions and counters exactly as the current reference shows them (for example the " / 03" testimonial counter). Filter label "Sass App". Response times "2-4 hours" and "24 hours". Project descriptions word for word.
 - No WhatsApp on the contact page (the reference has none).

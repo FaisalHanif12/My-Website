@@ -4,6 +4,8 @@
 A production rebuild of the portfolio at faisalhanif.work. The design is final and lives in `reference-design/faisalhanif-redesign.html`. The job is to replicate it EXACTLY: same layout, spacing, type, colours, light and dark themes, motion, interactions and responsiveness at every width. The code must be clean, typed, modular, scalable and production grade. The reference is the single source of truth. When in doubt, open it and match it.
 
 ## The reference always wins
+The owner replaced the reference design on 2026-09-29 (commit 398c7e4). Only the CURRENT `reference-design/faisalhanif-redesign.html` counts, for all content and for every screen size. Ignore anything about the older design (old commits, old notes, memory). When REFERENCE_MAP.md, a brief or any doc disagrees with the current file, the file wins. For every width you build, check the file's own responsive rules (`@media` and `@container`) and match them exactly.
+
 If anything in `.claude/` (PRD, tech stack, specs, contract, checklist, reference map), a lead's brief or a worker's idea conflicts with the reference design, the reference wins. Build it exactly as the reference has it: same markup, classes, copy, states, field names, timings and behaviour. Do not add new UI states, labels or notes that the reference does not have. Then fix the doc that was wrong and tell the orchestrator. Backend and API choices must fit what the reference UI already does, never the other way round.
 
 ## Folders

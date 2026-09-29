@@ -10,7 +10,7 @@ Any place where the build differs from the reference is a bug, even if a doc sai
 
 ## Responsive
 - [ ] No horizontal scroll at any width from 320 to 1920.
-- [ ] Small-screen heroes stack exactly as in the reference (About: copy first, orbit below; other pages as mapped in REFERENCE_MAP.md section 11).
+- [ ] Small-screen heroes stack exactly as in the current reference at every width (REFERENCE_MAP.md section 11).
 - [ ] Nothing hides under the top bar or dock. Touch targets are 44px or more.
 
 ## Function
