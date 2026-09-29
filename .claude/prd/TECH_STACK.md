@@ -10,9 +10,9 @@ Check the latest stable versions with `npm view <pkg> version` before installing
   - `layout.css` (rail, top bar, dock, curtain, preloader)
   - one file per feature: `about.css`, `profile.css`, `works.css`, `approvals.css`, `contact.css`, `overlays.css`
   All are imported once in the root layout. Class names and prefixes (`ab-`, `pf-`, `wk-`, `ct-`) stay unchanged so the result stays pixel identical. No Tailwind and no renamed classes.
-- Fonts: next/font for Plus Jakarta Sans (400 to 800), Instrument Serif (400 normal and italic) and JetBrains Mono (400, 500), exposed through the same CSS variables the reference uses.
+- Fonts: next/font with explicit weights: Plus Jakarta Sans 400, 500, 600, 700, 800; Instrument Serif italic 400 (the normal face is never shown, so it is not loaded); JetBrains Mono 400, 500. tokens.css builds the reference's `--font-sans`, `--font-serif` and `--font-mono` from the next/font variables (see .claude/plans/orchestrator-decisions.md).
 - Images: next/image (AVIF/WebP) with explicit sizes. Priority only on each route's LCP image.
-- Motion: port the reference's vanilla JS into small React hooks and components: useReveal, useMagnetic, useSpotlight, useTilt, useParallax, useSmoothScroll, usePageTransition, useCountUp. Use requestAnimationFrame, and animate transform and opacity only. Clean up in effects. Add no animation library unless it is needed to match the reference.
+- Motion: port the reference's vanilla JS into small React hooks and components: useReveal, useMagnetic, useSpotlight, useTilt, useParallax, useSmoothScroll, usePageTransition, useCountUp. Use requestAnimationFrame, and animate only what the reference animates (transform, opacity, filter, clip-path, border-radius, background-size, the translate property and CSS variables). Clean up in effects. Add no animation library unless it is needed to match the reference.
 - Theme: an inline script in the root layout sets `data-theme` before paint, plus a ThemeProvider.
 - State: React state and context only.
 - Content: typed data files in `src/content/` (site, profile, experience, education, skills, services, testimonials, pricing, projects, certificates, socials).

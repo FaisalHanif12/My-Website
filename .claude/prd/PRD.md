@@ -27,9 +27,9 @@ Everything in this file is a summary. If a summary here differs from the referen
 - Desktop left rail: logo, 5 links with icons, theme toggle. Mobile top bar (logo, name, theme toggle, Book button) and bottom dock (5 links). Same breakpoints as the reference.
 - Light and dark themes with no flash on load (storage key `fh-theme`). Where the browser supports it, the toggle uses the circular View Transition reveal.
 - Motion system:
-  - scroll reveals: up, fade, scale, left, right, blur, mask, stagger, split text and count up
-  - magnetic buttons, cursor spotlight cards, tilt and parallax
-  - lerped smooth wheel scrolling on desktop; native scrolling on touch and in inner scroll areas
+  - scroll reveals: up, fade, scale, left, right, blur, mask, stagger, split text (by word) and count up
+  - magnetic buttons, cursor spotlight cards, tilt and parallax, the lerped cursor glow and the top scroll progress bar
+  - lerped smooth wheel scrolling wherever the pointer is fine and reduced motion is off (read once at start, at any width); native scrolling on touch and in inner scroll areas
   - all of it honours reduced motion
 - Toasts, modals, and the floating chat button with its "Ask me anything" nudge.
 - Booking modal, exactly as in the reference:
@@ -40,7 +40,7 @@ Everything in this file is a summary. If a summary here differs from the referen
 
 ## Pages (the full inventory is in REFERENCE_MAP.md)
 - About:
-  - hero: the greeting "Hi there! I'm"; the name on two rows, "Faisal" then "Hanif" (serif, gradient, with a line that draws in before it), split into letters for the entrance; the role line with the rolling role; Download CV and Book Meeting; 5 socials (LinkedIn, X, GitHub, Quora, Instagram); stats with a gliding mark; orbital portrait with 8 tech badges (React, Node.js, OpenAI, AWS, Next.js, Claude, MongoDB, React Native)
+  - hero: the greeting "Hi there! I'm"; the name on two rows, "Faisal" then "Hanif" (serif, gradient, with a line that draws in before it), split by word for the entrance (each word rises in turn); the role line with the rolling role; Download CV and Book Meeting; 5 socials (LinkedIn, X, GitHub, Quora, Instagram); stats that count up (3+, 10+, 3+); orbital portrait with 8 tech badges (React, Node.js, OpenAI, AWS, Next.js, Claude, MongoDB, React Native)
   - below: marquee, Get to Know Me bento, services, testimonials carousel, pricing
 - Profile: hero "résumé as an object": a desk with 3 sheets (experience, education, skills); experience timeline; education; skills tabs.
 - Works:
@@ -48,7 +48,7 @@ Everything in this file is a summary. If a summary here differs from the referen
   - filters, 14 project cards, and the PureBody modal with 3 videos
 - Approvals: hero with seven real certificates fanned from one pivot and a "VERIFIED CREDENTIALS" seal; filters, grid and rail of 7 certificates.
 - Contact: hero with the live globe, 24h dial and Lahore clock card; contact form; booking; chat.
-- Small screens: every page hero shows the visual on top with centred content below. The switch happens at 900px for About and 1023px for the other pages, as in the reference.
+- Small screens: each hero stacks exactly as the reference does. About stacks at 900px and below with the copy first and the orbit below it (text stays left aligned). The other pages stack at 1023px and below in the order the reference uses (REFERENCE_MAP.md section 11).
 
 ## Backend features (full detail in BACKEND_SPEC.md, which is binding)
 - AI chatbot:

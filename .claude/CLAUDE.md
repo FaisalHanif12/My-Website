@@ -16,7 +16,12 @@ If anything in `.claude/` (PRD, tech stack, specs, contract, checklist, referenc
 The project root path has spaces in it (`My Projects /Faisal-Website`, with a space before the slash), so always quote paths in shell commands.
 
 ## Read order for every agent
-1. This file 2. prd/PRD.md 3. prd/TECH_STACK.md 4. prd/BACKEND_SPEC.md 5. prd/REFERENCE_MAP.md 6. prd/API_CONTRACT.md 7. prd/GIT_WORKFLOW.md 8. prd/QA_CHECKLIST.md
+1. This file 2. prd/PRD.md 3. prd/TECH_STACK.md 4. prd/BACKEND_SPEC.md 5. prd/REFERENCE_MAP.md 6. prd/API_CONTRACT.md 7. prd/GIT_WORKFLOW.md 8. prd/QA_CHECKLIST.md 9. plans/orchestrator-decisions.md (answers to the reference quirk questions; binding)
+REFERENCE_MAP.md is large (about 9,600 lines). Use the index at the top of its section 11 and read only the parts you need, with offsets.
+
+## How agents work here (important)
+- Work in small steps and make a tool call at least every few minutes. An agent that goes about 10 minutes without progress is killed and restarted from its brief. Never compose one huge file or message in a single step; write files in pieces.
+- Assume you may be a restart. First look at the files you own and continue from what is there. Never redo finished work.
 
 ## Team and orchestration
 Claude Code subagents cannot start their own subagents. So the MAIN session is the orchestrator and runs this loop:

@@ -5,12 +5,12 @@ Any place where the build differs from the reference is a bug, even if a doc sai
 ## Visual parity with the reference
 - [ ] Playwright compares every route with the reference (hash page to route) at 1440x900, 1280x720, 1024x768, 891x774, 768x1024, 390x844 and 360x780, in light and dark, with reduced motion on, the clock frozen and fonts loaded.
 - [ ] Pixel diff is 0.5% or less per screenshot. Any area above that is inspected and fixed.
-- [ ] Hover, focus and open states are checked by eye against the reference: buttons, cards, socials, stats glide mark, tabs, filters, modals, booking steps, chat.
-- [ ] Motion matches the reference: entrance order and timing, rolling role, orbits, globe, curtain transition, theme toggle reveal, preloader. Reduced motion shows everything with no movement.
+- [ ] Hover, focus and open states are checked by eye against the reference: buttons, cards, socials, stat count-ups, tabs, filters, modals, booking steps, chat.
+- [ ] Motion matches the reference: entrance order and timing, rolling role, orbits, globe, curtain transition, theme toggle reveal, preloader. Reduced motion behaves exactly like the reference (everything visible; the few places where the reference still moves under reduced motion move the same way).
 
 ## Responsive
 - [ ] No horizontal scroll at any width from 320 to 1920.
-- [ ] Small-screen heroes show the visual first and centred content, as in the reference.
+- [ ] Small-screen heroes stack exactly as in the reference (About: copy first, orbit below; other pages as mapped in REFERENCE_MAP.md section 11).
 - [ ] Nothing hides under the top bar or dock. Touch targets are 44px or more.
 
 ## Function
