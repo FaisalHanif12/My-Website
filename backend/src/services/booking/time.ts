@@ -18,6 +18,7 @@ import {
   FIRST_HOUR,
   LAST_HOUR,
   MIN_NOTICE_MS,
+  SLOT_STEP_MINUTES,
   WINDOW_DAYS,
 } from './catalog.js';
 import type { DateWindow, Ymd } from './types.js';
@@ -120,14 +121,23 @@ export function inWindow(date: Ymd, window: DateWindow): boolean {
 // ---------------------------------------------------------------------------
 
 /**
- * The 9 hourly slot starts 09:00..17:00 of the calendar day `date` in `tz`. For
- * Asia/Karachi this is exactly the reference slotsFor: Date.UTC(y, m - 1, d, h - 5).
+ * The slot starts of the calendar day `date` in `tz`, one every `minutes` minutes from 09:00 while
+ * the session still ends by 18:00. A 60 minute session gives the 9 hourly starts 09:00..17:00 (for
+ * Asia/Karachi exactly the reference slotsFor: Date.UTC(y, m - 1, d, h - 5)); a 30 minute session
+ * gives 18 starts, 09:00, 09:30 .. 17:30 (owner change, 2026-09-29).
  */
-export function slotStarts(date: Ymd, tz: string = DEFAULT_BOOKING_TIMEZONE): Date[] {
+export function slotStarts(
+  date: Ymd,
+  tz: string = DEFAULT_BOOKING_TIMEZONE,
+  minutes: number = SLOT_STEP_MINUTES,
+): Date[] {
   parseYmd(date);
   const starts: Date[] = [];
-  for (let hour = FIRST_HOUR; hour <= LAST_HOUR; hour += 1) {
-    const start = fromZonedTime(`${date}T${String(hour).padStart(2, '0')}:00:00`, tz);
+  const dayEnd = (LAST_HOUR + 1) * 60;
+  for (let at = FIRST_HOUR * 60; at + minutes <= dayEnd; at += minutes) {
+    const hh = String(Math.floor(at / 60)).padStart(2, '0');
+    const mm = String(at % 60).padStart(2, '0');
+    const start = fromZonedTime(`${date}T${hh}:${mm}:00`, tz);
     if (Number.isNaN(start.getTime())) throw new RangeError('Unknown time zone');
     starts.push(start);
   }
@@ -149,12 +159,13 @@ export function isSlotStart(
   date: Ymd,
   startUtc: Date | string,
   tz: string = DEFAULT_BOOKING_TIMEZONE,
+  minutes: number = SLOT_STEP_MINUTES,
 ): boolean {
   const start = toInstant(startUtc);
   if (!start || !isYmdDate(date)) return false;
   try {
     const ms = start.getTime();
-    return slotStarts(date, tz).some((slot) => slot.getTime() === ms);
+    return slotStarts(date, tz, minutes).some((slot) => slot.getTime() === ms);
   } catch {
     return false;
   }

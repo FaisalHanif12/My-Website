@@ -15,9 +15,8 @@ export interface JoinPayload {
   bookingId: string;
   /** The real meeting address (Google Meet or Zoom). */
   url: string;
-  /** ISO start and end of the session. */
-  start: string;
-  end: string;
+  /** ISO start and end of every booked session, in order. The link opens around each of them. */
+  sessions: Array<{ start: string; end: string }>;
 }
 
 export type JoinState = 'early' | 'open' | 'ended';
@@ -25,6 +24,13 @@ export type JoinState = 'early' | 'open' | 'ended';
 export interface JoinWindow {
   opensAt: Date;
   closesAt: Date;
+}
+
+/** What the join page needs: the state now and, when it is not open, the next session. */
+export interface JoinStatus {
+  state: JoinState;
+  /** The session that is open now, else the next one to come, else the last one. */
+  session: { start: Date; end: Date };
 }
 
 export function joinWindow(start: Date, end: Date): JoinWindow {
@@ -38,6 +44,22 @@ export function joinState(window: JoinWindow, now: Date): JoinState {
   if (now < window.opensAt) return 'early';
   if (now > window.closesAt) return 'ended';
   return 'open';
+}
+
+/**
+ * The state of a link with one or more sessions: open when any session's window is open, early
+ * when one still lies ahead (also between two sessions), ended when every window has passed.
+ */
+export function joinStatus(
+  sessions: ReadonlyArray<{ start: Date; end: Date }>,
+  now: Date,
+): JoinStatus {
+  const list = sessions.map((s) => ({ ...s, window: joinWindow(s.start, s.end) }));
+  const open = list.find((s) => joinState(s.window, now) === 'open');
+  if (open) return { state: 'open', session: open };
+  const next = list.find((s) => joinState(s.window, now) === 'early');
+  if (next) return { state: 'early', session: next };
+  return { state: 'ended', session: list[list.length - 1] ?? { start: now, end: now } };
 }
 
 export interface JoinLinks {
@@ -85,13 +107,24 @@ export function createJoinLinks(secret: string, siteUrl: string): JoinLinks {
         if (
           typeof value.bookingId !== 'string' ||
           typeof value.url !== 'string' ||
-          typeof value.start !== 'string' ||
-          typeof value.end !== 'string' ||
+          !Array.isArray(value.sessions) ||
+          value.sessions.length === 0 ||
+          !value.sessions.every(
+            (s) =>
+              typeof s?.start === 'string' &&
+              typeof s?.end === 'string' &&
+              !Number.isNaN(Date.parse(s.start)) &&
+              !Number.isNaN(Date.parse(s.end)),
+          ) ||
           !/^https:\/\//i.test(value.url)
         ) {
           return null;
         }
-        return { bookingId: value.bookingId, url: value.url, start: value.start, end: value.end };
+        return {
+          bookingId: value.bookingId,
+          url: value.url,
+          sessions: value.sessions.map((s) => ({ start: s.start, end: s.end })),
+        };
       } catch {
         return null;
       }

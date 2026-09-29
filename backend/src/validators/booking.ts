@@ -43,19 +43,34 @@ export const bookingBodySchema = z.object({
     { error: 'Enter a valid phone number.' },
   ),
   company: optionalTrimmed(BOOKING_LIMITS.companyMax),
-  date: ymdDateSchema,
+  /** Ignored: each slot's day is read from the slot itself. Sent by the site for older clients. */
+  date: ymdDateSchema.optional(),
   timezone: ianaTimeZoneSchema,
-  startUtc: z
-    .string({ error: 'Pick a time slot.' })
-    .trim()
-    .min(1, { error: 'Pick a time slot.' })
-    .max(40, { error: 'Pick a time slot.' }),
+  /** ISO time of the first slot. Ignored when `slots` is sent. */
+  startUtc: z.string().trim().max(40).optional(),
+  /** One ISO start time per booked session (owner change, 2026-09-29). */
+  slots: z
+    .array(
+      z
+        .string({ error: 'Pick a time slot.' })
+        .trim()
+        .min(1, { error: 'Pick a time slot.' })
+        .max(40, { error: 'Pick a time slot.' }),
+      { error: 'Pick your time slots.' },
+    )
+    .min(1, { error: 'Pick your time slots.' })
+    .max(MAX_SESSIONS, { error: `Book at most ${MAX_SESSIONS} sessions.` }),
   platform: z.enum(PLATFORMS, { error: 'Choose Google Meet or Zoom.' }),
   notes: optionalTrimmed(BOOKING_LIMITS.notesMax),
   website: honeypotSchema,
 });
 
 export type BookingBody = z.output<typeof bookingBodySchema>;
+
+/** True when the slot list has as many entries as sessions and none repeats. */
+export function slotsMatchSessions(body: Pick<BookingBody, 'sessions' | 'slots'>): boolean {
+  return body.slots.length === body.sessions && new Set(body.slots).size === body.slots.length;
+}
 
 /** Query of GET /api/booking/slots. */
 export const slotsQuerySchema = z.object({

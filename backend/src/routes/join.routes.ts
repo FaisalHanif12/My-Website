@@ -1,12 +1,7 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { rateLimiters } from '../middleware/rateLimit.js';
-import {
-  createJoinLinks,
-  joinSecret,
-  joinState,
-  joinWindow,
-} from '../services/booking/joinLink.js';
+import { createJoinLinks, joinSecret, joinStatus } from '../services/booking/joinLink.js';
 import type { JoinLinks } from '../services/booking/joinLink.js';
 import { formatWhen } from '../services/booking/time.js';
 import { escapeHtml } from '../templates/escape.js';
@@ -47,7 +42,7 @@ export function createJoinModule(overrides: JoinModuleOverrides = {}): ApiModule
       const links =
         overrides.joinLinks === undefined
           ? secret
-            ? createJoinLinks(secret, env.SITE_URL)
+            ? createJoinLinks(secret, env.API_PUBLIC_URL)
             : null
           : overrides.joinLinks;
 
@@ -70,11 +65,14 @@ export function createJoinModule(overrides: JoinModuleOverrides = {}): ApiModule
             );
           return;
         }
-        const start = new Date(payload.start);
-        const end = new Date(payload.end);
-        const window = joinWindow(start, end);
-        const state = joinState(window, now());
-        const when = escapeHtml(formatWhen(start, end, env.BOOKING_TIMEZONE));
+        const status = joinStatus(
+          payload.sessions.map((s) => ({ start: new Date(s.start), end: new Date(s.end) })),
+          now(),
+        );
+        const state = status.state;
+        const when = escapeHtml(
+          formatWhen(status.session.start, status.session.end, env.BOOKING_TIMEZONE),
+        );
         if (state === 'open') {
           req.log.info(
             { event: 'join.redirect', bookingId: payload.bookingId },
@@ -91,7 +89,7 @@ export function createJoinModule(overrides: JoinModuleOverrides = {}): ApiModule
               page(
                 'Not open yet',
                 'This meeting link opens 10 minutes before the session starts.',
-                `Your session: <strong>${when}</strong> (Pakistan time). Open this link again then.`,
+                `Your next session: <strong>${when}</strong> (Pakistan time). Open this link again then.`,
               ),
             );
           return;
@@ -103,7 +101,7 @@ export function createJoinModule(overrides: JoinModuleOverrides = {}): ApiModule
             page(
               'This meeting has ended',
               'The link was only active around the booked time.',
-              `Your session was <strong>${when}</strong> (Pakistan time). Reply to your booking email to book another.`,
+              `Your last session was <strong>${when}</strong> (Pakistan time). Reply to your booking email to book another.`,
             ),
           );
       });

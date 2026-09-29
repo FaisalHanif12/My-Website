@@ -60,6 +60,11 @@ export interface BookingEmailData {
   addToCalendarUrl: string;
   /** The owner's calendar event (htmlLink), when the calendar returned one. */
   eventLink: string | null;
-  /** More than one session: the others are planned together on the first call. */
+  /** More than one session: every session has its own time and calendar event. */
   multiSession: boolean;
+  /**
+   * The time of every booked session in order (the first one equals whenVisitor and whenPkt).
+   * Leave out, or give one, for a single session.
+   */
+  sessionTimes?: ReadonlyArray<{ whenVisitor: string; whenPkt: string }>;
 }

@@ -348,7 +348,7 @@ describe('booking visitor email', () => {
   });
 
   it('explains the other sessions only for a multi-session booking', () => {
-    const multiLine = 'The other sessions will be planned together on the first call.';
+    const multiLine = 'all of them use the same meeting link';
     expect(email.html).toContain(multiLine);
     expect(email.text).toContain('You booked 3 sessions.');
     const single = renderBookingVisitor({
@@ -392,7 +392,7 @@ describe('booking owner email', () => {
       'Calendar event: https://www.google.com/calendar/event?eid=c2FtcGxlZXZlbnQ',
     );
     expect(email.text).toContain('Meeting link: https://meet.google.com/abc-defg-hij');
-    expect(email.html).toContain('The calendar event covers the first one.');
+    expect(email.html).toContain('Each one has its own calendar event');
   });
 
   it('flags zoomPending in a clear warning box', () => {

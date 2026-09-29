@@ -66,10 +66,12 @@ export interface BookingResult {
   bookingId: string;
   /** The join link. null only when Zoom was picked but Zoom is not set up. */
   meetLink: string | null;
-  /** ISO start time. */
+  /** ISO start time of the first session. */
   start: string;
-  /** ISO end time. */
+  /** ISO end time of the first session. */
   end: string;
+  /** Every booked session, in time order. */
+  sessions: Array<{ start: string; end: string }>;
 }
 
 /** An inclusive range of calendar days. */

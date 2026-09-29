@@ -10,9 +10,10 @@ import type { KeyValueStore } from '../../store/types.js';
 import { renderBookingOwner } from '../../templates/bookingOwner.js';
 import { renderBookingVisitor } from '../../templates/bookingVisitor.js';
 import type { BookingEmailData } from '../../templates/types.js';
+import { slotsMatchSessions } from '../../validators/booking.js';
 import type { BookingBody } from '../../validators/booking.js';
 import { isCalendarError } from '../calendar/types.js';
-import type { CalendarProvider } from '../calendar/types.js';
+import type { CalendarProvider, CreatedEvent } from '../calendar/types.js';
 import { ownerAddress } from '../mail/index.js';
 import { toMailSendError } from '../mail/types.js';
 import type { Mailer } from '../mail/types.js';
@@ -31,6 +32,7 @@ import {
   isSlotStart,
   isWeekday,
   sessionEnd,
+  ymdIn,
   zoneLabel,
 } from './time.js';
 import type { BookingResult } from './types.js';
@@ -114,9 +116,8 @@ function requestFingerprint(body: BookingBody): string {
     name: body.name,
     phone: body.phone,
     company: body.company,
-    date: body.date,
     timezone: body.timezone,
-    startUtc: body.startUtc,
+    slots: [...body.slots].sort(),
     platform: body.platform,
     notes: body.notes,
   });
@@ -141,36 +142,57 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
   });
   const mutex: KeyedMutex = createKeyedMutex();
 
-  /** Checks the payload against the booking rules and returns the slot start. */
-  function checkRules(body: BookingBody): Date {
-    if (!isWeekday(body.date) || !inWindow(body.date, bookingDateWindow(now(), body.timezone))) {
-      throw Errors.validation({ date: BOOKING_FIELD_MESSAGES.date });
+  /** Checks every slot against the booking rules and returns the starts in time order. */
+  function checkRules(body: BookingBody): Date[] {
+    const info = sessionInfo(body.sessionType);
+    if (!slotsMatchSessions(body)) {
+      throw Errors.validation({
+        slots: `Pick ${body.sessions} different time slot${body.sessions === 1 ? '' : 's'}, one for each session.`,
+      });
     }
-    if (!isSlotStart(body.date, body.startUtc, homeTz)) {
-      throw Errors.validation({ startUtc: BOOKING_FIELD_MESSAGES.startUtc });
+    const starts: Date[] = [];
+    for (const iso of body.slots) {
+      const start = new Date(iso);
+      // A slot belongs to the Pakistan day it was built on (the picked calendar day).
+      const day = Number.isNaN(start.getTime()) ? '' : ymdIn(start, homeTz);
+      if (!day || !isWeekday(day) || !inWindow(day, bookingDateWindow(now(), body.timezone))) {
+        throw Errors.validation({ slots: BOOKING_FIELD_MESSAGES.date });
+      }
+      if (!isSlotStart(day, iso, homeTz, info.minutes)) {
+        throw Errors.validation({ slots: BOOKING_FIELD_MESSAGES.startUtc });
+      }
+      if (!hasNotice(start, now())) {
+        throw Errors.validation({ slots: BOOKING_FIELD_MESSAGES.notice });
+      }
+      starts.push(start);
     }
-    const start = new Date(body.startUtc);
-    if (!hasNotice(start, now())) {
-      throw Errors.validation({ startUtc: BOOKING_FIELD_MESSAGES.notice });
-    }
-    return start;
+    return starts.sort((a, b) => a.getTime() - b.getTime());
   }
 
-  async function create(body: BookingBody, start: Date): Promise<BookingResult> {
+  /** Holds the lock of every slot (in time order, so two bookings can not wait on each other). */
+  function withLocks<T>(keys: readonly string[], work: () => Promise<T>): Promise<T> {
+    const [head, ...rest] = keys;
+    if (head === undefined) return work();
+    return mutex.withLock(head, () => withLocks(rest, work));
+  }
+
+  async function create(body: BookingBody, starts: Date[]): Promise<BookingResult> {
     const info = sessionInfo(body.sessionType);
     const price = quote(body.sessionType, body.sessions);
-    const end = sessionEnd(start, info.minutes);
+    const ends = starts.map((start) => sessionEnd(start, info.minutes));
+    const first = starts[0] as Date;
     const bookingId = newId();
-    const title = `${info.name} (${info.minutes} min) with ${body.name}`;
+    const baseTitle = `${info.name} (${info.minutes} min) with ${body.name}`;
     const meeting = meetingFor(body.platform);
+    const many = starts.length > 1;
 
-    // 1. The meeting, before the event: a Zoom link is made first and goes into the event.
+    // 1. The meeting, before the events: a Zoom link is made first and goes into the events.
     let plan;
     try {
       plan = await meeting.plan({
         bookingId,
-        topic: title,
-        start,
+        topic: baseTitle,
+        start: first,
         durationMinutes: info.minutes,
         timeZone: homeTz,
       });
@@ -182,12 +204,14 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
       throw Errors.upstream(undefined, error);
     }
 
-    // 2. The one calendar event (with a Meet conference for Google Meet).
+    const sessionLines = starts.map(
+      (start, i) => `Session ${i + 1}: ${formatWhen(start, ends[i] as Date, homeTz)} (PKT)`,
+    );
     const description = [
       `Booking ${bookingId}`,
       `${info.name}, ${info.minutes} minutes, $${info.price} per session`,
       `Sessions: ${body.sessions} (total $${price.total} ${CURRENCY})`,
-      body.sessions > 1 ? 'The other sessions will be planned together on the first call.' : null,
+      ...(many ? sessionLines : []),
       `Platform: ${body.platform}${plan.pending ? ' (Zoom link still to be sent)' : ''}`,
       `Visitor: ${body.name} <${body.email}>`,
       body.phone ? `Phone: ${body.phone}` : null,
@@ -197,21 +221,28 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
       .filter((line): line is string => line !== null)
       .join('\n');
 
-    let created;
+    // 2. One calendar event per session. The first one makes the Meet conference; the others use
+    // its address, so every session happens in the same meeting room.
+    const created: CreatedEvent[] = [];
+    let rawLink: string | null = plan.joinUrl;
     try {
-      created = await calendar.createEvent({
-        requestId: bookingId,
-        summary: title,
-        description,
-        start,
-        end,
-        timeZone: homeTz,
-        // With a join link the visitor stays off the event: an attendee's own calendar would show
-        // the real meeting link at any time. The emails and the .ics carry the join link instead.
-        attendee: joinLinks ? null : { email: body.email, name: body.name },
-        location: plan.joinUrl,
-        withGoogleMeet: plan.withGoogleMeet,
-      });
+      for (const [i, start] of starts.entries()) {
+        const event = await calendar.createEvent({
+          requestId: i === 0 ? bookingId : `${bookingId}-${i + 1}`,
+          summary: many ? `${baseTitle} (session ${i + 1} of ${starts.length})` : baseTitle,
+          description,
+          start,
+          end: ends[i] as Date,
+          timeZone: homeTz,
+          // With a join link the visitor stays off the event: an attendee's own calendar would show
+          // the real meeting link at any time. The emails and the .ics carry the join link instead.
+          attendee: joinLinks ? null : { email: body.email, name: body.name },
+          location: i === 0 ? plan.joinUrl : rawLink,
+          withGoogleMeet: i === 0 && plan.withGoogleMeet,
+        });
+        created.push(event);
+        if (i === 0) rawLink = plan.joinUrl ?? event.meetLink;
+      }
     } catch (error) {
       log.error(
         isCalendarError(error)
@@ -219,34 +250,50 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
           : { bookingId, reason: 'unexpected' },
         'calendar_create_failed',
       );
+      // All or nothing: take back the events that were made.
+      await Promise.allSettled(created.map((event) => calendar.deleteEvent(event.eventId)));
       throw Errors.upstream(undefined, error);
     }
+    const firstEvent = created[0] as CreatedEvent;
 
-    // 3. The one link both sides get. With a join link it works only around the booked time.
-    const rawLink = plan.joinUrl ?? created.meetLink;
+    // 3. The one link both sides get. With a join link it works only around the booked times.
     const meetLink =
       rawLink && joinLinks
         ? joinLinks.create({
             bookingId,
             url: rawLink,
-            start: start.toISOString(),
-            end: end.toISOString(),
+            sessions: starts.map((start, i) => ({
+              start: start.toISOString(),
+              end: (ends[i] as Date).toISOString(),
+            })),
           })
         : rawLink;
-    await availability.markBooked(start, end).catch((error: unknown) => {
-      log.warn({ bookingId, err: error }, 'mark_booked_failed');
-    });
+    await Promise.all(
+      starts.map((start, i) =>
+        availability.markBooked(start, ends[i] as Date).catch((error: unknown) => {
+          log.warn({ bookingId, err: error }, 'mark_booked_failed');
+        }),
+      ),
+    );
 
     const result: BookingResult = {
       bookingId,
       meetLink,
-      start: start.toISOString(),
-      end: end.toISOString(),
+      start: first.toISOString(),
+      end: (ends[0] as Date).toISOString(),
+      sessions: starts.map((start, i) => ({
+        start: start.toISOString(),
+        end: (ends[i] as Date).toISOString(),
+      })),
     };
 
-    // 4. The emails. The event exists now, so a failure here is logged and the booking still
+    // 4. The emails. The events exist now, so a failure here is logged and the booking still
     // succeeds (BACKEND_SPEC.md section 3): the owner sees it in Google Calendar.
     const owner = ownerAddress(env);
+    const sessionTimes = starts.map((start, i) => ({
+      whenVisitor: formatWhen(start, ends[i] as Date, body.timezone),
+      whenPkt: `${formatWhen(start, ends[i] as Date, homeTz)} ${zoneText(homeTz, start, 'Asia/Karachi')}`,
+    }));
     const emailData: BookingEmailData = {
       bookingId,
       sessionName: info.name,
@@ -263,26 +310,29 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
       platform: body.platform,
       meetLink,
       zoomPending: plan.pending,
-      whenVisitor: formatWhen(start, end, body.timezone),
-      whenPkt: `${formatWhen(start, end, homeTz)} ${zoneText(homeTz, start, 'Asia/Karachi')}`,
+      whenVisitor: (sessionTimes[0] as { whenVisitor: string }).whenVisitor,
+      whenPkt: (sessionTimes[0] as { whenPkt: string }).whenPkt,
+      sessionTimes,
       visitorTimeZone: body.timezone,
       addToCalendarUrl: addToCalendarUrl({
-        title,
-        start,
-        end,
+        title: baseTitle,
+        start: first,
+        end: ends[0] as Date,
         details: description,
         location: meetLink,
       }),
-      eventLink: created.htmlLink,
-      multiSession: body.sessions > 1,
+      eventLink: firstEvent.htmlLink,
+      multiSession: many,
     };
     let ics: string | null = null;
     try {
       ics = buildIcs({
-        uid: created.iCalUID,
-        start,
-        end,
-        title,
+        sessions: starts.map((start, i) => ({
+          uid: (created[i] as CreatedEvent).iCalUID,
+          start,
+          end: ends[i] as Date,
+          title: many ? `${baseTitle} (session ${i + 1} of ${starts.length})` : baseTitle,
+        })),
         description,
         link: meetLink,
         organizer: { name: 'Faisal Hanif', email: owner ?? body.email },
@@ -330,25 +380,33 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
           code: failure.code,
           responseCode: failure.responseCode,
         },
-        'A booking email failed after the event was created',
+        'A booking email failed after the events were created',
       );
     });
-    log.info({ event: 'booking.created', bookingId, platform: body.platform }, 'Booking created');
+    log.info(
+      { event: 'booking.created', bookingId, platform: body.platform, sessions: starts.length },
+      'Booking created',
+    );
     return result;
   }
 
   return {
     async book(body, idempotencyKey) {
-      const start = checkRules(body);
+      const starts = checkRules(body);
+      const minutes = sessionInfo(body.sessionType).minutes;
       const { value } = await idempotency.run(idempotencyKey, requestFingerprint(body), () =>
-        mutex.withLock(`slot:${start.toISOString()}`, async () => {
-          const minutes = sessionInfo(body.sessionType).minutes;
-          // Google is asked again here (not the cache) so two visitors cannot take one slot.
-          if (!(await availability.isFree(start, minutes, { fresh: true }))) {
-            throw Errors.slotTaken();
-          }
-          return create(body, start);
-        }),
+        withLocks(
+          starts.map((start) => `slot:${start.toISOString()}`),
+          async () => {
+            // Google is asked again here (not the cache) so two visitors cannot take one slot.
+            for (const start of starts) {
+              if (!(await availability.isFree(start, minutes, { fresh: true }))) {
+                throw Errors.slotTaken();
+              }
+            }
+            return create(body, starts);
+          },
+        ),
       );
       return value;
     },

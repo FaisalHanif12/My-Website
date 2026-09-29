@@ -47,6 +47,33 @@ export function visitorTime(data: BookingEmailData): string {
   return zone ? `${when} (${zone})` : when;
 }
 
+/**
+ * The time rows of a booking. One session: "Your time" and "Pakistan time" (labels and order come
+ * from `labels`). Several: two rows per session, "Session 2 (your time)" and "Session 2 (Pakistan)".
+ */
+export function sessionTimeRows(
+  data: BookingEmailData,
+  labels: { you: string; pkt: string; pktFirst?: boolean } = {
+    you: 'Your time',
+    pkt: 'Pakistan time',
+  },
+): Array<[string, string]> {
+  const list = data.sessionTimes;
+  if (!list || list.length < 2) {
+    const you: [string, string] = [labels.you, visitorTime(data)];
+    const pkt: [string, string] = [labels.pkt, oneLine(data.whenPkt)];
+    return labels.pktFirst ? [pkt, you] : [you, pkt];
+  }
+  const zone = oneLine(data.visitorTimeZone);
+  return list.flatMap((t, i): Array<[string, string]> => {
+    const when = oneLine(t.whenVisitor);
+    return [
+      [`Session ${i + 1} (your time)`, zone ? `${when} (${zone})` : when],
+      [`Session ${i + 1} (Pakistan)`, oneLine(t.whenPkt)],
+    ];
+  });
+}
+
 /** The join link when it is a safe web link, else "". */
 export function joinUrl(data: BookingEmailData): string {
   const href = safeUrl(data.meetLink);
@@ -78,15 +105,14 @@ export function renderBookingVisitor(data: BookingEmailData): RenderedEmail {
   const join = joinUrl(data);
   const pending = pendingLinkText(data);
   const multi = data.multiSession
-    ? `You booked ${data.sessions} sessions. This booking is for the first one. ` +
-      'The other sessions will be planned together on the first call.'
+    ? `You booked ${data.sessions} sessions. Each one has its own time above and all of them use ` +
+      'the same meeting link, which opens shortly before each session.'
     : '';
   const calendarUrl = safeUrl(data.addToCalendarUrl);
 
   const rows: Array<[string, string]> = [
     ...sessionRows(data),
-    ['Your time', visitorTime(data)],
-    ['Pakistan time', oneLine(data.whenPkt)],
+    ...sessionTimeRows(data),
     ['Platform', data.platform],
   ];
 

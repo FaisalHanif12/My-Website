@@ -28,6 +28,12 @@ export interface Env {
   readonly TRUST_PROXY: TrustProxy;
   readonly CORS_ORIGINS: readonly string[];
   readonly SITE_URL: string;
+  /**
+   * Public address of this API, used for the meeting join links in the booking emails
+   * (<API_PUBLIC_URL>/api/join/<token>). Defaults to SITE_URL, right when nginx serves /api on the
+   * site's own domain. Set it in local tests, where the site and the API use different ports.
+   */
+  readonly API_PUBLIC_URL: string;
   readonly DEV_FAKE_EXTERNALS: boolean;
 
   readonly OPENROUTER_API_KEY: string | undefined;
@@ -245,6 +251,22 @@ const envSchema = z.object({
   TRUST_PROXY: trustProxy(),
   CORS_ORIGINS: originList(),
   SITE_URL: httpUrl('https://faisalhanif.work'),
+  API_PUBLIC_URL: z
+    .string()
+    .optional()
+    .transform((raw, ctx) => {
+      if (raw === undefined) return undefined;
+      try {
+        const url = new URL(raw);
+        if (url.protocol === 'http:' || url.protocol === 'https:') {
+          return url.href.replace(/\/+$/, '');
+        }
+      } catch {
+        // reported below
+      }
+      ctx.addIssue({ code: 'custom', message: 'must be an http or https URL' });
+      return z.NEVER;
+    }),
   DEV_FAKE_EXTERNALS: flag(false),
 
   OPENROUTER_API_KEY: optionalText(),
@@ -322,6 +344,7 @@ export function parseEnv(source: EnvSource): Env {
 
   return {
     ...data,
+    API_PUBLIC_URL: data.API_PUBLIC_URL ?? data.SITE_URL,
     LOG_LEVEL: data.LOG_LEVEL ?? (data.NODE_ENV === 'test' ? 'silent' : 'info'),
     CORS_ORIGINS: data.CORS_ORIGINS ?? [...DEFAULT_DEV_CORS_ORIGINS],
   };

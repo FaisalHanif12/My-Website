@@ -1,11 +1,12 @@
 /**
- * npm run check:booking [-- --to you@example.com] [--platform zoom] [--delete]
+ * npm run check:booking [-- --to you@example.com] [--platform zoom] [--session deep] [--sessions 2] [--delete]
  * Books the next free weekday slot for real: one Google Calendar event with a Google Meet link,
  * and the two emails (owner and visitor, the same link, with an .ics). The visitor address is
  * --to (default MAIL_TO_OWNER). The event stays on your calendar so you can open the link and
  * check the emails; pass --delete to remove it again right away.
  */
 import { features } from '../src/config/env.js';
+import { sessionInfo } from '../src/services/booking/catalog.js';
 import { createAvailability } from '../src/services/booking/availability.js';
 import { createBookingService } from '../src/services/booking/bookingService.js';
 import { addDays, bookingDateWindow, isWeekday, slotStarts } from '../src/services/booking/time.js';
@@ -42,59 +43,60 @@ async function main(): Promise<void> {
     env,
     logger,
     meetingFor: (p) => getMeetingProvider(p, ctx),
-    joinLinks: secret ? createJoinLinks(secret, env.SITE_URL) : null,
+    joinLinks: secret ? createJoinLinks(secret, env.API_PUBLIC_URL) : null,
   });
 
-  // The first free slot from tomorrow on (the booking rules need at least 2 hours of notice).
+  // The first free slots from tomorrow on, one per session (the rules need 2 hours of notice).
+  const sessionType = flagValue('session')?.toLowerCase() === 'deep' ? 'deep' : 'quick';
+  const count = Math.max(1, Math.min(10, Number(flagValue('sessions') ?? '1') || 1));
+  const minutes = sessionInfo(sessionType).minutes;
   const window = bookingDateWindow(now, env.BOOKING_TIMEZONE);
+  const slots: Date[] = [];
   let date = window.first;
-  let start: Date | undefined;
-  for (let i = 0; i < 14 && !start; i += 1, date = addDays(date, 1)) {
+  for (let i = 0; i < 21 && slots.length < count; i += 1, date = addDays(date, 1)) {
     if (!isWeekday(date)) continue;
-    const free = await availability.freeSlots(date, 'quick');
-    if (free.length === 0) continue;
-    start = slotStarts(date, env.BOOKING_TIMEZONE).find((s) =>
-      free.includes(
-        s.toLocaleTimeString('en-GB', {
-          timeZone: env.BOOKING_TIMEZONE,
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-      ),
-    );
-    if (start) break;
+    const free = await availability.freeSlots(date, sessionType);
+    for (const s of slotStarts(date, env.BOOKING_TIMEZONE, minutes)) {
+      const label = s.toLocaleTimeString('en-GB', {
+        timeZone: env.BOOKING_TIMEZONE,
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      if (free.includes(label) && slots.length < count) slots.push(s);
+    }
   }
-  if (!start) {
-    fail('No free weekday slot found in the next two weeks.');
+  if (slots.length < count) {
+    fail(`Found only ${slots.length} free slot(s) in the next three weeks, ${count} needed.`);
     process.exitCode = 1;
     return;
   }
-  const bookingDate = start.toLocaleDateString('en-CA', { timeZone: env.BOOKING_TIMEZONE });
   try {
     const result = await service.book(
       {
-        sessionType: 'quick',
-        sessions: 1,
+        sessionType,
+        sessions: count,
         email: to,
         name: 'Check Script',
         phone: '',
         company: '',
-        date: bookingDate,
         timezone: env.BOOKING_TIMEZONE,
-        startUtc: start.toISOString(),
+        slots: slots.map((s) => s.toISOString()),
         platform,
         notes: 'Test booking from npm run check:booking.',
         website: false,
       },
       `check-${Date.now()}`,
     );
-    ok(`booked ${result.bookingId} for ${result.start}`);
+    ok(`booked ${result.bookingId}: ${result.sessions.map((x) => x.start).join(', ')}`);
     info(
       `meeting link: ${result.meetLink ?? '(none: Zoom is not set up, the link would follow by email)'}`,
     );
     info(`emails sent to ${owner} (owner) and ${to} (visitor). Both must show the same link.`);
     if (hasFlag('delete') && calendar.kind === 'google') {
       await calendar.deleteEvent(googleEventIdFor(result.bookingId));
+      for (let i = 2; i <= count; i += 1) {
+        await calendar.deleteEvent(googleEventIdFor(`${result.bookingId}-${i}`));
+      }
       info('The test event was deleted from your calendar (--delete).');
     } else {
       info('The test event is on your calendar. Delete it there when you are done.');

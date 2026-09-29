@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createBookingInfoModule } from '../../src/routes/booking-info.routes.js';
 import { createBookingModule } from '../../src/routes/booking.routes.js';
 import { createFakeCalendar } from '../../src/services/calendar/fake.js';
+import { CalendarError } from '../../src/services/calendar/types.js';
 import { createJoinLinks, joinSecret } from '../../src/services/booking/joinLink.js';
 import { createMemoryMailer } from '../../src/services/mail/index.js';
 import { createGoogleMeetProvider } from '../../src/services/meeting/googleMeet.js';
@@ -23,7 +24,7 @@ const BODY = {
   sessionName: 'Wrong Name',
   durationMinutes: 5,
   pricePerSession: 1,
-  sessions: 3,
+  sessions: 1,
   total: 3,
   currency: 'USD',
   email: 'ada@example.com',
@@ -32,7 +33,7 @@ const BODY = {
   company: 'Analytical Engines',
   date: '2026-10-08',
   timezone: 'Europe/London',
-  startUtc: SLOT,
+  slots: [SLOT],
   timeLocal: '6:00 AM',
   timeLahore: '10:00 AM',
   platform: 'Google Meet',
@@ -103,6 +104,9 @@ describe('POST /api/booking', () => {
     expect(bodyOf(res).bookingId).toBe('FH-TEST0001');
     expect(bodyOf(res).start).toBe(SLOT);
     expect(bodyOf(res).end).toBe('2026-10-08T06:00:00.000Z');
+    expect((bodyOf(res) as unknown as { sessions: unknown }).sessions).toEqual([
+      { start: SLOT, end: '2026-10-08T06:00:00.000Z' },
+    ]);
     // Both sides get the join link, which hands out the real Meet address only around the booked time.
     const joinUrl = bodyOf(res).meetLink!;
     expect(joinUrl).toMatch(/^https:\/\/faisalhanif\.work\/api\/join\/[A-Za-z0-9_-]+$/);
@@ -110,8 +114,7 @@ describe('POST /api/booking', () => {
     const inside = createJoinLinks(joinSecret(env)!, env.SITE_URL).read(joinUrl.split('/').pop()!);
     expect(inside).toMatchObject({
       bookingId: 'FH-TEST0001',
-      start: SLOT,
-      end: '2026-10-08T06:00:00.000Z',
+      sessions: [{ start: SLOT, end: '2026-10-08T06:00:00.000Z' }],
     });
     expect(inside!.url).toMatch(/^https:\/\/meet\.google\.com\//);
 
@@ -119,7 +122,7 @@ describe('POST /api/booking', () => {
     const event = calendar.events[0]!;
     expect(event.withGoogleMeet).toBe(true);
     expect(event.summary).toBe('Technical Deep Dive (60 min) with Ada Lovelace');
-    expect(event.description).toContain('Sessions: 3 (total $75 USD)');
+    expect(event.description).toContain('Sessions: 1 (total $25 USD)');
     expect(event.description).toContain('Please cover architecture.');
     // The visitor stays off the event, so no calendar of theirs shows the real Meet address.
     expect(event.attendee).toBeNull();
@@ -142,19 +145,20 @@ describe('POST /api/booking', () => {
     }
     // Names, prices and totals come from the server catalog, never from the client.
     expect(visitor.html).toContain('Technical Deep Dive');
-    expect(visitor.html).toContain('$75');
+    expect(visitor.html).toContain('$25');
     expect(visitor.html).not.toContain('Wrong Name');
     expect(visitor.html).toContain('FH-TEST0001');
   });
 
   it('rejects days and times outside the booking rules', async () => {
-    const cases: Array<[string, object, 'date' | 'startUtc']> = [
-      ['weekend', { date: '2026-10-10', startUtc: '2026-10-10T05:00:00.000Z' }, 'date'],
-      ['today', { date: '2026-10-06', startUtc: '2026-10-06T10:00:00.000Z' }, 'date'],
-      ['too far', { date: '2026-12-15', startUtc: '2026-12-15T05:00:00.000Z' }, 'date'],
-      ['off the hour', { startUtc: '2026-10-08T05:30:00.000Z' }, 'startUtc'],
-      ['other day', { startUtc: '2026-10-09T05:00:00.000Z' }, 'startUtc'],
-      ['no zone', { startUtc: '2026-10-08T05:00:00' }, 'startUtc'],
+    const cases: Array<[string, object, 'slots']> = [
+      ['weekend', { date: '2026-10-10', slots: ['2026-10-10T05:00:00.000Z'] }, 'slots'],
+      ['today', { date: '2026-10-06', slots: ['2026-10-06T10:00:00.000Z'] }, 'slots'],
+      ['too far', { date: '2026-12-15', slots: ['2026-12-15T05:00:00.000Z'] }, 'slots'],
+      ['off the hour', { slots: ['2026-10-08T05:30:00.000Z'] }, 'slots'],
+      ['after hours', { slots: ['2026-10-08T13:00:00.000Z'] }, 'slots'],
+      ['half hour of a deep dive', { slots: ['2026-10-08T05:30:00.000Z'] }, 'slots'],
+      ['no zone', { slots: ['2026-10-08T05:00:00'] }, 'slots'],
     ];
     for (const [label, change, field] of cases) {
       const { app, calendar } = await setup();
@@ -172,7 +176,7 @@ describe('POST /api/booking', () => {
       ...BODY,
       timezone: 'Pacific/Kiritimati',
       date: '2026-10-07',
-      startUtc: '2026-10-07T04:00:00.000Z',
+      slots: ['2026-10-07T04:00:00.000Z'],
     });
     expect(res.status).toBe(200);
     expect(calendar.events).toHaveLength(1);
@@ -186,16 +190,16 @@ describe('POST /api/booking', () => {
       ...BODY,
       timezone: 'Pacific/Pago_Pago',
       date: '2026-10-06',
-      startUtc: '2026-10-06T10:00:00.000Z',
+      slots: ['2026-10-06T10:00:00.000Z'],
     });
     expect(soon.status).toBe(400);
-    expect(bodyOf(soon).error.fields.startUtc).toContain('2 hours');
+    expect(bodyOf(soon).error.fields.slots).toContain('2 hours');
     const ok = await setup();
     const fine = await post(ok.app, {
       ...BODY,
       timezone: 'Pacific/Pago_Pago',
       date: '2026-10-06',
-      startUtc: '2026-10-06T11:00:00.000Z',
+      slots: ['2026-10-06T11:00:00.000Z'],
     });
     expect(fine.status).toBe(200);
   });
@@ -354,14 +358,14 @@ describe('POST /api/booking', () => {
     for (const [i, date] of days.entries()) {
       const res = await post(
         app,
-        { ...BODY, date, startUtc: `${date}T05:00:00.000Z` },
+        { ...BODY, date, slots: [`${date}T05:00:00.000Z`] },
         `limit-key-0000000${i}`,
       );
       expect(res.status).toBe(200);
     }
     const res = await post(
       app,
-      { ...BODY, date: '2026-10-13', startUtc: '2026-10-13T05:00:00.000Z' },
+      { ...BODY, date: '2026-10-13', slots: ['2026-10-13T05:00:00.000Z'] },
       'limit-key-00000009',
     );
     expect(res.status).toBe(429);
@@ -382,16 +386,119 @@ describe('POST /api/booking', () => {
   });
 });
 
-describe('GET /api/booking/slots and /config', () => {
-  it('lists the free hourly starts in Pakistan time', async () => {
+describe('POST /api/booking with several sessions', () => {
+  const QUICK = { ...BODY, sessionType: 'quick' };
+  const THREE = [
+    '2026-10-08T04:30:00.000Z', // 09:30 PKT
+    '2026-10-08T05:00:00.000Z', // 10:00 PKT
+    '2026-10-09T09:00:00.000Z', // 14:00 PKT, next day
+  ];
+
+  it('needs exactly one different slot per session', async () => {
+    const { app, calendar } = await setup();
+    const few = await post(app, { ...QUICK, sessions: 2, slots: [THREE[0]] });
+    expect(few.status).toBe(400);
+    expect(bodyOf(few).error.fields.slots).toContain('2 different');
+    const twin = await post(app, { ...QUICK, sessions: 2, slots: [THREE[0], THREE[0]] });
+    expect(bodyOf(twin).error.fields.slots).toBeDefined();
+    expect(calendar.events).toHaveLength(0);
+  });
+
+  it('a Quick Chat can start on the half hour', async () => {
     const { app } = await setup();
-    const res = await request(app).get('/api/booking/slots?date=2026-10-08&session=quick');
+    const res = await post(app, { ...QUICK, sessions: 1, slots: [THREE[0]] });
     expect(res.status).toBe(200);
-    expect(bodyOf(res)).toEqual({
-      ok: true,
-      timezone: 'Asia/Karachi',
-      slots: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+    expect(bodyOf(res).end).toBe('2026-10-08T05:00:00.000Z');
+  });
+
+  it('books each slot as its own event in one Meet room, with one link and every time in the emails', async () => {
+    const { app, calendar, mailer } = await setup();
+    const res = await post(app, { ...QUICK, sessions: 3, slots: [THREE[2], THREE[0], THREE[1]] });
+    expect(res.status).toBe(200);
+    expect(
+      (bodyOf(res) as unknown as { sessions: Array<{ start: string }> }).sessions.map(
+        (x) => x.start,
+      ),
+    ).toEqual(THREE);
+    expect(calendar.events).toHaveLength(3);
+    expect(calendar.events.map((e) => e.start.toISOString())).toEqual(THREE);
+    expect(calendar.events.map((e) => e.withGoogleMeet)).toEqual([true, false, false]);
+    // The other events use the first event's Meet address.
+    expect(calendar.events[1]!.location).toBe(calendar.events[0]!.meetLink);
+    expect(calendar.events[2]!.location).toBe(calendar.events[0]!.meetLink);
+    expect(calendar.events[1]!.summary).toContain('session 2 of 3');
+    const env = makeTestEnv();
+    const link = bodyOf(res).meetLink!;
+    const inside = createJoinLinks(joinSecret(env)!, env.SITE_URL).read(link.split('/').pop()!);
+    expect(inside!.sessions).toHaveLength(3);
+    for (const tag of ['booking-visitor', 'booking-owner']) {
+      const mail = mailer.byTag(tag)[0]!;
+      expect(mail.html).toContain(link);
+      for (const n of [1, 2, 3]) expect(mail.text).toContain(`Session ${n} (`);
+      const ics = String(mail.attachments![0]!.content);
+      expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(3);
+    }
+    expect(mailer.byTag('booking-visitor')[0]!.text).toContain('Total: $45');
+  });
+
+  it('answers 409 and books nothing when one of the slots is busy', async () => {
+    const { app, calendar, mailer } = await setup();
+    calendar.addBusy(new Date('2026-10-09T09:00:00Z'), new Date('2026-10-09T09:30:00Z'));
+    const res = await post(app, { ...QUICK, sessions: 2, slots: [THREE[0], THREE[2]] });
+    expect(res.status).toBe(409);
+    expect(calendar.events).toHaveLength(0);
+    expect(mailer.outbox).toHaveLength(0);
+  });
+
+  it('takes back the events already made when a later one fails', async () => {
+    const real = createFakeCalendar({ now: () => NOW });
+    let calls = 0;
+    const calendar = {
+      ...real,
+      kind: real.kind,
+      freeBusy: real.freeBusy.bind(real),
+      deleteEvent: real.deleteEvent.bind(real),
+      createEvent: (input: Parameters<typeof real.createEvent>[0]) => {
+        calls += 1;
+        return calls === 2
+          ? Promise.reject(new CalendarError('down', { retryable: true, reason: 'timeout' }))
+          : real.createEvent(input);
+      },
+    };
+    const mailer = createMemoryMailer();
+    const { app } = await buildTestApp({
+      modules: [
+        createBookingModule({ calendar, mailer, store: new MemoryStore(), now: () => NOW }),
+      ],
     });
+    const res = await post(app, { ...QUICK, sessions: 2, slots: [THREE[0], THREE[1]] });
+    expect(res.status).toBe(502);
+    expect(real.events).toHaveLength(0);
+    expect(mailer.outbox).toHaveLength(0);
+  });
+});
+
+describe('GET /api/booking/slots and /config', () => {
+  it('lists a start every 30 minutes for a Quick Chat and every 60 for a Deep Dive', async () => {
+    const { app } = await setup();
+    const quick = await request(app).get('/api/booking/slots?date=2026-10-08&session=quick');
+    expect(quick.status).toBe(200);
+    expect(bodyOf(quick).timezone).toBe('Asia/Karachi');
+    expect(bodyOf(quick).slots).toHaveLength(18);
+    expect(bodyOf(quick).slots.slice(0, 3)).toEqual(['09:00', '09:30', '10:00']);
+    expect(bodyOf(quick).slots.at(-1)).toBe('17:30');
+    const deep = await request(app).get('/api/booking/slots?date=2026-10-08&session=deep');
+    expect(bodyOf(deep).slots).toEqual([
+      '09:00',
+      '10:00',
+      '11:00',
+      '12:00',
+      '13:00',
+      '14:00',
+      '15:00',
+      '16:00',
+      '17:00',
+    ]);
   });
 
   it('leaves out busy times, times booked a moment ago and slots under 2 hours away', async () => {
@@ -405,7 +512,7 @@ describe('GET /api/booking/slots and /config', () => {
     expect(bodyOf(after).slots).not.toContain('10:00');
     // Today is 14:00 in Lahore: 15:00 is under two hours away, 16:00 is fine.
     const today = await request(app).get('/api/booking/slots?date=2026-10-06&session=quick');
-    expect(bodyOf(today).slots).toEqual(['16:00', '17:00']);
+    expect(bodyOf(today).slots).toEqual(['16:00', '16:30', '17:00', '17:30']);
   });
 
   it('returns [] outside the window and 400 for a weekend or bad query', async () => {

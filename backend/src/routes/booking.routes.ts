@@ -59,7 +59,7 @@ export function createBookingModule(overrides: BookingModuleOverrides = {}): Api
       const joinLinks =
         overrides.joinLinks === undefined
           ? secret
-            ? createJoinLinks(secret, env.SITE_URL)
+            ? createJoinLinks(secret, env.API_PUBLIC_URL)
             : null
           : overrides.joinLinks;
       const service =

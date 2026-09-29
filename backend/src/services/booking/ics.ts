@@ -1,16 +1,21 @@
-import { createEvent } from 'ics';
+import { createEvents } from 'ics';
 import type { EventAttributes } from 'ics';
 import type { MailAttachment } from '../mail/types.js';
 
 export const ICS_FILENAME = 'faisal-hanif-meeting.ics';
 export const ICS_PRODUCT_ID = 'faisalhanif.work/booking';
 
-export interface IcsInput {
+export interface IcsSession {
   /** The Google Calendar event UID, so calendars match the file to the event. */
   uid: string;
   start: Date;
   end: Date;
   title: string;
+}
+
+export interface IcsInput {
+  /** One entry per booked session. */
+  sessions: readonly IcsSession[];
   description: string;
   /** The join link: used as the location and the URL. null when there is none yet. */
   link: string | null;
@@ -34,21 +39,21 @@ function oneLine(value: string): string {
 }
 
 /**
- * The .ics text of a booking. Throws when the calendar library rejects the input, so the caller
- * can log it and send the email without the file.
+ * The .ics text of a booking, one VEVENT per session. Throws when the calendar library rejects
+ * the input, so the caller can log it and send the email without the file.
  */
 export function buildIcs(input: IcsInput): string {
-  const event: EventAttributes = {
-    uid: input.uid,
+  const events: EventAttributes[] = input.sessions.map((session) => ({
+    uid: session.uid,
     productId: ICS_PRODUCT_ID,
     method: 'PUBLISH',
-    start: utcParts(input.start),
+    start: utcParts(session.start),
     startInputType: 'utc',
     startOutputType: 'utc',
-    end: utcParts(input.end),
+    end: utcParts(session.end),
     endInputType: 'utc',
     endOutputType: 'utc',
-    title: oneLine(input.title),
+    title: oneLine(session.title),
     description: input.description,
     status: 'CONFIRMED',
     busyStatus: 'BUSY',
@@ -63,8 +68,8 @@ export function buildIcs(input: IcsInput): string {
       },
     ],
     ...(input.link ? { location: input.link, url: input.link } : {}),
-  };
-  const { error, value } = createEvent(event);
+  }));
+  const { error, value } = createEvents(events);
   if (error || !value) throw new Error('The calendar invite could not be built.');
   return value;
 }

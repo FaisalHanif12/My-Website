@@ -15,14 +15,18 @@ import { makeTestEnv } from '../helpers/testEnv.js';
 
 const START = new Date('2026-10-08T05:00:00.000Z');
 const END = new Date('2026-10-08T06:00:00.000Z');
+const START2 = new Date('2026-10-09T09:00:00.000Z');
+const END2 = new Date('2026-10-09T09:30:00.000Z');
 const RAW = 'https://meet.google.com/abc-defg-hij';
 const env = makeTestEnv();
 const links = createJoinLinks('test-secret', env.SITE_URL);
 const url = links.create({
   bookingId: 'FH-TEST0001',
   url: RAW,
-  start: START.toISOString(),
-  end: END.toISOString(),
+  sessions: [
+    { start: START.toISOString(), end: END.toISOString() },
+    { start: START2.toISOString(), end: END2.toISOString() },
+  ],
 });
 const tokenOf = (u: string) => u.split('/').pop()!;
 
@@ -94,8 +98,18 @@ describe('GET /api/join/:token', () => {
     }
   });
 
-  it('answers 410 after the window with no address', async () => {
-    const res = await get(new Date(END.getTime() + JOIN_CLOSES_AFTER_MS + 60_000));
+  it('with several sessions it opens around each one and waits in between', async () => {
+    const between = await get(new Date(END.getTime() + JOIN_CLOSES_AFTER_MS + 60_000));
+    expect(between.status).toBe(200);
+    expect(between.text).toContain('Not open yet');
+    expect(between.text).toContain('Friday, 9 October 2026');
+    const second = await get(START2);
+    expect(second.status).toBe(302);
+    expect(second.headers.location).toBe(RAW);
+  });
+
+  it('answers 410 after the last window with no address', async () => {
+    const res = await get(new Date(END2.getTime() + JOIN_CLOSES_AFTER_MS + 60_000));
     expect(res.status).toBe(410);
     expect(res.text).toContain('has ended');
     expect(res.text).not.toContain('meet.google.com');

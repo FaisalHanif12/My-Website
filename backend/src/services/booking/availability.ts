@@ -118,7 +118,7 @@ export function createAvailability(options: AvailabilityOptions): Availability {
       const info = sessionInfo(session);
       const busy = await busyOn(date, false);
       const out: string[] = [];
-      for (const start of slotStarts(date, tz)) {
+      for (const start of slotStarts(date, tz, info.minutes)) {
         if (!hasNotice(start, now())) continue;
         if (await free(start, info.minutes, busy)) out.push(slotLabel(start, tz));
       }

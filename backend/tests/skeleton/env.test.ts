@@ -107,6 +107,17 @@ describe('parseEnv values', () => {
     expect(parseEnv({ TRUST_PROXY: 'loopback' }).TRUST_PROXY).toBe('loopback');
   });
 
+  it('API_PUBLIC_URL defaults to SITE_URL and can be set on its own', () => {
+    expect(parseEnv({ SITE_URL: 'https://example.com' }).API_PUBLIC_URL).toBe(
+      'https://example.com',
+    );
+    expect(
+      parseEnv({ SITE_URL: 'https://example.com', API_PUBLIC_URL: 'http://localhost:8787/' })
+        .API_PUBLIC_URL,
+    ).toBe('http://localhost:8787');
+    expect(() => parseEnv({ API_PUBLIC_URL: 'ftp://x' })).toThrow(/API_PUBLIC_URL/);
+  });
+
   it('keeps SITE_URL without a trailing slash', () => {
     expect(parseEnv({ SITE_URL: 'https://example.com/' }).SITE_URL).toBe('https://example.com');
   });
