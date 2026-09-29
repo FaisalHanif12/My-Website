@@ -84,8 +84,11 @@ hour per IP. All visitor text is escaped in the HTML emails.
 6. Test it: `npm run check:env`, then `npm run check:booking`. Open the printed link and check both
    emails: they must show the same Meet link.
 
-Rules (the same as the site's calendar): Monday to Friday, hourly starts 09:00 to 17:00 Pakistan
-time, from tomorrow up to 60 days ahead, at least 2 hours of notice, and free on your calendar. A
+Rules: Monday to Friday, Pakistan time. A Quick Chat starts every 30 minutes (09:00 to 17:30), a
+Deep Dive every 60 (09:00 to 17:00). The visitor picks one slot per session (any weekdays), from
+tomorrow up to 60 days ahead, at least 2 hours of notice, and free on your calendar. Each slot
+becomes its own calendar event; the first creates the Meet room and the others reuse it, so all
+sessions share one join link. A
 taken slot answers `409 SLOT_TAKEN`. Names, prices and totals are recomputed on the server. The
 `Idempotency-Key` header stops double submits. 3 bookings per hour per IP.
 

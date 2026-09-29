@@ -82,6 +82,46 @@ Both are `NEXT_PUBLIC_` variables, so Next.js writes their values into the clien
 time. Set them before `npm run build` and rebuild after changing them. For local work against the
 backend, use `NEXT_PUBLIC_API_URL=http://localhost:8787`.
 
+## Features
+
+- **Pages**: About, Profile, Works, Approvals and Contact, each server rendered from typed content
+  (`src/content`) plus a ported reference script (`src/features/<page>/init*.ts`) for its motion.
+- **Page transitions**: the curtain router (`src/components/providers/TransitionProvider.tsx`) and
+  `TransitionLink`; deep links, hash redirects (`/#works`), Back and Forward all work.
+- **Booking modal** (`src/features/booking`): pick a session (Quick Chat 30 min, Technical Deep
+  Dive 60 min), 1 to 10 sessions, then details, date and time, platform and confirm. A Quick Chat
+  offers a slot every 30 minutes and a Deep Dive every 60; the visitor picks one slot per session
+  (on any days). With `NEXT_PUBLIC_API_URL` set it books through the API (slots come from
+  `GET /api/booking/slots`, a 409 sends the visitor back to step 2); without it the reference
+  mailto flow opens the mail app with every detail.
+- **Chat widget** (`src/features/chat`): the floating assistant. With the API set it asks
+  `POST /api/chat` (12 second timeout) and falls back to the local keyword answers on any failure.
+- **Contact form**: reference validation and messages, a hidden honeypot and a 3 second minimum
+  fill time; `POST /api/contact` with the API set, mailto without it.
+- **SEO**: metadata, Open Graph and Twitter card image, `sitemap.xml`, `robots.txt`, icon and
+  JSON-LD (`src/app`, `src/components/seo`).
+
+## Owner changes to the reference design
+
+The reference wins, with these deliberate exceptions (all requested by the owner, each marked in
+the code):
+
+- The mobile dock is solid, so page text no longer shows through it (`src/styles/overrides.css`).
+- The Approvals deck leans toward the cursor instead of away from it (`initApprovals.ts`).
+- Booking: 30 minute slots for Quick Chat and one slot per session (`src/features/booking`).
+- Three large PNG screenshots are served as WebP of the same picture (`public/imgs`). The visual
+  harness answers the reference's PNG requests from `tests/visual/reference-assets`.
+
+## Tests
+
+| Command                                             | What it checks                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm test`                                          | Unit and component tests (Vitest): content parity with the reference, motion, providers, booking, chat, API client.                                                                                                                                                               |
+| `npm run test:e2e`                                  | Playwright against a running app (`APP_URL`, default `http://localhost:3000`, run **without** `NEXT_PUBLIC_API_URL`): every route has no console errors and no horizontal scroll from 320 to 1920 px, navigation, redirects, the booking flow, focus trap, chat and contact form. |
+| `npm run test:a11y`                                 | axe on every route in both themes plus the open booking modal and chat panel. The colour contrast rule is off because the flagged text uses the reference's own muted grey; Lighthouse covers contrast.                                                                           |
+| `npm run test:visual`                               | Pixel diff of every route, width and theme against the reference (needs both servers, see below).                                                                                                                                                                                 |
+| `npm run lighthouse -- --url http://127.0.0.1:3002` | Lighthouse (mobile) on every route of a running production server against the budgets 90 / 95 / 95 / 100.                                                                                                                                                                         |
+
 ## Visual diff harness
 
 The visual harness compares the app with the reference in Playwright Chromium and writes the
