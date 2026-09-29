@@ -1,0 +1,10 @@
+public
+.next
+node_modules
+package-lock.json
+src/styles/*.css
+coverage
+playwright-report
+test-results
+tests/visual/out
+tests/perf/out

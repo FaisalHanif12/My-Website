@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Tests
+coverage/
+playwright-report/
+test-results/
+tests/visual/out/
+tests/perf/out/
+
+# Env files (keep the example)
+.env
+.env.*
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+
+# OS
+.DS_Store
