@@ -95,7 +95,12 @@ function Name() {
       </span>
       <span className="ab-name__last" id="ab-last" aria-hidden="true">
         <span className="ab-name__ink serif">{name.last}</span>
-        <svg className="ab-flourish" viewBox="0 0 320 34" preserveAspectRatio="none" focusable="false">
+        <svg
+          className="ab-flourish"
+          viewBox="0 0 320 34"
+          preserveAspectRatio="none"
+          focusable="false"
+        >
           <defs>
             <linearGradient id="ab-fl-g" x1="0" x2="1" y1="0" y2="0">
               <stop offset="0" className="ab-fl-s1" />
@@ -151,12 +156,7 @@ function Copy() {
 
       <div className="ab-cta ab-in">
         <a className="btn btn--primary ab-dl" href={cv.href} download data-cv="" data-magnetic="">
-          <svg
-            className="i ab-dl__ic"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
+          <svg className="i ab-dl__ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <g className="ab-dl__arrow">
               <path d="M12 3.5v10.5" />
               <path d="M7.6 9.8 12 14.2l4.4-4.4" />
@@ -242,13 +242,7 @@ function Orbit() {
               key={ring.n}
             >
               <svg className="ab-orb__svg" focusable="false">
-                <circle
-                  className="ab-orb__line"
-                  cx="50%"
-                  cy="50%"
-                  r={ring.svgR}
-                  pathLength="360"
-                />
+                <circle className="ab-orb__line" cx="50%" cy="50%" r={ring.svgR} pathLength="360" />
               </svg>
               {orbitDots
                 .filter((dot) => dot.ring === ring.n)

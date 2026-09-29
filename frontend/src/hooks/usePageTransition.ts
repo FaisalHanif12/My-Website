@@ -83,4 +83,3 @@ export function useTransitionPhase(): TransitionPhase {
   const { subscribe, getPhase } = useContext(TransitionContext);
   return useSyncExternalStore(subscribe, getPhase, () => 'idle');
 }
-

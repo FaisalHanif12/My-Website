@@ -71,7 +71,8 @@ export function jumpTop(): void {
  */
 export function scrollToEl(el: Element | null | undefined): void {
   if (!el) return;
-  const offset = innerWidth < SCROLL_OFFSET.breakpoint ? SCROLL_OFFSET.mobile : SCROLL_OFFSET.desktop;
+  const offset =
+    innerWidth < SCROLL_OFFSET.breakpoint ? SCROLL_OFFSET.mobile : SCROLL_OFFSET.desktop;
   const y = el.getBoundingClientRect().top + scrollY - offset;
   if (smoothTo(y)) return;
   window.scrollTo({ top: y, behavior: getReducedMotion() ? 'auto' : 'smooth' });

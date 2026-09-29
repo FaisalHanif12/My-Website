@@ -185,7 +185,8 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
     /* start once the curtain has begun to lift */
     function afterCurtain(fn: () => void) {
       const c = document.getElementById('curtain');
-      const covering = () => !!c && c.classList.contains('is-on') && !c.classList.contains('is-out');
+      const covering = () =>
+        !!c && c.classList.contains('is-on') && !c.classList.contains('is-out');
       if (!covering()) {
         later(fn, 120);
         return;
@@ -251,7 +252,8 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
         y += (ty - y) * 0.08;
         first.style.translate = (x * 4).toFixed(2) + 'px ' + (y * 3).toFixed(2) + 'px';
         last.style.translate = (x * 10).toFixed(2) + 'px ' + (y * 5).toFixed(2) + 'px';
-        if (Math.abs(tx - x) > 0.002 || Math.abs(ty - y) > 0.002) praf = requestAnimationFrame(loop);
+        if (Math.abs(tx - x) > 0.002 || Math.abs(ty - y) > 0.002)
+          praf = requestAnimationFrame(loop);
       };
       listen(
         hero,
@@ -311,7 +313,11 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
       frac: 0.4,
       drift: parseFloat(r.dataset.drift ?? '') || 0,
       line: r.querySelector<SVGElement>('.ab-orb__line'),
-      sats: $$('.ab-sat', r).map((s) => ({ el: s, a: parseFloat(s.dataset.a ?? '') * DEG, ord: 0 })),
+      sats: $$('.ab-sat', r).map((s) => ({
+        el: s,
+        a: parseFloat(s.dataset.a ?? '') * DEG,
+        ord: 0,
+      })),
       dots: $$('.ab-orb__dot', r).map((d) => ({
         el: d,
         a: parseFloat(d.dataset.a ?? '') * DEG,
@@ -345,7 +351,10 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
 
     const measure = () => {
       const cs = getComputedStyle(orb);
-      S = parseFloat(cs.width) || orb.clientWidth || S; /* layout width, unaffected by the exit scale */
+      S =
+        parseFloat(cs.width) ||
+        orb.clientWidth ||
+        S; /* layout width, unaffected by the exit scale */
       rings.forEach((R) => {
         R.frac = parseFloat(cs.getPropertyValue('--r' + R.n)) || R.frac;
       });
@@ -361,7 +370,10 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
       my += (tmy - my) * 0.06;
       for (const R of rings) {
         const rp = R.frac * S;
-        if (R.drift && R.line) R.line.style.strokeDashoffset = (t * R.drift).toFixed(3); /* pathLength 360: units are degrees */
+        if (R.drift && R.line)
+          R.line.style.strokeDashoffset = (t * R.drift).toFixed(
+            3,
+          ); /* pathLength 360: units are degrees */
         for (const s of R.sats) {
           if (s.hidden) continue;
           const p = reduce ? 1 : clamp((intro - 300 - s.ord * 45) / 850, 0, 1);
@@ -369,17 +381,27 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
           const a = s.a + t * SAT_W - (1 - ep) * 0.5;
           const rr = rp * (1 + (1 - ep) * 0.1);
           s.el.style.transform =
-            'translate3d(' + (Math.cos(a) * rr).toFixed(2) + 'px,' + (Math.sin(a) * rr).toFixed(2) + 'px,0)';
+            'translate3d(' +
+            (Math.cos(a) * rr).toFixed(2) +
+            'px,' +
+            (Math.sin(a) * rr).toFixed(2) +
+            'px,0)';
           s.el.style.opacity = ep.toFixed(3);
         }
         for (const D of R.dots) {
           const da = D.a + ((t * TAU) / 100) * D.w;
           D.el.style.transform =
-            'translate3d(' + (Math.cos(da) * rp).toFixed(2) + 'px,' + (Math.sin(da) * rp).toFixed(2) + 'px,0)';
+            'translate3d(' +
+            (Math.cos(da) * rp).toFixed(2) +
+            'px,' +
+            (Math.sin(da) * rp).toFixed(2) +
+            'px,0)';
         }
       }
       orb!.style.translate =
-        Math.abs(mx) + Math.abs(my) > 0.001 ? (mx * PAR).toFixed(2) + 'px ' + (my * PAR).toFixed(2) + 'px' : '';
+        Math.abs(mx) + Math.abs(my) > 0.001
+          ? (mx * PAR).toFixed(2) + 'px ' + (my * PAR).toFixed(2) + 'px'
+          : '';
       if (textSvg) textSvg.style.transform = 'rotate(' + (-t * 4).toFixed(3) + 'deg)';
     }
 
@@ -588,7 +610,8 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
           env.toast(v);
         }
       };
-      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(v).then(ok, fallback);
+      if (navigator.clipboard && window.isSecureContext)
+        navigator.clipboard.writeText(v).then(ok, fallback);
       else fallback();
     });
   });
@@ -733,7 +756,11 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
         }
       });
       items.forEach((it, i) => it.classList.toggle('is-focus', i === best && bestD < vh * 0.3));
-      if (idx) idx.style.setProperty('--lp', clamp((vh * 0.55 - lr.top) / Math.max(1, lr.height), 0, 1).toFixed(3));
+      if (idx)
+        idx.style.setProperty(
+          '--lp',
+          clamp((vh * 0.55 - lr.top) / Math.max(1, lr.height), 0, 1).toFixed(3),
+        );
     };
     const schedule = () => {
       if (!sraf) sraf = requestAnimationFrame(upd);
@@ -781,13 +808,21 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
       out.animate(
         [
           { opacity: 1, transform: 'none', filter: 'blur(0px)' },
-          { opacity: 0, transform: 'translate3d(' + -dx + 'px,0,0) scale(.985)', filter: 'blur(10px)' },
+          {
+            opacity: 0,
+            transform: 'translate3d(' + -dx + 'px,0,0) scale(.985)',
+            filter: 'blur(10px)',
+          },
         ],
         { duration: 560, easing: EASE },
       );
       inn.animate(
         [
-          { opacity: 0, transform: 'translate3d(' + dx + 'px,0,0) scale(.985)', filter: 'blur(10px)' },
+          {
+            opacity: 0,
+            transform: 'translate3d(' + dx + 'px,0,0) scale(.985)',
+            filter: 'blur(10px)',
+          },
           { opacity: 1, transform: 'none', filter: 'blur(0px)' },
         ],
         { duration: 900, delay: 140, easing: EASE, fill: 'backwards' },
@@ -806,11 +841,17 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
       });
       const mark = $('.ab-carousel__mark', car!);
       if (mark)
-        mark.animate([{ transform: 'translate3d(' + dx * 0.35 + 'px,0,0)', opacity: 0.1 }, { transform: 'none' }], {
-          duration: 1100,
-          easing: EASE,
-          composite: 'add',
-        });
+        mark.animate(
+          [
+            { transform: 'translate3d(' + dx * 0.35 + 'px,0,0)', opacity: 0.1 },
+            { transform: 'none' },
+          ],
+          {
+            duration: 1100,
+            easing: EASE,
+            composite: 'add',
+          },
+        );
     }
     dots.forEach((d, j) => listen(d, 'click', () => go(j, true)));
     $$('[data-tst]', root).forEach((b) => {
@@ -852,7 +893,8 @@ export function initAbout(root: HTMLElement, env: AboutEnv): Dispose {
       const dx = e.clientX - sx;
       const dy = e.clientY - sy;
       sx = null;
-      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) go(i + (dx < 0 ? 1 : -1), true, dx < 0 ? 1 : -1);
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2)
+        go(i + (dx < 0 ? 1 : -1), true, dx < 0 ? 1 : -1);
     }) as EventListener);
     listen(slidesWrap, 'pointercancel', () => {
       sx = null;

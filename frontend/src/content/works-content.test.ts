@@ -39,7 +39,6 @@ import {
   PUREBODY_SHOWCASE,
   WORKS_HERO,
   type Project,
-  type WorksHeroDevice,
 } from './projects';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -68,8 +67,8 @@ const EXPORTS = {
 const ALLOWLIST: readonly RegExp[] = [
   /^PROJECTS\[\d+\]\.image$/,
   /^CERTIFICATES\[\d+\]\.image$/,
-  /^WORKS_HERO\.devices\[\d+\]\.image\.src$/,
-  /^WORKS_HERO\.devices\[\d+\]\.kind$/,
+  /^WORKS_HERO\.cards\[\d+\]\.image\.src$/,
+  /^WORKS_HERO\.phone\.screens\[\d+\]\.src$/,
   /^PUREBODY_SHOWCASE\.demos\[\d+\]\.video$/,
 ];
 
@@ -387,7 +386,7 @@ describe('certificates.ts: data parity with the reference works.js (L6913-6936, 
   });
 });
 
-describe('projects.ts: Works hero (HTML L3799-3878, seal L7352-7356)', () => {
+describe('projects.ts: Works hero, the orbit (HTML L4167-4265)', () => {
   it('matches the copy column', () => {
     const h = WORKS_HERO;
     const html = WORKS_HERO_HTML;
@@ -400,7 +399,6 @@ describe('projects.ts: Works hero (HTML L3799-3878, seal L7352-7356)', () => {
     expect(html).toContain(`<p class="lead wk-wh__lead wk-a" style="--d:320ms">${h.lead}</p>`);
     expect(html).toContain(`</svg>${h.browseLabel}</button>`);
     expect(html).toContain(`</svg>${h.bookLabel}</button>`);
-    expect(html).toContain(`<p class="wk-wh__stkl" id="wk-stk-lbl">${h.stackLabel}</p>`);
     expect(html).toContain(`role="group" aria-label="${h.stageAriaLabel}"`);
     expect(html).toContain(`</span>${h.cue}</button>`);
   });
@@ -414,71 +412,74 @@ describe('projects.ts: Works hero (HTML L3799-3878, seal L7352-7356)', () => {
     expect(WORKS_HERO.stats[0]).toMatchObject({ label: 'Projects', value: 10 });
   });
 
-  it('matches the caption and the seal', () => {
-    const { caption, seal } = WORKS_HERO;
+  it('matches the phone: label, the two screens, the status time and the pill', () => {
+    const { phone, pill } = WORKS_HERO;
     expect(WORKS_HERO_HTML).toContain(
-      `<span class="wk-sk__n"><span class="wk-sk__d">${caption.countDesktop}</span><span class="wk-sk__m">${caption.countPhone}</span></span>` +
-        `<span><span class="wk-sk__d">${caption.textDesktop}</span><span class="wk-sk__m">${caption.textPhone}</span></span>`,
+      `class="wk-phn" id="wk-phn" aria-label="${phone.ariaLabel}" aria-haspopup="dialog"`,
     );
-    expect(WORKS_JS).toContain(
-      `<textPath href="#wk-sk-p" textLength="280">${seal.ring}</textPath>`,
+    const screens = all(
+      /<img class="wk-phn__img(?: is-on)?" src="data:image\/webp;base64,<\.\.\.>" alt="" width="(\d+)" height="(\d+)" decoding="async" draggable="false">/,
+      WORKS_HERO_HTML,
+    ).map((m) => ({ width: Number(m[1]), height: Number(m[2]) }));
+    expect(phone.screens.map(({ width, height }) => ({ width, height }))).toEqual(screens);
+    expect(WORKS_HERO_HTML).toContain(
+      `<span class="wk-phn__sb" aria-hidden="true"><b>${phone.statusTime}</b>`,
     );
-    expect(WORKS_JS).toContain(`text-anchor="middle">'+PROJECTS.length+'</text>`);
-    expect(WORKS_JS).toContain(`text-anchor="middle">${seal.label}</text>`);
+    expect(WORKS_HERO_HTML).toContain(
+      `<span class="dot-live"></span><b>${pill.name}</b><span>${pill.type}</span><span>${pill.latest}</span>`,
+    );
   });
 
-  it('matches the four devices, in DOM order, with the section 8 screenshots', () => {
-    const devices = all(
-      /<button type="button" class="wk-dv wk-dv--(\w+)" data-p="([^"]+)" aria-label="([^"]+)">([\s\S]*?)<\/button>/,
+  it('matches the caption', () => {
+    const { caption } = WORKS_HERO;
+    expect(WORKS_HERO_HTML).toContain(
+      `<p class="wk-ob__cap"><span class="wk-ob__n">${caption.count}</span><span><span class="wk-ob__d">${caption.desktop}</span><span class="wk-ob__m">${caption.phone}</span></span></p>`,
+    );
+  });
+
+  it('matches the six orbit cards, in DOM order, with the section 8 screenshots', () => {
+    const cards = all(
+      /<button type="button" class="wk-oc( wk-oc--dk)?" data-p="([^"]+)" aria-label="([^"]+)">([\s\S]*?)<\/button>/,
       WORKS_HERO_HTML,
-    ).map((m): WorksHeroDevice => {
+    ).map((m) => {
       const body = m[4]!;
       const img = one(
-        /<img src="data:image\/webp;base64,<\.\.\.>" alt="([^"]+)" width="(\d+)" height="(\d+)" decoding="async" draggable="false">/,
+        /<img src="data:image\/webp;base64,<\.\.\.>" alt="" width="(\d+)" height="(\d+)" decoding="async" draggable="false">/,
         body,
       );
-      const tag = one(
-        /<span class="wk-dv__tag" aria-hidden="true"><span class="(wk-dv__dot|dot-live)"><\/span><b>([^<]+)<\/b><span>([^<]+)<\/span><\/span>/,
+      const url = one(/<span class="wk-oc__url">([^<]+)<\/span>/, body);
+      const lbl = one(
+        /<span class="wk-oc__lbl" aria-hidden="true"><b>([^<]+)<\/b><span>([^<]+)<\/span><\/span>/,
         body,
       );
-      const url =
-        /<span class="wk-bw__url"><svg class="i"><use href="#i-lock"\/><\/svg>([^<]+)<\/span>/.exec(
-          body,
-        );
-      const file = IMAGES.find((x) => x.alt === img[1])?.file;
-      const phone = body.includes('<span class="wk-ph">');
       return {
-        key: m[1] as WorksHeroDevice['key'],
         projectTitle: m[2]!,
-        kind: phone ? 'phone' : 'browser',
-        ...(body.includes('<span class="wk-bw wk-bw--dark">') ? { dark: true } : {}),
-        ...(url ? { url: url[1] } : {}),
-        image: {
-          src: `/images/${file}`,
-          width: Number(img[2]),
-          height: Number(img[3]),
-          alt: img[1]!,
-        },
-        tag: { name: tag[2]!, type: tag[3]!, ...(tag[1] === 'dot-live' ? { live: true } : {}) },
+        ...(m[1] ? { dark: true } : {}),
+        url: url[1]!,
+        image: { width: Number(img[1]), height: Number(img[2]) },
+        label: { name: lbl[1]!, type: lbl[2]! },
         ariaLabel: m[3]!,
       };
     });
-    expect(devices).toHaveLength(4);
-    expect(WORKS_HERO.devices).toEqual(devices);
+    expect(cards).toHaveLength(6);
+    expect(
+      WORKS_HERO.cards.map((c) => ({
+        projectTitle: c.projectTitle,
+        ...(c.dark ? { dark: true } : {}),
+        url: c.url,
+        image: { width: c.image.width, height: c.image.height },
+        label: c.label,
+        ariaLabel: c.ariaLabel,
+      })),
+    ).toEqual(cards);
   });
 
-  it('points every device at a project (the jump lookup byT) and a browser URL that matches its live link', () => {
-    for (const d of WORKS_HERO.devices) {
-      const project = PROJECTS.find((p) => p.title === d.projectTitle);
-      expect(project, d.projectTitle).toBeDefined();
-      if (d.url) expect(project!.live.replace(/^https?:\/\//, '').replace(/\/$/, '')).toBe(d.url);
+  it('points every card at a project (the jump lookup byT) and a URL that matches its live link', () => {
+    for (const c of WORKS_HERO.cards) {
+      const project = PROJECTS.find((p) => p.title === c.projectTitle);
+      expect(project, c.projectTitle).toBeDefined();
+      expect(project!.live.replace(/^https?:\/\//, '').replace(/\/$/, '')).toBe(c.url);
     }
-  });
-
-  it('lists the stack chips as the filters without "all"', () => {
-    expect(WORKS_JS).toContain(
-      `chipsEl.innerHTML=P_FILTERS.filter(function(f){ return f[0]!=='all' })`,
-    );
   });
 });
 
@@ -720,12 +721,13 @@ describe('assets on disk (frontend/public)', () => {
   const paths = [
     ...PROJECTS.map((p) => p.image),
     ...CERTIFICATES.map((c) => c.image),
-    ...WORKS_HERO.devices.map((d) => d.image.src),
+    ...WORKS_HERO.cards.map((c) => c.image.src),
+    ...WORKS_HERO.phone.screens.map((sc) => sc.src),
     ...PUREBODY_SHOWCASE.demos.map((d) => d.video),
   ];
 
-  it('lists 14 + 7 + 4 + 3 asset paths, all rooted at /', () => {
-    expect(paths).toHaveLength(28);
+  it('lists 14 + 7 + 6 + 2 + 3 asset paths, all rooted at /', () => {
+    expect(paths).toHaveLength(32);
     for (const p of paths) expect(p).toMatch(/^\/(imgs|images|vedioes)\/[^/]+$/);
   });
 
@@ -745,18 +747,18 @@ describe('assets on disk (frontend/public)', () => {
   });
 
   it('serves the hero screenshots at the intrinsic size of the section 8 table', () => {
-    for (const d of WORKS_HERO.devices) {
-      const entry = IMAGES.find((x) => `/images/${x.file}` === d.image.src);
-      expect(entry, d.image.src).toBeDefined();
-      expect({ width: d.image.width, height: d.image.height, alt: d.image.alt }).toEqual({
+    const shots = [...WORKS_HERO.cards.map((c) => c.image), ...WORKS_HERO.phone.screens];
+    for (const d of shots) {
+      const entry = IMAGES.find((x) => `/images/${x.file}` === d.src);
+      expect(entry, d.src).toBeDefined();
+      expect({ width: d.width, height: d.height }).toEqual({
         width: entry!.width,
         height: entry!.height,
-        alt: entry!.alt,
       });
-      const size = webpSize(readFileSync(onDisk(d.image.src)));
-      expect({ width: size.width, height: size.height }, d.image.src).toEqual({
-        width: d.image.width,
-        height: d.image.height,
+      const size = webpSize(readFileSync(onDisk(d.src)));
+      expect({ width: size.width, height: size.height }, d.src).toEqual({
+        width: d.width,
+        height: d.height,
       });
     }
   });

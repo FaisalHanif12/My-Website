@@ -1,6 +1,6 @@
 /**
  * Works page content: the 14 projects, the project filter, the grid copy, the Works hero (the
- * studio wall devices) and the PureBody showcase modal.
+ * orbit: PureBody in the centre, six builds around it) and the PureBody showcase modal.
  *
  * Source: reference works.js data L6862-6911, card template L7030-7066, count L7102, hero seal and
  * jump L7352-7362, hero HTML L3799-3878, PureBody modal HTML L4493-4554 (REFERENCE_MAP.md 11.5.11).
@@ -356,28 +356,26 @@ export interface WorksHeroStat {
   delay: number;
 }
 
-export interface WorksHeroDevice {
-  /** CSS modifier: .wk-dv--{key} */
-  key: 'gp' | 'uha' | 'ffl' | 'pb';
+/** A project that rides the orbit: a small browser window on the ring (button.wk-oc, L4207-4237). */
+export interface OrbitCard {
   /** data-p, matched against Project.title for the jump. */
   projectTitle: string;
-  kind: 'browser' | 'phone';
-  /** .wk-bw--dark (GitPulse only). */
+  /** .wk-oc--dk (GitPulse and YOOM have dark screens). */
   dark?: boolean;
-  /** Browser chrome URL text. */
-  url?: string;
+  /** Browser bar URL text (span.wk-oc__url). */
+  url: string;
   /**
    * The base64 screenshot of the reference, extracted to frontend/public/images/ by
-   * scripts/extract-images.mjs. width and height are the intrinsic size (map section 8).
-   * Rendered with decoding="async" draggable="false" and no loading attribute.
+   * scripts/extract-images.mjs. width and height are the intrinsic size. The image has an empty alt
+   * (decorative: the button carries the label), decoding="async" draggable="false".
    */
-  image: { src: string; width: number; height: number; alt: string };
-  /** Label pill: <b>{name}</b><span>{type}</span>; live = .dot-live instead of .wk-dv__dot. */
-  tag: { name: string; type: string; live?: boolean };
+  image: { src: string; width: number; height: number };
+  /** Hover label under the card: <b>{name}</b><span>{type}</span> (aria-hidden). */
+  label: { name: string; type: string };
   ariaLabel: string;
 }
 
-/** Works hero, "the studio wall" (HTML L3799-3878, seal L7352-7356). */
+/** Works hero, "the orbit" (HTML L4167-4265, script L7856-8113). */
 export const WORKS_HERO = {
   eyebrow: 'Portfolio Showcase',
   titleRowA: 'Featured',
@@ -393,78 +391,73 @@ export const WORKS_HERO = {
     { label: 'Technologies', value: 7, suffix: '+', delay: 540 },
     { label: 'Responsive', value: 100, suffix: '%', delay: 600 },
   ] as readonly WorksHeroStat[],
-  /** The chips are PROJECT_FILTERS without 'all', in that order. */
-  stackLabel: 'Built with',
-  stageAriaLabel: 'Four featured projects. Choose one to jump to its card.',
-  /** Hard coded in the reference (phone text says three because UHA is hidden under 640px). */
-  caption: {
-    countDesktop: '04',
-    countPhone: '03',
-    textDesktop: 'Four of fourteen. Pick one to jump to it.',
-    textPhone: 'Three of fourteen. Tap one to jump to it.',
+  stageAriaLabel: 'PureBody in the centre with six projects in orbit. Choose one to jump to it.',
+  /** The upright phone in the middle: it opens the PureBody showcase (button.wk-phn, L4187-4204). */
+  phone: {
+    ariaLabel: 'PureBody, SaaS app. Open the app showcase.',
+    /** Two app screens that swap every 4.5s; the first is on. */
+    screens: [
+      { src: '/images/works-orbit-purebody-1.webp', width: 402, height: 884 },
+      { src: '/images/works-orbit-purebody-2.webp', width: 379, height: 872 },
+    ],
+    statusTime: '9:41',
   },
-  /** Seal: ring text, centre number = PROJECTS.length (not the "10+" stat), label. */
-  seal: { ring: 'WEB · MOBILE · AI · 2022 - 2026 ·', label: 'PROJECTS' },
+  /** The label pill under the phone (span.wk-ob__pill): dot, name, type, "Latest", page dots. */
+  pill: { name: 'PureBody', type: 'SaaS App', latest: 'Latest' },
+  /** The caption: a number, then a desktop line and a phone line (CSS shows one of them). */
+  caption: {
+    count: '06',
+    desktop: 'PureBody at the centre, six builds in orbit. Pick one to jump to it.',
+    phone: 'PureBody at the centre, six builds in orbit. Tap one to jump to it.',
+  },
   cue: 'Scroll to explore',
-  /** DOM order = back to front paint order by depth (L2702): gp, uha, ffl, pb. */
-  devices: [
+  /** The six orbit cards in DOM order (slot i sits at angle i * 60deg). */
+  cards: [
     {
-      key: 'gp',
+      projectTitle: 'UHA International',
+      url: 'uha-international.com',
+      image: { src: '/images/works-orbit-uha.webp', width: 1280, height: 697 },
+      label: { name: 'UHA International', type: 'React.js' },
+      ariaLabel: 'UHA International, React.js. Jump to this project.',
+    },
+    {
       projectTitle: 'GitPulse',
-      kind: 'browser',
       dark: true,
       url: 'gitpulseee.netlify.app',
-      image: {
-        src: '/images/works-hero-gitpulse.webp',
-        width: 1400,
-        height: 797,
-        alt: 'GitPulse admin dashboard with learner stats, an activity trend chart and a score distribution donut',
-      },
-      tag: { name: 'GitPulse', type: 'Next.js' },
-      ariaLabel: 'GitPulse, Next.js dashboard. Jump to this project.',
+      image: { src: '/images/works-orbit-gitpulse.webp', width: 1400, height: 797 },
+      label: { name: 'GitPulse', type: 'Next.js' },
+      ariaLabel: 'GitPulse, Next.js. Jump to this project.',
     },
     {
-      key: 'uha',
-      projectTitle: 'UHA International',
-      kind: 'browser',
-      url: 'uha-international.com',
-      image: {
-        src: '/images/works-hero-uha.webp',
-        width: 1280,
-        height: 697,
-        alt: 'UHA International home page with a glass globe beside the headline',
-      },
-      tag: { name: 'UHA International', type: 'React.js' },
-      ariaLabel: 'UHA International, React.js website. Jump to this project.',
-    },
-    {
-      key: 'ffl',
       projectTitle: 'Fit For Living',
-      kind: 'browser',
       url: 'fitforliving.netlify.app',
-      image: {
-        src: '/images/works-hero-fitforliving.webp',
-        width: 1280,
-        height: 697,
-        alt: 'Fit For Living home page: Coaching that actually knows your name, with the weekly class timetable',
-      },
-      tag: { name: 'Fit For Living', type: 'Client Website' },
-      ariaLabel: 'Fit For Living, client website. Jump to this project.',
+      image: { src: '/images/works-orbit-fitforliving.webp', width: 1280, height: 697 },
+      label: { name: 'Fit For Living', type: 'Client Website' },
+      ariaLabel: 'Fit For Living, Client Website. Jump to this project.',
     },
     {
-      key: 'pb',
-      projectTitle: 'PureBody',
-      kind: 'phone',
-      image: {
-        src: '/images/works-hero-purebody.webp',
-        width: 402,
-        height: 884,
-        alt: "PureBody app home screen with today's overview and an AI meal plan",
-      },
-      tag: { name: 'PureBody', type: 'SaaS App', live: true },
-      ariaLabel: 'PureBody, SaaS app. Jump to this project.',
+      projectTitle: 'Soledeck',
+      url: 'soledeckf.vercel.app',
+      image: { src: '/images/works-orbit-soledeck.webp', width: 1100, height: 690 },
+      label: { name: 'Soledeck', type: 'Next.js \u00b7 Stripe' },
+      ariaLabel: 'Soledeck, Next.js, Stripe. Jump to this project.',
     },
-  ] as readonly WorksHeroDevice[],
+    {
+      projectTitle: 'Dosnexa',
+      url: 'dosnexa.vercel.app',
+      image: { src: '/images/works-orbit-dosnexa.webp', width: 1100, height: 576 },
+      label: { name: 'Dosnexa', type: 'Next.js \u00b7 Prisma' },
+      ariaLabel: 'Dosnexa, Next.js, Prisma. Jump to this project.',
+    },
+    {
+      projectTitle: 'YOOM',
+      dark: true,
+      url: 'faisal-yoom.netlify.app',
+      image: { src: '/images/works-orbit-yoom.webp', width: 707, height: 380 },
+      label: { name: 'YOOM', type: 'Next.js \u00b7 WebRTC' },
+      ariaLabel: 'YOOM, Next.js, WebRTC. Jump to this project.',
+    },
+  ] as readonly OrbitCard[],
 } as const;
 
 export interface PureBodyDemo {

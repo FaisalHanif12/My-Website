@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Extracts the 5 base64 WebP images embedded in the reference design into frontend/public/images/.
+ * Extracts the 9 base64 WebP images embedded in the reference design into frontend/public/images/.
  *
  * Usage (from frontend/): node scripts/extract-images.mjs
  *
@@ -21,45 +21,27 @@ const REFERENCE = resolve(FRONTEND, '../reference-design/faisalhanif-redesign.ht
 const OUT_DIR = resolve(FRONTEND, 'public/images');
 
 /**
- * REFERENCE_MAP.md section 8: line, output file, alt text on the same line, expected size.
+ * REFERENCE_MAP.md section 8: line, output file, alt text on the same line ("" for the decorative
+ * Works hero screens), expected size.
  * Exported for scripts/audit-assets.mjs and the works content test.
  */
 export const IMAGES = [
   {
-    line: 3112,
+    line: 3480,
     file: 'portrait-faisal.webp',
     alt: 'Portrait of Faisal Hanif',
     width: 498,
     height: 696,
   },
-  {
-    line: 3833,
-    file: 'works-hero-gitpulse.webp',
-    alt: 'GitPulse admin dashboard with learner stats, an activity trend chart and a score distribution donut',
-    width: 1400,
-    height: 797,
-  },
-  {
-    line: 3843,
-    file: 'works-hero-uha.webp',
-    alt: 'UHA International home page with a glass globe beside the headline',
-    width: 1280,
-    height: 697,
-  },
-  {
-    line: 3853,
-    file: 'works-hero-fitforliving.webp',
-    alt: 'Fit For Living home page: Coaching that actually knows your name, with the weekly class timetable',
-    width: 1280,
-    height: 697,
-  },
-  {
-    line: 3862,
-    file: 'works-hero-purebody.webp',
-    alt: "PureBody app home screen with today's overview and an AI meal plan",
-    width: 402,
-    height: 884,
-  },
+  // The Works hero: the two screens of the PureBody phone (they swap) and the six orbit cards.
+  { line: 4198, file: 'works-orbit-purebody-1.webp', alt: '', width: 402, height: 884 },
+  { line: 4199, file: 'works-orbit-purebody-2.webp', alt: '', width: 379, height: 872 },
+  { line: 4209, file: 'works-orbit-uha.webp', alt: '', width: 1280, height: 697 },
+  { line: 4214, file: 'works-orbit-gitpulse.webp', alt: '', width: 1400, height: 797 },
+  { line: 4219, file: 'works-orbit-fitforliving.webp', alt: '', width: 1280, height: 697 },
+  { line: 4224, file: 'works-orbit-soledeck.webp', alt: '', width: 1100, height: 690 },
+  { line: 4229, file: 'works-orbit-dosnexa.webp', alt: '', width: 1100, height: 576 },
+  { line: 4234, file: 'works-orbit-yoom.webp', alt: '', width: 707, height: 380 },
 ];
 
 const PAYLOAD_RE = /src="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/g;

@@ -26,6 +26,7 @@ import { ModalProvider } from '@/components/providers/ModalProvider';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { ToastProvider } from '@/components/providers/ToastProvider';
 import { TransitionProvider } from '@/components/providers/TransitionProvider';
+import { PureBodyModal } from '@/features/works/PureBodyModal';
 import { IconSprite } from '@/components/ui/IconSprite';
 import { Toast } from '@/components/ui/Toast';
 import { siteMeta } from '@/content/site';
@@ -54,7 +55,12 @@ export const viewport: Viewport = {
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang={siteMeta.lang} data-theme="light" className={fontVariables} suppressHydrationWarning>
+    <html
+      lang={siteMeta.lang}
+      data-theme="light"
+      className={fontVariables}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
@@ -77,6 +83,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     {children}
                     <Footer />
                   </main>
+                  <PureBodyModal />
                   <Toast />
                   <GlobalMotion />
                 </AppShell>

@@ -7,12 +7,7 @@ import { contactFacts } from './site';
 
 /** Shell sprite symbol ids of the social icons. */
 export type SocialIcon =
-  | 'i-linkedin'
-  | 'i-xlogo'
-  | 'i-github'
-  | 'i-quora'
-  | 'i-instagram'
-  | 'i-mail';
+  'i-linkedin' | 'i-xlogo' | 'i-github' | 'i-quora' | 'i-instagram' | 'i-mail';
 
 export interface Social {
   id: 'linkedin' | 'x' | 'github' | 'quora' | 'instagram' | 'email';
@@ -37,8 +32,20 @@ export const socials: readonly Social[] = [
     href: 'https://www.linkedin.com/in/faisal-frontend-developer/',
     icon: 'i-linkedin',
   },
-  { id: 'x', label: 'X (Twitter)', tip: 'X', href: 'https://x.com/FaisalHanif333', icon: 'i-xlogo' },
-  { id: 'github', label: 'GitHub', tip: 'GitHub', href: 'https://github.com/FaisalHanif12', icon: 'i-github' },
+  {
+    id: 'x',
+    label: 'X (Twitter)',
+    tip: 'X',
+    href: 'https://x.com/FaisalHanif333',
+    icon: 'i-xlogo',
+  },
+  {
+    id: 'github',
+    label: 'GitHub',
+    tip: 'GitHub',
+    href: 'https://github.com/FaisalHanif12',
+    icon: 'i-github',
+  },
   {
     id: 'quora',
     label: 'Quora',

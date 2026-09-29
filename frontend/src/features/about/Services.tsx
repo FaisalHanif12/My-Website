@@ -27,7 +27,11 @@ export function Services() {
         <RevealGroup className="ab-svc-list" stagger={90}>
           {services.map((s, i) => {
             const open = i === servicesDefaultOpen;
-            const className = ['ab-svc', s.variant ? `ab-svc--${s.variant}` : '', open ? 'is-open' : '']
+            const className = [
+              'ab-svc',
+              s.variant ? `ab-svc--${s.variant}` : '',
+              open ? 'is-open' : '',
+            ]
               .filter(Boolean)
               .join(' ');
             return (
