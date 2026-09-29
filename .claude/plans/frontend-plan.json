@@ -1,0 +1,821 @@
+{
+  "app": "frontend",
+  "sharedDecisions": "FRONTEND SHARED DECISIONS (every frontend brief follows these; the reference design still wins over anything here, then .claude/plans/orchestrator-decisions.md, then REFERENCE_MAP.md)\n\n0. Paths, tools and working rules\n- Project root \"/Users/faisalhanif/MyProfile/My Projects /Faisal-Website\" (quote it, it has spaces). App: frontend/. Reference (read only): reference-design/faisalhanif-redesign.html. Map: .claude/prd/REFERENCE_MAP.md (use the section 11 index and read with offsets). Lines L1392 = reference file lines; \"map 5539-5633\" = REFERENCE_MAP.md lines.\n- Never print reference lines L3480, L4200*, L4210*, L4191*, L4200* raw (base64). Use: sed -n 'Np' FILE | sed -E 's/base64,[A-Za-z0-9+\\/=]+/base64,<...>/'.\n- Restart safe: FIRST list and read the files you own and continue from what is there. Work in small steps, write big files in pieces (create, then append or Edit), make a tool call at least every few minutes.\n- Never run git. Never run npm install / npx install of packages (only fe-01 installs). If you need a package, stop and report it.\n- Only touch files your brief owns. If a bug is in a file owned by another brief (CSS included), do not edit it: describe it in your report (file, selector or line, expected vs actual).\n- Servers: from wave 2 on the orchestrator runs next dev at http://localhost:3000, the reference at http://localhost:4400/faisalhanif-redesign.html and the backend at http://localhost:8787. Workers never start next dev and never run next build (the lead runs builds one at a time). In wave 1 only fe-13 may start next dev (port 3000) and it stops it when done.\n- Your checks: npm run typecheck (whole project; fix errors in YOUR files, list others in the report), npx eslint <your files>, npx prettier --check <your files>, npx vitest run <your test files>, plus the visual commands in your brief.\n- Report at the end: files written, checks run with results, diff percents per route/width/theme you ran, every place you copied a reference quirk, every doc error found (the doc line and what the reference really has), and CSS or other-owner problems for the lead.\n\n1. Stack (installed once by fe-01, exact versions)\nnext 16.3.6, react 19.3.0, react-dom 19.3.0, typescript 6.0.3 (typescript-eslint needs <6.1), eslint 9.39.5 (eslint-config-next plugins do not support eslint 10), eslint-config-next 16.3.6, eslint-config-prettier 10.1.8, prettier 3.9.9, vitest 5.0.2, vite 8.3.1, @vitejs/plugin-react 6.1.1, jsdom 30.1.1, @testing-library/react 16.3.3, @testing-library/dom 10.4.2, @testing-library/jest-dom 7.0.1, @testing-library/user-event 14.6.7, @playwright/test 1.63.0 (+ chromium), pixelmatch 7.2.0, pngjs 7.0.0, @types/pngjs 6.0.5, @types/pixelmatch only if pixelmatch lacks its own types, @axe-core/playwright 4.13.0, lighthouse 13.5.0, chrome-launcher 1.2.1, postcss 8.5.28, tsx 4.23.15, @types/node 24.19.0, @types/react 19.3.0, @types/react-dom 19.3.0. No Tailwind, no animation library, no state library. Node >= 20.9 (dev machine: Node 26).\n\n2. Folder layout (frontend/)\nsrc/app (layout.tsx, page.tsx = About, profile/, works/, approvals/, contact/, @booking/, @chat/, @purebody/, sitemap.ts, robots.ts, opengraph-image.tsx), src/styles (9 CSS files), src/components/{layout,ui,motion,providers,seo}, src/features/{about,profile,works,approvals,contact,booking,chat}, src/content, src/lib, src/hooks, public/ (imgs, vedioes, css, sass-app.html are carried over: never touch; images/ holds the 5 extracted base64 images), tests/{visual,e2e,a11y,perf}, scripts/. Import alias @/* -> src/*. Vitest runs *.test.ts(x) (unit tests sit next to the code inside the folder you own); Playwright runs *.spec.ts under tests/ (projects visual, e2e, a11y). src/styles/*.css is in .prettierignore (kept in the reference's compact format). next.config sets devIndicators: false so dev screenshots have no Next badge.\n- Every worker receives its whole brief object: title, owns, deps, refs, brief and checks. refs holds the reference lines (Lnnnn) and REFERENCE_MAP.md line ranges (\"map a-b\"); checks is the acceptance list.\n\n3. Markup and CSS rules\n- Copy reference markup exactly: same tags, ids, classes, attributes, aria, copy and order. Class names never change. All CSS lives in src/styles and is owned by fe-02; components add no CSS files, no CSS modules and no style objects except inline styles the reference itself writes (style attributes in the HTML or styles its JS sets, for example --d, transform, translate).\n- Global CSS import order (layout.tsx): tokens, base, layout, about, contact, overlays, profile, works, approvals.\n- React attribute traps: write data-reveal=\"\" (never bare data-reveal), data-book=\"\" or data-book=\"deep\", data-split=\"\" etc. Put suppressHydrationWarning on <html>. The only className on <html> is the static next/font variable classes; js, is-loaded, smooth-on and has-pointer are added with document.documentElement.classList only, never from React state.\n- SVG icons: <Icon name=\"i-arrow-right\" /> renders <svg class=\"i\"><use href=\"#i-arrow-right\"/></svg> exactly as the reference. The About and Contact page-only sprites (ab-ic-*, ct-i-*) are rendered by those pages; wk-guil by the Approvals hero.\n- Content (all copy, lists, numbers, URLs) comes from src/content/*. Components never hard code copy. Em dashes only where the reference has them (write the escape \\u2014 in TS string literals, never the raw character). The middle dot is U+00B7.\n- Server components by default. \"use client\" only for parts with state, effects or listeners; keep client leaves small. Code split heavy interactive parts with next/dynamic or lazy import where it does not change first paint (booking steps, chat panel body, PureBody videos, globe loop).\n- Reduced motion, (pointer:fine) and hover capability are read ONCE at start (useReducedMotion, useFinePointer, useCanHover), exactly like the reference. Every rAF loop, timer, observer and listener is cleaned up on unmount; idle loops stop when settled or off screen (orchestrator decision).\n- Images: next/image with explicit width/height and the reference sizes; priority only on the route LCP image (About portrait). Paths with spaces go through encodeURI like the reference img().\n\n4. Contracts from wave 1 that pages use (read the real code before using it)\n- @/lib/asset: asset(path) -> \"/\" + path. @/lib/dom: $ / $$ helpers, lerp. @/lib/motion: every timing constant from the core (map 2121-2153), never rounded.\n- @/hooks/useReducedMotion, useFinePointer, useCanHover (read once). @/lib/boot: useBootState() -> { loaded, motionReady } (loaded = preloader done and html.is-loaded set; motionReady 250ms later, 0 with reduced motion). @/lib/revealStore: module Set of revealed keys that survives route changes.\n- @/components/motion: <Reveal as variant delay> (renders data-reveal and --d, adds is-in once, remembers it), <SplitWords as ...> (span.w > span words, --d = i*55ms, is-in on the real element), <CountUp to prefix suffix duration decimals>, staggerDelay(base, step, k). <RevealGroup stagger delay> for data-stagger parents. is-in is React state, so re-renders keep it. Attribute driven and global (installed once by GlobalMotion, so markup just keeps the reference attributes): data-magnetic and data-tilt (document delegation, lib/bindMotion), data-parallax (lib/parallax, refreshParallax()), data-spotlight (one pointermove listener), smooth wheel scroll (lib/smoothScroll: smoothTo(), smoothReset()).\n- @/components/providers/ModalProvider: useModal() -> { open(id, opts?: { payload?, returnFocus? }), close(id?), isOpen(id), payloadOf(id) }. Document delegation for [data-close], [data-open] and [data-book] (data-book=\"deep\" -> open('booking', { payload: { type: 'deep' } }), anything else -> 'quick'), Esc closes all, body.modal-open, 60ms first focus, focus trap, focus returns to the opener (or opts.returnFocus) only when a modal really closed. @/components/ui/Modal: <Modal id className labelledBy onOpen onClose panelProps> renders the .fh-modal shell (scrim [data-close], panel role=\"dialog\" aria-modal, close button) exactly like L4609-4613 / L4862-4867; children go in the panel.\n- @/components/providers/ToastProvider: useToast() -> toast(msg) (3200ms, replaces text, restarts timer); #toast always mounted.\n- @/components/providers/TransitionProvider and @/hooks/usePageTransition: useNavigate() -> { go(target), scrollToEl(el, opts?) }, usePageShow(cb) (first show after loaded, later shows at T=560), useCurtainLift(cb) (T=700 or at once without a curtain), useIsLeaving(). <TransitionLink href> for authored links; raw href=\"#id\" links keep working through the capture listener. <NextPageLink from=\"about|profile|works|approvals|contact\" /> is the last child of every page root. After each show the provider dispatches window resize one frame later (page parts may re-measure on resize like the reference).\n- @/lib/seo: pageMetadata(id) returns the Next Metadata (title, description, canonical, openGraph, twitter) for that page; the root layout holds metadataBase, viewport and themeColor.\n- @/lib/api: API_ENABLED (NEXT_PUBLIC_API_URL set), postChat({message, history}) -> reply string (12000ms timeout, reply parsing exactly as L6923-6929), postContact(body), postBooking(body, idempotencyKey), getBookingSlots(date, session), getBookingConfig(); every failure throws ApiError { code, status, fields?, retryAfter? }. Bodies exactly as API_CONTRACT.md. Contact and booking timeouts 15000ms, slots and config 8000ms.\n- @/lib/viewMotion: wait(ms), morphHeight(el, change, dur), swapViews(container, from, to, dir, axis) (reference L5673-5698). @/lib/strings: esc, pad, ymd, parseYmd, EMAIL_RE. @/lib/mailto: openMail(subject, body) (the reference mailto flow).\n- Content files (src/content): site, socials, about, services, testimonials, pricing, profile, experience, education, skills, projects, certificates, contact, booking, chat-knowledge. Types are exported from the same file.\n\n5. Page composition\n- Each route page.tsx is a server component that renders the page root exactly like map 2153-2170 (ids, classes plus \"page is-current\" and data-page), exports metadata = pageMetadata(id), and ends with <NextPageLink from=id />. Old hash links are handled by the TransitionProvider, not by pages.\n- Pages with two briefs: the page.tsx owner imports the other brief's ENTRY component from the exact path named in both briefs. The brief that does not own page.tsx must create its entry file as its FIRST step (a component that renders its root element), so the import resolves at once; if your page imports an entry file that is not there yet, keep working and re-run typecheck later.\n- Global overlays use root parallel route slots, so no wave 1 file imports a feature: the root layout takes optional props booking, chat and purebody and renders them after </main> in that order, then the toast (reference order L4609, L4837, L4862, L4926). src/app/@booking/default.tsx, src/app/@chat/default.tsx and src/app/@purebody/default.tsx are owned by the booking UI, chat and works grid briefs. Soft navigation keeps slot state, so the overlays persist across routes like the reference shell.\n- Page entrances and timing follow map 1941-1955 and the \"What each page subscribes to\" table (map 2153-2217): hero entrances replay on every show; scroll reveals never replay (revealStore).\n- Works and Approvals: heroes and bodies talk through window CustomEvents defined in src/features/works/shared/events.ts (fe-19): WK_FILTER_EVENT 'wk:filter' (detail: filter key), WK_JUMP_EVENT 'wk:jump' (detail: project index) and AP_JUMP_EVENT 'wk:ap-jump' (detail: certificate index). The body that owns the target does the switch to All, the waits, the scroll and the flash exactly like the reference. Shared body helpers (toolbar and segmented filter, FLIP, flash) live in src/features/works/shared/ (fe-19); the shared page hero controller (enter and reset with the curtain, data-wk-to count up, scroll cue buttons) lives in src/features/works/hero-shared/ (fe-18) and is used by both heroes.\n\n6. Visual diff harness (fe-03; everyone uses it)\n- One comparison: npm run visual -- --route /works --width 1440 --theme dark\n  Options: --route / | /profile | /works | /approvals | /contact | all (default /); --ref-url and --app-url override the servers; --tag <name> adds a suffix to the output names; --width 1440 | 1280 | 1024 | 891 | 768 | 390 | 360 | all (heights: 900, 720, 768, 774, 1024, 844, 780); --theme light | dark | both (default light); --selector \"<css>\" (element screenshot on both sides instead of the full page); --hover \"<css>\" and --click \"<css>\" (repeatable, applied in order on both sides before the capture); --wait <ms> (extra settle time, default 300); --motion (turn reduced motion off, for eye checks of end states); --max <percent> (exit code 1 when any diff is above it, default 0.5).\n  It prints one line per capture: route width theme diffPercent, and writes tests/visual/out/<route>_<width>_<theme>[_<tag>]_{ref,app,diff}.png. Look at the PNGs with the Read tool.\n- Both sides get the same setup: Playwright chromium, deviceScaleFactor 1, reducedMotion 'reduce' (unless --motion), locale en-US, timezoneId Asia/Karachi, page.clock.setFixedTime(2026-03-10T09:00:00Z), localStorage fh-theme set by addInitScript before load, every request to https://faisalhanif.work/** answered from frontend/public files, wait for load + document.fonts.ready + html.is-loaded, the preloader hidden the same way on both sides, scroll through the page to trigger lazy content then back to top, full page screenshot, pixelmatch threshold 0.1. Reference hash pages map to routes: /#about -> /, #profile -> /profile, #works -> /works, #approvals -> /approvals, #contact -> /contact.\n- Suite: npm run test:visual (every route x width x theme, fails above 0.5%). Env overrides REF_URL (default http://localhost:4400/faisalhanif-redesign.html) and APP_URL (default http://localhost:3000).\n- A page brief passes its visual check when the diff for its own area (--selector on its section) is at most 0.5% at all 7 widths in both themes, and the states in its brief were compared by eye with --hover / --click captures.\n\n7. Waves and ids\nWave 1 foundations fe-01 to fe-13, wave 2 pages and features fe-14 to fe-26, wave 3 audits fe-27 to fe-30. Wave 3 audit briefs own only their test and script files; anything they find in other files goes into their report as a precise fix list grouped by the owning brief, and the orchestrator turns it into fix briefs.\n\n8. Who owns what (report problems to the owning brief id)\nfe-01 tooling and config, README, .env.example; fe-02 all CSS; fe-03 visual harness and playwright.config; fe-04 site, socials and About content; fe-05 Profile content; fe-06 works and approvals content, public/images, asset audit; fe-07 contact, booking and chat content; fe-08 motion libs, hooks, components/motion, viewMotion; fe-09 modals and toast; fe-10 api, mailto and string helpers; fe-11 transitions, routes, curtain, NextPageLink, hash redirects; fe-12 fonts, theme, icons, preloader and boot, ambient, cursor glow, progress; fe-13 root layout, rail, top bar, dock, footer, seo helpers, Person JSON-LD; fe-14 About route and hero; fe-15 About lower sections; fe-16 Profile route and hero; fe-17 Profile body; fe-18 Works route, hero and hero-shared; fe-19 Works grid, shared body helpers, PureBody; fe-20 Approvals hero; fe-21 Approvals route and body; fe-22 Contact route and hero; fe-23 Contact body and form; fe-24 booking logic; fe-25 booking UI; fe-26 chat; fe-27 SEO files; fe-28 performance; fe-29 accessibility tests; fe-30 parity sweep and e2e.\n",
+  "briefs": [
+    {
+      "id": "fe-01",
+      "title": "Scaffold Next.js app, tooling and every frontend dependency",
+      "wave": 1,
+      "owns": [
+        "frontend/package.json",
+        "frontend/package-lock.json",
+        "frontend/tsconfig.json",
+        "frontend/next.config.ts",
+        "frontend/next-env.d.ts",
+        "frontend/eslint.config.mjs",
+        "frontend/.prettierrc.json",
+        "frontend/.prettierignore",
+        "frontend/vitest.config.ts",
+        "frontend/vitest.setup.ts",
+        "frontend/tests/unit/smoke.test.ts",
+        "frontend/tests/unit/referenceText.ts",
+        "frontend/tests/unit/referenceText.test.ts",
+        "frontend/.gitignore",
+        "frontend/.env.example",
+        "frontend/README.md"
+      ],
+      "deps": [],
+      "refs": "TECH_STACK.md (Frontend, Hosting); PRD.md (Routes, Assets); API_CONTRACT.md top (NEXT_PUBLIC_API_URL); sharedDecisions sections 0, 1, 2; reference L1-20 (head, for README notes only).",
+      "brief": "Goal: turn frontend/ (today it holds only public/) into a working Next.js 16 App Router + TypeScript strict project with all tooling, and install EVERY package the frontend will ever need. You are the only brief that runs npm install.\n\nRules: frontend/public/ already holds imgs/, vedioes/, css/ and sass-app.html. Never delete, move or overwrite anything in public/. Do not create src/app, src/styles or any component: other briefs own them. Do not create playwright.config.ts (fe-03 owns it).\n\nSteps (restart safe: check what already exists first):\n1. npm view each package in sharedDecisions section 1 and confirm the version. Pin exact versions (no ^ or ~). If a listed version no longer exists, take the newest patch of the same minor and say so in the report. Keep typescript 6.0.x and eslint 9.x (peer ranges).\n2. Scaffold into /tmp/fe-scaffold with npx create-next-app@16.3.6 (TypeScript, ESLint, App Router, src dir, no Tailwind, alias @/*, npm, no React Compiler; check --help for flags). Run next build there once with your next.config (step 6) to prove the toolchain.\n3. Copy only config files into frontend/ (package.json, tsconfig, eslint config, next-env.d.ts, .gitignore). Do NOT copy src/app demo files, globals.css, favicon.ico or the public/*.svg files.\n4. package.json: name \"faisal-hanif-frontend\", private, engines node >=20.9. Scripts: dev \"next dev\", build \"next build\", start \"next start\", lint \"eslint .\", typecheck \"tsc --noEmit\", test \"vitest run\", test:watch \"vitest\", test:visual \"playwright test --project=visual\", test:e2e \"playwright test --project=e2e\", test:a11y \"playwright test --project=a11y\", visual \"tsx tests/visual/visual.ts\", lighthouse \"node scripts/lighthouse.mjs\", format \"prettier --write .\", format:check \"prettier --check .\". (Some target files arrive later; that is expected.)\n5. Install every dependency and devDependency from sharedDecisions section 1 with --save-exact inside frontend/, then npx playwright install chromium.\n6. next.config.ts: output \"standalone\", reactStrictMode true, poweredByHeader false, devIndicators false, images.formats [\"image/avif\",\"image/webp\"], and redirects() with { source: \"/index.html\", destination: \"/\", permanent: true } (sass-app.html links to index.html). Check the Next 16 docs (Context7) for the exact option names.\n7. tsconfig: strict true, noEmit, moduleResolution bundler, paths @/* -> ./src/*, include src, tests, *.ts at the root, next-env.d.ts and .next/types.\n8. ESLint flat config: eslint-config-next core-web-vitals + typescript, then eslint-config-prettier last. Ignore .next, out, public, coverage, playwright-report, test-results, tests/visual/out, tests/perf/out.\n9. Prettier: singleQuote, semi, trailingComma all, printWidth 100. .prettierignore: public, .next, package-lock.json, src/styles/*.css, tests/visual/out, tests/perf/out.\n10. Vitest: @vitejs/plugin-react, environment jsdom, setupFiles ./vitest.setup.ts (imports @testing-library/jest-dom/vitest), include src/**/*.test.{ts,tsx} and tests/**/*.test.{ts,tsx}, exclude **/*.spec.ts, alias @ -> src. Add tests/unit/smoke.test.ts (renders a tiny element with Testing Library). Add tests/unit/referenceText.ts for the content briefs: referenceText() returns the reference file text with HTML entities decoded (&amp; &#160; &ldquo; etc.) plus JS string escapes decoded, and collectStrings(value) walks any exported object or array and returns every string leaf with its path; test it in referenceText.test.ts.\n11. .gitignore: node_modules, .next, out, coverage, playwright-report, test-results, tests/visual/out, tests/perf/out, .env and .env.* but keep .env.example, *.tsbuildinfo, .DS_Store.\n12. .env.example: NEXT_PUBLIC_API_URL= (empty means the reference mailto flow and the local chat responder) and NEXT_PUBLIC_SITE_URL=https://faisalhanif.work, each with a one line comment.\n13. README.md (plain English, no em dashes): purpose, requirements, setup, every script, env vars, the visual harness command (sharedDecisions section 6), and the VPS deploy from TECH_STACK.md Hosting (npm ci and build, copy public/ and .next/static next to .next/standalone, node .next/standalone/server.js on port 3000 under PM2 or systemd, an nginx server block proxying the site and /api/ to port 8787 with proxy_buffering off for /api/chat).\nFinish with the checks. Report the final installed versions.",
+      "checks": [
+        "npm ls --depth=0 in frontend/ shows every package of sharedDecisions section 1 at an exact pinned version, no ^ or ~ in package.json",
+        "npx playwright --version works and chromium is installed",
+        "npm run typecheck, npm run lint and npm run test pass (the smoke test runs)",
+        "npx prettier --check on the config files passes",
+        "next build succeeded in the temp scaffold with the same next.config (standalone output, redirect, devIndicators false)",
+        "frontend/public/ is unchanged (same file count: imgs 40, vedioes 6 mp4 plus posters/, css 2, sass-app.html); no demo files, favicon or svg added",
+        "README covers setup, scripts, env, visual harness and the VPS deploy with PM2 or systemd and nginx"
+      ]
+    },
+    {
+      "id": "fe-02",
+      "title": "Verbatim CSS port of the reference style block into 9 files",
+      "wave": 1,
+      "owns": [
+        "frontend/src/styles/tokens.css",
+        "frontend/src/styles/base.css",
+        "frontend/src/styles/layout.css",
+        "frontend/src/styles/about.css",
+        "frontend/src/styles/contact.css",
+        "frontend/src/styles/overlays.css",
+        "frontend/src/styles/profile.css",
+        "frontend/src/styles/works.css",
+        "frontend/src/styles/approvals.css",
+        "frontend/src/styles/css-port.test.ts"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "Reference L21-3206 (the whole <style> block). Map 40-78 (section 3 blocks and landmarks), 122-130 (section 6 breakpoints), 213-227 (errata: booking L1382-1618, chat L1620-1710, PureBody L2570-2636 + L2655-2664, container queries L2868 and L2921*), 1103-1146 (11.1.12 shell split table and import order), 1146-1190 (notes: fonts, traps), 350-410 (11.1.2 fonts). Page blocks: about L365-969; contact L970-1722; profile L1774-2292; works and approvals L2293-3206 (approvals body L2469-2563 and L2651-2653, approvals hero L2666-2876, works hero L2887-3206, shared toolbar L2327-2345 and L2552-2568).",
+      "brief": "Goal: every CSS rule of reference L21-3206 lands in exactly one of the 9 files with identical selectors, declarations, values, at-rules and relative order, so the rebuilt pages are pixel identical. Keep the reference compact formatting (one rule per line where the reference does that); these files are excluded from Prettier.\n\nSplit:\n- tokens.css, base.css, layout.css: follow the table in map 1103-1146 line by line (11.1.12 wins where the 11.2.0 table disagrees: modal shell L266-279 and toast L281-284 go to layout.css, reduced motion L356-362 at the end of layout.css).\n- about.css L365-969. profile.css L1774-2292.\n- contact.css: L970-1722 minus the booking rules (L1382-1618) and chat rules (L1620-1710). Rules shared with the contact form (L1268, L1310-1320) stay in contact.css. The reduced motion block L1711-1717 stays.\n- overlays.css: booking L1382-1618 and chat L1620-1710 (in that order), then the PureBody modal L2570-2636 and its float and reduced motion rules from L2655-2664.\n- works.css: L2293-3206 minus PureBody and minus the approvals-only blocks. approvals.css: the approvals-only blocks (certificate rail, cards, progress, deck hero L2666-2876 and similar) in reference order.\n- A mixed @media or @container block may be split into two blocks with the same query, one per file.\n\nOnly change allowed: in tokens.css build the three font tokens from the next/font variables fe-12 defines: --font-sans:var(--ff-jakarta),<reference fallback stack>; --font-serif:var(--ff-instrument),<fallbacks>; --font-mono:var(--ff-jetbrains),<fallbacks>. Keep every fallback exactly. Copy the grain data URI (L206) byte for byte. Keep unused rules and tokens (map 1146-1190 lists them). Each file starts with a one line comment naming its reference line ranges.\n\nCascade safety: the import order is tokens, base, layout, about, contact, overlays, profile, works, approvals. Moving a block changes which rule wins only when two rules match the same element with equal specificity and set the same property. For every block you move past other rules (PureBody moves before profile and works; approvals hero moves after the works hero; approvals body moves after the works grid), check the rules it jumps over for shared class or id tokens and shared properties. If a flip is possible, keep that block in its original file and position instead, and list it in the report.\n\nTest (css-port.test.ts, Vitest, uses postcss): 1) parse the reference <style> content (L22-3206 read from reference-design/faisalhanif-redesign.html) and the 9 files concatenated in import order; normalise whitespace; the multiset of (at-rule chain + selector + declaration list) must be identical, except the three font token declarations. 2) order check: for every pair of rules whose relative order changed, assert they do not share a property and a class or id token in their last compound selector, unless listed in a small documented allowlist. Work in pieces: write one file at a time, run the test often.",
+      "checks": [
+        "npx vitest run src/styles/css-port.test.ts passes (identical rule multiset, order check clean)",
+        "grep shows no selector or value edits except the three font tokens in tokens.css",
+        "Each file begins with its reference line range comment; no Tailwind, no CSS modules, no renamed classes",
+        "Report lists every block that stayed in its original file for cascade safety and every split @media block"
+      ]
+    },
+    {
+      "id": "fe-03",
+      "title": "Visual diff harness (Playwright + pixelmatch) and Playwright config",
+      "wave": 1,
+      "owns": [
+        "frontend/playwright.config.ts",
+        "frontend/tests/visual/visual.ts",
+        "frontend/tests/visual/parity.spec.ts",
+        "frontend/tests/visual/lib/**"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "sharedDecisions section 6 (the command interface is binding). QA_CHECKLIST.md \"Visual parity\". Reference L12-17 (theme boot, FH_BASE), L5042-5099 (hash router: initial page from location.hash; deep link element scroll after 1600ms), L5146-5153 (preloader, is-loaded; done() at once with reduced motion), L357-362 (reduced motion CSS). Map 1234-1266 (boot order), 1891-1910 (preloader), 1925-1941 (reduced motion), 2121-2153 (constants).",
+      "brief": "Goal: a deterministic tool that screenshots the reference and the app under identical conditions and reports the pixel diff, exactly per sharedDecisions section 6. Wave 2 workers depend on it, so keep the CLI stable.\n\nFiles:\n- tests/visual/lib/args.ts: parse --route, --width, --theme, --selector, --hover, --click (repeatable, order kept), --wait, --motion, --max, --ref-url, --app-url, --tag. Unit test args.test.ts next to it.\n- tests/visual/lib/matrix.ts: widths with heights (1440x900, 1280x720, 1024x768, 891x774, 768x1024, 390x844, 360x780), themes, routes and the route -> reference hash map (/ -> no hash or #about, /profile -> #profile, /works -> #works, /approvals -> #approvals, /contact -> #contact).\n- tests/visual/lib/capture.ts: capture(side, opts) -> PNG buffer. One browser, a new context per capture: viewport, deviceScaleFactor 1, reducedMotion reduce (unless --motion), locale en-US, timezoneId Asia/Karachi, colorScheme light. addInitScript sets localStorage fh-theme before any script. page.clock.setFixedTime(new Date(\"2026-03-10T09:00:00Z\")) on both sides (timers keep running). context.route(\"https://faisalhanif.work/**\") fulfils from frontend/public (decode %20 in paths; 404 when missing, and log it). Navigate, wait for load, document.fonts.ready and html.is-loaded, then hide the preloader the same way on both sides (add style #preloader{visibility:hidden!important} after is-loaded; with --motion wait 1400ms first). Scroll down the page in viewport steps to trigger lazy images and observers, return to the top, wait --wait ms, apply --hover and --click in order (wait 400ms after each), then take a full page screenshot or, with --selector, an element screenshot of the first match (fail clearly if it is missing on either side).\n- tests/visual/lib/diff.ts: pad the two PNGs to the same size (pad with magenta so size differences count as diff), pixelmatch threshold 0.1, return percent of differing pixels; write <name>_{ref,app,diff}.png to tests/visual/out/ (create it). Name = route slug (root = about), width, theme, optional tag.\n- tests/visual/visual.ts: the CLI (npm run visual -- ...). Expands all/both, runs captures with limited parallelism (3 pages at once), prints \"route width theme diff%\" lines and a summary, prints every console error or warning, page error and failed request seen on either side (prefixed ref: or app:), exits 1 if any diff > --max.\n- tests/visual/parity.spec.ts: the full matrix as Playwright tests (npm run test:visual), each asserting diff <= 0.5% and attaching the PNGs.\n- playwright.config.ts: no webServer (servers are external). Projects: visual (testDir tests/visual), e2e (tests/e2e), a11y (tests/a11y); chromium only; baseURL from APP_URL (default http://localhost:3000); testMatch *.spec.ts; reporter list plus html (open never); outputDir test-results.\n\nWave 1 has no running app: validate the harness by comparing the reference with itself (--app-url set to the reference URL; the route map then applies on both sides). Only the reference server at http://localhost:4400 is guaranteed; do not start next dev. If ref vs ref is not 0.00% for some page (for example the Contact globe or the About orbit), find the source of non determinism and fix the setup (clock, reduced motion, waits), never by masking. Keep the code typed and small; write it in pieces.",
+      "checks": [
+        "npm run visual -- --route all --width all --theme both --app-url http://localhost:4400/faisalhanif-redesign.html prints 70 lines, all 0.00%, and writes PNGs to tests/visual/out/",
+        "npm run visual -- --route /contact --width 390 --theme dark --selector \"#ct-hero\" --app-url <reference url> works (element mode)",
+        "A --click \"[data-book]\" capture on the reference shows the open booking modal in the ref PNG (check it with the Read tool)",
+        "npx vitest run tests/visual/lib passes; typecheck and eslint clean for owned files",
+        "npx playwright test --list --project=visual lists 70 tests"
+      ]
+    },
+    {
+      "id": "fe-04",
+      "title": "Typed content: site, socials, about, services, testimonials, pricing",
+      "wave": 1,
+      "owns": [
+        "frontend/src/content/site.ts",
+        "frontend/src/content/socials.ts",
+        "frontend/src/content/about.ts",
+        "frontend/src/content/services.ts",
+        "frontend/src/content/testimonials.ts",
+        "frontend/src/content/pricing.ts",
+        "frontend/src/content/site.test.ts",
+        "frontend/src/content/about-content.test.ts"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "site.ts has four parts in the map that must be merged into ONE file without duplicates: map 987-1103 (11.1.11 shell copy, nav data, page labels), 2044-2121 (11.2.24 SitePage: id, path, n, title, docTitle, navIcon, next page words), 2852-2884 (11.3.10 SiteInfo), 7487-7521 (11.6.9 contactFacts). socials.ts: map 2884-2908 and 7521-7524. services.ts 2908-2993, testimonials.ts 2993-3067, pricing.ts 3067-3173, about.ts 3173-3411 (hero copy, role words, stats, orbit badges with data-a angles, marquee, bento). Reference: head L1-20, shell L3317-3346, footer L4597-4605, About L3349-3802, core META/PAGES L5042-5105. Notes map 3411-3443 and 1146-1190.",
+      "brief": "Goal: the typed content modules for the shell and the About page, so no component ever hard codes copy.\n\nMust include (check each against the map and the reference):\n- site.ts: PageId, the five SitePage records in order (about, profile, works, approvals, contact) with path, curtain number \"02 / 05\" style data, nav label and icon, document titles (About = \"Faisal Hanif · Software Engineer\", others \"<Title> · Faisal Hanif\"), the Next page data (label \"Next page · 02\", counter \"1 / 5\", title split into plain + serif part exactly as map 2217-2255 note 3 lists), meta description, theme colors (#0e6655 light, #050f0c dark), footer copy, preloader label \"Faisal Hanif · Portfolio\", rail and top bar aria labels, and contactFacts. One export per concept, no duplicated values.\n- socials.ts: the 5 About socials in order (LinkedIn, X (Twitter), GitHub, Quora, Instagram) with href, label, icon id. No WhatsApp.\n- about.ts: hero greeting, name rows, role line and rolling roles, CV and Book labels, stats 3+ / 10+ / 3+ with suffixes, the 8 orbit badges with angles (React 0, Node.js 90, OpenAI 180, AWS 270, Next.js 45, Claude 135, MongoDB 225, React Native 315), marquee items, Get to Know Me bento copy.\n- services.ts (4 services, section head), testimonials.ts (3 items; Sarah Johnson (TechCorp) and Emily Rodriguez (AppSolutions) carry needsConfirmation: true; counter text \" / 03\" as in the reference), pricing.ts (plans, the $25 count-up, the \"Talk first\" aside with its two session buttons).\n\nHow to work: the map sections already hold the typed TypeScript for these files, checked against the reference. Copy them, but open the cited reference lines for every string you are unsure of and fix the map when it is wrong (the reference wins; list the fix in the report). Write one file at a time.\nRules: pure data modules (no React, no \"use client\", no imports from components). Export the interfaces next to the data. Array order is data order (never sort). Em dashes only where the reference has them, written as \\u2014. Keep the reference quirks listed in .claude/plans/orchestrator-decisions.md (\"Content kept as the reference has it\"). Fields the reference does not have are left out (do not invent).\nTest: a Vitest file next to the data (owned by you) that uses referenceText() and collectStrings() from tests/unit/referenceText.ts to assert that every visible copy string (length >= 3) appears verbatim in the reference text, with a short explicit allowlist for derived values (paths, ids, keys, enum values), plus count checks (number of items per list) taken from the map.",
+      "checks": [
+        "npx vitest run src/content/site.test.ts src/content/about-content.test.ts passes (every copy string found in the reference, list counts match the map)",
+        "npm run typecheck clean for the owned files; eslint and prettier clean",
+        "site.ts holds each value once (no duplicate page tables); needsConfirmation set on the two testimonials",
+        "Report lists every map correction made"
+      ]
+    },
+    {
+      "id": "fe-05",
+      "title": "Typed content: profile, experience, education, skills",
+      "wave": 1,
+      "owns": [
+        "frontend/src/content/profile.ts",
+        "frontend/src/content/experience.ts",
+        "frontend/src/content/education.ts",
+        "frontend/src/content/skills.ts",
+        "frontend/src/content/profile-content.test.ts"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "Map 4164-4598 (11.4.12: profile.ts 4170-4334, experience.ts 4334-4422, education.ts 4422-4486, skills.ts 4486-4598), 4598-4677 (notes; content oddities at 4671), 3454-3512 (page frame and reveal table), 3571-3694 (hero desk sheets: the copy they show comes from these files). Reference: Profile HTML L3805-4165 (hero L3807-3932, experience L3943-4023, education L4025-4072, technical expertise L4074-4160), profile.js L7020-7382 (tab data, ring values, year labels). Em dash in visible copy at L3817 and L3977.",
+      "brief": "Goal: the typed content modules for the Profile page (hero desk sheets, experience timeline, education, technical expertise tabs with rings, languages, core expertise chips), so the Profile components render only from data.\n\nMust include (check each against the map and the reference):\n- profile.ts: hero eyebrow, title parts, lead, CTA labels (CV link uses asset(\"imgs/Faisal-CVS.pdf\") at render time; store the path \"imgs/Faisal-CVS.pdf\"), the three desk sheets (experience, education, skills) with every label, number and ring value they show, block heads with their index labels (\"02.1\", \"02.2\", \"02.3\") and subtitles.\n- experience.ts: the roles in reference order with years, company, title, dates, bullets and tags, and the sticky year data used by profile.js.\n- education.ts: the featured card and the two other cards (ids pf-edu-inter and pf-edu-matric exist in the markup; keep an id field for them).\n- skills.ts: the tab list with its skills and percentages (ring values), the languages card, the 10 core expertise chips.\nKeep the two em dashes (L3817, L3977) exactly and every number as the reference shows it, even where two places disagree (list them in the report).\n\nHow to work: the map sections already hold the typed TypeScript for these files, checked against the reference. Copy them, but open the cited reference lines for every string you are unsure of and fix the map when it is wrong (the reference wins; list the fix in the report). Write one file at a time.\nRules: pure data modules (no React, no \"use client\", no imports from components). Export the interfaces next to the data. Array order is data order (never sort). Em dashes only where the reference has them, written as \\u2014. Keep the reference quirks listed in .claude/plans/orchestrator-decisions.md (\"Content kept as the reference has it\"). Fields the reference does not have are left out (do not invent).\nTest: a Vitest file next to the data (owned by you) that uses referenceText() and collectStrings() from tests/unit/referenceText.ts to assert that every visible copy string (length >= 3) appears verbatim in the reference text, with a short explicit allowlist for derived values (paths, ids, keys, enum values), plus count checks (number of items per list) taken from the map.",
+      "checks": [
+        "npx vitest run src/content/profile-content.test.ts passes",
+        "npm run typecheck clean for the owned files; eslint and prettier clean",
+        "Counts match the reference: roles, education cards (3), skill tabs and their items, 10 core chips",
+        "Report lists every map correction and every content oddity kept"
+      ]
+    },
+    {
+      "id": "fe-06",
+      "title": "Typed content for projects and certificates, base64 image extraction and asset audit",
+      "wave": 1,
+      "owns": [
+        "frontend/src/content/projects.ts",
+        "frontend/src/content/certificates.ts",
+        "frontend/src/content/works-content.test.ts",
+        "frontend/public/images/portrait-faisal.webp",
+        "frontend/public/images/works-hero-gitpulse.webp",
+        "frontend/public/images/works-hero-uha.webp",
+        "frontend/public/images/works-hero-fitforliving.webp",
+        "frontend/public/images/works-hero-purebody.webp",
+        "frontend/scripts/extract-images.mjs",
+        "frontend/scripts/audit-assets.mjs",
+        "frontend/MISSING_ASSETS.md"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "Map 5724-6460 (11.5.11: projects.ts 5733-6223, certificates.ts 6223-6460), 6460-6500 (notes), 135-155 (section 8 assets: base64 table and remote assets), 4811-4964 (Works hero devices: which image each device shows). Reference: works.js data L7390-7477 (14 projects L7394-7433 with em dashes at L7396, L7399, L7402, L7405; 7 certificates L7445-7463; img() L7475), HTML L4167-4267 (hero devices), L4862-4923 (PureBody modal videos). Base64 lines L3480, L4200*, L4210*, L4191*, L4200* (never print them raw).",
+      "brief": "Goal: (1) projects.ts and certificates.ts as typed data; (2) the 5 base64 WebP images written to frontend/public/images/ as real files with the exact decoded bytes; (3) an audit that every asset the reference uses exists under frontend/public/.\n\nContent: 14 projects and 7 certificates in reference order with every field the reference uses (title, description word for word including the 4 em dashes, tags, filter category, image path under /imgs/ as in section 8 with the two names that contain spaces kept, live and code links, badges such as Live, the PureBody modal link \"purebody\" and its three videos /vedioes/ScreenRecording1-3.mp4, the Works hero device data: URL bar text, aria labels, image /images/works-hero-*.webp with alt text and intrinsic size from the section 8 table). Certificates: title, issuer, year, image, verify URL, filter category; no month, PDF or credential id (not in the reference). Keep the Soledeck live link and its Live badge (flag it with a comment; orchestrator decision). Keep filter label \"Sass App\" as written.\n\nImages: scripts/extract-images.mjs (node, no dependencies) reads each of the 5 lines, pulls the data:image/webp;base64 payload with a regex, Buffer.from(b64, \"base64\"), writes the file named in section 8, then prints name, byte size and the WebP dimensions read from the VP8/VP8L/VP8X header, and verifies they match the table (498x696, 1400x797, 1280x697, 1280x697, 402x884). Never echo the base64.\n\nAudit: scripts/audit-assets.mjs lists every imgs/ and vedioes/ path the reference uses (grep FH.asset calls, the works data, absolute https://faisalhanif.work/ URLs) plus everything public/sass-app.html and public/css/*.css load, and checks each file exists in frontend/public (decode %20). Write MISSING_ASSETS.md only if something is missing (what, where it is referenced, and whether the old site on git main had it; you cannot run git, so say \"not checked in git\" and let the orchestrator check).\n\nHow to work: the map sections already hold the typed TypeScript for these files, checked against the reference. Copy them, but open the cited reference lines for every string you are unsure of and fix the map when it is wrong (the reference wins; list the fix in the report). Write one file at a time.\nRules: pure data modules (no React, no \"use client\", no imports from components). Export the interfaces next to the data. Array order is data order (never sort). Em dashes only where the reference has them, written as \\u2014. Keep the reference quirks listed in .claude/plans/orchestrator-decisions.md (\"Content kept as the reference has it\"). Fields the reference does not have are left out (do not invent).\nTest: a Vitest file next to the data (owned by you) that uses referenceText() and collectStrings() from tests/unit/referenceText.ts to assert that every visible copy string (length >= 3) appears verbatim in the reference text, with a short explicit allowlist for derived values (paths, ids, keys, enum values), plus count checks (number of items per list) taken from the map.",
+      "checks": [
+        "node scripts/extract-images.mjs writes the 5 files; sizes and dimensions match the section 8 table; running it twice gives identical bytes",
+        "node scripts/audit-assets.mjs reports every referenced asset present (or MISSING_ASSETS.md lists the gaps)",
+        "npx vitest run src/content/works-content.test.ts passes: 14 projects, 7 certificates, 4 em dashes present, every image path exists on disk",
+        "npm run typecheck, eslint and prettier clean for owned files"
+      ]
+    },
+    {
+      "id": "fe-07",
+      "title": "Typed content: contact page, booking modal and chat knowledge",
+      "wave": 1,
+      "owns": [
+        "frontend/src/content/contact.ts",
+        "frontend/src/content/booking.ts",
+        "frontend/src/content/chat-knowledge.ts",
+        "frontend/src/content/contact-content.test.ts"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "Map 7483-7782 (11.6.9: contact.ts hero, clock card and dial 7524-7611, kicker and methods 7611-7670, Lahore map 7670-7685, form content 7685-7755, time zone to place table 7755-7782), 7782-7843 (notes), 8683-8867 (11.7.10 booking.ts: sessions, time zones, copy of all three screens, errors), 9133-9442 (11.7.15 chat knowledge), 9442-9554 (11.7.16 local engine: only its data tables belong here, the code goes to the chat brief), 176-212 (section 10 forms). Reference: contact HTML L4334-4594, booking HTML L4609-4836 and JS L6322-6704, chat HTML L4837-4860 and JS L6709-6861.",
+      "brief": "Goal: every string, option and table the Contact page, the booking modal and the chat widget need, as typed data. These files also seed the backend knowledge base, so keep them free of React and of browser APIs.\n\nMust include (check each against the map and the reference):\n- contact.ts: hero copy (\"Available for Projects\" pill, title, lead, stats 10+ and 100% and \"24h\" as written), clock card and dial labels, working hours text, section kicker, the 4 methods with their response time texts exactly as each appears (\"2-4 hours\" and \"24 hours\" both stay), the Lahore map aside, form labels, placeholders, project types (App Development, Web Application, E-commerce, Maintenance & Support, Consultation, Other), budgets with their descriptions, every validation message, status texts, toasts, the mailto subject and body templates, the done panel copy, and the time zone to place table for the globe. No WhatsApp.\n- booking.ts: BOOKING_SESSIONS quick (\"Quick Chat\", \"30 minutes\", 30, 15, i-zap) and deep (\"Technical Deep Dive\", \"60 minutes\", 60, 25, i-layers) with descriptions and features, max 10 sessions, the 23 fixed time zones with their labels, window 60 days, slot hours 9:00 to 17:00 PKT, all screen copy (pick, steps 1 to 3, recap, done for both API and mailto paths: \"Booking sent!\" and \"Request ready!\"), every error text including the two added by API_CONTRACT.md (\"That time was just taken. Please pick another slot.\" and \"That day is fully booked. Please pick another weekday.\"), toasts and live region texts, and the mailto subject and body templates.\n- chat-knowledge.ts: CHAT_EMAIL, CHAT_CV_URL, greeting, start chips, the 14 project entries, every reply and action exactly as map 9133-9442 (with **bold** and [label](url) markup), plus the keyword tables the local engine uses. Orchestrator decision: the CV is served from the same origin, so CHAT_CV_URL = \"/imgs/Faisal-CVS.pdf\" (not the absolute URL the map shows); note it in a comment. Keep \"2-4 hours\" and \"24 hours\" where each appears. Mark the Sarah Johnson and Emily Rodriguez review entries needsConfirmation: true.\n\nHow to work: the map sections already hold the typed TypeScript for these files, checked against the reference. Copy them, but open the cited reference lines for every string you are unsure of and fix the map when it is wrong (the reference wins; list the fix in the report). Write one file at a time.\nRules: pure data modules (no React, no \"use client\", no imports from components). Export the interfaces next to the data. Array order is data order (never sort). Em dashes only where the reference has them, written as \\u2014. Keep the reference quirks listed in .claude/plans/orchestrator-decisions.md (\"Content kept as the reference has it\"). Fields the reference does not have are left out (do not invent).\nTest: a Vitest file next to the data (owned by you) that uses referenceText() and collectStrings() from tests/unit/referenceText.ts to assert that every visible copy string (length >= 3) appears verbatim in the reference text, with a short explicit allowlist for derived values (paths, ids, keys, enum values), plus count checks (number of items per list) taken from the map.",
+      "checks": [
+        "npx vitest run src/content/contact-content.test.ts passes (copy strings found in the reference; 6 project types, 4 budgets, 2 sessions, 23 zones, 14 chat projects, 6 start chips)",
+        "npm run typecheck, eslint and prettier clean for owned files",
+        "No React or DOM imports in the three files (the backend can import them)",
+        "Report lists the CV URL deviation and every map correction"
+      ]
+    },
+    {
+      "id": "fe-08",
+      "title": "Motion system: constants, boot and reveal stores, reveal, split words, count up, magnetic, tilt, spotlight, parallax, smooth wheel scroll",
+      "wave": 1,
+      "owns": [
+        "frontend/src/lib/motion.ts",
+        "frontend/src/lib/dom.ts",
+        "frontend/src/lib/asset.ts",
+        "frontend/src/lib/boot.ts",
+        "frontend/src/lib/revealStore.ts",
+        "frontend/src/lib/smoothScroll.ts",
+        "frontend/src/lib/parallax.ts",
+        "frontend/src/lib/viewMotion.ts",
+        "frontend/src/lib/motion.test.ts",
+        "frontend/src/hooks/useReducedMotion.ts",
+        "frontend/src/hooks/useFinePointer.ts",
+        "frontend/src/hooks/useCanHover.ts",
+        "frontend/src/hooks/useReveal.ts",
+        "frontend/src/hooks/useCountUp.ts",
+        "frontend/src/lib/bindMotion.ts",
+        "frontend/src/hooks/motion-hooks.test.tsx",
+        "frontend/src/components/motion/**"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "Reference JS L5673-5698 (wait, morphHeight, swapViews) and L4932-5005 (helpers, split, reveal observer, count, spotlight, magnetic, tilt), L5107-5139 (smooth wheel scroll, parallax); CSS L165-191 (spotlight, stat-num, reveal variants, split words), L349-350, L357-362. Map 1190-1234 (11.2.0 source index), 1425-1570 (11.2.4 split, 11.2.5 reveal, 11.2.6 counters, 11.2.7 spotlight, 11.2.8 magnetic, 11.2.9 tilt), 1831-1879 (11.2.16 smooth scroll, 11.2.17 parallax), 1925-1941 (reduced motion), 2121-2153 (lib/motion.ts constants), 2153-2217 (porting plan: runs once vs every show, reveal gating), 2217-2255 (notes 18-25, 30), 884-913 (reveal system CSS states), 759-778.",
+      "brief": "Goal: port the reference motion core (window.FH helpers) into small typed modules that behave exactly like it.\n\nBuild:\n- lib/motion.ts: every constant of map 2121-2153, unrounded. lib/dom.ts ($, $$, lerp, clamp). lib/asset.ts: asset(p) = \"/\" + p.\n- hooks/useReducedMotion, useFinePointer (\"(pointer:fine)\"), useCanHover (\"(hover:hover)\"): read the media query ONCE per app load (module cache), like FH.reduce and FH.fine. False during SSR; never change server markup with them.\n- lib/boot.ts: tiny external store (useSyncExternalStore) with loaded and motionReady, markLoaded() (sets loaded, then motionReady after 250ms, 0 with reduced motion), useBootState(), whenLoaded(cb). fe-12 calls markLoaded() from the preloader timer.\n- lib/revealStore.ts: module level Set of revealed keys that survives route changes (key = pathname + stable id).\n- hooks/useReveal + components/motion/Reveal.tsx: one shared IntersectionObserver (rootMargin \"0px 0px -8% 0px\", threshold .12, one shot). <Reveal as variant delay ...> renders data-reveal (empty string for the default variant) and style --d; adds is-in when it intersects, as React state merged into its className (never classList, so re-renders keep it), but only after motionReady on first load (pages mounted later observe at once); with reduced motion or a key already in revealStore it renders is-in from the first paint. Also staggerDelay(base, step, k) and a <RevealGroup as stagger delay> parent that renders data-stagger / data-delay and gives its direct <Reveal> children --d exactly like L4966-4978 (direct children only, own data-delay overrides, default step 70).\n- components/motion/SplitWords.tsx: server renderable; splits text into span.w > span with --d = index x 55ms, a whole .serif / .grad-text child counts as one word (L4941-4960). is-in goes on the element that carries data-split, like the reference.\n- hooks/useCountUp + components/motion/CountUp.tsx: data-count, data-prefix, data-suffix, data-duration (default 1600), decimals from the string, easing 1-(1-p)^4 per rAF, initial text \"0\", final text at once with reduced motion or when already revealed. Starts on its own intersect.\n- lib/bindMotion.ts: magnetic and tilt by DOCUMENT DELEGATION on [data-magnetic] (strength = parseFloat(value) || 0.25) and [data-tilt] (max = parseFloat(value) || 5). Only on fine pointers without reduced motion and only after motionReady (the reference binds at preloader done + 250ms). Write the inline transform strings exactly like L4995-5005 (toFixed(1) px, perspective(900px) rotateX/rotateY toFixed(2) and translateY(-4px)), clear it on leave, add no easing (the element CSS transition does it).\n- lib/smoothScroll.ts: the lerped wheel scroller of L5107-5127 (fine pointer and no reduced motion, read once; adds html.smooth-on; native scroll inside [data-native-scroll] and while body.modal-open), with smoothTo(y), smoothReset(), isSmoothOn().\n- lib/parallax.ts: data-parallax on .page.is-current elements using style.translate (not transform), factor default .1, frozen beyond 200px outside the viewport, refreshParallax() for route shows.\n- lib/viewMotion.ts: wait(ms) (0 with reduced motion), morphHeight(el, change, dur = 560) and swapViews(container, from, to, dir, axis) ported exactly from reference L5673-5698 (used by the contact form, booking and chat).\n- components/motion/GlobalMotion.tsx (client, mounted once by the root layout in fe-13): installs the spotlight pointermove listener (L4989-4993: every pointer type, ignores reduced motion, sets --mx/--my), bindMotion, smooth scroll and parallax; cleans up on unmount.\n\nKeep the reference quirks listed in map 2217-2255 (notes 20 to 25). Test pure logic in lib/motion.test.ts (stagger math, count text formatting, split output, revealStore) and the components with Testing Library in hooks/motion-hooks.test.tsx (mock IntersectionObserver and matchMedia).",
+      "checks": [
+        "npx vitest run src/lib/motion.test.ts src/hooks/motion-hooks.test.tsx passes",
+        "npm run typecheck, eslint and prettier clean for owned files",
+        "Reveal renders data-reveal=\"\" for the default variant (never \"true\") and --d in ms; SplitWords output matches L4941-4960 for \"Faisal\" + <span class=\"serif grad-text\">Hanif</span>",
+        "Every listener, observer, rAF and timer is cleaned up on unmount (tests cover Reveal, CountUp and the delegated magnetic and tilt handlers)",
+        "No animation library added; constants match map 2121-2153 exactly"
+      ]
+    },
+    {
+      "id": "fe-09",
+      "title": "Modal and toast system: ModalProvider, Modal shell, focus trap, ToastProvider, Toast",
+      "wave": 1,
+      "owns": [
+        "frontend/src/components/providers/ModalProvider.tsx",
+        "frontend/src/components/ui/Modal.tsx",
+        "frontend/src/components/providers/ToastProvider.tsx",
+        "frontend/src/components/ui/Toast.tsx",
+        "frontend/src/lib/focusTrap.ts",
+        "frontend/src/components/providers/modal-toast.test.tsx"
+      ],
+      "deps": [
+        "fe-01"
+      ],
+      "refs": "Reference markup L4609-4613 (booking modal shell), L4862-4867 (PureBody shell), L4926 (toast); CSS L266-284; JS L5018-5032 (openModal, closeModal, click delegation, Esc, toast), L6693-6703 (FH.openBooking), L6325 (data-native-scroll on the booking panel). Map 666-687 (modal shell), 1332-1390 (modal shell contract, FH.openBooking hook up), 1592-1642 (11.2.11 modals, 11.2.12 toast), 2217-2255 (notes 9 and 33), 7885-7950 (11.7.1 every Book button, 11.7.2 booking modal shell). Orchestrator decisions: focus trap, focus return, Esc restores focus only when a modal closed, chat Book action returns focus to the chat button.",
+      "brief": "Goal: the React replacement for FH.openModal / closeModal / openBooking / toast, keeping the reference markup, classes, timings and delegation so feature markup can keep data-open, data-close and data-book attributes.\n\nModalProvider (client): context with open(id, opts?: { payload?: unknown; returnFocus?: HTMLElement | null }), close(id?), isOpen(id), payloadOf(id), plus a subscribe API so Modal instances re-render. Behaviour:\n- open: remember the opener (document.activeElement, or opts.returnFocus), set the modal open, add body.modal-open, after 60ms focus the first [autofocus],button,input,select,textarea,a[href] inside the modal with preventScroll (the close button for both modals).\n- close(id?) closes that modal or every open one; removes body.modal-open when none is left; restores focus ONLY when a modal actually closed.\n- Document click delegation in the bubble phase, first match wins: [data-close] closes the modal that contains it; [data-open] preventDefault + open(value); [data-book] preventDefault + open(\"booking\", { payload: { type: value === \"deep\" ? \"deep\" : \"quick\" } }). Esc closes every open modal.\n- Focus trap: while a modal is open, Tab and Shift+Tab cycle inside its panel (lib/focusTrap.ts, tested). Nothing visible changes.\nModal (client): <Modal id className labelledBy onOpen onClose panelProps children> renders exactly: div.fh-modal (+ className, id, aria-hidden) > div.fh-modal__scrim[data-close] + div.fh-modal__panel (role=\"dialog\", aria-modal=\"true\", aria-labelledby, panelProps such as data-native-scroll) > button.fh-modal__close[data-close] with the i-close icon and its aria-label from the reference, then children. Toggle is-open like the reference (closing is instant: no delayed unmount). Call onOpen synchronously on open (fh:open) and onClose on close (fh:close). Keep children mounted while closed (the reference keeps them in the DOM).\nToastProvider + Toast: useToast() returns toast(msg): set text, add is-on, restart a 3200ms timer; the text is not cleared on hide. Toast renders div.toast#toast role=\"status\" aria-live=\"polite\" and is always mounted (fe-13 places it last in the layout).\n\nIcons: render <svg class=\"i\"><use href=\"#i-close\"/></svg> directly (the Icon component from fe-12 may not exist yet). Copy the exact attributes of L4609-4613 and L4862-4867 (check which attributes differ between the two shells and expose them as props). Test with Testing Library: delegation, payload for data-book=\"deep\", Esc, focus return only after a real close, focus trap cycling, toast timer.",
+      "checks": [
+        "npx vitest run src/components/providers/modal-toast.test.tsx passes",
+        "npm run typecheck, eslint and prettier clean for owned files",
+        "Rendered Modal markup matches reference L4609-4613 and L4862-4867 attribute for attribute (report any difference)",
+        "No timers or document listeners leak after unmount (tested)"
+      ]
+    },
+    {
+      "id": "fe-10",
+      "title": "Typed API client for chat, contact and booking, plus the mailto and string helpers",
+      "wave": 1,
+      "owns": [
+        "frontend/src/lib/api.ts",
+        "frontend/src/lib/api.test.ts",
+        "frontend/src/lib/mailto.ts",
+        "frontend/src/lib/strings.ts",
+        "frontend/src/lib/mailto-strings.test.ts"
+      ],
+      "deps": [
+        "fe-01",
+        "fe-04"
+      ],
+      "refs": "API_CONTRACT.md (whole file, binding). Reference L5659-5672 (contact.js helpers esc, pad, ymd, parseYmd, openMail). Map 176-212 (section 10 forms and payloads), 213-227 (errata for section 10), 9050-9105 (11.7.13 chat JS: C4 sending, C5 getting a reply). Reference JS L6907-6934 (chat request, 12s timeout, reply parsing, fallback), L6285 and L6289-6306 (contact hook call and error path), L6642-6691 (booking hook call, bookingData L6643-6648, error path), L19 (FH_HOOKS). BACKEND_SPEC.md for status codes only.",
+      "brief": "Goal: one small, typed, framework free module (no React) that the contact form, booking modal and chat use in place of window.FH_HOOKS. Bodies are exactly the reference FH_HOOKS payloads plus the contract extras.\n\nExports:\n- API_BASE (process.env.NEXT_PUBLIC_API_URL trimmed, no trailing slash, or null) and API_ENABLED (boolean). When disabled, callers use the reference mailto flow or the local chat responder; the client itself never falls back.\n- class ApiError extends Error { code: \"VALIDATION_ERROR\" | \"RATE_LIMITED\" | \"SLOT_TAKEN\" | \"UPSTREAM_ERROR\" | \"NOT_FOUND\" | \"INTERNAL\" | \"TIMEOUT\" | \"NETWORK\" | \"DISABLED\"; status: number; fields?: Record<string, string>; retryAfter?: number }.\n- Types ChatTurn, ChatRequest, ContactRequest, BookingRequest, BookingResponse, SlotsResponse, BookingConfig copied from API_CONTRACT.md (projectType and budget as string unions).\n- postChat(body, { signal? }): POST /api/chat, timeout 12000ms (AbortController, combined with the caller signal). Parse like L6923-6929: JSON reply, then message, text, content, answer, choices[0].message.content; plain text bodies are accepted as the reply. Empty reply = error. Throw ApiError on non 2xx (read the envelope), timeout and network errors.\n- postContact(body): POST /api/contact, 15000ms. body includes website (honeypot, usually \"\") and startedAt (ms).\n- postBooking(body, idempotencyKey): POST /api/booking with header Idempotency-Key, 15000ms; 409 becomes ApiError code SLOT_TAKEN.\n- getBookingSlots(date, session): GET /api/booking/slots?date=&session=, 8000ms, returns the slots array. getBookingConfig(): GET /api/booking/config, 8000ms.\n- newIdempotencyKey(): crypto.randomUUID().\nCommon: JSON headers, credentials omitted, no retries, Retry-After parsed into seconds, never log bodies (they hold personal data). Plain English error messages without em dashes.\n\nAlso port the contact.js helpers (reference L5662-5672) that the contact form, booking and chat share: lib/strings.ts esc(s), pad(n), ymd(d), parseYmd(s) and EMAIL_RE (/^[^\\s@]+@[^\\s@.]+(\\.[^\\s@.]+)*\\.[A-Za-z]{2,}$/, map 7847-7885); lib/mailto.ts openMail(subject, body) building mailto:<site email>?subject=&body= with encodeURIComponent and opening it through a hidden anchor click exactly like the reference, returning the href.\nTest with a mocked global fetch and fake timers: disabled mode, every reply shape, the 12s timeout, 429 with Retry-After, 409 SLOT_TAKEN, validation fields passthrough, network failure, caller abort.",
+      "checks": [
+        "npx vitest run src/lib/api.test.ts src/lib/mailto-strings.test.ts passes",
+        "npm run typecheck, eslint and prettier clean for owned files",
+        "Request bodies match API_CONTRACT.md field for field (test asserts the exact JSON sent)",
+        "No secrets or server env read; only NEXT_PUBLIC_API_URL"
+      ]
+    },
+    {
+      "id": "fe-11",
+      "title": "Page transitions: TransitionProvider (curtain router), Curtain, TransitionLink, NextPageLink, hash redirects",
+      "wave": 1,
+      "owns": [
+        "frontend/src/components/providers/TransitionProvider.tsx",
+        "frontend/src/hooks/usePageTransition.ts",
+        "frontend/src/components/layout/Curtain.tsx",
+        "frontend/src/components/layout/NextPageLink.tsx",
+        "frontend/src/components/ui/TransitionLink.tsx",
+        "frontend/src/lib/routes.ts",
+        "frontend/src/lib/hashRedirect.ts",
+        "frontend/src/lib/routes.test.ts",
+        "frontend/src/components/providers/transition.test.tsx"
+      ],
+      "deps": [
+        "fe-01",
+        "fe-04",
+        "fe-08",
+        "fe-09"
+      ],
+      "refs": "Reference HTML L3301-3305 (curtain), CSS L293-347 (router, curtain, next page link), JS L5042-5105 (PAGES, META, show, jumpTop, scrollToEl, go, click interception, popstate, initial page, next page links). Map 548-597 (curtain and next page markup), 863-884 (curtain states), 1266-1347 (11.2.2 shell markup, curtain), 1662-1831 (11.2.14 router and curtain, 11.2.15 next page links), 1941-1955 (11.2.22 hero timing contract), 2153-2217 (porting plan: TransitionProvider steps 1 to 7, what each page subscribes to), 2217-2255 (notes 1-17, 26-29, 32-33). Orchestrator decisions: popstate curtain or fallback, dropped click changes nothing, jumpTop, hash redirects, rail re-measure is fe-13.",
+      "brief": "Goal: reproduce the reference hash router on top of the App Router: the curtain sequence (560ms cover, 140ms hold, 640ms reveal, clicks blocked 1340ms), instant jump to top, anchor scrolling with the 84/32px offset, Back and Forward, old hash links, and the page facing hooks. Build it exactly as the porting plan in map 2153-2217 describes; read it fully first.\n\nBuild:\n- lib/routes.ts: PageId <-> path map from src/content/site.ts, resolveTarget(href) -> { pageId, path, anchorId }, and ANCHOR_PAGE: every element id inside each reference page section (about L3349-3804, profile L3805-4165, works L4166-4267, approvals L4268-4333, contact L4334-4594) mapped to its page. Generate the list once with a script, hard code it, and have routes.test.ts re-derive it from the reference file and compare.\n- TransitionProvider (client): state machine idle -> covering -> swapping -> holding -> revealing -> idle with a busy ref; go(target) closes open modals (useModal), same route targets scroll (scrollToEl or smooth to 0) and pushState the #anchor, reduced motion swaps with no curtain, otherwise the curtain sequence with router.push(path, { scroll: false }) at T=560 and hold/reveal counted from the commit (usePathname change). On commit: jumpTop (scroll-behavior auto around scrollTo(0,0), smoothReset()), then one frame later window resize event and refreshParallax(). All five routes prefetched after boot. A click while busy is dropped (URL unchanged).\n- Capture phase window click listener for raw a[href^=\"#\"] links, ported from L5082-5092 (modifier and button test, claim wrapper, blur rail links after a mouse click, data-no-route). href=\"#\" does nothing.\n- Back and Forward: try the full curtain (capture popstate, stop it, cover 560ms, re-dispatch with a pass flag, jumpTop on commit, hold 140, reveal 640, then the anchor). If that is not robust, use the decided fallback (curtain appears covering, hold 140, reveal 640) and say which one you shipped.\n- lib/hashRedirect.ts + provider mount step: old links /#about -> /, /#profile|#works|#approvals|#contact -> route, any other id -> the route of the page that holds it, then scrollToEl after 1600ms like L5099; unknown ids stay with no scroll.\n- hooks/usePageTransition.ts: useNavigate() { go, scrollToEl }, usePageShow(cb), useCurtainLift(cb), useIsLeaving(), usePageId().\n- Curtain.tsx: markup of L3301-3305 (#curtain, label with #curtainNum \"02 / 05\" and the serif title), classes is-on / is-in / is-out driven by the provider. The leaving page root gets .is-leaving: set it on the DOM element with [data-page] (pages are server components).\n- NextPageLink.tsx: <NextPageLink from=id /> renders div.wrap > nav.page-next exactly as L5101-5105 builds it (label \"Next page · 02\", counter \"1 / 5\", title plain + span.serif, i-arrow-right icon, data-reveal=\"\"; the href is the real next route path, not the reference \"#<next>\", through TransitionLink) using Reveal from fe-08 and data from site.ts; clicks go through go().\n- TransitionLink.tsx: next/link with onNavigate preventDefault + go(href); modified clicks keep browser behaviour.\n\nNo next dev in this brief (fe-13 mounts the provider and checks it live). Test with Testing Library and a mocked next/navigation router and fake timers: exact timing of classes, dropped clicks, same page anchors, reduced motion path, hash redirects, resolveTarget.",
+      "checks": [
+        "npx vitest run src/lib/routes.test.ts src/components/providers/transition.test.tsx passes (timings 560/140/640 asserted with fake timers)",
+        "npm run typecheck, eslint and prettier clean for owned files",
+        "Curtain and NextPageLink markup match L3301-3305 and L5101-5105 output attribute for attribute",
+        "Report says whether the full popstate curtain or the fallback shipped, and why"
+      ]
+    },
+    {
+      "id": "fe-12",
+      "title": "Theme, fonts, icon sprite and the static shell pieces: preloader and boot, ambient background, cursor glow, scroll progress",
+      "wave": 1,
+      "owns": [
+        "frontend/src/app/fonts.ts",
+        "frontend/src/lib/themeBoot.ts",
+        "frontend/src/lib/scrollFrame.ts",
+        "frontend/src/components/providers/ThemeProvider.tsx",
+        "frontend/src/components/layout/ThemeToggle.tsx",
+        "frontend/src/components/ui/Icon.tsx",
+        "frontend/src/components/ui/IconSprite.tsx",
+        "frontend/src/components/providers/AppShell.tsx",
+        "frontend/src/components/layout/Preloader.tsx",
+        "frontend/src/components/layout/AmbientBackground.tsx",
+        "frontend/src/components/layout/CursorGlow.tsx",
+        "frontend/src/components/layout/ScrollProgress.tsx",
+        "frontend/src/components/layout/shell.test.tsx"
+      ],
+      "deps": [
+        "fe-01",
+        "fe-04",
+        "fe-08"
+      ],
+      "refs": "Reference head L1-20 (fonts, theme boot L12-16, theme-color), L3226 (js class), sprite L3229-3292 (pl-g gradient L3231, 59 symbols L3232-3290), preloader L3294-3299, progress L3306, ambient L3308-3314, cursor glow L3315, theme toggle buttons L3329 and L3336; CSS L193-264, L352-354; JS L5007-5016 (setTheme, circular reveal), L5034-5037 (progress), L5141-5153 (cursor glow, boot, preloader). Map 350-410 (fonts), 441-508 (head, boot, sprite conventions), 526-548, 597-635 (preloader, progress, ambient, glow), 820-837 and 913-924 (theme toggle and reveal), 1146-1190 (font and hydration traps), 1234-1266 (boot order), 1570-1592 (11.2.10), 1642-1662 (progress), 1879-1925 (glow, preloader, ambient). Orchestrator decisions: fonts, aria-pressed, theme-color in the boot script, stop idle rAF loops.",
+      "brief": "Goal: everything the root layout needs before navigation: fonts, the no-flash theme, the icon sprite, and the always-mounted visual shell pieces, each matching the reference markup and timing.\n\nBuild:\n- app/fonts.ts: next/font/google Plus_Jakarta_Sans weight [\"400\",\"500\",\"600\",\"700\",\"800\"], Instrument_Serif weight \"400\" style [\"italic\"] only (decision), JetBrains_Mono weight [\"400\",\"500\"]; subsets latin, display swap; variables --ff-jakarta, --ff-instrument, --ff-jetbrains (tokens.css from fe-02 reads them). Export fontVariables (the class string for <html>).\n- lib/themeBoot.ts: the inline head script as a string: exactly L12-16 (localStorage fh-theme in try/catch, else prefers-color-scheme), plus documentElement.classList.add(\"js\") (L3226), plus setting meta[name=theme-color] to #050f0c for dark (decision; light stays #0e6655).\n- ThemeProvider + ThemeToggle: port L5007-5016 (setTheme writes data-theme, localStorage, theme-color meta; circular reveal with document.startViewTransition from the click point when supported and not reduced motion; dispatch nothing else). ThemeToggle renders the exact button markup of L3329 (rail) and L3336 (top bar) via a variant prop, with aria-pressed reflecting dark (decision; nothing visible changes).\n- IconSprite.tsx: the shell sprite L3229-3292 verbatim as a server component (hidden svg, defs with linearGradient#pl-g and all 59 symbols); add focusable=\"false\". Icon.tsx: <Icon name className fill? /> -> <svg class=\"i\"><use href=\"#name\"/></svg> (i--fill variant).\n- Preloader.tsx: server markup of L3294-3299. AppShell.tsx (client): after hydration start the 1250ms timer (0 with reduced motion), then add .is-done on #preloader, html.is-loaded and call markLoaded() from lib/boot (motionReady follows 250ms later); run the first progress and top bar update; never show the preloader again on client navigation; clear timers on unmount. AppShell also renders children (providers wrap it in fe-13).\n- AmbientBackground.tsx: L3308-3314 markup (server). CursorGlow.tsx: L3315 markup + the lerped loop of L5141-5144 (fine pointer and no reduced motion only, starts at viewport centre, adds html.has-pointer on first move); stop the rAF loop when it has settled and restart on the next pointer move (decision), pixels identical.\n- lib/scrollFrame.ts: one passive scroll listener throttled to one rAF, subscribe(cb) for ScrollProgress and the top bar (fe-13). ScrollProgress.tsx: #progress bar, transform scaleX(scrollY / (scrollHeight - innerHeight)) unrounded, no resize update (reference quirk).\n\nTest in shell.test.tsx: theme boot script result for stored, dark preference and default cases, toggle writes storage and aria-pressed, preloader timer sets classes and calls markLoaded, sprite contains 59 symbols plus pl-g.",
+      "checks": [
+        "npx vitest run src/components/layout/shell.test.tsx passes",
+        "npm run typecheck, eslint and prettier clean for owned files",
+        "IconSprite symbol ids equal the section 7 list (script compares with reference L3232-3290)",
+        "Preloader, ambient, glow, progress and toggle markup match the reference attribute for attribute",
+        "fonts.ts loads exactly the decided weights and styles (no variable range)"
+      ]
+    },
+    {
+      "id": "fe-13",
+      "title": "Root layout, navigation (rail, top bar, dock), footer, SEO helpers and live shell check",
+      "wave": 1,
+      "owns": [
+        "frontend/src/app/layout.tsx",
+        "frontend/src/components/layout/Rail.tsx",
+        "frontend/src/components/layout/TopBar.tsx",
+        "frontend/src/components/layout/Dock.tsx",
+        "frontend/src/components/layout/Footer.tsx",
+        "frontend/src/components/layout/FooterYear.tsx",
+        "frontend/src/lib/seo.ts",
+        "frontend/src/components/seo/PersonJsonLd.tsx",
+        "frontend/src/components/layout/nav.test.tsx"
+      ],
+      "deps": [
+        "fe-02",
+        "fe-03",
+        "fe-04",
+        "fe-06",
+        "fe-08",
+        "fe-09",
+        "fe-11",
+        "fe-12"
+      ],
+      "refs": "Reference L1-20 (head), L3224-3348 (body order, rail L3318-3330, top bar L3333-3339, dock L3340-3346, main.site L3348), footer L4597-4605 inside main (L4606 closes main), toast L4926; CSS L111-115, L212-250, L286-290; JS L5034-5041 (top bar state, setActive and rail indicator), L5149 (year). Map 510-526 (body order and stacking), 635-666 (main, footer, toast), 776-861 (nav items, rail, theme toggle, top bar, dock), 1266-1347 (shell markup), 1642-1662 (11.2.13), 2153-2170 (porting plan: layout order, head script, html attributes), 1146-1190 (hydration traps). Orchestrator decisions: rail indicator re-measure on resize and when the rail becomes visible, footer year server + client update, data-scroll-behavior.",
+      "brief": "Goal: assemble the persistent shell in src/app/layout.tsx from the wave 1 pieces and build the navigation and footer, then check the shell live against the reference.\n\nlayout.tsx (server): import the 9 CSS files once in the order of sharedDecisions section 3. <html lang=\"en\" data-theme=\"light\" data-scroll-behavior=\"smooth\" suppressHydrationWarning className={fontVariables}>; in <head> the themeBoot inline script (fe-12) before paint. Export metadata (from lib/seo: default title, description, metadataBase) and viewport (width device-width, initial scale 1, viewport-fit cover, themeColor #0e6655). Body order exactly like the reference (map 510-526): IconSprite, Preloader, Curtain, ScrollProgress, AmbientBackground, CursorGlow, Rail, TopBar, Dock, <main className=\"site\" id=\"site\">{children}<Footer/></main>, then the optional parallel route slots {booking}{chat}{purebody} (typed as optional React.ReactNode props; the folders arrive in wave 2), then Toast; wrapped in ThemeProvider, ToastProvider, ModalProvider, TransitionProvider, AppShell and GlobalMotion. Add PersonJsonLd. Keep client boundaries small (providers are client, markup stays server where possible).\n\nRail.tsx, TopBar.tsx, Dock.tsx: exact markup of L3318-3330, L3333-3339, L3340-3346 from site.ts data (5 links with icons and data-nav, the logo \"back to top\" link, ThemeToggle variants, the top bar Book button with data-book=\"\"). Page links are TransitionLink with the real route paths (\"/profile\" instead of the reference \"#profile\"; PRD real routes, crawlable, nothing visible changes); the logo and the footer \"Back to top\" link point to \"/\", and go(\"/\") on About smooth scrolls to the top like the reference #about. Active item from usePageId(); .is-active on rail and dock links; rail indicator translateY(offsetTop) measured in useLayoutEffect on route change AND re-measured on resize and when the rail becomes visible (decision). TopBar toggles is-scrolled at scrollY > 12 through lib/scrollFrame.\nFooter.tsx: L4597-4605 markup and copy from site.ts; the year is rendered on the server and FooterYear (client leaf) updates it after mount; the \"Back to top\" link goes to \"/\" (see above).\nlib/seo.ts: rootMetadata and pageMetadata(id) (title = site.ts docTitle, reference description, alternates.canonical = route path, openGraph and twitter basics with siteName, locale en_US, type website; images come from the file conventions fe-27 adds). PersonJsonLd.tsx: schema.org Person (name, jobTitle, url, email, address Lahore PK, sameAs from socials.ts, image /images/portrait-faisal.webp).\n\nLive check (you are the only wave 1 brief allowed to run next dev, on port 3000; stop it when done). No pages exist yet, so check the shell pieces on the not found page: npm run visual -- --route / --width all --theme both --selector \".rail\" (and \".topbar\", \".dock\" at 1023px and below). Compare element screenshots, fix your markup, and report CSS problems for fe-02. Confirm no console errors from the shell and that the theme toggle, top bar state and preloader behave like the reference.",
+      "checks": [
+        "npm run typecheck, npm run lint and npm run test pass for the whole app",
+        "Element diffs for .rail (1440, 1280, 1024), .topbar and .dock (891, 768, 390, 360) are 0.5% or less in both themes",
+        "html keeps js, is-loaded, smooth-on and has-pointer after navigation and re-renders (no React className churn); no hydration warnings in the console",
+        "Rail indicator moves to the right item after widening from 390px to 1440px",
+        "nav.test.tsx covers active state, indicator measurement and the footer year"
+      ]
+    },
+    {
+      "id": "fe-14",
+      "title": "About page route and hero (name split, rolling role, socials, stats, orbital portrait)",
+      "wave": 2,
+      "owns": [
+        "frontend/src/app/page.tsx",
+        "frontend/src/features/about/hero/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-04",
+        "fe-06"
+      ],
+      "refs": "Reference HTML L3349-3494 (page root L3349, About sprite L3352-3362, hero L3364-3494, portrait base64 at L3480), CSS L365-613 and the hero parts of L828-969 (responsive 901-1180 L829, height L835, stack at 900 L855, 380 L898, reduced motion L959), JS L5156-5467 (page activity, CV link, hero visibility, role typer, orbit loop, entrance, mouse parallax, scroll exit). Map 2255-2316 (11.3.0 page frame and reveal table), 2316-2479 (11.3.1 hero), 2684-2702 (responsive and reduced motion), 2702-2778 (11.3.9 JS behaviours for the hero), 3173-3411 (about.ts), 3411-3443 (notes), 1941-1955 and 2153-2217 (page show timing: About orb intro).",
+      "brief": "Goal: the / route with the About page root and a pixel identical hero. The lower sections come from fe-15.\n\npage.tsx (server): export metadata = pageMetadata(\"about\"); render <section id=\"about\" className=\"ab page is-current\" data-page=\"about\" aria-labelledby=\"ab-name\"> with the About brand sprite (L3352-3362, ab-ic-aws text gets style font-family:var(--font-sans), decision), <AboutHero />, <AboutLower /> imported from \"@/features/about/lower/AboutLower\" (fe-15 creates it first), and <NextPageLink from=\"about\" />.\n\nHero (features/about/hero/): greeting p.ab-hello, h1.ab-name#ab-name with SplitWords (\"Faisal\" then the .serif.grad-text \"Hanif\" row with its drawn line), the role line with the rolling role (typer timings from L5184*-5315), Download CV (href asset(\"imgs/Faisal-CVS.pdf\"), download) and Book Meeting (data-book=\"\"), 5 socials, dl.ab-stats (data-stagger 90, base 600) with CountUp 3+, 10+, 3+, the orbital portrait with 8 badges .ab-sat positioned by data-a angles, the orbit loop, orbit entrance (.is-pre, intro timing: intro(0) if already loaded, intro(120) when is-loaded arrives, intro(480) on later shows via usePageShow), mouse parallax (fine pointer), the hero scroll exit, hero visibility idling loops off screen, and the scroll cue shown with html.is-loaded. Reveal delays per the table in map 2261-2316.\nPortrait: next/image of /images/portrait-faisal.webp, 498x696, alt \"Portrait of Faisal Hanif\", priority and fetchPriority high (the About LCP), sizes matching the rendered width; the rendered box must equal the reference img box.\nMotion: stop loops and timers on unmount and while the hero is off screen; reduced motion shows the end state like the reference; the stack at 900px keeps copy first and orbit below.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route / --selector \"#ab-hero\" --width all --theme both: every diff 0.5% or less",
+        "By eye (--motion and --hover): orbit badges and entrance end state, rolling role, socials hover, CV and Book buttons hover and focus, stats count up final text",
+        "Book Meeting opens the booking modal once fe-25 exists (data-book=\"\"); CV link downloads /imgs/Faisal-CVS.pdf",
+        "Leaving and returning to / replays the orb intro but not the reveals"
+      ]
+    },
+    {
+      "id": "fe-15",
+      "title": "About lower sections: marquee, Get to Know Me bento, services, testimonials, pricing and the Talk first aside",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/about/lower/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-04"
+      ],
+      "refs": "Reference HTML L3496-3802 (marquee L3496-3509, bento #ab-know L3511-3578, services L3580-3688, testimonials L3690-3739, pricing and aside L3741-3802), CSS L615-826 plus the matching parts of L828-969, JS L5469-5644 (Lahore clock, copy email, marquee, services accordion and scroll progress, testimonials carousel, pricing sweep). Map 2261-2316 (reveal and stagger table), 2479-2702 (11.3.2 to 11.3.8), 2778-2850 (11.3.9 JS for these parts), 2850-3411 (content), 3411-3443 (notes: the services stagger that is cancelled, etc.).",
+      "brief": "Goal: everything on the About page after the hero, pixel identical. FIRST STEP: create features/about/lower/AboutLower.tsx exporting AboutLower (it can render an empty fragment at first); fe-14 imports it from \"@/features/about/lower/AboutLower\".\n\nBuild (server markup first, client leaves only where needed):\n- Marquee (div.ab-marquee): drift that speeds up and changes direction with scroll velocity (L5498-5532), re-measure on resize, paused off screen, still under reduced motion only as the reference is.\n- Get to Know Me bento (div.wrap.ab-block#ab-know): section head with SplitWords, 4 cards with the ab-clip animation and data-stagger 90; email card with copy to clipboard (toast \"Email copied to clipboard\", on failure the address itself); phone; location card with the live Lahore clock (PKT, UTC+5, no DST, hourCycle h23 per decision; the timer cleaned up); availability card.\n- Services (What I Do Best): the index list and 4 article.ab-svc with the accordion (one open at a time, L5534-5549) and the scroll progress (L5551-5574). Keep the cancelled stagger quirk from the notes.\n- Testimonials: carousel with controls and the \" / 03\" counter exactly as L5577-5634 (timers, swipe or keys as the reference has them), reveal scale on the carousel.\n- Pricing: plan card with CountUp to 25 over 1400ms, the border light sweep only while on screen (L5636-5644), and aside.ab-side \"Talk first\" with its two session buttons (data-book=\"\" and data-book=\"deep\" as the reference assigns them) and the side card; data-stagger 90.\nAll re-measure hooks run on the resize event the TransitionProvider dispatches after each show. Content from about.ts, services.ts, testimonials.ts, pricing.ts, site.ts.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route / --selector \"<each block root: .ab-marquee, #ab-know, .ab-services, .ab-tst, .ab-price>\" --width all --theme both: every diff 0.5% or less",
+        "By eye: bento hover, copy email toast, services accordion open and closed, carousel next and previous states, plan card hover and sweep, aside buttons hover",
+        "Lahore clock, carousel and sweep timers stop on unmount (unit tested)"
+      ]
+    },
+    {
+      "id": "fe-16",
+      "title": "Profile route and hero: the resume desk with three sheets, entrance, float, tilt, scroll exit",
+      "wave": 2,
+      "owns": [
+        "frontend/src/app/profile/page.tsx",
+        "frontend/src/features/profile/hero/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-05"
+      ],
+      "refs": "Reference HTML L3805-3932 (root L3805, hero header.page-hero.pf-hero#pf-hero L3807-3932, sheets L3838-3924, seal L3911-3919, hint L3923), CSS L1774-2057 (frame L1781-1821, desk L1823-1942, entrance L1956-1978, float L1983-1986, tablet L1988*-2024, phone L2025*-2057) plus shell L300-301, JS L7020-7163 (helpers, entrance and replay, scroll exit, desk tilt, sheet jump and flash, CV link) and L7362-7379 (lifecycle). Map 3443-3512 (page frame), 3512-3789 (11.4.1 to 11.4.4), 4039-4098 (11.4.11 A to E), 4159-4164 (L lifecycle), 4170-4334 (profile.ts), 4598-4677 (notes), 1941-1955 (profile timing: afterCurtain 150ms, fallback 1600ms).",
+      "brief": "Goal: the /profile route with the page root and a pixel identical hero (\"the resume as an object\"). The body comes from fe-17.\n\npage.tsx (server): metadata = pageMetadata(\"profile\"); <section id=\"profile\" className=\"section pf page is-current\" data-page=\"profile\" aria-labelledby=\"pf-title\"> containing <ProfileHero /> and <ProfileBody /> imported from \"@/features/profile/body/ProfileBody\" (fe-17 creates it first), then <NextPageLink from=\"profile\" />.\n\nHero (features/profile/hero/): copy column (eyebrow, h1#pf-title, lead, CTAs: the .pf-cv Download CV link to asset(\"imgs/Faisal-CVS.pdf\") with download and data-magnetic (same origin, decision) and the .pf-goexp \"View experience\" link to #pf-exp; hero stats dl.pf-hstats with the .pf-count values), the desk with its three sheets (Education back, Experience middle, Expertise front) with every value from profile.ts, desk rings using the #pf-ring-g gradient (rendered by fe-17 in the body defs; if the hero needs it before the body, report it), the seal and the hint. Behaviour: entrance via .is-in (resetHero then playHero 120ms after loaded on first load; on later shows reset in usePageShow and play 150ms after the curtain lift with useCurtainLift, fallback 1600ms; reduced motion plays at once), ambient float paused off screen, fine pointer desk tilt (L7110-7129), sheet click jumps to the matching body block with scrollToEl and the flash (L7131-7160; the click is claimed so it pushes no history), scroll-linked exit writing --sp (L7093-7108), idle flag. Clean up everything on unmount.\nResponsive: tablet puts copy above the desk, phone overrides per map 3761-3789; the desk scales as one object with container units (CSS already does it; markup must keep the container elements).\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /profile --selector \"#pf-hero\" --width all --theme both: every diff 0.5% or less",
+        "By eye: entrance end state, sheet hover lift and tilt (--motion --hover), seal, CTA hover and focus",
+        "Clicking each sheet scrolls to its block with the reference offset and flashes it; no history entry is added",
+        "Route change away and back replays the hero entrance at the reference timing"
+      ]
+    },
+    {
+      "id": "fe-17",
+      "title": "Profile body: experience timeline with sticky year, education, technical expertise tabs and rings, languages, core chips",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/profile/body/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-05"
+      ],
+      "refs": "Reference HTML L3934-4165 (body wrapper L3934, defs #pf-ring-g L3935-3941, experience #pf-exp L3943-4023, education L4025-4072, technical expertise L4074-4160), CSS L2059-2292 (block heads, badges L2073-2079, experience L2081-2147, education L2149-2192, expertise L2194-2279, reduced motion L2281-2288), JS L7165-7360 (timeline fill and active role, sticky year swap, skill tabs, ring lighting, education sheen, core chip magnetism). Map 3454-3512 (reveal and stagger table for the body), 3789-4039 (11.4.5 to 11.4.10), 4098-4164 (11.4.11 F to L), 4334-4598 (experience, education, skills content), 4598-4677 (notes).",
+      "brief": "Goal: the Profile body, pixel identical, inside div.wrap.pf-body. FIRST STEP: create features/profile/body/ProfileBody.tsx exporting ProfileBody (it may render just the wrapper at first); fe-16 imports it from \"@/features/profile/body/ProfileBody\".\n\nBuild:\n- svg.pf-defs with linearGradient#pf-ring-g (stop classes pf-stop-a and pf-stop-b), used by rings in the body and in the hero desk.\n- Experience (div.pf-block.pf-exp#pf-exp, role region): block head (index \"02.1\" fade, SplitWords title, subtitle delay 150), sticky year box (fade, delay 250) with the year swap (L7208-7239), timeline with 4 role cards (reveal left) and the scroll-driven fill, lit roles and active role (L7165-7206, L7241-7247).\n- Education: featured card #pf-edu-bs with its clip animation and sheen switch (L7324-7332), small cards #pf-edu-inter (delay 120) and #pf-edu-matric (delay 220), data-spotlight.\n- Technical expertise: segmented tabs with full ARIA (tablist, tabs, panels, arrow keys as the reference supports), panels with rings that light up on first view and on tab change (L7249-7321), languages card (delay 120), core expertise card (delay 80) with 10 chips in ul.pf-chips data-stagger 45 and chip magnetism on fine pointers (L7334-7360).\nTimers, observers and rAF loops stop on unmount; re-measure on the resize event after each show. Content from experience.ts, education.ts, skills.ts, profile.ts.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /profile --selector \"<#pf-exp, .pf-edu-block, .pf-tech>\" --width all --theme both: every diff 0.5% or less",
+        "By eye: timeline fill and active role while scrolling (--motion), year swap, each skill tab selected with its rings, card hovers, chip hover",
+        "Tabs are keyboard operable with correct aria-selected and aria-controls (unit tested)"
+      ]
+    },
+    {
+      "id": "fe-18",
+      "title": "Works route and hero: the studio wall of four devices, stack chips, stats, shared page hero controller",
+      "wave": 2,
+      "owns": [
+        "frontend/src/app/works/page.tsx",
+        "frontend/src/features/works/hero/**",
+        "frontend/src/features/works/hero-shared/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-06"
+      ],
+      "refs": "Reference HTML L4166-4247 (root L4166, hero #wk-hero L4167-4247, copy L4167-4187, stage L4189*-4240, foot cue L4243-4247; device screenshots are base64 lines, never print them), CSS L2293-2317 (frame, .wk-a entrance helper, cue) and L2887-3206 (works hero), JS L7794-7854 (shared page hero controller, count up, scroll cue, re-measure) and L7856-8114 (works hero: chips, seal injected at L7956*, entrance, hover lift, tilt, jump, scroll exit). Map 4677-4730 (11.5.0 frames), 4730-4811 (11.5.1 copy column), 4811-4964 (11.5.2 the stage), 5633-5724 (11.5.10 shared behaviours), 5733-6223 (projects.ts hero device data), 6460-6500 (notes), 1941-1955 (works timing: enter(90) after loaded, afterCurtain 120ms, fallback 1800ms).",
+      "brief": "Goal: the /works route with the page root and a pixel identical hero. The grid, filters and PureBody modal come from fe-19.\n\npage.tsx (server): metadata = pageMetadata(\"works\"); <section id=\"works\" className=\"section wk-sec page is-current\" data-page=\"works\" aria-labelledby=\"wk-title\"> with <WorksHero />, then <WorksBody /> from \"@/features/works/grid/WorksBody\" (fe-19 creates it first), then <NextPageLink from=\"works\" />.\n\nhero-shared/ (used by this hero and the Approvals hero in fe-20): usePageHero(rootRef, { sync, enter, reset }) porting L7794-7854: first load waits for loaded (the reference polls every 50ms and runs anyway after about 4050ms) then enter(90); later shows reset at once (usePageShow) and enter 120ms after the curtain lift (useCurtainLift, fallback 1800ms); reduced motion enters at once; the data-wk-to stat count up over 1500ms; the scroll cue buttons; the re-measure on show. Document its API in a short comment.\n\nHero (hero/): copy column (eyebrow \"Portfolio Showcase\", title \"Featured\" / \"Projects\" with meta \"2022 → 2026\", lead, \"Browse projects\" scrolling to #wk-toolbar with scrollToEl, \"Book Meeting\" data-book=\"\", stats 10+, 7+, 100%, \"Built with\" chips #wk-chips that dispatch WK_FILTER_EVENT), and the stage #wk-sk-tilt (role group, aria label from the map) with 4 device buttons (.wk-dv--gp, --uha, --ffl browser windows, --pb phone) using next/image for /images/works-hero-*.webp at the section 8 sizes, label pills, the seal with ring text \"WEB · MOBILE · AI · 2022 - 2026 ·\", the caption. Behaviour: entrance .is-on, .is-settled, hover lift on mouse only after settle, fan, stage tilt toward the cursor, slow float, desktop scroll-linked exit, device click dispatches WK_JUMP_EVENT with the project index (fe-19 handles the rest). No orbit and no drag. Stop loops when idle or unmounted.\nEvents: import the constants from \"@/features/works/shared/events\" (fe-19 creates that file first).\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /works --selector \"#wk-hero\" --width all --theme both: every diff 0.5% or less",
+        "By eye: device hover lift and fan after settle (--motion --hover), chip hover and active, CTA hover and focus, seal",
+        "Chip click filters the grid; device click switches to All if needed, scrolls to the card and flashes it (with fe-19 in place)",
+        "Leaving and returning replays the entrance at the reference timing; usePageHero unit tested with fake timers"
+      ]
+    },
+    {
+      "id": "fe-19",
+      "title": "Works grid: toolbar and segmented filter, FLIP filtering, 14 project cards, flash, and the PureBody modal",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/works/grid/**",
+        "frontend/src/features/works/shared/**",
+        "frontend/src/features/works/purebody/**",
+        "frontend/src/app/@purebody/default.tsx"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-06"
+      ],
+      "refs": "Reference HTML L4249-4266 (toolbar #wk-toolbar L4251-4254, grid L4256-4263, empty state L4258-4262), L4862-4923 (PureBody modal), CSS L2327-2468, L2552-2568, L2638-2650, L2660-2663 (grid), L2570-2636 and L2655-2664 (PureBody), JS L7383-7645 (data, makeFilter L7482-7513, FLIP L7515-7554, card template L7561-7597, editorial layout L7600-7630, reveal delays L7637-7638), L8289-8293 (sync on show), L8295-8317 (PureBody videos). Map 4964-5042 (11.5.3 toolbar, 11.5.4 FLIP), 5042-5168 (11.5.5 grid and cards), 5539-5633 (11.5.9 PureBody), 5633-5724 (flash, re-measure, index), 5733-6223 (projects.ts), 6460-6500 (notes), 1592-1629 (modal core).",
+      "brief": "Goal: the Works body and the PureBody modal, pixel identical, plus the shared body helpers the Approvals body reuses. FIRST STEP: create shared/events.ts (WK_FILTER_EVENT \"wk:filter\", WK_JUMP_EVENT \"wk:jump\", AP_JUMP_EVENT \"wk:ap-jump\" with typed detail helpers) and grid/WorksBody.tsx exporting WorksBody (fe-18 imports both).\n\nshared/: Toolbar + SegmentedFilter (markup and labels from the map; Approvals uses the same component with its own keys), useFlip (FLIP filtering exactly as L7515-7554, reduced motion instant), flash(el) (the jump flash: start after 900ms, lasts 2600ms), and the sync-on-show hook (filter sync 30ms after each show, L8289-8293).\n\nGrid (grid/): the 14 cards rendered by React from projects.ts with the exact card template output of map 5049-5090 (n = 01..14, cover colours, badges such as Live, links, tags, the PureBody \"Live Preview\" button.wk-live[data-open=\"purebody\"][aria-haspopup=\"dialog\"]), the editorial rhythm layout (L7600-7630), reveal delays --d = round(rowX/12*3)*90 ms, the screen wipe entrance on .wk-cell.is-in, the empty state, filter counts. WK_FILTER_EVENT sets the filter; WK_JUMP_EVENT: if a filter is active switch to All and wait 650ms, scrollToEl the card, flash it. Images via next/image with encodeURI paths (two names contain spaces), lazy, sized like the reference.\n\nPureBody (purebody/ + app/@purebody/default.tsx): <Modal id=\"purebody\" className=\"wk-pb\"> with the markup of L4863-4923 (head, \"Open full page\" link to https://faisalhanif.work/sass-app.html kept absolute, 3 phones with lazy videos /vedioes/ScreenRecording1-3.mp4 via data-src). onOpen: scroll #wk-pb-phones to 0, set src and play each video after 300 + i*120 ms (0 with reduced motion; the reference still autoplays under reduced motion) only if still open; onClose: pause all. Load the modal body lazily without changing the closed markup the reference renders.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /works --selector \"<#wk-toolbar, the grid root>\" --width all --theme both: every diff 0.5% or less",
+        "npm run visual -- --route /works --click \".wk-live\" --selector \"#purebody\" --width 1440 and 390 --theme both: 0.5% or less (open modal, videos may differ only inside the video frames; report)",
+        "By eye: filter active states, FLIP animation (--motion), card hover, Live badge, empty state if reachable",
+        "FLIP, flash and filter logic unit tested; videos pause on close; focus returns to the Live Preview button"
+      ]
+    },
+    {
+      "id": "fe-20",
+      "title": "Approvals hero: the certificate fan of seven cards, seal, stats and entrance",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/approvals/hero/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-06",
+        "fe-18",
+        "fe-19"
+      ],
+      "refs": "Reference HTML L4269-4307 (hero #wk-ap-hero: copy L4269-4293 and L4303-4307, deck L4295-4300), CSS L2666-2876 (copy L2683-2722, deck L2723-2815, entrance L2817-2827, scroll exit L2829-2836, tablet and phone L2850-2867, container query L2868, reduced motion L2874-2876), JS L8115-8287 (guilloche wk-guil L8127-8132, seal L8133-8137, card order and template L8138-8162, setMode L8176-8184, fan engine targets and paint L8189-8212, hover and spread L8227-8247, tilt L8248-8261, scroll exit L8263-8272, enter L8282-8283). Map 5168-5208 (11.5.6 copy), 5208-5395 (11.5.7 the deck), 5633-5724 (shared hero controller), 6223-6460 (certificates.ts), 6460-6500 (notes).",
+      "brief": "Goal: the Approvals hero, pixel identical. FIRST STEP: create hero/ApprovalsHero.tsx exporting ApprovalsHero (fe-21 owns the /approvals page and imports it from \"@/features/approvals/hero/ApprovalsHero\").\n\nBuild: the copy column (eyebrow, title, lead, CTAs, stats 6+ etc. with data-wk-to count up, entrance delays per map 5180-5208), and the deck: seven real certificates from certificates.ts fanned from one pivot below the deck, card template output exactly as map 5253-5286, the guilloche symbol wk-guil (built in JS by the reference; render it as SVG markup), the seal on the top card with ring text \"VERIFIED CREDENTIALS · 2023 - 2026 ·\", the caption. Behaviour ported from the fan engine: setMode sizing, deal in entrance, fan targets per frame, hover lift and spread (mouse only), slow float, deck tilt toward the cursor, jump to a certificate (dispatch AP_JUMP_EVENT from \"@/features/works/shared/events\"; the rail in fe-21 scrolls and flashes), desktop scroll-linked exit. Use usePageHero from \"@/features/works/hero-shared\" (fe-18) for the enter and reset timing (enter(90) after loaded; later shows 120ms after the curtain lift, fallback 1800ms). Stop the rAF engine when settled, off screen or unmounted (decision); the pixels must stay identical. Reduced motion shows the fanned end state like the reference, and the copy keeps its step delays under reduced motion exactly as the reference does (orchestrator decision).\nImages: certificate images from /imgs/ via next/image, sized like the reference cards.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /approvals --selector \"#wk-ap-hero\" --width all --theme both: every diff 0.5% or less",
+        "By eye (--motion, --hover): deal in end state, hover spread, seal, CTA hover and focus",
+        "Clicking a card dispatches AP_JUMP_EVENT with the right index; fan engine loop stops when idle (unit tested with fake timers or rAF mock)"
+      ]
+    },
+    {
+      "id": "fe-21",
+      "title": "Approvals route and body: filter, certificate rail with controls, drag, progress and cards",
+      "wave": 2,
+      "owns": [
+        "frontend/src/app/approvals/page.tsx",
+        "frontend/src/features/approvals/body/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-06",
+        "fe-19",
+        "fe-20"
+      ],
+      "refs": "Reference HTML L4268 (root section#approvals), L4310-4331 (toolbar L4311-4318, rail, cards, empty state, progress), CSS L2469-2563 and L2651-2653 (rail, controls, cards, responsive), JS L7647-7792 (card template L7652-7682, rail state, prev and next, arrow keys, drag with inertia, Shift plus wheel, velocity skew, certificate filter), L8290-8293 (sync on show and rail scroll re-fire). Map 4677-4730 (frames), 4964-5042 (shared toolbar and FLIP), 5395-5539 (11.5.8 approvals body), 5633-5724 (shared behaviours, flash), 6223-6460 (certificates.ts), 6460-6500 (notes).",
+      "brief": "Goal: the /approvals route with its page root and a pixel identical body; the hero comes from fe-20.\n\npage.tsx (server): metadata = pageMetadata(\"approvals\"); <section id=\"approvals\" className=\"section wk-sec wk-ap page is-current\" data-page=\"approvals\" aria-labelledby=\"wk-ap-title\"> with <ApprovalsHero /> from \"@/features/approvals/hero/ApprovalsHero\", <ApprovalsBody />, then <NextPageLink from=\"approvals\" />.\n\nBody (body/): the shared Toolbar and SegmentedFilter from \"@/features/works/shared\" with the certificate keys and counts, the rail with its controls (counter, progress bar, prev and next buttons, edge fade), 7 certificate cards rendered from certificates.ts with the exact template output of map 5421-5466 (n = 01..07, reveal --d = min(i,3)*90 ms, verify link), the empty state. Behaviour: rail state updates on scroll, prev and next and arrow keys, mouse drag with inertia, Shift plus wheel, scroll velocity skew (reduced motion off), certificate filter with FLIP, sync 30ms after each show and re-fire the rail scroll handler (L8290-8293). Listen to AP_JUMP_EVENT: switch to All if needed, scroll the page to the rail and the rail to the card, flash it with the shared flash helper, with the reference waits. The rail keeps native touch scrolling (data-native-scroll where the reference needs it). Clean up listeners and inertia loops on unmount.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /approvals --width all --theme both (full page, hero from fe-20 included): every diff 0.5% or less",
+        "By eye: filter states, rail after clicking next twice (--click), card hover, progress bar, disabled button states at the ends",
+        "Keyboard: arrow keys move the rail, buttons have accessible names; drag and inertia unit tested"
+      ]
+    },
+    {
+      "id": "fe-22",
+      "title": "Contact route and hero: live globe, 24h dial, Lahore clock card, entrance, sway and scroll exit",
+      "wave": 2,
+      "owns": [
+        "frontend/src/app/contact/page.tsx",
+        "frontend/src/features/contact/hero/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-07"
+      ],
+      "refs": "Reference HTML L4334-4385 (root L4334, Contact sprite L4335-4338, hero #ct-hero L4341-4385, orb L4368-4380, clock card L4371-4378), CSS L970-1146 (shared L974-976, frame L978-1037, orb L1039-1096, clock card L1098-1114, entrance L1116-1146) and the hero parts of L1322-1368 and L1711-1716, JS L5700-6160 (visitor guess, sphere helpers, static SVG L5782-5843, per frame render L5845-5941, fit L5943-5987, clocks and working hours L6046-6083, entrance L6088-6105, scroll exit L6107-6133, sway L6135-6151, router hooks L6153-6160). Map 6500-6580 (11.6.0 page frame), 6578-6972 (11.6.1 to 11.6.3), 7352-7439 (11.6.7 B1 to B9), 7467-7483 (responsive), 7524-7611 and 7755-7782 (contact.ts hero and time zone table), 7782-7843 (notes).",
+      "brief": "Goal: the /contact route with its page root and a pixel identical hero. The methods ledger, map and form come from fe-23.\n\npage.tsx (server): metadata = pageMetadata(\"contact\"); <section className=\"section ct page is-current\" id=\"contact\" data-page=\"contact\" aria-labelledby=\"ct-title\"> with the Contact sprite (ct-i-copy, ct-i-down), <ContactHero />, <ContactBody /> from \"@/features/contact/body/ContactBody\" (fe-23 creates it first), then <NextPageLink from=\"contact\" />.\n\nHero (hero/): availability bar with the \"Available for Projects\" pill, h1#ct-title split with the contact delays (170 + i*130 ms), lead, actions (copy email with toast \"Email copied: <email>\", Book button data-book), stats (count up), scroll cue, and the orb: the 24h dial, the globe drawn as SVG (static parts built once in the exact order of L5785-5843, per frame render: view, graticule, night side, link from the visitor to Lahore), visitor marker guessed from the time zone table, best starting view computed once, fit() so the dial and the clock card never overlap, the Lahore clock card and dial hand ticking every second (hourCycle h23, decision), working hours state. Pure math (projection, sphere, sun position, view) goes in hero/lib/*.ts with unit tests. Motion: entrance .is-play with play(delay) (first load 1320ms after boot, or 120ms if already loaded; later shows fit, exit, play(600), sync via usePageShow), scroll-linked exit, the 32s ambient sway only while visible, the globe still turns with scroll under reduced motion (decision). Stop the globe loop and timers when off screen, idle or unmounted (decision). Code split the globe renderer if it does not change the first paint.\nDeterminism: with the harness frozen clock and Asia/Karachi time zone, the globe must render the same frame as the reference.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /contact --selector \"#ct-hero\" --width all --theme both: every diff 0.5% or less",
+        "By eye (--motion): entrance end state, dial hand, clock card, sway; action buttons hover and focus; copy email toast",
+        "Globe math unit tested (projection, visitor guess for several zones, fit results); loops stop on unmount and off screen"
+      ]
+    },
+    {
+      "id": "fe-23",
+      "title": "Contact body: methods ledger, Lahore map aside, and the contact form with validation, API and mailto flows",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/contact/body/**"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-07",
+        "fe-10"
+      ],
+      "refs": "Reference HTML L4386-4594 (kicker L4388, ledger L4391-4426, grid L4429, map aside L4430-4489, form #ct-form L4491-4591, done panel L4581-4589), CSS L1148-1320 and L1322-1380 (contact responsive), L1494, L1711-1716, JS L6162-6186 (copy email, map clock) and L6188-6317 (form: live validation, focus line, option fill, send button morph, submit flow, done panel, write another). Map 6564-6580 (reveal and stagger table), 6972-7352 (11.6.4 to 11.6.6), 7439-7467 (B10 to B12), 7467-7483 (responsive), 7611-7755 (contact.ts methods, map, form), 176-212 (section 10 contact form), 213-227 (errata), API_CONTRACT.md POST /api/contact.",
+      "brief": "Goal: everything on /contact after the hero, pixel identical, with the reference form behaviour wired to the API client. FIRST STEP: create body/ContactBody.tsx exporting ContactBody (fe-22 imports it from \"@/features/contact/body/ContactBody\").\n\nBuild:\n- Kicker and methods ledger (div.ct-ledger__row data-stagger 80, base 80; 4 article.ct-method; copy email action with toast \"Email copied: <email>\").\n- Map and form grid: the aside figure with the static Lahore map SVG copied verbatim (L4432-4476), top chips, bottom panel with the map clock (L6176-6186, hourCycle h23).\n- The form (form#ct-form.card.ct-form): fields name, email, phone, company, project type radios (#ct-type), budget radios, details textarea with #ct-details-count (is-near above 1800), exactly the reference labels, placeholders, maxlengths and markup. Behaviour: the pointer focus line, option cards filling from the pointer, live validation timing (L6216-6221) with the reference messages from contact.ts, on a failed submit focus the first bad field (scrollToEl, like the patched scrollIntoView) and status \"Some fields need a quick fix before sending.\", the send button states and width morph (setSend), the submit flow and the done panel with morphHeight (lib/viewMotion) and \"Write another message\".\n- Submit: if API_ENABLED, postContact({ name, email, phone, company, projectType, budget, details, website, startedAt }) where website is a visually hidden honeypot input (off screen, aria-hidden, tabindex -1, autocomplete off; no visible change) and startedAt is when the form was first shown; success shows the reference success path (\"Sent\", toast \"Message sent. Talk soon!\", done panel \"Thanks, <first name>!\"); any failure shows only the reference failure toast and status (decision). If the API is not set, the reference mailto path exactly (openMail from lib/mailto, label \"Ready\", status and toast texts from contact.ts, the \"Email directly\" button). Map server VALIDATION_ERROR fields to the reference messages, never the server text.\nPure logic (validation, summary and mailto body builder, first-name) in body/lib with unit tests.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /contact --width all --theme both (full page with fe-22 hero): every diff 0.5% or less",
+        "By eye: field focus line, option hover and checked, error states after an empty submit (--click the submit button), counter near limit, done panel (API mocked and mailto path)",
+        "Validation, payload (exact API_CONTRACT body) and mailto body unit tested; honeypot invisible and skipped by keyboard"
+      ]
+    },
+    {
+      "id": "fe-24",
+      "title": "Booking logic: state store, time zones, calendar rules, slots, validation, recap, payload, submit (API and mailto)",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/booking/lib/**"
+      ],
+      "deps": [
+        "fe-07",
+        "fe-08",
+        "fe-09",
+        "fe-10"
+      ],
+      "refs": "Reference JS L6319-6704 (state L6329-6340 and L6378-6408, summary and total tween L6411-6435, radios and stepper L6436-6447, navigation L6448-6477, verify and validation L6478-6529, calendar L6537-6588, time zones L6342-6376, slots L6590-6625, recap L6628-6640, complete L6642-6687, openBooking L6693-6703, live region L6340). Map 7847-7885 (11.7.0 source index and module constants), 8467-8667 (11.7.8 B1 to B14, announcements, focus handling), 8667-8683 (11.7.9 section 10 check), 8683-8867 (booking.ts), 196-205 and 224 (section 10 booking and errata), API_CONTRACT.md booking endpoints (SLOT_TAKEN, slots, idempotency).",
+      "brief": "Goal: all booking behaviour as framework light, unit tested TypeScript, so fe-25 only renders. No JSX here except an optional React hook file (useBooking.ts) that wraps the store.\n\nBuild in features/booking/lib/:\n- state.ts: the reference state (type, sessions 1 to 10, screen pick | steps | done, step 1 to 3, email, verified, name, phone, company, date, timezone, slot startUtc, platform, notes, errors, busy) as a reducer with typed actions; reset(type, keepContact) like L6379-6400; open with the payload type from the ModalProvider (default quick). useBooking.ts exposes state and actions.\n- total.ts: price x sessions and the 650ms total tween values (EASE, reduced motion jumps).\n- timezones.ts: the 23 fixed zones plus the visitor zone when missing, sorted by offset, labels like \"GMT+5 · Pakistan (PKT)\", \" (your zone)\" suffix, offset formatting exactly like L6342-6376 (Intl, hourCycle h23).\n- calendar.ts: month grid starting Monday, availability (weekday, after today, at most 60 days ahead), keyboard moves (arrows, PageUp and PageDown, Home and End) per L6537-6588, plus fully booked days from the API.\n- slots.ts: hourly starts 09:00 to 17:00 PKT on the picked day (slotsFor L6591), shown in the chosen zone with next day and prev day tags; when API_ENABLED filter by getBookingSlots(date, type) and report a day with no free time (message \"That day is fully booked. Please pick another weekday.\" for #ct-bk-date-err); without the API, all slots.\n- validate.ts: step 1 (email required and EMAIL_RE, verify button state Verify then Verified, name at least 2), step 2 (date, slot), step 3 (platform), with the exact reference messages from booking.ts.\n- recap.ts and payload.ts: renderRecap data, bookingData() exactly as L6643-6648 (plus website honeypot \"\"), mailBody() and the mailto subject \"Meeting request: <sessionName> on <date>\".\n- submit.ts: complete() per L6642-6687: API path postBooking(body, idempotency key kept per attempt so double submits reuse it), success -> done screen \"Booking sent!\" copy and toast \"Booking sent. Check your inbox soon.\"; SLOT_TAKEN -> back to step 2, reload slots, \"That time was just taken. Please pick another slot.\" in #ct-bk-slot-err; other errors -> toast \"Booking did not go through. Please try again.\" and live text \"Booking failed. Please try again.\"; no API -> mailto path (\"Request ready!\", toast \"Opening your email app with the booking details\").\n- announce.ts: the #ct-bk-live texts.\n\nTest every module with fixed dates and time zones (fake timers, TZ-independent Intl checks): weekends and day 61 disabled, slot times for UTC, PKT, America/New_York and Asia/Tokyo including day tags, payload equality with API_CONTRACT.md, 409 flow, idempotency reuse.",
+      "checks": [
+        "npx vitest run src/features/booking/lib passes with meaningful coverage of every module",
+        "npm run typecheck, eslint and prettier clean for owned files",
+        "bookingData() output matches API_CONTRACT.md field for field and the reference L6643-6648 order",
+        "No DOM access at module load; everything works in Node for tests"
+      ]
+    },
+    {
+      "id": "fe-25",
+      "title": "Booking modal UI: pick screen, three step screen with calendar and slots, recap, done screen",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/booking/ui/**",
+        "frontend/src/app/@booking/default.tsx"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-07",
+        "fe-24"
+      ],
+      "refs": "Reference HTML L4609-4836 (shell L4609-4614, stage and head L4614-4622, screen pick L4617-4688 with summary aside L4663-4676 and What to Expect L4679-4687, screen steps L4690-4819 with header L4700-4707, pane 1 L4710-4745, pane 2 L4748-4781, pane 3 L4784-4807, recap L4811-4817, screen done L4821-4831), CSS L974-976 and L1382-1618 (in overlays.css), plus L266-279 shell. Map 7885-7904 (every Book button), 7904-7950 (modal shell), 7950-8101 (stage, screen A), 8101-8391 (screen B, calendar, slots, recap), 8391-8436 (screen C), 8436-8467 (responsive), 8467-8667 (behaviour, focus handling, announcements), 8683-8867 (booking.ts).",
+      "brief": "Goal: the booking modal, pixel identical in every screen and state, driven by the fe-24 logic.\n\napp/@booking/default.tsx renders <BookingModal /> (the slot is placed by the root layout after main). BookingModal uses <Modal id=\"booking\" className=\"ct-bk\" ...> from the wave 1 Modal with the panel attributes of L4611-4613 (including data-native-scroll), so the closed markup is in the page like the reference. On open read the payload type from useModal (data-book=\"deep\" preselects Technical Deep Dive, all others Quick Chat) and reset like L6379-6400; move focus to the checked session radio at 90ms (70ms with reduced motion). Load the heavy step screen lazily on first open if that keeps the first paint unchanged.\n\nScreens (exact markup, classes, ids and copy from booking.ts):\n- pick: session cards (radios name=\"ct-bk-type\"), sessions stepper [data-bk-step] 1 to 10 with the live total tween, summary aside, What to Expect, \"Book Session\" #ct-bk-go.\n- steps: header with the progress fill and is-current / is-done steps, pane 1 (email with #ct-bk-verify, name, phone, company), pane 2 (calendar #ct-cal with full keyboard support and aria, time zone select #ct-bk-tz, slots #ct-slots with the 35ms stagger and day tags, #ct-bk-date-err and #ct-bk-slot-err), pane 3 (platform radios name=\"ct-bk-plat\", notes #ct-bk-notes maxlength 800), Back and Continue [data-bk-next] buttons, the recap aside, the live region #ct-bk-live.\n- done: \"Booking sent!\" or \"Request ready!\" with the ticket (Session x count, When local and Lahore, Platform, Total) and the .ct-check draw in.\nTransitions between screens and panes use swapViews and morphHeight from lib/viewMotion with the reference directions. Errors show in the reference error elements only. The focus trap and focus return come from the Modal; after a chat Book action focus returns to the chat button (the chat passes returnFocus).\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route /contact --click \"[data-book]\" --selector \"#booking .fh-modal__panel\" --width all --theme both: pick screen 0.5% or less",
+        "The same with extra --click steps for step 1, step 2 (pick a date and slot) and step 3, and the done screen via the mailto path: each 0.5% or less at 1440 and 390 in both themes",
+        "Keyboard only: open, choose a session, fill every step, pick a date with the arrow keys, submit; focus stays in the modal and returns to the opener on close",
+        "data-book=\"deep\" (About aside) opens on Technical Deep Dive; Esc and the scrim close it instantly like the reference"
+      ]
+    },
+    {
+      "id": "fe-26",
+      "title": "Chat widget: FAB, nudge, panel, messages, formatter, local responder, actions and API replies",
+      "wave": 2,
+      "owns": [
+        "frontend/src/features/chat/**",
+        "frontend/src/app/@chat/default.tsx"
+      ],
+      "deps": [
+        "fe-13",
+        "fe-07",
+        "fe-10"
+      ],
+      "refs": "Reference HTML L4836-4860 (nudge L4838, FAB L4839, panel L4844, log L4853, form L4854, input L4856), CSS L974-976 and L1620-1710 (in overlays.css), JS L6706-7016 (knowledge L6716-6821, local engine L6822-6861, rendering and inline formatter L6863-6905, answer flow L6907-6934, sending L6935-6948, greeting L6949-6955, actions L6957-6980, open and close L6983-7004, one time nudge L7006-7015). Map 8867-9050 (11.7.11 and 11.7.12 markup, visuals, bubbles, typing, chips, actions), 9050-9133 (11.7.13 and 11.7.14 behaviours and actions), 9133-9442 (chat-knowledge.ts, already in src/content), 9442-9554 (11.7.16 local engine: port exactly, with the expected results table), 9554-9615 (section 10 check, notes), API_CONTRACT.md POST /api/chat.",
+      "brief": "Goal: the floating chat, pixel identical and behaving exactly like the reference, with real API answers when NEXT_PUBLIC_API_URL is set and the local responder otherwise or on any failure.\n\napp/@chat/default.tsx renders <ChatWidget /> (div.ct-chat#ct-chat, placed after the booking slot by the root layout; it persists across routes). Server render the FAB, nudge and the closed panel shell like the reference; load the panel logic lazily if the first paint stays identical.\n\nBuild in features/chat/:\n- engine/localReply.ts: port L6822-6861 exactly (intents, keyword matching, replies and actions from src/content/chat-knowledge.ts, the location reply with the live Lahore time in hourCycle h23). Unit test it against every row of the expected results table in map 9531-9554.\n- format.ts: the inline formatter and block renderer of L6864-6917 (paragraphs, -, *, bullet and 1. lists, **bold**, [label](url) for https, http, mailto, tel and #, bare http and https URLs), producing React elements (no dangerouslySetInnerHTML) with the same output markup; tested.\n- Messages: bubbles, typing dots after 220ms, reply shown after at least min(1300, 650 + text.length * 8) ms, starter chips after the greeting (\"Hi! I'm Faisal's assistant. How can I help you today?\"), actions under answers (API answers get the local reply actions, never chips).\n- Sending: history kept like the reference (starts with the greeting, includes the current message, last 12 sent); if API_ENABLED call postChat({ message, history }) (12s timeout) and fall back to localReply on any error, timeout or 429.\n- Actions: navigation actions call go() then wait reduce ? 60 : (cross page ? 2700 : 900) ms before the follow up (for example focusing #ct-name); \"Book\" opens the booking modal with useModal().open(\"booking\", { payload: { type }, returnFocus: the chat FAB }); Download CV uses /imgs/Faisal-CVS.pdf (same origin, decision); email and phone links.\n- Open and close (L6983-7004) with focus handling (input on fine pointers), Esc closes the chat only when no modal is open, focus trap while open and focus return to the FAB (decision), the one time nudge (L7006-7015) that yields to open modals, unread dot, data-native-scroll on the panel log.\n\nProcedure (restart safe: first read the files you own and continue):\n1. Read your map sections fully, then the reference lines, and write down the markup tree, the content it needs and every behaviour with its timings.\n2. Build the server markup first, from src/content only, copying tags, ids, classes, attributes and aria exactly; then add small client leaves for behaviour, using the wave 1 hooks and providers (sharedDecisions section 4). Keep the reference quirks listed in the map notes and in orchestrator-decisions.md.\n3. Compare often with the running servers: npm run visual -- --route <route> --selector \"<your root>\" --width all --theme both, open the PNGs with Read, fix, repeat. Check hover, focus and open states by eye with --hover, --click and --motion captures on both sides.\n4. Unit test your pure logic next to the code. Never edit CSS: if a style is wrong, report the selector, the reference line and what differs, for the lead.",
+      "checks": [
+        "npm run typecheck (your files clean), npx eslint and npx prettier --check on your files, npx vitest run on your tests",
+        "No console errors or warnings on the route (the visual tool prints them for the app side)",
+        "npm run visual -- --route / --selector \"#ct-chat\" --width all --theme both: closed state 0.5% or less; with --click \".ct-chat__fab\" (use the real FAB selector) at 1440 and 390: open panel with the greeting 0.5% or less",
+        "By eye: typing dots, a local answer with actions, chips, a link inside an answer, the nudge",
+        "localReply matches every row of the map 9531-9554 table; formatter tests pass; API fallback on timeout and 429 tested with mocked fetch",
+        "The chat stays open with its history across a page change; Book action returns focus to the chat button after the modal closes"
+      ]
+    },
+    {
+      "id": "fe-27",
+      "title": "SEO: sitemap, robots, Open Graph and Twitter images, tab icon, and an SEO test over every route",
+      "wave": 3,
+      "owns": [
+        "frontend/src/app/sitemap.ts",
+        "frontend/src/app/robots.ts",
+        "frontend/src/app/opengraph-image.tsx",
+        "frontend/src/app/twitter-image.tsx",
+        "frontend/src/app/icon.svg",
+        "frontend/tests/e2e/seo.spec.ts"
+      ],
+      "deps": [
+        "fe-14",
+        "fe-15",
+        "fe-16",
+        "fe-17",
+        "fe-18",
+        "fe-19",
+        "fe-20",
+        "fe-21",
+        "fe-22",
+        "fe-23",
+        "fe-24",
+        "fe-25",
+        "fe-26"
+      ],
+      "refs": "PRD.md (Non-functional: SEO; Lighthouse SEO 100), QA_CHECKLIST.md Quality. Reference head L1-11 (title, description, theme-color). Map 2044-2121 (site.ts page titles), 2153-2170 (routes). Existing: src/lib/seo.ts and src/components/seo/PersonJsonLd.tsx (fe-13), src/content/site.ts and socials.ts (fe-04). Next.js 16 metadata file conventions (check with Context7).",
+      "brief": "Goal: complete the SEO surface with the Next.js file conventions and prove every route meets PRD SEO requirements.\n\nBuild:\n- sitemap.ts: the 5 routes with absolute URLs from NEXT_PUBLIC_SITE_URL (default https://faisalhanif.work), changeFrequency monthly, About priority 1. robots.ts: allow all, sitemap URL, host.\n- opengraph-image.tsx and twitter-image.tsx (next/og ImageResponse, 1200x630, static): a calm brand card in the reference style (light theme tokens #0e6655 family, name \"Faisal Hanif\", role line from site.ts, \"faisalhanif.work\"); alt text from site.ts. No network at build time: use the built-in font, no remote images.\n- icon.svg: the tab icon copied from public/imgs/F-Logo3-optimized.svg (the reference has no icon link; this only avoids a favicon 404 in the console; the owner confirms it, see openQuestions).\n- tests/e2e/seo.spec.ts (Playwright, project e2e): for each route check the title equals the site.ts docTitle, one meta description, canonical = site URL + path, og:title, og:image and twitter:card present, exactly one Person JSON-LD that parses and has name, jobTitle, url and sameAs, html lang=\"en\", /sitemap.xml lists 5 URLs, /robots.txt references the sitemap, /index.html redirects to /.\nThen run Lighthouse SEO only on each route against the dev server (npx lighthouse <url> --only-categories=seo --preset=desktop and the default mobile run, headless chrome, output json to /tmp) and report the scores. If metadata problems live in src/lib/seo.ts, PersonJsonLd or a page file, report them for fe-13 or the page brief.\n\nWave 3 rules: you own only the files listed. You never edit page, component, content or CSS files. Every problem you find goes into your report as a fix list grouped by the owning brief id (see the owns lists in .claude/plans/frontend-plan.json), each item with the file, the exact symptom, how to reproduce it (route, width, theme, steps), the reference line that shows the correct result, and a suggested fix. Use the running servers (frontend http://localhost:3000, reference http://localhost:4400/faisalhanif-redesign.html, backend http://localhost:8787); never start next dev or run next build.",
+      "checks": [
+        "npx playwright test --project=e2e tests/e2e/seo.spec.ts passes against http://localhost:3000",
+        "curl -s http://localhost:3000/sitemap.xml, /robots.txt, /opengraph-image and /twitter-image return 200 with the right content types",
+        "Lighthouse SEO is 100 on all 5 routes (or the report lists exactly what blocks it and who owns it)",
+        "npm run typecheck, eslint and prettier clean for owned files"
+      ]
+    },
+    {
+      "id": "fe-28",
+      "title": "Performance: Lighthouse runner, budgets and a performance audit of every route",
+      "wave": 3,
+      "owns": [
+        "frontend/scripts/lighthouse.mjs",
+        "frontend/tests/perf/budgets.json",
+        "frontend/tests/perf/lighthouse.test.ts"
+      ],
+      "deps": [
+        "fe-14",
+        "fe-15",
+        "fe-16",
+        "fe-17",
+        "fe-18",
+        "fe-19",
+        "fe-20",
+        "fe-21",
+        "fe-22",
+        "fe-23",
+        "fe-24",
+        "fe-25",
+        "fe-26"
+      ],
+      "refs": "PRD.md Non-functional requirements (Lighthouse mobile Performance 90+, Accessibility 95+, Best Practices 95+, SEO 100; LCP under 2.5s; CLS under 0.05; heavy parts code split without changing first paint). QA_CHECKLIST.md Quality. TECH_STACK.md (images, motion, fonts). Map 135-155 (assets and LCP portrait), 1146-1190 (font traps).",
+      "brief": "Goal: measure every route like QA_CHECKLIST.md asks and give precise, owner-grouped fixes until the targets hold, without changing a single visible pixel.\n\nPREREQUISITE (orchestrator): a production server of the current tree at http://localhost:3300 (the lead runs npm run build, copies public/ and .next/static next to .next/standalone, then PORT=3300 node .next/standalone/server.js). You never build. If it is not running, stop and ask for it.\n\nBuild:\n- scripts/lighthouse.mjs (run with npm run lighthouse -- --url http://localhost:3300 [--route /works] [--form mobile|desktop]): uses lighthouse and chrome-launcher, mobile preset by default (desktop optional), all 4 categories, for each of the 5 routes 3 runs and the median; writes JSON to tests/perf/out/ (git ignored); prints a table of the 4 scores plus LCP, CLS, TBT, and the LCP element; exits 1 when a score is below tests/perf/budgets.json.\n- tests/perf/budgets.json: the PRD thresholds. tests/perf/lighthouse.test.ts: Vitest unit test for the pure helpers of the script (median, budget check, table formatting).\n\nAudit (read code and the Lighthouse JSON): LCP element and its priority (About portrait priority and fetchPriority; other routes), font loading (only the decided weights, preload, no layout shift), image sizes and formats (next/image sizes attributes), JS per route and whether booking steps, chat panel, PureBody modal, the globe and the orbit are split without changing first paint, long tasks from rAF loops that never stop, CLS sources, unused CSS is acceptable (global CSS port), caching headers of the standalone server for /_next/static, /imgs and /vedioes. Suggest nginx cache and compression settings for the README (fe-01 owns it) in the report.\n\nWave 3 rules: you own only the files listed. You never edit page, component, content or CSS files. Every problem you find goes into your report as a fix list grouped by the owning brief id (see the owns lists in .claude/plans/frontend-plan.json), each item with the file, the exact symptom, how to reproduce it (route, width, theme, steps), the reference line that shows the correct result, and a suggested fix. Use the running servers (frontend http://localhost:3000, reference http://localhost:4400/faisalhanif-redesign.html, backend http://localhost:8787); never start next dev or run next build.",
+      "checks": [
+        "npm run lighthouse -- --url http://localhost:3300 runs all 5 routes and prints the table (JSON in tests/perf/out/)",
+        "npx vitest run tests/perf/lighthouse.test.ts passes; typecheck, eslint and prettier clean for owned files",
+        "Report gives the median mobile scores per route and a fix list per owning brief for every miss (Performance 90, Accessibility 95, Best Practices 95, SEO 100, LCP 2.5s, CLS 0.05)"
+      ]
+    },
+    {
+      "id": "fe-29",
+      "title": "Accessibility audit: axe on every route and theme, keyboard flows, focus, modals, touch targets",
+      "wave": 3,
+      "owns": [
+        "frontend/tests/a11y/axe.spec.ts",
+        "frontend/tests/a11y/keyboard.spec.ts",
+        "frontend/tests/a11y/targets.spec.ts",
+        "frontend/tests/a11y/helpers.ts"
+      ],
+      "deps": [
+        "fe-14",
+        "fe-15",
+        "fe-16",
+        "fe-17",
+        "fe-18",
+        "fe-19",
+        "fe-20",
+        "fe-21",
+        "fe-22",
+        "fe-23",
+        "fe-24",
+        "fe-25",
+        "fe-26"
+      ],
+      "refs": "PRD.md Non-functional (Accessibility: semantic HTML, full keyboard access, visible focus, aria on tabs, modals and toggles, AA contrast in both themes, 44px touch targets on mobile). QA_CHECKLIST.md (Keyboard only; Responsive: touch targets). Orchestrator decisions (focus trap and return, aria-pressed on the theme toggle, Esc restores focus only when a modal closed). Map 1146-1190 and 2217-2255 (reference a11y gaps: shared landmark names, no focus trap), 8650-8667 (booking focus handling), 9054-9073 (chat open and close focus).",
+      "brief": "Goal: prove the rebuilt site is accessible to PRD level while looking exactly like the reference; anything that would need a visible change is reported as a question, not a fix.\n\nBuild (Playwright, project a11y, against http://localhost:3000):\n- axe.spec.ts: @axe-core/playwright with wcag2a, wcag2aa, wcag21a, wcag21aa tags on every route in light and dark at 1440 and 390, plus the open booking modal (each step), the open chat panel and the open PureBody modal. Fail on serious and critical violations; attach the full results.\n- keyboard.spec.ts: Tab through each route and assert every interactive element is reachable and shows a visible focus indicator (non empty outline or box shadow change); rail and dock navigation by keyboard triggers the page change; Profile skill tabs follow the tabs pattern (arrow keys, aria-selected, aria-controls); booking modal: focus lands on close, Tab is trapped, Esc closes and focus returns to the opener; chat: open, type, send, Esc, focus back on the FAB; after a chat Book action focus returns to the chat button; theme toggle exposes aria-pressed; Approvals rail arrow keys; calendar arrow keys, PageUp and PageDown, Home and End.\n- targets.spec.ts: at 390x844 and 360x780 every visible link, button and form control in the top bar, dock, page content, chat and booking is at least 44x44 CSS px (or has a 44px hit area); list offenders with their reference size (if the reference itself is smaller, report it as an owner question instead of a failure).\n- helpers.ts: shared route list, theme setup (localStorage fh-theme), reduced motion option.\nAlso check contrast in both themes with axe results and name every failing token pair.\n\nWave 3 rules: you own only the files listed. You never edit page, component, content or CSS files. Every problem you find goes into your report as a fix list grouped by the owning brief id (see the owns lists in .claude/plans/frontend-plan.json), each item with the file, the exact symptom, how to reproduce it (route, width, theme, steps), the reference line that shows the correct result, and a suggested fix. Use the running servers (frontend http://localhost:3000, reference http://localhost:4400/faisalhanif-redesign.html, backend http://localhost:8787); never start next dev or run next build.",
+      "checks": [
+        "npm run test:a11y runs the three specs; results attached",
+        "Report: zero serious or critical axe violations, or a fix list per owning brief; keyboard flows all pass or have fix items; touch target list",
+        "Typecheck, eslint and prettier clean for owned files"
+      ]
+    },
+    {
+      "id": "fe-30",
+      "title": "Visual parity sweep, navigation and function e2e, responsive checks and zero console errors",
+      "wave": 3,
+      "owns": [
+        "frontend/tests/e2e/navigation.spec.ts",
+        "frontend/tests/e2e/functional.spec.ts",
+        "frontend/tests/e2e/responsive.spec.ts",
+        "frontend/tests/e2e/console.spec.ts",
+        "frontend/tests/e2e/helpers.ts"
+      ],
+      "deps": [
+        "fe-14",
+        "fe-15",
+        "fe-16",
+        "fe-17",
+        "fe-18",
+        "fe-19",
+        "fe-20",
+        "fe-21",
+        "fe-22",
+        "fe-23",
+        "fe-24",
+        "fe-25",
+        "fe-26"
+      ],
+      "refs": "QA_CHECKLIST.md (Visual parity, Responsive, Function, Zero console errors). sharedDecisions section 6 (harness). Orchestrator decisions (hash redirects, popstate curtain, dropped clicks, CV same origin, PureBody Open full page link). Map 1662-1831 (router and curtain), 2153-2255 (porting plan and notes), 1941-1955 (entrance timing), 122-130 (breakpoints). PRD.md Assets (sass-app.html must load with no missing files).",
+      "brief": "Goal: the final frontend parity and behaviour sweep that QA_CHECKLIST.md needs, turned into repeatable Playwright tests plus a precise fix list.\n\n1. Visual: run npm run test:visual (5 routes x 7 widths x 2 themes). For every capture above 0.5%, open the three PNGs, find the region, compare with the reference markup and CSS, and write a fix item for the owning brief. Then check the QA by-eye states with npm run visual --hover / --click / --motion captures: buttons, cards, socials, stat count ups, tabs, filters, modals, every booking step, chat, theme toggle reveal end state, curtain covering state, preloader.\n2. navigation.spec.ts: every rail, dock, top bar, footer and Next page link; the curtain timing (is-on at 0, route commit after 560ms, is-out 140ms after commit, cleared 640ms later) and that clicks during it are dropped with the URL unchanged; Back and Forward (curtain or the decided fallback) and scroll to top; deep links /profile#pf-exp style anchors with the 84 or 32px offset; old hash links /#works, /#contact, /#about, /#pf-exp redirect as decided; /index.html redirects to /; same page anchors glide; revisiting a page keeps reveals and replays hero entrances.\n3. functional.spec.ts: Download CV returns the PDF from /imgs/Faisal-CVS.pdf; every social and project link has the reference href and target; the PureBody Open full page link is https://faisalhanif.work/sass-app.html and /sass-app.html on the app loads with no failed requests except third party CDNs; contact form validation messages and the mailto or API path; booking through all screens (API mocked with page.route when NEXT_PUBLIC_API_URL is set, mailto otherwise); chat local answers and API fallback (route the API to fail).\n4. responsive.spec.ts: no horizontal scroll at every width from 320 to 1920 in steps of 40 plus the 7 QA widths; the About hero stacks copy first at 900px and below, other heroes stack at 1023px and below in the reference order; nothing sits under the top bar or dock (anchor targets and last content visible).\n5. console.spec.ts: zero console errors and warnings (and no failed same-origin requests) on every route, in both themes, while navigating between all pages and opening every modal and the chat.\n\nWave 3 rules: you own only the files listed. You never edit page, component, content or CSS files. Every problem you find goes into your report as a fix list grouped by the owning brief id (see the owns lists in .claude/plans/frontend-plan.json), each item with the file, the exact symptom, how to reproduce it (route, width, theme, steps), the reference line that shows the correct result, and a suggested fix. Use the running servers (frontend http://localhost:3000, reference http://localhost:4400/faisalhanif-redesign.html, backend http://localhost:8787); never start next dev or run next build.",
+      "checks": [
+        "npm run test:visual result summary in the report (count above 0.5% and each diff percent)",
+        "npx playwright test --project=e2e tests/e2e/navigation.spec.ts tests/e2e/functional.spec.ts tests/e2e/responsive.spec.ts tests/e2e/console.spec.ts: pass, or each failure maps to a fix item",
+        "Fix list grouped by owning brief with route, width, theme, reproduction steps and the reference line",
+        "Typecheck, eslint and prettier clean for owned files"
+      ]
+    }
+  ],
+  "openQuestions": [
+    "Tab icon: the reference has no favicon link. fe-27 adds src/app/icon.svg copied from public/imgs/F-Logo3-optimized.svg only to avoid a favicon 404 in the console (nothing on the page changes). Owner to confirm, or drop it and accept the 404.",
+    "Performance brief fe-28 needs a production server of the current tree at http://localhost:3300 (lead runs npm run build, copies public/ and .next/static into .next/standalone, then PORT=3300 node .next/standalone/server.js), because workers never build. Please provide it before starting fe-28.",
+    "From wave 2 on, please run the frontend dev server with NEXT_PUBLIC_API_URL=http://localhost:8787 (backend CORS must allow http://localhost:3000), so the chat, contact and booking workers can see the API path; the mailto and local responder paths are covered by unit tests and by fe-30 with page.route.",
+    "Overlays use root parallel route slots (@booking, @chat, @purebody with default.tsx) so no wave 1 file imports a wave 2 feature. Next docs say soft navigation keeps slot state; the fe-13 and fe-30 reviews must confirm the chat keeps its history and no overlay remounts across route changes. If it does remount, the fix is a follow-up brief that mounts the three overlays from one client component in the layout.",
+    "Doc fix for REFERENCE_MAP.md: the 11.2.0 source index table (map 1226-1233) places the modal shell in overlays.css and the toast and global reduced motion in base.css, while 11.1.12 (map 1103-1146) puts them in layout.css. The plan follows 11.1.12; please correct 11.2.0.",
+    "Doc fix for REFERENCE_MAP.md 11.7.15 (map 9143-9144): CHAT_CV_URL is written as the absolute https://faisalhanif.work URL, but orchestrator-decisions.md says the CV is served from the same origin everywhere; fe-07 uses /imgs/Faisal-CVS.pdf.",
+    "Doc note for TECH_STACK.md: the plan ports magnetic and tilt as document delegation (lib/bindMotion.ts, like FH.bind) instead of useMagnetic and useTilt hooks, and renders reference markup with its classes instead of generic Button, Pill and Card components. Behaviour and pixels are the same; update the doc if you agree.",
+    "The visual harness needs internet access for the reference's Google Fonts (and next/font downloads its files at dev and build time). If the machine is offline, the font rendering on the reference side will differ and every diff will be high.",
+    "MISSING_ASSETS.md (fe-06) cannot compare with the old site's git main because workers never run git; if fe-06 reports missing files, the orchestrator should check origin/main for them."
+  ]
+}

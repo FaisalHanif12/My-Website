@@ -1,0 +1,1033 @@
+{
+  "meta": {
+    "schemaVersion": 1,
+    "source": "reference-design/faisalhanif-redesign.html",
+    "referenceMapSections": [
+      "11.7.15 Chat knowledge",
+      "11.7.17 Section 10 check: chat",
+      "11.1.11 Content data (site.ts)",
+      "11.3.10 Content data (About: site, socials, services, testimonials, pricing)",
+      "11.4.12 Content data (Profile: experience, education, skills, languages, core expertise)",
+      "11.5.11 Content data (Works and Approvals: projects, certificates)",
+      "11.6.9 Content data (Contact: methods, hours, location)",
+      "11.7.10 Booking content data"
+    ],
+    "knownDifferences": [
+      "Projects: the stats and the chat say 10+ projects, while the Works page lists 14 projects.",
+      "Certifications: the Approvals stat says 6+, while the Approvals page lists 7 certificates.",
+      "Companies: the stats and the chat say 3+ companies, while the Profile page lists four roles at four companies.",
+      "Response time: the chat contact reply and the Email Me method say 2-4 hours; the chat availability reply, the contact form note, the form done message and the Response Time stat say 24 hours.",
+      "Project descriptions and tags: the Works cards and the chat knowledge word them differently; both versions are kept.",
+      "Upwork: the chat experience reply says \"Upwork\", the Profile page says \"Upwork Platform\"."
+    ]
+  },
+  "person": {
+    "name": "Faisal Hanif",
+    "role": "Software Engineer",
+    "roles": [
+      "Frontend Development",
+      "Backend Development",
+      "Database Management",
+      "System Design",
+      "Cloud Orchestration"
+    ],
+    "summary": "Faisal Hanif, software engineer in Lahore building AI-powered web and mobile products with React, Next.js, Node.js and LLMs.",
+    "location": "Lahore, Pakistan",
+    "city": "Lahore",
+    "country": "Pakistan",
+    "timezone": "Asia/Karachi",
+    "timezoneLabel": "GMT+5",
+    "timezoneAbbr": "PKT",
+    "coordinates": "31.5204° N, 74.3587° E",
+    "email": "mehrfaisal111@gmail.com",
+    "phone": {
+      "display": "+92 314 8166354",
+      "href": "tel:+923148166354"
+    },
+    "cvUrl": "https://faisalhanif.work/imgs/Faisal-CVS.pdf",
+    "mapUrl": "https://maps.google.com/?q=Lahore,Pakistan",
+    "hours": {
+      "text": "Mon-Fri, 9AM-6PM (GMT+5)",
+      "days": "Monday to Friday",
+      "workingDays": [1, 2, 3, 4, 5],
+      "start": "09:00",
+      "end": "18:00"
+    },
+    "availability": ["Open to Work", "Available for Projects"],
+    "responseTimes": [
+      {
+        "value": "2-4 hours",
+        "mentions": [
+          {
+            "where": "chat contact reply",
+            "text": "usually replies within 2-4 hours"
+          },
+          {
+            "where": "contact page, Email Me method",
+            "text": "Usually responds within 2-4 hours"
+          }
+        ]
+      },
+      {
+        "value": "24 hours",
+        "mentions": [
+          {
+            "where": "chat availability reply",
+            "text": "replies to messages within 24 hours"
+          },
+          {
+            "where": "contact form note",
+            "text": "I'll respond within 24 hours with next steps"
+          },
+          {
+            "where": "contact form done message",
+            "text": "Your message is on its way. I will get back to you at <email> within 24 hours."
+          },
+          {
+            "where": "Response Time stat (About talk first card and Contact hero)",
+            "text": "24h"
+          }
+        ]
+      }
+    ]
+  },
+  "socials": [
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/faisal-frontend-developer/"
+    },
+    {
+      "id": "x",
+      "label": "X (Twitter)",
+      "url": "https://x.com/FaisalHanif333"
+    },
+    {
+      "id": "github",
+      "label": "GitHub",
+      "url": "https://github.com/FaisalHanif12"
+    },
+    {
+      "id": "quora",
+      "label": "Quora",
+      "url": "https://www.quora.com/profile/Faisal-Hanif-126"
+    },
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "https://www.instagram.com/faisal_hanif_0/"
+    }
+  ],
+  "stats": [
+    {
+      "page": "about",
+      "where": "About hero",
+      "items": [
+        { "label": "Years Coding", "value": "3+" },
+        { "label": "Projects", "value": "10+" },
+        { "label": "Companies", "value": "3+" }
+      ]
+    },
+    {
+      "page": "about",
+      "where": "About pricing, Talk first card",
+      "items": [
+        { "label": "Response Time", "value": "24h" },
+        { "label": "Projects Completed", "value": "10+" },
+        { "label": "Client Satisfaction", "value": "100%" }
+      ]
+    },
+    {
+      "page": "profile",
+      "where": "Profile hero",
+      "items": [
+        { "label": "Years Coding", "value": "3+" },
+        { "label": "Degree", "value": "BS-SE" },
+        { "label": "Companies", "value": "3+" }
+      ]
+    },
+    {
+      "page": "works",
+      "where": "Works hero",
+      "items": [
+        { "label": "Projects", "value": "10+" },
+        { "label": "Technologies", "value": "7+" },
+        { "label": "Responsive", "value": "100%" }
+      ]
+    },
+    {
+      "page": "approvals",
+      "where": "Approvals hero",
+      "items": [
+        { "label": "Certifications", "value": "6+" },
+        { "label": "Learning Hours", "value": "200+" },
+        { "label": "Video Tutorials", "value": "15+" }
+      ]
+    },
+    {
+      "page": "contact",
+      "where": "Contact hero",
+      "items": [
+        { "label": "Response Time", "value": "24h" },
+        { "label": "Projects Completed", "value": "10+" },
+        { "label": "Client Satisfaction", "value": "100%" }
+      ]
+    }
+  ],
+  "services": {
+    "lead": "Four areas I work across, from the first screen to the cloud it runs on.",
+    "areas": [
+      {
+        "id": "web",
+        "number": "01",
+        "kicker": "Frontend",
+        "title": "Web Development",
+        "description": "Crafting responsive, high-performance web applications using modern frameworks and cutting-edge technologies.",
+        "features": ["Responsive Design", "Performance Optimization", "Modern UI/UX"],
+        "stack": [
+          "React.js",
+          "Next.js",
+          "TypeScript",
+          "Tailwind CSS",
+          "Node.js",
+          "Express.js",
+          "MongoDB",
+          "SQL",
+          "API Integration"
+        ]
+      },
+      {
+        "id": "mobile",
+        "number": "02",
+        "kicker": "Mobile",
+        "title": "Mobile Development",
+        "description": "Creating cross-platform mobile applications with native performance and exceptional user experience.",
+        "features": ["Cross-Platform", "Native Performance", "App Store Ready"],
+        "stack": [
+          "React Native",
+          "Expo",
+          "iOS",
+          "Android",
+          "Node.js",
+          "Express.js",
+          "MongoDB",
+          "SQL",
+          "API Integration"
+        ]
+      },
+      {
+        "id": "ai",
+        "number": "03",
+        "kicker": "AI / LLM",
+        "title": "AI/LLM Integration",
+        "description": "Integrating large language models into real products: intelligent assistants, AI-powered features, and automated workflows that make applications smarter.",
+        "features": ["AI Chatbots & Assistants", "Agentic Workflows", "Personalized AI Features"],
+        "stack": ["OpenAI", "Claude", "LLM APIs", "Prompt Engineering", "RAG", "MCP"]
+      },
+      {
+        "id": "cloud",
+        "number": "04",
+        "kicker": "Cloud",
+        "title": "Cloud Orchestration",
+        "description": "Orchestrating, deploying, and scaling cloud infrastructure with containerization, CI/CD pipelines, and modern DevOps practices for reliable production systems.",
+        "features": ["Cloud Architecture", "Automated Deployment", "Scalable Infrastructure"],
+        "stack": ["AWS", "Docker", "CI/CD", "Vercel", "Netlify"]
+      }
+    ]
+  },
+  "pricing": {
+    "currency": "USD",
+    "plan": {
+      "name": "Professional",
+      "kicker": "Full Stack + AI Power",
+      "rate": 25,
+      "unit": "hour",
+      "display": "$25/hour",
+      "covers": [
+        "AI/LLM Integration",
+        "Frontend",
+        "Backend API",
+        "Database",
+        "Performance",
+        "Cloud",
+        "Maintenance"
+      ]
+    },
+    "customNote": "Need a custom solution? Let's discuss your project",
+    "sessions": [
+      {
+        "id": "quick",
+        "name": "Quick Chat",
+        "minutes": 30,
+        "durationLabel": "30 minutes",
+        "price": 15,
+        "description": "Perfect for initial discussions and project exploration",
+        "features": ["Project overview", "Requirements discussion", "Technology suggestions"]
+      },
+      {
+        "id": "deep",
+        "name": "Technical Deep Dive",
+        "minutes": 60,
+        "durationLabel": "60 minutes",
+        "price": 25,
+        "description": "Comprehensive discussion for complex projects",
+        "features": ["Detailed planning", "Architecture review", "Timeline & budget"]
+      }
+    ],
+    "sessionsPerBooking": {
+      "min": 1,
+      "max": 10
+    },
+    "payment": {
+      "online": false,
+      "note": "There is no online payment on the site. Payment details follow from Faisal by email after booking."
+    }
+  },
+  "booking": {
+    "days": "Monday to Friday",
+    "workingDays": [1, 2, 3, 4, 5],
+    "timezone": "Asia/Karachi",
+    "slotStartHours": [9, 10, 11, 12, 13, 14, 15, 16, 17],
+    "slotsSummary": "Hourly start times from 09:00 to 17:00 PKT, so every session ends by 18:00 PKT. The calendar shows the times in the visitor's own time zone.",
+    "window": "Weekdays from tomorrow up to 60 days ahead.",
+    "maxDaysAhead": 60,
+    "minNoticeHours": 2,
+    "platforms": [
+      { "name": "Google Meet", "note": "No downloads needed" },
+      { "name": "Zoom", "note": "Professional conferencing" }
+    ],
+    "howToOpen": [
+      "Any Book button on the site, such as \"Book\" in the top bar or \"Book Meeting\" on the pages",
+      "the chat actions \"Book a call\", \"Book Quick Chat\" and \"Book Deep Dive\""
+    ],
+    "steps": [
+      "Pick a session type and the number of sessions (1 to 10), then press \"Book Session\"",
+      "Details: email, name, and an optional phone number and company",
+      "Schedule: pick a weekday and one of the time slots",
+      "Confirm: choose Google Meet or Zoom, add optional notes, then press \"Complete Booking\""
+    ],
+    "expect": [
+      {
+        "title": "Personal Consultation",
+        "text": "One-on-one discussion tailored to your specific needs and goals"
+      },
+      {
+        "title": "Expert Insights",
+        "text": "Professional recommendations and innovative solutions for your project"
+      },
+      {
+        "title": "Flexible Timing",
+        "text": "Choose a time that works best for your schedule across different time zones"
+      },
+      {
+        "title": "Confidential & Secure",
+        "text": "Your information and project details are kept private and secure at all times"
+      }
+    ],
+    "afterBooking": [
+      "The confirmation and meeting link are sent by email.",
+      "When more than one session is booked, the other sessions are planned together on the first call.",
+      "To reschedule or cancel, reply to the confirmation email."
+    ]
+  },
+  "projects": [
+    {
+      "id": "purebody",
+      "number": "01",
+      "name": "PureBody",
+      "category": "SaaS App",
+      "badge": "latest",
+      "featured": true,
+      "description": "Live SaaS app on Android & App Store — complete AI system powering personalized diet plans, smart workout tracking, and an AI coach that adapts to every user.",
+      "chatDescription": "Live SaaS app on Android and the App Store. A complete AI system powering personalized diet plans, smart workout tracking and an AI coach that adapts to every user.",
+      "tags": ["React Native", "Node.js", "MongoDB", "Push Notifications", "LLM API", "Hostinger"],
+      "chatTags": "React Native, Node.js, MongoDB, Push Notifications, LLM API",
+      "role": null,
+      "liveUrl": "https://faisalhanif.work/sass-app.html",
+      "sourceUrl": null,
+      "liveLinkBroken": false,
+      "chatKeywords": ["purebody", "pure body"]
+    },
+    {
+      "id": "uha-international",
+      "number": "02",
+      "name": "UHA International",
+      "category": "React.js",
+      "badge": "live",
+      "featured": true,
+      "description": "UHA corporate website covering tech, real estate & trading — with built-in AI chat support and Nodemailer turning visitor inquiries into real business.",
+      "chatDescription": "Corporate website covering tech, real estate and trading, with built-in AI chat support and Nodemailer turning visitor inquiries into real business.",
+      "tags": ["React.js", "Node.js", "Nodemailer", "API Integration"],
+      "chatTags": "React.js, Node.js, Nodemailer, API Integration",
+      "role": null,
+      "liveUrl": "https://uha-international.com/",
+      "sourceUrl": null,
+      "liveLinkBroken": false,
+      "chatKeywords": ["uha", "uha international"]
+    },
+    {
+      "id": "fit-for-living",
+      "number": "03",
+      "name": "Fit For Living",
+      "category": "Client Website",
+      "badge": "live",
+      "featured": true,
+      "description": "Business website for a Geelong gym & coaching studio — membership pricing, programs, and a live weekly class timetable that highlights the next session in local time.",
+      "chatDescription": "Business website for a Geelong gym and coaching studio, with membership pricing, programs and a live weekly class timetable.",
+      "tags": ["HTML5", "CSS3", "JavaScript", "Responsive Design", "Netlify"],
+      "chatTags": "HTML5, CSS3, JavaScript, Netlify",
+      "role": null,
+      "liveUrl": "https://fitforliving.netlify.app/",
+      "sourceUrl": null,
+      "liveLinkBroken": false,
+      "chatKeywords": ["fit for living", "fitforliving"]
+    },
+    {
+      "id": "gitpulse",
+      "number": "04",
+      "name": "GitPulse",
+      "category": "Next.js",
+      "badge": "live",
+      "featured": true,
+      "description": "GitHub activity tracking platform for coding bootcamps — role-based dashboards for admins, coordinators, leadership, and learners with cohort management, scoring, and leaderboards.",
+      "chatDescription": "GitHub activity tracking platform for coding bootcamps, with role-based dashboards, cohort management, scoring and leaderboards.",
+      "tags": ["Next.js", "React", "GitHub API", "Role-Based Access"],
+      "chatTags": "Next.js, React, GitHub API, Role-Based Access",
+      "role": null,
+      "liveUrl": "https://gitpulseee.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/GitPulse-",
+      "liveLinkBroken": false,
+      "chatKeywords": ["gitpulse", "git pulse"]
+    },
+    {
+      "id": "smart-health-care",
+      "number": "05",
+      "name": "Smart Health Care",
+      "category": "Full Stack",
+      "badge": "live",
+      "featured": false,
+      "description": "A full-featured fitness tracker platform with user activity monitoring, workout scheduling, and progress analytics.",
+      "chatDescription": "A full-featured fitness tracker with activity monitoring, workout scheduling and progress analytics.",
+      "tags": ["React", "Node.js", "MongoDB", "Express"],
+      "chatTags": "React, Node.js, MongoDB, Express",
+      "role": null,
+      "liveUrl": "https://smart-health-care.vercel.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/Smart-health-Care",
+      "liveLinkBroken": false,
+      "chatKeywords": ["smart health", "fitness tracker"]
+    },
+    {
+      "id": "smart-gallery-app",
+      "number": "06",
+      "name": "Smart Gallery App",
+      "category": "React Native",
+      "badge": "live",
+      "featured": false,
+      "description": "An intelligent photo gallery application with advanced sorting, filtering, and AI-powered image recognition features.",
+      "chatDescription": "An intelligent photo gallery with advanced sorting, filtering and AI-powered image recognition.",
+      "tags": ["React Native", "Expo", "Async Storage", "OPEN AI"],
+      "chatTags": "React Native, Expo, Async Storage, OpenAI",
+      "role": null,
+      "liveUrl": "https://smartgallery-display.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/SmartGallery",
+      "liveLinkBroken": false,
+      "chatKeywords": ["smart gallery", "gallery app"]
+    },
+    {
+      "id": "echo-ai",
+      "number": "07",
+      "name": "Echo AI",
+      "category": "React.js",
+      "badge": "featured",
+      "featured": false,
+      "description": "An advanced AI-powered conversational interface with natural language processing and intelligent response generation.",
+      "chatDescription": "An AI-powered conversational interface with natural language processing and intelligent response generation.",
+      "tags": ["React", "OpenAI", "TypeScript", "Tailwind"],
+      "chatTags": "React, OpenAI, TypeScript, Tailwind",
+      "role": null,
+      "liveUrl": "https://echoaai.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/Echoai",
+      "liveLinkBroken": false,
+      "chatKeywords": ["echo ai", "echoai"]
+    },
+    {
+      "id": "medicine-store-app",
+      "number": "08",
+      "name": "Medicine Store App",
+      "category": "React Native",
+      "badge": "live",
+      "featured": false,
+      "description": "A comprehensive pet healthcare management system for tracking medications and medical records for animal.",
+      "chatDescription": "A pet healthcare app for tracking medications and medical records for animals.",
+      "tags": ["React Native", "Expo", "Async Storage"],
+      "chatTags": "React Native, Expo, Async Storage",
+      "role": null,
+      "liveUrl": "https://medicaredisplay.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/medicine-tracker-",
+      "liveLinkBroken": false,
+      "chatKeywords": ["medicine store", "medicine app", "medicare", "pet health"]
+    },
+    {
+      "id": "soledeck",
+      "number": "09",
+      "name": "Soledeck",
+      "category": "E-commerce",
+      "badge": "live",
+      "featured": false,
+      "description": "A modern e-commerce platform for sneakers with advanced filtering, payment integration, and inventory management.",
+      "chatDescription": "A modern sneaker store with advanced filtering, Stripe payments and inventory management.",
+      "tags": ["Next.js", "Stripe", "MongoDB", "Redux"],
+      "chatTags": "Next.js, Stripe, MongoDB, Redux",
+      "role": null,
+      "liveUrl": "https://soledeckf.vercel.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/Soledeck",
+      "liveLinkBroken": true,
+      "chatKeywords": ["soledeck", "sneaker store", "sneaker shop"]
+    },
+    {
+      "id": "financial-fusion",
+      "number": "10",
+      "name": "Financial Fusion",
+      "category": "FinTech",
+      "badge": "live",
+      "featured": false,
+      "description": "A comprehensive financial management application with expense tracking, budget planning, and investment analytics.",
+      "chatDescription": "A financial management app with expense tracking, budget planning and investment analytics.",
+      "tags": ["React Native", "Charts.js", "SQLite", "Redux"],
+      "chatTags": "React Native, Charts.js, SQLite, Redux",
+      "role": null,
+      "liveUrl": "https://financial-fusion.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/FinancialFusion",
+      "liveLinkBroken": false,
+      "chatKeywords": ["financial fusion", "fintech app", "expense tracker"]
+    },
+    {
+      "id": "yoom",
+      "number": "11",
+      "name": "YOOM",
+      "category": "Communication",
+      "badge": "live",
+      "featured": false,
+      "description": "A modern video conferencing platform with real-time collaboration, screen sharing, and meeting management features.",
+      "chatDescription": "A video conferencing platform with real-time collaboration, screen sharing and meeting management.",
+      "tags": ["Next.js", "WebRTC", "Socket.io", "Clerk Auth"],
+      "chatTags": "Next.js, WebRTC, Socket.io, Clerk Auth",
+      "role": null,
+      "liveUrl": "https://faisal-yoom.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/YOOM",
+      "liveLinkBroken": false,
+      "chatKeywords": ["yoom", "video conferencing app"]
+    },
+    {
+      "id": "dosnexa",
+      "number": "12",
+      "name": "Dosnexa",
+      "category": "Healthcare",
+      "badge": "live",
+      "featured": false,
+      "description": "A comprehensive medical platform connecting patients with doctors, featuring appointment booking and telemedicine capabilities.",
+      "chatDescription": "A medical platform connecting patients with doctors, with appointment booking and telemedicine.",
+      "tags": ["Next.js", "Prisma", "PostgreSQL", "Shadcn/ui"],
+      "chatTags": "Next.js, Prisma, PostgreSQL, Shadcn/ui",
+      "role": null,
+      "liveUrl": "https://dosnexa.vercel.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/Dosnexa",
+      "liveLinkBroken": false,
+      "chatKeywords": ["dosnexa", "telemedicine"]
+    },
+    {
+      "id": "dsa-tracker",
+      "number": "13",
+      "name": "DSA Tracker",
+      "category": "Education",
+      "badge": "live",
+      "featured": false,
+      "description": "A comprehensive data structures and algorithms learning platform with progress tracking and coding challenges.",
+      "chatDescription": "A data structures and algorithms learning platform with progress tracking and coding challenges.",
+      "tags": ["React", "Material-UI", "Local Storage", "PWA"],
+      "chatTags": "React, Material-UI, PWA",
+      "role": null,
+      "liveUrl": "https://faisal-dsa-tracker.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/DSA-Tracker-",
+      "liveLinkBroken": false,
+      "chatKeywords": ["dsa tracker", "dsa"]
+    },
+    {
+      "id": "live-search-weather",
+      "number": "14",
+      "name": "Live Search Weather",
+      "category": "Utility",
+      "badge": "live",
+      "featured": false,
+      "description": "A real-time weather application with live search functionality, detailed forecasts, and location-based services.",
+      "chatDescription": "A real-time weather app with live search, detailed forecasts and location-based services.",
+      "tags": ["Next.js", "Weather API", "Geolocation", "CSS3"],
+      "chatTags": "Next.js, Weather API, Geolocation",
+      "role": null,
+      "liveUrl": "https://weather-faisal.netlify.app/",
+      "sourceUrl": "https://github.com/FaisalHanif12/Live-search-weather",
+      "liveLinkBroken": false,
+      "chatKeywords": ["live search weather", "weather app"]
+    }
+  ],
+  "experience": [
+    {
+      "id": "techxelo",
+      "title": "Software Engineer",
+      "company": "TechXelo",
+      "from": "2024",
+      "to": "2026",
+      "dates": "2024 - 2026",
+      "current": true,
+      "status": "current",
+      "description": "Integrating AI and LLMs into software engineering — building intelligent full-stack web and mobile applications with React.js, Next.js, Node.js, and MongoDB, powered by AI-driven features, smart automation, and scalable REST APIs across production systems.",
+      "tags": ["React.js", "Next.js", "Node.js", "Express.js", "MongoDB"]
+    },
+    {
+      "id": "upwork",
+      "title": "Freelance Developer",
+      "company": "Upwork Platform",
+      "from": "2023",
+      "to": "2024",
+      "dates": "2023 - 2024",
+      "current": false,
+      "status": "closed",
+      "description": "Collaborating with diverse international clients, delivering custom web solutions and building strong client relationships across various industries.",
+      "tags": ["Client Relations", "Custom Solutions", "Global Projects"]
+    },
+    {
+      "id": "uha-international",
+      "title": "Outsourcing Engineer",
+      "company": "UHA International",
+      "from": "2023",
+      "to": "2024",
+      "dates": "2023 - 2024",
+      "current": false,
+      "status": null,
+      "description": "Orchestrated project acquisition and client engagement strategies, expertly identifying opportunities and aligning them with company capabilities.",
+      "tags": ["Project Management", "Client Acquisition", "Strategy"]
+    },
+    {
+      "id": "viral-square",
+      "title": "React Native Developer",
+      "company": "Viral Square",
+      "from": "2022",
+      "to": "2023",
+      "dates": "2022 - 2023",
+      "current": false,
+      "status": null,
+      "description": "Specialized in cross-platform mobile development, creating seamless user experiences for iOS and Android applications.",
+      "tags": ["React Native", "Mobile Apps", "Cross-Platform"]
+    }
+  ],
+  "education": [
+    {
+      "id": "bs-se",
+      "level": "BACHELOR'S DEGREE",
+      "title": "Software Engineering",
+      "short": "BS-SE",
+      "institution": "University of Management & Technology, Lahore",
+      "years": "2020 - 2024",
+      "description": "Comprehensive software engineering program covering modern development practices, algorithms, and industry-standard methodologies.",
+      "tags": ["Software Engineering", "Data Structures", "Web Development", "Database Systems"]
+    },
+    {
+      "id": "inter",
+      "level": "INTERMEDIATE",
+      "title": "Computer Science",
+      "short": "Inter",
+      "institution": "Unique College, Lahore",
+      "years": "2018 - 2020",
+      "description": "Foundation in computing principles, programming fundamentals, and essential computer technology skills.",
+      "tags": ["Programming Basics", "Computer Science", "Mathematics"]
+    },
+    {
+      "id": "matric",
+      "level": "MATRICULATION",
+      "title": "Computer Science",
+      "short": "Matric",
+      "institution": "Unique College, Lahore",
+      "years": "2016 - 2018",
+      "description": "Early foundation in computing with hands-on activities and basic programming concepts introduction.",
+      "tags": ["Computer Basics", "Mathematics", "Science"]
+    }
+  ],
+  "skills": [
+    {
+      "group": "Programming Languages",
+      "items": [
+        { "name": "JavaScript", "level": 90 },
+        { "name": "TypeScript", "level": 85 },
+        { "name": "Node.js", "level": 85 },
+        { "name": "C++", "level": 60 }
+      ]
+    },
+    {
+      "group": "Frameworks & Libraries",
+      "items": [
+        { "name": "React.js", "level": 95 },
+        { "name": "Next.js", "level": 80 },
+        { "name": "React Native", "level": 80 },
+        { "name": "Express.js", "level": 70 }
+      ]
+    },
+    {
+      "group": "AI & LLM Frameworks",
+      "items": [
+        { "name": "LangChain", "level": 80 },
+        { "name": "LangGraph", "level": 75 },
+        { "name": "OpenAI API", "level": 85 },
+        { "name": "Claude API", "level": 80 }
+      ]
+    },
+    {
+      "group": "CSS & Styling",
+      "items": [
+        { "name": "Tailwind CSS", "level": 90 },
+        { "name": "Bootstrap", "level": 90 },
+        { "name": "CSS3", "level": 92 },
+        { "name": "Responsive Design", "level": 95 }
+      ]
+    }
+  ],
+  "languages": [
+    { "name": "English", "level": "Professional" },
+    { "name": "Urdu", "level": "Native" }
+  ],
+  "coreExpertise": [
+    "AI/LLM Integration",
+    "AI Agents & Workflows",
+    "Frontend Development",
+    "Backend Development",
+    "Mobile Development",
+    "Progressive Web Apps",
+    "Website Testing",
+    "Cloud Deployment",
+    "Performance Optimization",
+    "UI/UX Design"
+  ],
+  "certificates": [
+    {
+      "id": "claude-code-in-action",
+      "name": "Claude Code in Action",
+      "issuer": "Anthropic",
+      "type": "Certificate of Completion",
+      "date": "2026",
+      "link": "https://verify.skilljar.com/c/ckyyu2785vdw",
+      "area": "AI",
+      "tags": ["Claude Code", "Agentic Coding", "MCP", "AI Workflows"],
+      "description": "Hands-on training in AI-assisted software development with Claude Code, covering agentic coding workflows, context management, custom commands, MCP servers, and hooks for automating real-world engineering tasks."
+    },
+    {
+      "id": "claude-101",
+      "name": "Claude 101",
+      "issuer": "Anthropic",
+      "type": "Certificate of Completion",
+      "date": "2026",
+      "link": "https://verify.skilljar.com/c/drx9sbkavduo",
+      "area": "AI",
+      "tags": ["Claude AI", "Prompt Engineering", "Generative AI", "Productivity"],
+      "description": "Foundations of working effectively with Claude, including prompting techniques, projects, artifacts, and applying AI assistance to everyday research, writing, and development workflows."
+    },
+    {
+      "id": "google-frontend-web-development",
+      "name": "Frontend Web Development Professional Certificate",
+      "issuer": "Google",
+      "type": "Professional Certificate",
+      "date": "2024",
+      "link": "https://www.coursera.org/account/accomplishments/certificate/ZBMGZAEQPFMZ",
+      "area": "Frontend",
+      "tags": ["HTML5", "CSS3", "JavaScript", "Responsive Design"],
+      "description": "Comprehensive frontend development training covering HTML5, CSS3, JavaScript ES6+, responsive design, and modern frontend frameworks for building interactive web applications."
+    },
+    {
+      "id": "meta-react-front-end-developer",
+      "name": "React Front-End Developer Professional Certificate",
+      "issuer": "Meta",
+      "type": "Professional Certificate",
+      "date": "2024",
+      "link": "https://www.coursera.org/account/accomplishments/certificate/EE42JSYQPZ7D",
+      "area": "Frontend",
+      "tags": ["React", "JSX", "Hooks", "Redux"],
+      "description": "Advanced React development skills including hooks, state management, component architecture, and modern React patterns for building scalable single-page applications."
+    },
+    {
+      "id": "ibm-full-stack-web-development",
+      "name": "Full Stack Web Development Professional Certificate",
+      "issuer": "IBM",
+      "type": "Professional Certificate",
+      "date": "2023",
+      "link": "https://www.coursera.org/account/accomplishments/certificate/RKY4CN2NHHR3",
+      "area": "Backend",
+      "tags": ["Node.js", "Express", "MongoDB", "APIs"],
+      "description": "Complete web development training covering both frontend and backend technologies, including databases, APIs, deployment, and modern web development best practices."
+    },
+    {
+      "id": "aws-cloud-data-analytics",
+      "name": "AWS Cloud & Data Analytics Professional Certificate",
+      "issuer": "AWS",
+      "type": "Cloud Certification",
+      "date": "2023",
+      "link": "https://www.coursera.org/account/accomplishments/verify/3YLMQJ6HTBRE",
+      "area": "Cloud",
+      "tags": ["AWS", "Cloud Computing", "Data Analytics", "Security"],
+      "description": "Foundation-level understanding of AWS cloud services, data analytics, security best practices, and deployment strategies for scalable cloud-based data solutions."
+    },
+    {
+      "id": "meta-react-native-mobile-development",
+      "name": "Meta React Native Mobile Development Certificate",
+      "issuer": "Meta",
+      "type": "Professional Certificate",
+      "date": "2024",
+      "link": "https://www.coursera.org/account/accomplishments/certificate/BEMCRMJ7N46L",
+      "area": "Mobile",
+      "tags": ["React Native", "Mobile Development", "JavaScript", "UI/UX"],
+      "description": "Comprehensive training in building cross-platform mobile applications using React Native, covering UI/UX, navigation, state management, and deployment to app stores."
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Sarah Johnson",
+      "role": "Project Manager, TechCorp",
+      "quote": "Faisal delivered exceptional work on our React project. His attention to detail and problem-solving skills are outstanding. The application performance improved significantly after his optimizations.",
+      "chatQuote": "His attention to detail and problem-solving skills are outstanding.",
+      "tags": ["React.js", "Performance", "Optimization"],
+      "needsConfirmation": true
+    },
+    {
+      "name": "Amnan Hussain",
+      "role": "Infinity Edge Technology",
+      "quote": "I had the pleasure of working with Faisal on a challenging project. His exceptional coding skills and problem-solving abilities consistently delivered high-quality work, demonstrating both technical expertise and strong teamwork.",
+      "chatQuote": "Exceptional coding skills and problem-solving abilities.",
+      "tags": ["Team Work", "Problem Solving", "Quality Code"],
+      "needsConfirmation": false
+    },
+    {
+      "name": "Emily Rodriguez",
+      "role": "Lead Developer, AppSolutions",
+      "quote": "Faisal's expertise in React Native helped us launch our mobile app successfully. His code quality and documentation are top-notch. Highly recommended for any frontend development work.",
+      "chatQuote": "His code quality and documentation are top-notch.",
+      "tags": ["React Native", "Mobile App", "Documentation"],
+      "needsConfirmation": true
+    }
+  ],
+  "chat": {
+    "greeting": "Hi! I'm Faisal's assistant. How can I help you today?",
+    "starterChips": ["Services", "Rates", "Projects", "Experience", "Book a call", "Contact"],
+    "replies": {
+      "greet": {
+        "p": [
+          "Hello! I can tell you about Faisal's services, rates, projects or experience. What would you like to know?"
+        ],
+        "list": [],
+        "p2": []
+      },
+      "thanks": {
+        "p": ["Happy to help! Anything else you would like to know?"],
+        "list": [],
+        "p2": []
+      },
+      "services": {
+        "p": ["Faisal works across four areas:"],
+        "list": [
+          "**Web Development**: fast, responsive apps with React.js, Next.js, TypeScript and Node.js",
+          "**Mobile Development**: cross-platform iOS and Android apps with React Native and Expo",
+          "**AI/LLM Integration**: chatbots, agentic workflows and RAG with OpenAI, Claude and MCP",
+          "**Cloud Orchestration**: AWS, Docker, CI/CD, Vercel and Netlify"
+        ],
+        "p2": ["Want to talk through your project?"]
+      },
+      "web": {
+        "p": [
+          "**Web Development** is Faisal's core. He builds responsive, high-performance web apps with React.js, Next.js, TypeScript and Tailwind CSS, backed by Node.js, Express.js, MongoDB and SQL.",
+          "Recent examples: [GitPulse](https://gitpulseee.netlify.app/), [Soledeck](https://soledeckf.vercel.app/) and [UHA International](https://uha-international.com/)."
+        ],
+        "list": [],
+        "p2": []
+      },
+      "mobile": {
+        "p": [
+          "Faisal builds cross-platform mobile apps with React Native and Expo, ready for iOS and Android.",
+          "His latest is **PureBody**, a live AI fitness app on Android and the App Store with personalized diet plans and an AI coach. Others include [Smart Gallery](https://smartgallery-display.netlify.app/) and [Financial Fusion](https://financial-fusion.netlify.app/)."
+        ],
+        "list": [],
+        "p2": []
+      },
+      "ai": {
+        "p": ["AI is a big part of Faisal's work. He brings LLMs into real products:"],
+        "list": [
+          "AI chatbots and assistants, agentic workflows and personalized AI features",
+          "Tools: OpenAI, Claude API, LangChain, LangGraph, RAG and MCP",
+          "Examples: PureBody's AI coach, [Echo AI](https://echoaai.netlify.app/) and the AI chat on [UHA International](https://uha-international.com/)",
+          "Certified in Anthropic's Claude Code in Action and Claude 101 (2026)"
+        ],
+        "p2": []
+      },
+      "cloud": {
+        "p": [
+          "For **Cloud Orchestration** Faisal handles deployment and scaling with AWS, Docker, CI/CD pipelines, Vercel and Netlify. He also holds the AWS Cloud & Data Analytics Professional Certificate."
+        ],
+        "list": [],
+        "p2": []
+      },
+      "rates": {
+        "p": ["Here is how pricing works:"],
+        "list": [
+          "**Professional plan** (Full Stack + AI Power): **$25/hour**. Covers AI/LLM integration, frontend, backend API, database, performance, cloud and maintenance.",
+          "**Quick Chat** call: $15 per 30 minute session",
+          "**Technical Deep Dive** call: $25 per 60 minute session"
+        ],
+        "p2": ["Need a custom solution? Share your project and he will get back with next steps."]
+      },
+      "book": {
+        "p": ["You can book a video call right here:"],
+        "list": [
+          "**Quick Chat**: 30 minutes, $15. Good for first discussions",
+          "**Technical Deep Dive**: 60 minutes, $25. Planning, architecture and budget"
+        ],
+        "p2": ["Slots run Monday to Friday, 9AM to 6PM Pakistan time, shown in your own timezone."]
+      },
+      "projects": {
+        "p": ["Faisal has shipped 10+ projects. A few highlights:"],
+        "list": [
+          "**PureBody**: AI fitness SaaS on Android and the App Store",
+          "**GitPulse**: GitHub activity tracking for bootcamps ([live](https://gitpulseee.netlify.app/))",
+          "**UHA International**: corporate site with AI chat support ([live](https://uha-international.com/))",
+          "**Echo AI**: conversational AI interface ([live](https://echoaai.netlify.app/))",
+          "**Soledeck**: sneaker e-commerce with Stripe ([live](https://soledeckf.vercel.app/))",
+          "**YOOM**: video conferencing with WebRTC ([live](https://faisal-yoom.netlify.app/))"
+        ],
+        "p2": []
+      },
+      "experience": {
+        "p": ["Faisal has 3+ years of experience across 3+ companies:"],
+        "list": [
+          "**Software Engineer, TechXelo** (2024 - 2026, current): AI-powered full-stack web and mobile apps with React.js, Next.js, Node.js and MongoDB",
+          "**Freelance Developer, Upwork** (2023 - 2024): custom web solutions for international clients",
+          "**Outsourcing Engineer, UHA International** (2023 - 2024): project acquisition and client strategy",
+          "**React Native Developer, Viral Square** (2022 - 2023): cross-platform iOS and Android apps"
+        ],
+        "p2": []
+      },
+      "education": {
+        "p": ["Faisal's academic background:"],
+        "list": [
+          "**BS Software Engineering**, University of Management & Technology, Lahore (2020 - 2024)",
+          "**Intermediate, Computer Science**, Unique College, Lahore (2018 - 2020)",
+          "**Matric, Computer Science**, Unique College, Lahore (2016 - 2018)"
+        ],
+        "p2": []
+      },
+      "skills": {
+        "p": ["His main tools:"],
+        "list": [
+          "**Languages**: JavaScript, TypeScript, Node.js, C++",
+          "**Frameworks**: React.js, Next.js, React Native, Express.js",
+          "**AI & LLM**: LangChain, LangGraph, OpenAI API, Claude API",
+          "**Styling**: Tailwind CSS, Bootstrap, CSS3, responsive design"
+        ],
+        "p2": ["He speaks English at a professional level and Urdu natively."]
+      },
+      "certs": {
+        "p": ["Faisal holds 7 certifications, including:"],
+        "list": [
+          "**Claude Code in Action** and **Claude 101**, Anthropic (2026)",
+          "**React Front-End Developer** and **React Native Mobile Development**, Meta (2024)",
+          "**Frontend Web Development**, Google (2024)",
+          "**Full Stack Web Development**, IBM (2023)",
+          "**AWS Cloud & Data Analytics** (2023)"
+        ],
+        "p2": []
+      },
+      "contact": {
+        "p": ["Here is how to reach Faisal:"],
+        "list": [
+          "Email: [mehrfaisal111@gmail.com](mailto:mehrfaisal111@gmail.com), usually replies within 2-4 hours",
+          "Phone: [+92 314 8166354](tel:+923148166354), Mon-Fri, 9AM-6PM (GMT+5)"
+        ],
+        "p2": []
+      },
+      "location": {
+        "p": [
+          "Faisal is based in **Lahore, Pakistan** (GMT+5, PKT) and works with clients worldwide. It is {time} there right now."
+        ],
+        "list": [],
+        "p2": []
+      },
+      "avail": {
+        "p": [
+          "Yes, Faisal is available for work and new projects. He is reachable Monday to Friday, 9AM to 6PM (GMT+5), and replies to messages within 24 hours."
+        ],
+        "list": [],
+        "p2": []
+      },
+      "cv": {
+        "p": ["Here is Faisal's CV. It covers his experience, skills and education."],
+        "list": [],
+        "p2": []
+      },
+      "reviews": {
+        "p": ["A few words from clients:"],
+        "list": [
+          "\"His attention to detail and problem-solving skills are outstanding.\" **Sarah Johnson**, TechCorp",
+          "\"Exceptional coding skills and problem-solving abilities.\" **Amnan Hussain**, Infinity Edge Technology",
+          "\"His code quality and documentation are top-notch.\" **Emily Rodriguez**, AppSolutions"
+        ],
+        "p2": []
+      },
+      "about": {
+        "p": [
+          "**Faisal Hanif** is a software engineer in Lahore, Pakistan. He builds AI-powered web and mobile products with React, Next.js, Node.js and LLMs.",
+          "He has 3+ years of experience, 10+ projects and a BS in Software Engineering."
+        ],
+        "list": [],
+        "p2": []
+      },
+      "social": {
+        "p": ["You can find Faisal here:"],
+        "list": [
+          "[LinkedIn](https://www.linkedin.com/in/faisal-frontend-developer/)",
+          "[GitHub](https://github.com/FaisalHanif12)",
+          "[X](https://x.com/FaisalHanif333)",
+          "[Instagram](https://www.instagram.com/faisal_hanif_0/)",
+          "[Quora](https://www.quora.com/profile/Faisal-Hanif-126)"
+        ],
+        "p2": []
+      },
+      "fallback": {
+        "p": [
+          "I am not sure about that one, but Faisal can answer it directly. I can also help with his services, rates, projects or experience."
+        ],
+        "list": [],
+        "p2": []
+      }
+    },
+    "actions": {
+      "book": { "label": "Book a call" },
+      "quick": { "label": "Book Quick Chat" },
+      "deep": { "label": "Book Deep Dive" },
+      "form": { "label": "Send project details" },
+      "works": { "label": "See all projects" },
+      "certs": { "label": "View certifications" },
+      "cv": { "label": "Download CV", "href": "https://faisalhanif.work/imgs/Faisal-CVS.pdf" },
+      "mail": { "label": "Email Faisal", "href": "mailto:mehrfaisal111@gmail.com" },
+      "map": { "label": "View Map", "href": "https://maps.google.com/?q=Lahore,Pakistan" }
+    },
+    "projectCard": {
+      "builtWithPrefix": "Built with ",
+      "livePreviewLabel": "Live preview",
+      "sourceLabel": "Source",
+      "closedSourceText": "Closed source",
+      "separator": " · "
+    }
+  },
+  "siteLinks": {
+    "base": "https://faisalhanif.work",
+    "home": "https://faisalhanif.work/",
+    "profile": "https://faisalhanif.work/profile",
+    "works": "https://faisalhanif.work/works",
+    "approvals": "https://faisalhanif.work/approvals",
+    "contact": "https://faisalhanif.work/contact",
+    "contactForm": "https://faisalhanif.work/contact#ct-form"
+  }
+}

@@ -1,0 +1,69 @@
+/* tokens.css: reference L22-89 (only change: the three font tokens read the next/font variables --ff-jakarta, --ff-instrument, --ff-jetbrains) */
+/* =========================================================
+   DESIGN TOKENS
+   ========================================================= */
+:root{
+  --brand:#0e6655; --brand-600:#0a5a4a; --brand-700:#0f4c41; --brand-900:#08302a;
+  --accent:#10b981; --mint:#5fcf9f;
+  --grad:linear-gradient(135deg,#0e6655 0%,#0a5a4a 100%);
+  --grad-glow:linear-gradient(100deg,#0e6655 0%,#1f9c7f 45%,#5fcf9f 100%);
+
+  --bg:#f2f6f4; --bg-2:#e8efec;
+  --surface:#ffffff; --surface-2:#f6faf8; --surface-3:#eef5f2;
+  --line:rgba(15,76,65,.10); --line-strong:rgba(15,76,65,.20);
+  --ink:#0f231e; --ink-2:#34504a; --muted:#6b7f79;
+  --brand-ink:#0f4c41;          /* brand-coloured text */
+  --err:#c2410c;
+  --accent-soft:rgba(16,185,129,.12);
+  --brand-soft:rgba(14,102,85,.08);
+  --shadow-sm:0 1px 2px rgba(8,48,42,.06),0 2px 8px rgba(8,48,42,.05);
+  --shadow-md:0 2px 6px rgba(8,48,42,.05),0 12px 32px -8px rgba(8,48,42,.14);
+  --shadow-lg:0 4px 12px rgba(8,48,42,.06),0 30px 60px -20px rgba(8,48,42,.25);
+  --glow:0 10px 30px -10px rgba(14,102,85,.55);
+  --glass:rgba(255,255,255,.72);
+  --blob-a:rgba(16,185,129,.22); --blob-b:rgba(14,102,85,.20); --blob-c:rgba(95,207,159,.20);
+  --dot:rgba(15,76,65,.10);
+
+  --font-sans:var(--ff-jakarta),ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-serif:var(--ff-instrument),ui-serif,Georgia,'Times New Roman',serif;
+  --font-mono:var(--ff-jetbrains),ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --fs-display:clamp(3.1rem,7.6vw,7rem);
+  --fs-h2:clamp(2.2rem,4.6vw,3.9rem);
+  --fs-h3:clamp(1.15rem,1.6vw,1.4rem);
+  --fs-lead:clamp(1.02rem,1.25vw,1.18rem);
+  --fs-body:1rem; --fs-sm:.9rem; --fs-xs:.78rem; --fs-label:.72rem;
+
+  --r-sm:10px; --r-md:16px; --r-lg:24px; --r-xl:32px; --r-pill:999px;
+  --gutter:clamp(16px,4vw,48px);
+  --maxw:1240px;
+  --rail-w:104px;
+  --section-y:clamp(88px,12vw,160px);
+
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --ease-io:cubic-bezier(.65,0,.35,1);
+  --ease-soft:cubic-bezier(.33,1,.68,1);
+  --dur-1:.35s; --dur-2:.6s; --dur-3:.9s; --dur-4:1.2s;
+}
+[data-theme="dark"]{
+  --brand:#16876f; --brand-600:#0e6655; --brand-700:#8fe3c5; --brand-900:#062019;
+  --accent:#34d399; --mint:#6ee7b7;
+  --grad:linear-gradient(135deg,#0f7a64 0%,#0a5a4a 100%);
+  --grad-glow:linear-gradient(100deg,#34d399 0%,#5fcf9f 40%,#b6f0d9 100%);
+
+  --bg:#050f0c; --bg-2:#081612;
+  --surface:#0b1a16; --surface-2:#0f221d; --surface-3:#132a24;
+  --line:rgba(160,230,205,.08); --line-strong:rgba(160,230,205,.16);
+  --ink:#e9f4f0; --ink-2:#b4c9c2; --muted:#7d948d;
+  --brand-ink:#7fdcb9;
+  --err:#fb923c;
+  --accent-soft:rgba(52,211,153,.12);
+  --brand-soft:rgba(52,211,153,.07);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow-md:0 2px 6px rgba(0,0,0,.3),0 16px 36px -10px rgba(0,0,0,.6);
+  --shadow-lg:0 4px 12px rgba(0,0,0,.35),0 34px 70px -24px rgba(0,0,0,.8);
+  --glow:0 10px 34px -10px rgba(52,211,153,.45);
+  --glass:rgba(11,26,22,.72);
+  --blob-a:rgba(16,185,129,.16); --blob-b:rgba(14,102,85,.26); --blob-c:rgba(52,211,153,.10);
+  --dot:rgba(160,230,205,.07);
+}

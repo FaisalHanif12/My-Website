@@ -1,6 +1,19 @@
+# Dependencies
 node_modules/
+
+# Build and test output
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local scratch (dev mail previews and the like)
+tmp/
+
+# Env files (keep the example)
 .env
+.env.*
+!.env.example
+
+# Logs
 *.log
-.DS_Store
-backend/.env
-backend/node_modules
+npm-debug.log*
