@@ -1,6 +1,6 @@
 /**
- * Modal and toast system (fe-09) against the reference core (L4649-4663) and markup
- * (L4240-4243, L4494-4497, L4557).
+ * Modal and toast system (fe-09) against the reference core (L5018-5032) and markup
+ * (L4609-4612, L4863-4866, L4926).
  *
  * 1. Rendered shells match the reference attribute for attribute (order included).
  * 2. Click delegation: [data-close], [data-open], [data-book] ("deep" payload), first match wins.
@@ -89,32 +89,32 @@ afterEach(() => {
 
 describe('Modal markup', () => {
   it('reference lines are where the brief says', () => {
-    expect(ref(4240)).toContain('<div class="fh-modal ct-bk" id="booking" aria-hidden="true">');
-    expect(ref(4494)).toContain('<div class="fh-modal wk-pb" id="purebody" aria-hidden="true">');
-    expect(ref(4557)).toContain('<div class="toast" id="toast"');
+    expect(ref(4609)).toContain('<div class="fh-modal ct-bk" id="booking" aria-hidden="true">');
+    expect(ref(4863)).toContain('<div class="fh-modal wk-pb" id="purebody" aria-hidden="true">');
+    expect(ref(4926)).toContain('<div class="toast" id="toast"');
   });
 
-  it('booking shell matches L4240-4243 attribute for attribute (+ data-native-scroll, L5794)', () => {
+  it('booking shell matches L4609-4612 attribute for attribute (+ data-native-scroll, L6325)', () => {
     const { container } = render(
       <Providers>
         <Modal {...BOOKING} />
       </Providers>,
     );
-    const expected = parse(`${ref(4240, 4243)}</div></div>`);
-    // The booking script adds this at run time (L5794); it lands after aria-labelledby.
+    const expected = parse(`${ref(4609, 4612)}</div></div>`);
+    // The booking script adds this at run time (L6325); it lands after aria-labelledby.
     expected.querySelector('.fh-modal__panel')?.setAttribute('data-native-scroll', '');
     const actual = container.querySelector('#booking');
     expect(actual).not.toBeNull();
     expect(shape(actual as Element)).toBe(shape(expected));
   });
 
-  it('PureBody shell matches L4494-4497 attribute for attribute', () => {
+  it('PureBody shell matches L4863-4866 attribute for attribute', () => {
     const { container } = render(
       <Providers>
         <Modal {...PUREBODY} />
       </Providers>,
     );
-    const expected = parse(`${ref(4494, 4497)}</div></div>`);
+    const expected = parse(`${ref(4863, 4866)}</div></div>`);
     expect(shape(container.querySelector('#purebody') as Element)).toBe(shape(expected));
   });
 
@@ -519,9 +519,9 @@ function ToastHarness() {
 const toastEl = () => document.getElementById('toast') as HTMLElement;
 
 describe('Toast', () => {
-  it('is always mounted with the reference markup (L4557), empty and hidden', () => {
+  it('is always mounted with the reference markup (L4926), empty and hidden', () => {
     render(<ToastHarness />);
-    expect(shape(toastEl())).toBe(shape(parse(ref(4557))));
+    expect(shape(toastEl())).toBe(shape(parse(ref(4926))));
     expect(toastEl().className).toBe('toast');
     expect(toastEl()).toHaveTextContent('');
   });
@@ -551,7 +551,7 @@ describe('Toast', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it('a repeated identical toast swaps in a new text node (L4663 textContent=msg); hide keeps it', () => {
+  it('a repeated identical toast swaps in a new text node (L5032 textContent=msg); hide keeps it', () => {
     render(<ToastHarness />);
     const say = () => fireEvent.click(screen.getByText('say Email copied to clipboard'));
     say();

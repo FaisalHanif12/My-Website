@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // No Next badge in dev, so dev screenshots match the reference.
   devIndicators: false,
+  // Do not generate AGENTS.md / CLAUDE.md files into the repo.
+  agentRules: false,
   images: {
     formats: ['image/avif', 'image/webp'],
   },

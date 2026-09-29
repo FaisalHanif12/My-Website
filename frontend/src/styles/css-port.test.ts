@@ -2,7 +2,7 @@
 /**
  * fe-02: proves the 9 global CSS files are a verbatim port of the reference <style> block.
  *
- * 1. Rule multiset: every rule of reference L22-2877 (at-rule chain + selector + declarations,
+ * 1. Rule multiset: every rule of reference L22-3222 (at-rule chain + selector + declarations,
  *    whitespace normalised) appears in the 9 files exactly as often as in the reference, and
  *    nothing else does. The only allowed edit is the value of the three font tokens in :root.
  * 2. Order check: for every pair of rules whose relative order changed because a block moved to
@@ -32,11 +32,12 @@ const FILES = [
   'profile.css',
   'works.css',
   'approvals.css',
+  'heroes.css',
 ] as const;
 
 /** Reference lines holding the <style> content (1-based, inclusive). */
 const REF_FIRST = 22;
-const REF_LAST = 2877;
+const REF_LAST = 3222;
 
 /** The only edit allowed by the brief: the font tokens read the next/font variables (fe-12). */
 const FONT_TOKENS: Record<string, { ref: string; app: string }> = {

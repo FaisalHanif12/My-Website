@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, type ElementType } from 'react';
+import { useCallback, useRef, type ElementType } from 'react';
 
+import { useIsInClass } from '@/hooks/useIsInClass';
 import { useCountUp } from '@/hooks/useCountUp';
 
-import { assignRef, withIsIn, type MotionElementProps } from './shared';
+import { assignRef, type MotionElementProps } from './shared';
 
 export interface CountUpProps extends Omit<MotionElementProps, 'children' | 'prefix'> {
   /** data-count text; decimals come from it ("2.50" counts with 2 decimals). */
@@ -43,19 +44,22 @@ export function CountUp({
     isIn,
     text,
   } = useCountUp<HTMLElement>({ to, prefix, suffix, duration, decimals, revealKey });
+  const elRef = useRef<HTMLElement | null>(null);
   const setRef = useCallback(
     (el: HTMLElement | null) => {
+      elRef.current = el;
       countRef(el);
       assignRef(ref, el);
     },
     [countRef, ref],
   );
+  useIsInClass(elRef, isIn);
   const Tag = as as ElementType;
   return (
     <Tag
       ref={setRef}
       {...rest}
-      className={withIsIn(className, isIn)}
+      className={className}
       data-count={String(to)}
       data-prefix={prefix}
       data-suffix={suffix}

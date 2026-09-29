@@ -1,4 +1,4 @@
-/* profile.css: reference L1565-2040 */
+/* profile.css: reference L1774-2292 */
 /* ---- profile.css ---- */
 /* =========================================================
    PROFILE (pf-)
@@ -213,32 +213,75 @@
 #profile .pf-hero.is-idle .pf-sheet__float,#profile .pf-hero.is-idle .dot-live{animation-play-state:paused}
 @keyframes pf-float{from{transform:translate3d(0,-.45em,0) rotate(-.45deg)}to{transform:translate3d(0,.45em,0) rotate(.45deg)}}
 
-/* ---- Tablet: copy above, desk below ---- */
-@media (min-width:640px) and (max-width:1023px){
-  #profile .pf-desk{width:min(100%,600px);justify-self:center}
+/* ---- Single column (<=1023px): the desk comes first, centered copy follows ---- */
+@media (max-width:1023px){
+  #profile .pf-hero{padding-top:clamp(84px,calc(64px + 3vw),100px);padding-bottom:clamp(40px,6vw,60px)}
+  #profile .pf-hero__wrap{gap:clamp(22px,4.4vw,40px);justify-items:center}
+  #profile .pf-hero__halo{right:auto;left:50%;top:-4%;bottom:auto;width:min(130vw,980px);margin-left:calc(min(130vw,980px) / -2)}
+
+  /* visual on top */
+  #profile .pf-desk{order:-1;justify-self:center;margin-inline:auto;display:flex;flex-direction:column;align-items:center}
+  #profile .pf-desk__stage{margin-inline:auto}
+  #profile .pf-desk__hint{position:static;justify-content:center;width:max-content;max-width:calc(100vw - 2 * var(--gutter));margin:clamp(6px,1.4vw,12px) 0 0;font-size:.84rem;text-align:left}
+
+  /* centered copy */
+  #profile .pf-hero__copy{width:100%;justify-items:center;text-align:center;translate:0 calc(var(--sp) * -36px);opacity:calc(1 - var(--sp) * .7)}
+  #profile .pf-hero .pf-hero__copy .eyebrow::after{content:"";width:28px;height:1px;background:currentColor;opacity:.6}
+  #profile .pf-hero__title{margin-top:clamp(12px,2vw,18px)}
+  #profile .pf-ln--a{font-size:clamp(1.8rem,calc(1.05rem + 3.9vw),3rem);padding:0 .06em .1em}
+  #profile .pf-ln--b{font-size:clamp(4rem,calc(1.7rem + 11.6vw),6.9rem);padding:0 .1em .14em;margin:-.02em 0 -.12em}
+  #profile .pf-hero__lead{margin:clamp(14px,2.4vw,22px) auto 0;max-width:34em;font-size:clamp(.95rem,calc(.86rem + .34vw),1.08rem);line-height:1.65}
+  #profile .pf-hero__ctas{justify-content:center;margin-top:clamp(20px,3.4vw,30px)}
+  #profile .pf-hstats{margin:clamp(24px,4vw,36px) auto 0}
+  #profile .pf-hstat{align-items:center;text-align:center;padding:16px 12px 0}
+  #profile .pf-hstat:first-child{padding-left:12px}
+  #profile .pf-hstat__val{font-size:clamp(1.5rem,calc(1.1rem + 1.6vw),2.1rem)}
+  #profile .pf-hero__foot{margin-top:clamp(28px,5vw,44px);opacity:calc(1 - var(--sp) * 1.6)}
+  #profile .pf-hero__foot .wrap{display:flex;justify-content:center}
 }
 
-/* ---- Phone: a tighter desk with bigger type ---- */
+/* ---- Tablet (640-1023): the three pages fanned across the desk ---- */
+@media (min-width:640px) and (max-width:1023px){
+  #profile .pf-desk{width:min(100%,720px,calc((100svh - 190px) * 1.6))}
+  #profile .pf-desk__stage{font-size:calc(100cqw / 80);width:80em;height:50em;perspective-origin:50% 45%}
+  #profile .pf-sheet--edu{--x:1.1em;--y:4.5em;--w:24em;--r:-6deg}
+  #profile .pf-sheet--exp{--x:21.1em;--y:1em;--w:36.5em;--r:-1.5deg}
+  #profile .pf-sheet--skl{--x:49.6em;--y:19.5em;--w:28.5em;--r:5deg}
+  #profile .pf-seal{left:12.6em;top:37em;width:10em;height:10em}
+}
+
+/* ---- Phone (<=639): a compact stack, sized to the screen height ---- */
 @media (max-width:639px){
-  #profile .pf-hero__wrap{gap:44px}
-  #profile .pf-hero__ctas{width:100%}
-  #profile .pf-hero__ctas .btn{flex:1 1 auto}
-  #profile .pf-hstats{width:100%}
-  #profile .pf-hstat{padding:14px 10px 0}
-  #profile .pf-hstat__label{font-size:.6rem;letter-spacing:.1em}
-  #profile .pf-hero__halo{right:-40%;top:auto;bottom:0;width:130vw}
-  #profile .pf-desk__stage{font-size:calc(100cqw / 40);width:40em;height:79em}
+  #profile .pf-desk{width:min(100%,calc(40svh + 8px))}
+  #profile .pf-desk__stage{font-size:calc(100cqw / 46);width:46em;height:62.5em}
   #profile .pf-sheet__float{translate:0 calc(var(--sp) * var(--ez,0) * .4px)}
-  #profile .pf-sheet--edu{--x:14em;--y:0em;--w:26em;--r:4deg}
-  #profile .pf-sheet--exp{--x:0em;--y:13em;--w:34.5em;--r:-3deg}
-  #profile .pf-sheet--skl{--x:7em;--y:53em;--w:33em;--r:2deg}
+  #profile .pf-sheet--edu{--x:16.5em;--y:.5em;--w:29em;--r:4deg}
+  #profile .pf-sheet--exp{--x:.5em;--y:14.5em;--w:35em;--r:-2.5deg}
+  #profile .pf-sheet--skl{--x:11.5em;--y:43.5em;--w:34em;--r:2.5deg}
   #profile .pf-seal{display:none}
   #profile .pf-sheet__body{padding:2em}
   #profile .pf-sh__who{font-size:.85em;letter-spacing:.08em}
+  #profile .pf-sh__head{margin-top:1.4em;padding-top:1.1em}
+  #profile .pf-xp__row{padding:.8em 0 .75em}
+  #profile .pf-xp__bar{margin-top:.7em}
+  #profile .pf-xp__axis{display:none}
   #profile .pf-ed__big{font-size:6.2em}
   #profile .pf-ed__u{font-size:1.1em}
   #profile .pf-ed__list{display:none}
-  #profile .pf-desk__hint{position:static;max-width:none;margin-top:14px;font-size:.84rem}
+  #profile .pf-mr{margin-top:1.4em}
+  #profile .pf-sk__foot{display:none}
+  #profile .pf-desk__hint{font-size:.8rem;gap:10px}
+  #profile .pf-desk__n{height:24px;padding:0 8px}
+  /* two CTAs side by side, stretched equally */
+  #profile .pf-hero__ctas{width:100%;max-width:26rem;flex-wrap:nowrap;gap:10px}
+  #profile .pf-hero__ctas .btn{flex:1 1 50%;min-width:0;padding:0 12px;gap:8px;font-size:clamp(.84rem,calc(.7rem + .6vw),.95rem)}
+  #profile .pf-hstats{width:100%}
+  #profile .pf-hstat{padding:14px 8px 0}
+  #profile .pf-hstat:first-child{padding-left:8px}
+  #profile .pf-hstat__label{font-size:.6rem;letter-spacing:.1em}
+}
+@media (max-width:389px){
+  #profile .pf-hero__ctas .btn .i{display:none}
 }
 
 /* ---------- Shared block heads ---------- */

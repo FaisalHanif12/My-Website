@@ -1,0 +1,73 @@
+/* heroes.css: reference L3150-3222 (Phase 9 single-column heroes for Works and Approvals; imported last, as in the reference) */
+/* =========================================================
+   PHASE 9: single-column heroes (Works + Approvals), <=1023px only.
+   Visual first, centred copy below, fluid type. Desktop untouched.
+   ========================================================= */
+@media (max-width:1023px){
+  /* shared frame: sit the visual just under the fixed top bar */
+  #works .wk-hero--works,#approvals .wk-hero--ap{padding-top:clamp(70px,3vw + 58px,92px);padding-bottom:clamp(44px,7vw,72px)}
+  #works .wk-wh__wrap,#approvals .wk-aph__wrap{gap:clamp(18px,3.4vw,32px)}
+  #works .wk-ob,#approvals .wk-deck{order:-1}
+
+  /* halo moves behind the visual, centred */
+  #works .wk-wh__halo,#approvals .wk-aph__halo{left:50%;right:auto;top:0;bottom:auto;width:min(125vw,900px);translate:-50% -8%}
+
+  /* centred copy */
+  #works .wk-wh__copy,#approvals .wk-aph__copy{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+  #works .wk-hero--works .eyebrow::after,#approvals .wk-hero--ap .eyebrow::after{content:"";width:28px;height:1px;background:currentColor;opacity:.6}
+  #works .wk-wh__title,#approvals .wk-aph__title{text-align:center;margin-top:clamp(12px,2vw,20px)}
+  #works .wk-wl--a,#approvals .wk-ln--a{justify-content:center;font-size:clamp(1.9rem,5.6vw + .75rem,3.3rem)}
+  /* the year range sits on its own centred row above the first word; the rule is not needed */
+  #works .wk-wl--a,#approvals .wk-ln--a{flex-wrap:wrap;row-gap:.12em}
+  #works .wk-wl__rule,#approvals .wk-ln__rule{display:none}
+  #works .wk-wl__meta,#approvals .wk-ln__meta{order:-1;flex:0 0 100%;margin:0;font-size:clamp(.64rem,.3vw + .6rem,.74rem);line-height:1.6}
+  #works .wk-wl--b,#approvals .wk-ln--b{padding:0 .12em .16em;margin:-.02em 0 -.14em}
+  #works .wk-wl--b{font-size:clamp(3.1rem,12.6vw + .5rem,6.4rem)}
+  #approvals .wk-ln--b{font-size:clamp(2.7rem,11.2vw + .4rem,6rem)}
+  #works .wk-wh__lead,#approvals .wk-aph__lead{margin:clamp(12px,2.2vw,22px) auto 0;max-width:34em;font-size:clamp(.94rem,.5vw + .84rem,1.08rem);line-height:1.65;text-wrap:balance}
+  #works .wk-wh__ctas,#approvals .wk-aph__ctas{justify-content:center;margin-top:clamp(18px,3vw,28px)}
+
+  /* stats: centred columns under a full hairline */
+  #works .wk-wh__stats,#approvals .wk-aph__stats{margin:clamp(20px,3.4vw,32px) auto 0;width:min(100%,30rem)}
+  #works .wk-wh__stat,#approvals .wk-aph__stat,
+  #works .wk-wh__stat:first-child,#approvals .wk-aph__stat:first-child{align-items:center;padding:14px 8px 0}
+  #works .wk-wh__stat dd,#approvals .wk-aph__stat dd{font-size:clamp(1.5rem,2.6vw + .8rem,2.2rem)}
+
+  /* issuers row */
+  #approvals .wk-aph__iss{justify-content:center;margin-top:clamp(18px,3vw,26px)}
+  #approvals .wk-aph__isst{text-align:left}
+  #approvals .wk-aph__stack{padding-left:8px}
+
+  /* the orbit: capped so it never fills more than ~60% of a short tablet screen */
+  #works .wk-ob{width:min(100%,620px,calc((60svh - 44px) / .76))}
+  #works .wk-ob__cap{margin:clamp(2px,1vw,10px) 0 0;justify-content:center;text-align:center}
+
+  /* the deck: same idea */
+  #approvals .wk-deck{width:min(100%,600px,calc((57svh - 44px) * 1.32));justify-self:center}
+  #approvals .wk-deck__cap{margin:clamp(2px,1vw,10px) 0 0;justify-content:center;text-align:center}
+
+  /* gentle scroll-linked exit for the visual (FH skips --p under reduced motion) */
+  #works .wk-ob,#approvals .wk-deck{transform-origin:50% 100%;scale:calc(1 - var(--p) * .08);opacity:calc(1 - var(--p) * 1.15)}
+}
+@media (max-width:639px){
+  /* the orbit gets taller on phones so the phone itself reads well */
+  #works .wk-ob__stage{aspect-ratio:auto;height:min(calc((100vw - 2 * var(--gutter)) * 1.06),48svh)}
+  #works .wk-ob__cap,#approvals .wk-deck__cap{font-size:.8rem;text-align:center}
+  #works .wk-ob__n,#approvals .wk-deck__n{display:none}
+  #works .wk-ob__cap>span,#approvals .wk-deck__cap>span:last-child{max-width:38ch;text-wrap:balance}
+
+  /* two CTAs side by side, equal width */
+  #works .wk-wh__ctas,#approvals .wk-aph__ctas{flex-wrap:nowrap;gap:10px;width:100%;max-width:26rem}
+  #works .wk-wh__ctas .btn,#approvals .wk-aph__ctas .btn{flex:1 1 auto;min-width:0;--h:50px;padding:0 14px;gap:8px;font-size:clamp(.84rem,1.6vw + .5rem,.95rem);white-space:nowrap}
+  #works .wk-wh__ctas .btn .i,#approvals .wk-aph__ctas .btn .i{width:16px;height:16px;flex:none}
+
+  #works .wk-wh__stat dt,#approvals .wk-aph__stat dt{font-size:.56rem;letter-spacing:.08em}
+  #approvals .wk-aph__iss{flex-direction:column;gap:10px}
+  /* the deck spends a little of the side gutter to read larger */
+  #approvals .wk-deck{width:auto;justify-self:stretch;margin-inline:calc(6px - var(--gutter))}
+  #approvals .wk-aph__isst{text-align:center}
+}
+@media (max-width:400px){
+  /* "Browse certificates" is long: drop the button icons so both labels keep real padding */
+  #approvals .wk-aph__ctas .btn .i{display:none}
+}

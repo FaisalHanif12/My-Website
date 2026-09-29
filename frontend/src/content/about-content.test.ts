@@ -3,6 +3,7 @@ import { collectStrings, referenceText, type StringLeaf } from '../../tests/unit
 import {
   aboutHero,
   heroRoles,
+  heroRolesSrOnly,
   heroStats,
   knowMe,
   knowMeHead,
@@ -98,19 +99,27 @@ describe('About content is verbatim from the reference', () => {
 });
 
 describe('socials', () => {
-  it('lists the 5 hero socials in reference order with href, label and icon', () => {
-    const block = refSlice('<ul class="ab-social"', '</ul>');
+  it('lists the 6 hero socials in reference order with href, label, tip and icon', () => {
+    const block = refSlice('<ul class="ab-soc', '</ul>');
     const re =
-      /<li><a href="([^"]+)" target="_blank" rel="noopener" aria-label="([^"]+)"><svg class="i" aria-hidden="true"><use href="#([\w-]+)"\/>/g;
-    const fromRef = [...block.matchAll(re)].map((m) => ({ href: m[1], label: m[2], icon: m[3] }));
-    expect(fromRef).toHaveLength(5);
-    expect(socials.map(({ href, label, icon }) => ({ href, label, icon }))).toEqual(fromRef);
-    expect(socials.map((s) => s.label)).toEqual([
+      /<li><a href="([^"]+)"(?: target="_blank" rel="noopener")? aria-label="([^"]+)" data-tip="([^"]+)"><svg class="i" aria-hidden="true"><use href="#([\w-]+)"\/>/g;
+    const fromRef = [...block.matchAll(re)].map((m) => ({
+      href: m[1],
+      label: m[2],
+      tip: m[3],
+      icon: m[4],
+    }));
+    expect(fromRef).toHaveLength(6);
+    expect(socials.map(({ href, label, tip, icon }) => ({ href, label, tip, icon }))).toEqual(
+      fromRef,
+    );
+    expect(socials.map((s) => s.tip)).toEqual([
       'LinkedIn',
-      'X (Twitter)',
+      'X',
       'GitHub',
       'Quora',
       'Instagram',
+      'Email',
     ]);
     expect(block).toContain(`aria-label="${socialsAriaLabel}"`);
   });
@@ -121,35 +130,44 @@ describe('socials', () => {
 });
 
 describe('About hero', () => {
-  it('matches the greeting, name rows, role chip, buttons and scroll cue', () => {
+  it('matches the greeting, status pill, name, role chip, buttons and scroll cue', () => {
     const src = referenceText();
-    expect(src).toContain(`data-delay="80">${aboutHero.greeting}</p>`);
-    expect(src).toContain(`<span class="ab-name__row">${aboutHero.nameRows[0]}</span>`);
-    expect(src).toContain(`<span class="serif grad-text">${aboutHero.nameRows[1]}</span>`);
+    expect(src).toContain(`<p class="ab-hello">${aboutHero.greeting}</p>`);
+    expect(src).toContain(
+      `<span class="ab-status"><span class="ab-status__dot"></span>${aboutHero.status}</span>`,
+    );
+    expect(src).toContain(`<span class="sr-only">${aboutHero.name.srOnly}</span>`);
+    expect(src).toContain(`<span class="ab-name__ink serif">${aboutHero.name.last}</span>`);
+    const letters = [...src.matchAll(/<span class="ab-lt" style="--k:(\d+)">(.)<\/span>/g)].map(
+      (m) => m[2],
+    );
+    expect(letters.join('')).toBe(aboutHero.name.first);
+    expect(src).toContain(`<p class="sr-only">${aboutHero.srOnlyStatus}</p>`);
     expect(src).toContain(
       `<use href="#${aboutHero.roleChip.icon}"/></svg>${aboutHero.roleChip.label}</span>`,
     );
-    expect(src).toContain(`aria-hidden="true">${aboutHero.roleSlash}</span>`);
-    expect(src).toContain(`<use href="#${aboutHero.cv.icon}"/></svg>${aboutHero.cv.label}\n`);
-    expect(src).toContain(`<use href="#${aboutHero.book.icon}"/></svg>${aboutHero.book.label}\n`);
+    expect(src).toContain(`<span>${aboutHero.cv.label}</span>`);
+    expect(src).toContain(`<span>${aboutHero.book.label}</span>`);
     expect(aboutHero.book.bookType).toBe('');
     expect(src).toContain(
       `<a class="ab-scroll" href="${aboutHero.scrollCue.href}">\n        <span class="label">${aboutHero.scrollCue.label}</span>`,
     );
   });
 
-  it('has the 5 rolling roles of the typer, in order', () => {
-    const roles = [...refSlice('var roles = [', ']').matchAll(/'([^']+)'/g)].map((m) => m[1]);
+  it('has the 5 rolling words, in order', () => {
+    const block = refSlice('<span class="ab-roll"', '</span>\n          <span class="sr-only">');
+    const roles = [...block.matchAll(/<span class="ab-roll__w[^"]*">([^<]+)<\/span>/g)].map(
+      (m) => m[1],
+    );
     expect(heroRoles).toEqual(roles);
     expect(heroRoles).toHaveLength(5);
-    expect(referenceText()).toContain(`<span class="sr-only">${heroRoles.join(', ')}</span>`);
-    expect(referenceText()).toContain(`id="ab-typer">${heroRoles[0]}</span>`);
+    expect(referenceText()).toContain(`<span class="sr-only">${heroRolesSrOnly}</span>`);
   });
 
   it('has the 3 stats 3+ / 10+ / 3+', () => {
-    const block = refSlice('<dl class="ab-stats"', '</dl>');
+    const block = refSlice('<dl class="ab-stats', '</dl>');
     const re =
-      /<dt class="label">([^<]+)<\/dt>\s*<dd class="stat-num"><span data-count="(\d+)" data-suffix="([^"]*)">0<\/span><\/dd>/g;
+      /<dt class="label">([^<]+)<\/dt>\s*<dd><span class="ab-num" data-to="(\d+)">\d+<\/span><span class="ab-plus">([^<]*)<\/span><\/dd>/g;
     const fromRef = [...block.matchAll(re)].map((m) => ({
       label: m[1],
       value: Number(m[2]),

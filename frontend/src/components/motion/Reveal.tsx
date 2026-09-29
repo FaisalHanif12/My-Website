@@ -2,11 +2,12 @@
 
 import { useCallback, useLayoutEffect, useRef, type ElementType } from 'react';
 
+import { useIsInClass } from '@/hooks/useIsInClass';
 import { useReveal } from '@/hooks/useReveal';
 import { $$ } from '@/lib/dom';
 import { parseStagger, staggerDelay } from '@/lib/motion';
 
-import { assignRef, withIsIn, type MotionElementProps, type RevealVariant } from './shared';
+import { assignRef, type MotionElementProps, type RevealVariant } from './shared';
 
 export interface InViewProps extends MotionElementProps {
   /** Explicit reveal key, unique across the app (default: page id + DOM path). */
@@ -16,20 +17,23 @@ export interface InViewProps extends MotionElementProps {
 }
 
 /**
- * An element that gets `is-in` (React state merged into className) the first time
- * it enters view. Used by Reveal and SplitWords; see useReveal for the gating.
+ * An element that gets `is-in` (added through classList, so imperative classes survive) the
+ * first time it enters view. Used by Reveal and SplitWords; see useReveal for the gating.
  */
 export function InView({ as = 'div', revealKey, eager, className, ref, ...rest }: InViewProps) {
   const { ref: revealRef, isIn } = useReveal<HTMLElement>({ revealKey, eager });
+  const elRef = useRef<HTMLElement | null>(null);
   const setRef = useCallback(
     (el: HTMLElement | null) => {
+      elRef.current = el;
       revealRef(el);
       assignRef(ref, el);
     },
     [revealRef, ref],
   );
+  useIsInClass(elRef, isIn);
   const Tag = as as ElementType;
-  return <Tag ref={setRef} className={withIsIn(className, isIn)} {...rest} />;
+  return <Tag ref={setRef} className={className} {...rest} />;
 }
 
 export interface RevealProps extends InViewProps {

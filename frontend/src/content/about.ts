@@ -13,19 +13,24 @@ import { contactFacts, site } from './site';
 /* ------------------------------------------------------------------ hero copy */
 
 export interface AboutHero {
-  /** p.ab-hello (L3023). */
+  /** p.ab-hello (L3364). */
   greeting: string;
-  /** h1.ab-name rows (L3026-3027): row 1 plain, row 2 wrapped in span.serif.grad-text. */
-  nameRows: [string, string];
-  /** span.ab-role__chip: icon, then the label (L3031). */
+  /** span.ab-status: the pulsing dot, then this text (L3365). */
+  status: string;
+  /**
+   * h1.ab-name (L3368-3383): a sr-only full name, then "Faisal" split into one span.ab-lt per letter
+   * (--k = index) inside span.ab-name__mask, then "Hanif" (span.ab-name__ink.serif) with the SVG flourish.
+   */
+  name: { srOnly: string; first: string; last: string };
+  /** p.sr-only after the h1 (L3385). */
+  srOnlyStatus: string;
+  /** span.ab-chip: icon, then the label (L3389). */
   roleChip: { label: string; icon: 'i-code' };
-  /** span.ab-role__slash (aria-hidden) before the rolling role (L3033). */
-  roleSlash: string;
-  /** Download CV link (L3040-3042): download, data-cv, data-magnetic; icon before the label. */
-  cv: { label: string; icon: 'i-download'; href: string };
-  /** Book Meeting button (L3043-3045): data-book="" opens Quick Chat; icon before the label. */
+  /** Download CV link (L3402-3405): download, data-cv, data-magnetic; the custom SVG icon, then the label. */
+  cv: { label: string; href: string };
+  /** Book Meeting button (L3406-3408): data-book="" opens Quick Chat; icon before the label. */
   book: { label: string; icon: 'i-calendar'; bookType: '' };
-  /** a.ab-scroll (L3121-3124): span.label, then the i-arrow-right button. */
+  /** a.ab-scroll (L3520-3523): span.label, then the i-arrow-right button. */
   scrollCue: { label: string; href: string };
 }
 
@@ -34,10 +39,11 @@ const bookMeeting = { label: 'Book Meeting', icon: 'i-calendar', bookType: '' } 
 
 export const aboutHero: AboutHero = {
   greeting: "Hi there! I'm",
-  nameRows: ['Faisal', 'Hanif'],
+  status: 'Available for work',
+  name: { srOnly: site.name, first: 'Faisal', last: 'Hanif' },
+  srOnlyStatus: 'Available for work.',
   roleChip: { label: site.role, icon: 'i-code' },
-  roleSlash: '/',
-  cv: { label: 'Download CV', icon: 'i-download', href: site.cvPath },
+  cv: { label: 'Download CV', href: site.cvPath },
   book: bookMeeting,
   scrollCue: { label: 'Scroll to explore', href: '#ab-know' },
 };
@@ -54,12 +60,17 @@ export const heroRoles: readonly string[] = [
   'Cloud Orchestration',
 ];
 
+/**
+ * span.sr-only after the rolling words (L3401): "focused on A, B, C, D and E." (the last two are
+ * joined with " and ").
+ */
+export const heroRolesSrOnly = `focused on ${heroRoles.slice(0, -1).join(', ')} and ${heroRoles[heroRoles.length - 1]}.`;
+
 /* ------------------------------------------------------------------ hero stats */
 
 /**
- * dl.ab-stats (L3056-3069): dt.label, then dd.stat-num with
- * `<span data-count={value} data-suffix={suffix}>0</span>`. No data-duration, so the count up uses
- * its default duration.
+ * dl.ab-stats (L3436-3451): per stat `dt.label`, then `dd` with span.ab-num[data-to] (the number,
+ * counted up by the About script) and span.ab-plus.
  */
 export interface HeroStat {
   label: string;
@@ -69,7 +80,7 @@ export interface HeroStat {
 
 /** Kept as the reference states them (orchestrator decision). */
 export const heroStats: readonly HeroStat[] = [
-  { label: 'Years Coding', value: 3, suffix: '+' },
+  { label: 'Years coding', value: 3, suffix: '+' },
   { label: 'Projects', value: 10, suffix: '+' },
   { label: 'Companies', value: 3, suffix: '+' },
 ];
