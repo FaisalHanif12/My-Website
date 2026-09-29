@@ -1223,13 +1223,13 @@ Non ASCII in these ranges: `·` (U+00B7) in copy (titles, preloader label, next 
 | CSS L193-210 | ambient background and cursor glow | `layout.css` |
 | CSS L212-250 | progress, rail, theme button, top bar, dock | `layout.css` |
 | CSS L252-264 | preloader | `layout.css` |
-| CSS L266-279 | modal shell | `overlays.css` |
-| CSS L281-284 | toast | `base.css` |
+| CSS L266-279 | modal shell | `layout.css` (per 11.1.12) |
+| CSS L281-284 | toast | `layout.css` (per 11.1.12) |
 | CSS L293-308 | pages and router (`.smooth-on`, `.page`, `.page-hero`) | `layout.css` |
 | CSS L310-333 | curtain and `.page.is-leaving` | `layout.css` |
 | CSS L335-347 | next page link | `layout.css` |
 | CSS L349-354 | parallax helper, view transition rules | `base.css` |
-| CSS L356-362 | reduced motion (global) | `base.css` |
+| CSS L356-362 | reduced motion (global) | `layout.css` (per 11.1.12) |
 
 #### 11.2.1 Boot order (exact sequence in the reference)
 
@@ -9141,7 +9141,7 @@ For `portfolio.json`: every reply below is static text except `location`, which 
 
 export const CHAT_EMAIL = 'mehrfaisal111@gmail.com';
 /** FH.asset('imgs/Faisal-CVS.pdf') with FH_BASE 'https://faisalhanif.work/' (L6182). */
-export const CHAT_CV_URL = 'https://faisalhanif.work/imgs/Faisal-CVS.pdf';
+export const CHAT_CV_URL = '/imgs/Faisal-CVS.pdf'; // same origin (orchestrator-decisions.md); the reference has the absolute https://faisalhanif.work URL
 
 export const CHAT_GREETING = "Hi! I'm Faisal's assistant. How can I help you today?";
 export const CHAT_START_CHIPS: string[] = ['Services', 'Rates', 'Projects', 'Experience', 'Book a call', 'Contact'];

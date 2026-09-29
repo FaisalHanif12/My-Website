@@ -19,7 +19,7 @@ Body (what the reference sends to `FH_HOOKS.chatEndpoint`, L6392):
 
 Response 200: `{ "ok": true, "reply": string }`. The reference reads `reply` (L6395) and renders it with its own small formatter (L6333-6341, L6377-6386), so replies must use only that format: paragraphs separated by a blank line, list lines starting with `-` or `1.`, `**bold**`, and `[label](url)` links whose URL starts with `https://`, `http://`, `mailto:`, `tel:` or `#`. No headings, tables or code blocks.
 
-Optional stream: `?stream=true` returns `text/event-stream`, with events `data: {"delta":"..."}` and a final `data: [DONE]`. The v1 frontend does not use it, because the reference shows typing dots and then the whole reply.
+Optional stream: `?stream=true` returns `text/event-stream`, with events `data: {"delta":"..."}` and a final `data: [DONE]`. An error after streaming began is sent as `event: error` with data `{ "code", "message" }`, then the stream ends. The v1 frontend does not use it, because the reference shows typing dots and then the whole reply.
 
 Client behaviour (from the reference): a 12 second timeout. On any error, timeout or 429, the frontend answers with the local responder. The local responder's action buttons are still attached to API replies (L6398).
 
@@ -41,6 +41,7 @@ Body (the object the reference passes to `FH_HOOKS.onContact`, L5754, plus two a
 }
 ```
 - The honeypot is a visually hidden input (off screen, `aria-hidden`, `tabindex="-1"`, `autocomplete="off"`), so the form looks exactly like the reference.
+- A submit that comes less than 3 seconds after `startedAt` returns 400 `VALIDATION_ERROR` with `fields.startedAt`; the frontend shows the reference error toast.
 - `VALIDATION_ERROR` returns `fields` keyed by the names above. The frontend shows the reference's own messages (L5666-5682), not the server text.
 - 200 `{ "ok": true }`. Sends the owner email (Reply-To = visitor) and the visitor confirmation. Rate limit: 5 per hour per IP.
 - Any error: the frontend shows the reference error toast "That did not go through. Please try again or email me directly." (L5773).
@@ -72,6 +73,9 @@ Body (the object the reference passes to `FH_HOOKS.onBooking`, `bookingData()` a
 }
 ```
 Server rules:
+- A filled honeypot returns a normal-looking 200 and creates nothing.
+- The date window (tomorrow up to 60 days) is checked in the payload `timezone`, matching the reference calendar, which uses the visitor's own clock. `GET /api/booking/slots` serves the widest range (today to 61 days ahead in PKT), returns `[]` for a date outside it and 400 for a weekend.
+- The `Idempotency-Key` header matches `/^[A-Za-z0-9_-]{8,128}$/` (for example a uuid): one per submit attempt, reused when that attempt is retried.
 - Trust only `sessionType`, `sessions`, `email`, `name`, `phone`, `company`, `date`, `timezone`, `startUtc`, `platform` and `notes`. Recompute the session name, duration, price, total and every formatted time on the server.
 - `startUtc` must be one of the hourly slots for `date`: 09:00 to 17:00 PKT (04:00 to 12:00 UTC), on a weekday (Mon to Fri in PKT), from tomorrow up to 60 days ahead, and at least 2 hours from now.
 - 200 `{ "ok": true, "bookingId": string, "meetLink": string | null, "start": ISO string, "end": ISO string }`. `meetLink` is the join link: Google Meet, or Zoom when Zoom is chosen and set up. It is `null` only when Zoom is chosen but not set up (BACKEND_SPEC.md section 3).
