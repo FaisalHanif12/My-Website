@@ -31,15 +31,30 @@ import { ChatWidget } from '@/features/chat/ChatWidget';
 import { PureBodyModal } from '@/features/works/PureBodyModal';
 import { IconSprite } from '@/components/ui/IconSprite';
 import { Toast } from '@/components/ui/Toast';
-import { siteMeta } from '@/content/site';
+import { site, siteMeta } from '@/content/site';
+import { siteUrl } from '@/lib/siteUrl';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { THEME_BOOT_SCRIPT } from '@/lib/themeBoot';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? siteMeta.baseUrl.replace(/\/$/, '');
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: siteMeta.defaultTitle, template: `%s${siteMeta.docTitleSuffix}` },
   description: siteMeta.description,
+  applicationName: site.name,
+  authors: [{ name: site.name, url: siteUrl }],
+  openGraph: {
+    type: 'website',
+    siteName: site.name,
+    title: siteMeta.defaultTitle,
+    description: siteMeta.description,
+    url: siteUrl,
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteMeta.defaultTitle,
+    description: siteMeta.description,
+  },
 };
 
 export const viewport: Viewport = {
@@ -67,6 +82,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body>
+        <JsonLd />
         <ThemeProvider>
           <ToastProvider>
             <ModalProvider>
