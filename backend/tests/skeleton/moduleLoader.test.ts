@@ -46,7 +46,7 @@ function importerFrom(namespaces: Record<string, unknown>): ModuleImporter {
 
 describe('API_MODULES', () => {
   it('lists the four features in mount order', () => {
-    expect(API_MODULES).toEqual(['chat', 'contact', 'booking-info', 'booking']);
+    expect(API_MODULES).toEqual(['chat', 'contact', 'booking-info', 'booking', 'join']);
   });
 });
 
@@ -70,7 +70,7 @@ describe('loadApiModules', () => {
     const loaded = await loadApiModules(ctx, { importer });
     expect(loaded.map((m) => m.name)).toEqual([...API_MODULES]);
     expect(loaded.every((m) => typeof m.router === 'function')).toBe(true);
-    expect(seen).toHaveLength(4);
+    expect(seen).toHaveLength(5);
     expect(seen.every((c) => c === ctx)).toBe(true);
   });
 
@@ -97,7 +97,12 @@ describe('loadApiModules', () => {
     });
     expect(loaded.map((m) => m.name)).toEqual(['contact']);
     const warnings = capture.lines().filter((line) => line.level === 40);
-    expect(warnings.map((line) => line.module)).toEqual(['chat', 'booking-info', 'booking']);
+    expect(warnings.map((line) => line.module)).toEqual([
+      'chat',
+      'booking-info',
+      'booking',
+      'join',
+    ]);
     expect(String(warnings[0]?.msg)).toContain('Feature module "chat" was skipped');
   });
 
@@ -133,6 +138,7 @@ describe('loadApiModules', () => {
       './contact.routes.js does not default-export an ApiModule',
       'factory failed',
       './booking.routes.js does not default-export an ApiModule',
+      './join.routes.js does not default-export an ApiModule',
     ]);
   });
 

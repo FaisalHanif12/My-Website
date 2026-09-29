@@ -13,6 +13,8 @@ import { getMailer } from '../services/mail/index.js';
 import type { Mailer } from '../services/mail/index.js';
 import { getMeetingProvider } from '../services/meeting/index.js';
 import type { MeetingProvider } from '../services/meeting/types.js';
+import { createJoinLinks, joinSecret } from '../services/booking/joinLink.js';
+import type { JoinLinks } from '../services/booking/joinLink.js';
 import { getSharedStore } from '../store/index.js';
 import type { Store } from '../store/index.js';
 import { bookingBodySchema } from '../validators/booking.js';
@@ -23,6 +25,8 @@ export interface BookingModuleOverrides {
   calendar?: CalendarProvider | null;
   mailer?: Mailer | null;
   meetingFor?: (platform: Platform) => MeetingProvider;
+  /** Join link maker (default: from JOIN_LINK_SECRET or a server secret; null sends raw links). */
+  joinLinks?: JoinLinks | null;
   store?: Store;
   now?: () => Date;
   newId?: () => string;
@@ -51,6 +55,13 @@ export function createBookingModule(overrides: BookingModuleOverrides = {}): Api
       const calendar =
         overrides.calendar === undefined ? getCalendarProvider(ctx) : overrides.calendar;
       const mailer = overrides.mailer === undefined ? getMailer(ctx) : overrides.mailer;
+      const secret = joinSecret(env);
+      const joinLinks =
+        overrides.joinLinks === undefined
+          ? secret
+            ? createJoinLinks(secret, env.SITE_URL)
+            : null
+          : overrides.joinLinks;
       const service =
         calendar && mailer
           ? createBookingService({
@@ -60,6 +71,7 @@ export function createBookingModule(overrides: BookingModuleOverrides = {}): Api
               env,
               logger,
               now,
+              joinLinks,
               availability: createAvailability({ calendar, store, env, logger, now }),
               meetingFor: overrides.meetingFor ?? ((platform) => getMeetingProvider(platform, ctx)),
               ...(overrides.newId ? { newId: overrides.newId } : {}),

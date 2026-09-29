@@ -362,8 +362,10 @@ function buildEventBody(
     description: input.description,
     start: { dateTime: input.start.toISOString(), timeZone: input.timeZone },
     end: { dateTime: input.end.toISOString(), timeZone: input.timeZone },
-    attendees: [{ email: input.attendee.email, displayName: input.attendee.name }],
   };
+  if (input.attendee) {
+    body.attendees = [{ email: input.attendee.email, displayName: input.attendee.name }];
+  }
   if (input.location) body.location = input.location;
   if (input.withGoogleMeet) {
     body.conferenceData = {

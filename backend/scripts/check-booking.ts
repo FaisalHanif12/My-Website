@@ -12,6 +12,7 @@ import { addDays, bookingDateWindow, isWeekday, slotStarts } from '../src/servic
 import { getCalendarProvider } from '../src/services/calendar/index.js';
 import { googleEventIdFor } from '../src/services/calendar/google.js';
 import { createMailer, ownerAddress } from '../src/services/mail/index.js';
+import { createJoinLinks, joinSecret } from '../src/services/booking/joinLink.js';
 import { getMeetingProvider } from '../src/services/meeting/index.js';
 import { MemoryStore } from '../src/store/index.js';
 import { fail, flagValue, hasFlag, info, ok, reportFailure, scriptContext } from './lib.js';
@@ -29,6 +30,7 @@ async function main(): Promise<void> {
   }
   const to = flagValue('to') ?? owner;
   const platform = flagValue('platform')?.toLowerCase() === 'zoom' ? 'Zoom' : 'Google Meet';
+  const secret = joinSecret(env);
   const store = new MemoryStore();
   const now = new Date();
   const availability = createAvailability({ calendar, store, env, logger });
@@ -40,6 +42,7 @@ async function main(): Promise<void> {
     env,
     logger,
     meetingFor: (p) => getMeetingProvider(p, ctx),
+    joinLinks: secret ? createJoinLinks(secret, env.SITE_URL) : null,
   });
 
   // The first free slot from tomorrow on (the booking rules need at least 2 hours of notice).

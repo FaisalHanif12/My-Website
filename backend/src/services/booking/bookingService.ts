@@ -17,6 +17,7 @@ import { ownerAddress } from '../mail/index.js';
 import { toMailSendError } from '../mail/types.js';
 import type { Mailer } from '../mail/types.js';
 import { isMeetingError } from '../meeting/types.js';
+import type { JoinLinks } from './joinLink.js';
 import type { MeetingProvider } from '../meeting/types.js';
 import type { Platform } from './types.js';
 import type { Availability } from './availability.js';
@@ -50,6 +51,11 @@ export interface BookingServiceOptions {
   mailer: Mailer;
   meetingFor: (platform: Platform) => MeetingProvider;
   store: KeyValueStore;
+  /**
+   * Makes the address both emails carry. It hands out the real meeting link only around the booked
+   * time. null (no server secret to sign with) sends the real link as it is.
+   */
+  joinLinks: JoinLinks | null;
   env: Env;
   logger: Logger;
   now?: () => Date;
@@ -121,7 +127,7 @@ function zoneText(tz: string, at: Date, home: string): string {
 }
 
 export function createBookingService(options: BookingServiceOptions): BookingService {
-  const { calendar, availability, mailer, meetingFor, env } = options;
+  const { calendar, availability, mailer, meetingFor, joinLinks, env } = options;
   const log = options.logger.child({ component: 'booking' });
   const now = options.now ?? (() => new Date());
   const newId = options.newId ?? newBookingId;
@@ -200,7 +206,9 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
         start,
         end,
         timeZone: homeTz,
-        attendee: { email: body.email, name: body.name },
+        // With a join link the visitor stays off the event: an attendee's own calendar would show
+        // the real meeting link at any time. The emails and the .ics carry the join link instead.
+        attendee: joinLinks ? null : { email: body.email, name: body.name },
         location: plan.joinUrl,
         withGoogleMeet: plan.withGoogleMeet,
       });
@@ -214,8 +222,17 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
       throw Errors.upstream(undefined, error);
     }
 
-    // 3. The one link both sides get.
-    const meetLink = plan.joinUrl ?? created.meetLink;
+    // 3. The one link both sides get. With a join link it works only around the booked time.
+    const rawLink = plan.joinUrl ?? created.meetLink;
+    const meetLink =
+      rawLink && joinLinks
+        ? joinLinks.create({
+            bookingId,
+            url: rawLink,
+            start: start.toISOString(),
+            end: end.toISOString(),
+          })
+        : rawLink;
     await availability.markBooked(start, end).catch((error: unknown) => {
       log.warn({ bookingId, err: error }, 'mark_booked_failed');
     });

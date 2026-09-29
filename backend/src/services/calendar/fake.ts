@@ -26,7 +26,7 @@ export interface FakeCalendarEvent extends CreatedEvent {
   start: Date;
   end: Date;
   timeZone: string;
-  attendee: { email: string; name: string };
+  attendee: { email: string; name: string } | null;
   location: string | null;
   withGoogleMeet: boolean;
   createdAt: Date;
@@ -70,7 +70,7 @@ function copyEvent(event: FakeCalendarEvent): FakeCalendarEvent {
     ...event,
     start: new Date(event.start),
     end: new Date(event.end),
-    attendee: { ...event.attendee },
+    attendee: event.attendee ? { ...event.attendee } : null,
     createdAt: new Date(event.createdAt),
   };
 }
@@ -203,7 +203,7 @@ export function createFakeCalendar(options: FakeCalendarOptions = {}): FakeCalen
           start: new Date(input.start),
           end: new Date(input.end),
           timeZone: input.timeZone,
-          attendee: { ...input.attendee },
+          attendee: input.attendee ? { ...input.attendee } : null,
           location: input.location,
           withGoogleMeet: input.withGoogleMeet,
           createdAt: now(),

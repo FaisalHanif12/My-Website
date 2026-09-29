@@ -93,6 +93,18 @@ If Google fails, nothing is emailed and the visitor sees the normal "try again" 
 emails fail after the event exists, the booking still succeeds and the error is logged with the
 booking id so you can send the emails yourself.
 
+**Meeting links only work at the booked time.** Both emails (and the `.ics` file) carry the same
+join link, `https://faisalhanif.work/api/join/<token>`, not the raw Google Meet or Zoom address. The
+address is sealed inside the token (AES-256-GCM), so it can not be read out of it. The link
+redirects to the real meeting from 10 minutes before the session starts until 15 minutes after it
+should end. Before that it shows a "not open yet" page with the time, after that a "meeting has
+ended" page. The visitor is not added as an attendee of your calendar event for the same reason:
+their own Google Calendar would show the raw Meet address at any time. Your own calendar event keeps
+the real address. Set `JOIN_LINK_SECRET` (see `.env.example`); without it the Google client secret
+or SMTP password is the key, and with none of them the real link is emailed as it is. Google
+Calendar can not lock a Meet room to a time, so anyone who already has the raw address (you, from
+your calendar) can still open it; the join link protects what visitors receive.
+
 **Zoom is optional.** Without `ZOOM_ACCOUNT_ID`, `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (a
 Server-to-Server OAuth app from <https://marketplace.zoom.us>), a visitor who picks Zoom still gets
 a calendar event; the emails say you will send the Zoom link before the call and the owner email

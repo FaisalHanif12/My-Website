@@ -53,6 +53,8 @@ export interface Env {
   readonly ZOOM_ACCOUNT_ID: string | undefined;
   readonly ZOOM_CLIENT_ID: string | undefined;
   readonly ZOOM_CLIENT_SECRET: string | undefined;
+
+  readonly JOIN_LINK_SECRET: string | undefined;
 }
 
 /** One problem with one variable. Holds the name and a reason, never the value. */
@@ -270,6 +272,8 @@ const envSchema = z.object({
   ZOOM_ACCOUNT_ID: optionalText(),
   ZOOM_CLIENT_ID: optionalText(),
   ZOOM_CLIENT_SECRET: optionalText(),
+
+  JOIN_LINK_SECRET: optionalText(),
 });
 
 /** Rules that need more than one variable. Only runs on values that parsed. */

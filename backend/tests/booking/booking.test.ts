@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createBookingInfoModule } from '../../src/routes/booking-info.routes.js';
 import { createBookingModule } from '../../src/routes/booking.routes.js';
 import { createFakeCalendar } from '../../src/services/calendar/fake.js';
+import { createJoinLinks, joinSecret } from '../../src/services/booking/joinLink.js';
 import { createMemoryMailer } from '../../src/services/mail/index.js';
 import { createGoogleMeetProvider } from '../../src/services/meeting/googleMeet.js';
 import type { MeetingProvider } from '../../src/services/meeting/types.js';
@@ -102,7 +103,17 @@ describe('POST /api/booking', () => {
     expect(bodyOf(res).bookingId).toBe('FH-TEST0001');
     expect(bodyOf(res).start).toBe(SLOT);
     expect(bodyOf(res).end).toBe('2026-10-08T06:00:00.000Z');
-    expect(bodyOf(res).meetLink).toMatch(/^https:\/\/meet\.google\.com\//);
+    // Both sides get the join link, which hands out the real Meet address only around the booked time.
+    const joinUrl = bodyOf(res).meetLink!;
+    expect(joinUrl).toMatch(/^https:\/\/faisalhanif\.work\/api\/join\/[A-Za-z0-9_-]+$/);
+    const env = makeTestEnv();
+    const inside = createJoinLinks(joinSecret(env)!, env.SITE_URL).read(joinUrl.split('/').pop()!);
+    expect(inside).toMatchObject({
+      bookingId: 'FH-TEST0001',
+      start: SLOT,
+      end: '2026-10-08T06:00:00.000Z',
+    });
+    expect(inside!.url).toMatch(/^https:\/\/meet\.google\.com\//);
 
     expect(calendar.events).toHaveLength(1);
     const event = calendar.events[0]!;
@@ -110,7 +121,9 @@ describe('POST /api/booking', () => {
     expect(event.summary).toBe('Technical Deep Dive (60 min) with Ada Lovelace');
     expect(event.description).toContain('Sessions: 3 (total $75 USD)');
     expect(event.description).toContain('Please cover architecture.');
-    expect(event.attendee).toEqual({ email: 'ada@example.com', name: 'Ada Lovelace' });
+    // The visitor stays off the event, so no calendar of theirs shows the real Meet address.
+    expect(event.attendee).toBeNull();
+    expect(event.description).not.toContain('meet.google.com');
 
     const visitor = mailer.byTag('booking-visitor')[0]!;
     const owner = mailer.byTag('booking-owner')[0]!;
@@ -121,7 +134,8 @@ describe('POST /api/booking', () => {
       expect(mail.html).toContain(bodyOf(res).meetLink);
       expect(mail.text).toContain(bodyOf(res).meetLink);
       expect(mail.attachments).toHaveLength(1);
-      const ics = String(mail.attachments![0]!.content);
+      // Calendar files fold long lines with a line break and a space or tab.
+      const ics = String(mail.attachments![0]!.content).replace(/\r\n[ \t]/g, '');
       expect(ics).toContain(`UID:${event.iCalUID}`);
       expect(ics).toContain('DTSTART:20261008T050000Z');
       expect(ics).toContain(bodyOf(res).meetLink);
@@ -272,15 +286,46 @@ describe('POST /api/booking', () => {
     expect(failures[0]).toMatchObject({ bookingId: 'FH-TEST0001', level: 50 });
   });
 
+  it('without a server secret the real link is sent and the visitor is an attendee', async () => {
+    const calendar = createFakeCalendar({ now: () => NOW });
+    const mailer = createMemoryMailer();
+    const { app } = await buildTestApp({
+      modules: [
+        createBookingModule({
+          calendar,
+          mailer,
+          store: new MemoryStore(),
+          now: () => NOW,
+          joinLinks: null,
+        }),
+      ],
+    });
+    const res = await post(app);
+    expect(bodyOf(res).meetLink).toMatch(/^https:\/\/meet\.google\.com\//);
+    expect(calendar.events[0]!.attendee).toEqual({
+      email: 'ada@example.com',
+      name: 'Ada Lovelace',
+    });
+  });
+
   it('Zoom set up: the Zoom link is the event location and goes into both emails', async () => {
     const { app, calendar, mailer } = await setup({ zoom: 'https://zoom.us/j/123456' });
     const res = await post(app, { ...BODY, platform: 'Zoom' });
     expect(res.status).toBe(200);
-    expect(bodyOf(res).meetLink).toBe('https://zoom.us/j/123456');
+    const joinUrl = bodyOf(res).meetLink!;
+    expect(joinUrl).toContain('/api/join/');
+    const env = makeTestEnv();
+    expect(
+      createJoinLinks(joinSecret(env)!, env.SITE_URL).read(joinUrl.split('/').pop()!)!.url,
+    ).toBe('https://zoom.us/j/123456');
     expect(calendar.events[0]!.withGoogleMeet).toBe(false);
+    // The owner's own calendar event keeps the real Zoom address.
     expect(calendar.events[0]!.location).toBe('https://zoom.us/j/123456');
-    expect(mailer.byTag('booking-visitor')[0]!.html).toContain('https://zoom.us/j/123456');
-    expect(mailer.byTag('booking-owner')[0]!.html).toContain('https://zoom.us/j/123456');
+    for (const tag of ['booking-visitor', 'booking-owner']) {
+      const html = mailer.byTag(tag)[0]!.html;
+      expect(html).toContain(joinUrl);
+      expect(html).not.toContain('zoom.us/j/123456');
+    }
   });
 
   it('Zoom not set up: event without a conference, meetLink null, both emails explain', async () => {

@@ -23,8 +23,11 @@ export interface CreateEventInput {
   end: Date;
   /** IANA zone the event is shown in on the owner's calendar (BOOKING_TIMEZONE). */
   timeZone: string;
-  /** The visitor, added as an attendee without Google's own invite email. */
-  attendee: { email: string; name: string };
+  /**
+   * The visitor, added as an attendee without Google's own invite email. null keeps the visitor
+   * off the event (their calendar would show the raw meeting link, which the join link hides).
+   */
+  attendee: { email: string; name: string } | null;
   /** Join link used as the event location (Zoom), or null. */
   location: string | null;
   /** True when the provider must attach a Google Meet conference to the event. */

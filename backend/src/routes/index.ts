@@ -2,7 +2,7 @@ import type { ApiModule, AppContext, LoadedApiModule } from './types.js';
 import { isApiModule } from './types.js';
 
 /** Feature modules, loaded from ./<name>.routes.js in this order and mounted at /api. */
-export const API_MODULES = ['chat', 'contact', 'booking-info', 'booking'] as const;
+export const API_MODULES = ['chat', 'contact', 'booking-info', 'booking', 'join'] as const;
 
 export type ApiModuleName = (typeof API_MODULES)[number];
 
