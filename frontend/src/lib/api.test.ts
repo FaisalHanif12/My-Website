@@ -95,6 +95,7 @@ const bookingBody: ApiModule.BookingRequest = {
   date: '2026-03-12',
   timezone: 'Europe/London',
   startUtc: '2026-03-12T09:00:00.000Z',
+  slots: ['2026-03-12T09:00:00.000Z', '2026-03-12T10:00:00.000Z'],
   timeLocal: '9:00 AM',
   timeLahore: '2:00 PM',
   platform: 'Google Meet',
@@ -591,6 +592,7 @@ describe('postBooking', () => {
         '"pricePerSession":25,"sessions":2,"total":50,"currency":"USD",' +
         '"email":"ali@company.com","name":"Ali Khan","phone":"","company":"Acme",' +
         '"date":"2026-03-12","timezone":"Europe/London","startUtc":"2026-03-12T09:00:00.000Z",' +
+        '"slots":["2026-03-12T09:00:00.000Z","2026-03-12T10:00:00.000Z"],' +
         '"timeLocal":"9:00 AM","timeLahore":"2:00 PM","platform":"Google Meet",' +
         '"notes":"A line or two.","website":""}',
     );

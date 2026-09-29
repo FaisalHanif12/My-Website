@@ -15,7 +15,7 @@ import {
   BOOKING_MAX_DAYS_AHEAD,
   BOOKING_SESSIONS_MAX,
   BOOKING_SESSIONS_MIN,
-  BOOKING_SLOT_HOURS_PKT,
+  bookingSlotStarts,
   BOOKING_ZONES,
   BOOKING_PKT_OFFSET_HOURS,
   bookingGmtLabel,
@@ -62,7 +62,8 @@ interface State {
   phone: string;
   company: string;
   date: string | null;
-  slot: number | null;
+  /** Picked start times (ms), one per booked session. */
+  slots: number[];
   plat: BookingPlatformValue | '';
   notes: string;
 }
@@ -158,7 +159,7 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
       phone: '',
       company: '',
       date: null,
-      slot: null,
+      slots: [],
       plat: '',
       notes: '',
     };
@@ -246,6 +247,19 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
       month: 'short',
       year: 'numeric',
     }).format(parseYmd(s));
+  }
+  /** "Thu, Oct 1" in the chosen zone (the picked times list of several sessions). */
+  function fmtShortDay(ms: number, tz: string): string {
+    try {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: tz,
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      }).format(ms);
+    } catch {
+      return '';
+    }
   }
   function fmtShortTz(ms: number, tz: string): string {
     try {
@@ -377,6 +391,8 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
   $$<HTMLInputElement>('input[name="ct-bk-type"]').forEach((r) => {
     listen(r, 'change', () => {
       S.type = r.value === 'deep' ? 'deep' : 'quick';
+      // The slot length changes with the session type, so earlier picks no longer fit.
+      S.slots = [];
       updateSummary(true);
       announce(
         C.announce.typeSelected(bookingSession(S.type).name, bookingSession(S.type).price * S.n),
@@ -390,6 +406,12 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
       const n = Math.max(BOOKING_SESSIONS_MIN, Math.min(BOOKING_SESSIONS_MAX, S.n + delta));
       if (n === S.n) return;
       S.n = n;
+      // Fewer sessions: keep the earliest picks that still fit.
+      if (S.slots.length > n)
+        S.slots = S.slots
+          .slice()
+          .sort((a, b) => a - b)
+          .slice(0, n);
       updateSummary(true);
       if (!reduce && el.n.animate)
         el.n.animate(
@@ -522,15 +544,16 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
     }
     if (n === 2) {
       const cal = need('#ct-cal');
-      if (!S.date) {
+      if (!S.date && S.slots.length === 0) {
         cal.classList.add('is-invalid');
         need('#ct-bk-date-err').textContent = C.errors.date;
         $('.ct-cal__d[tabindex="0"]')?.focus();
         return false;
       }
-      if (S.slot == null) {
+      if (S.slots.length !== S.n) {
         el.slots.classList.add('is-invalid');
-        need('#ct-bk-slot-err').textContent = C.errors.slot;
+        need('#ct-bk-slot-err').textContent =
+          S.n === 1 ? C.errors.slot : C.errors.slotMany(S.n, S.slots.length);
         $('.ct-slot')?.focus();
         return false;
       }
@@ -654,7 +677,10 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
   $$('[data-cal]').forEach((b) => listen(b, 'click', () => moveMonth(+(b.dataset.cal ?? 0))));
   function pickDate(k: string) {
     S.date = k;
-    if (S.slot != null && fmtDayTz(S.slot, BOOKING_HOME_TZ) !== k) S.slot = null;
+    // One session keeps the reference rule (a pick on another day is dropped). With several sessions
+    // the picks stay while the visitor moves between days.
+    if (S.n === 1 && S.slots[0] != null && fmtDayTz(S.slots[0], BOOKING_HOME_TZ) !== k)
+      S.slots = [];
     $$('.ct-cal__d', el.grid).forEach((b) => {
       const on = b.dataset.date === k;
       b.setAttribute('aria-pressed', String(on));
@@ -720,12 +746,25 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
   });
 
   /* ---- time slots (9AM to 6PM PKT, Mon to Fri) (L6590-6625) ---- */
+  /** Minutes after midnight PKT of a slot. */
+  const pktMinutes = (ms: number) =>
+    (((ms / 60000 + BOOKING_PKT_OFFSET_HOURS * 60) % 1440) + 1440) % 1440;
   function slotsFor(k: string): number[] {
     const p = k.split('-').map(Number);
     const free = API_ENABLED ? freeSlots.get(k + '|' + S.type) : undefined;
-    return BOOKING_SLOT_HOURS_PKT.filter((h) => !free || free.includes(h)).map((h) =>
-      Date.UTC(p[0], p[1] - 1, p[2], h - BOOKING_PKT_OFFSET_HOURS, 0),
-    );
+    return bookingSlotStarts(bookingSession(S.type).mins)
+      .filter((m) => !free || free.includes(m))
+      .map((m) =>
+        Date.UTC(p[0], p[1] - 1, p[2], Math.floor(m / 60) - BOOKING_PKT_OFFSET_HOURS, m % 60),
+      );
+  }
+  /** The hint under the slots: the reference text, or a count when several sessions are booked. */
+  function updateSlotsHint() {
+    const hint = $('#ct-slots-hint span');
+    if (!hint) return;
+    hint.textContent =
+      S.n > 1 ? C.steps.p2.slotsHintMany(S.n, S.slots.length) : C.steps.p2.slotsHint;
+    el.slots.setAttribute('role', S.n > 1 ? 'group' : 'radiogroup');
   }
   function renderSlots(animate: boolean) {
     const tz = el.tz.value || LOCAL_TZ;
@@ -738,21 +777,24 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
     }
     const day0 = parseYmd(S.date).getTime();
     const list = slotsFor(S.date);
-    const sel = S.slot;
+    const many = S.n > 1;
+    updateSlotsHint();
     let i = 0;
     el.slots.innerHTML = list
       .map((ms) => {
         const day = fmtDayTz(ms, tz);
         const shift = Math.round((parseYmd(day).getTime() - day0) / 864e5);
         const tag = shift > 0 ? C.steps.p2.nextDay : shift < 0 ? C.steps.p2.prevDay : '';
-        const on = sel === ms;
+        const on = S.slots.includes(ms);
         const label = C.slotLabel(
           fmtTime(ms, tz),
           tag ? fmtShortTz(ms, tz) : '',
           fmtTime(ms, BOOKING_HOME_TZ),
         );
         return (
-          '<button type="button" role="radio" class="ct-slot' +
+          '<button type="button" role="' +
+          (many ? 'checkbox' : 'radio') +
+          '" class="ct-slot' +
           (animate && !reduce ? ' ct-slot--in' : '') +
           '" style="animation-delay:' +
           i++ * 35 +
@@ -773,14 +815,28 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
     if (focusable) focusable.tabIndex = 0;
   }
   function pickSlot(b: HTMLElement) {
-    S.slot = +(b.dataset.ms ?? 0);
+    const ms = +(b.dataset.ms ?? 0);
+    const errEl = need('#ct-bk-slot-err');
+    if (S.n === 1) {
+      S.slots = [ms];
+    } else if (S.slots.includes(ms)) {
+      S.slots = S.slots.filter((x) => x !== ms);
+    } else if (S.slots.length >= S.n) {
+      errEl.textContent = C.errors.slotLimit(S.n);
+      el.slots.classList.add('is-invalid');
+      return;
+    } else {
+      S.slots = [...S.slots, ms];
+    }
     $$('.ct-slot', el.slots).forEach((x) => {
-      const on = x === b;
+      const on = S.slots.includes(+(x.dataset.ms ?? 0));
       x.setAttribute('aria-checked', String(on));
-      x.tabIndex = on ? 0 : -1;
+      x.tabIndex = x === b ? 0 : -1;
     });
     el.slots.classList.remove('is-invalid');
-    need('#ct-bk-slot-err').textContent = '';
+    errEl.textContent = '';
+    updateSlotsHint();
+    if (S.n > 1) announce(C.announce.slotCount(S.n, S.slots.length));
     renderRecap();
   }
   listen(el.slots, 'click', (e) => {
@@ -804,7 +860,12 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
     }
     if (n) {
       e.preventDefault();
-      pickSlot(n);
+      if (S.n === 1) pickSlot(n);
+      else {
+        all.forEach((x) => {
+          x.tabIndex = x === n ? 0 : -1;
+        });
+      }
       n.focus();
     }
   });
@@ -822,27 +883,38 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
   async function loadSlots(k: string): Promise<void> {
     const seq = ++slotsSeq;
     const session = S.type;
-    let hours: number[];
+    let minutes: number[];
     try {
       const list = await getBookingSlots(k, session);
-      hours = list.map((s) => parseInt(s, 10)).filter((h) => Number.isFinite(h));
+      minutes = list
+        .map((t) => {
+          const m = /^(\d{1,2}):(\d{2})$/.exec(t);
+          return m ? +m[1] * 60 + +m[2] : NaN;
+        })
+        .filter((m) => Number.isFinite(m));
     } catch {
       return;
     }
     if (seq !== slotsSeq) return;
-    freeSlots.set(k + '|' + session, hours);
-    if (S.date !== k || S.type !== session) return;
-    if (hours.length === 0) {
+    freeSlots.set(k + '|' + session, minutes);
+    if (S.type !== session) return;
+    // Picks on that day that are no longer free are dropped.
+    S.slots = S.slots.filter(
+      (ms) => fmtDayTz(ms, BOOKING_HOME_TZ) !== k || minutes.includes(pktMinutes(ms)),
+    );
+    if (S.date !== k) {
+      renderRecap();
+      return;
+    }
+    if (minutes.length === 0) {
       fullDays.add(k);
       S.date = null;
-      S.slot = null;
       renderCal();
       renderSlots(false);
       renderRecap();
       need('#ct-bk-date-err').textContent = C.errors.dayFull;
       return;
     }
-    if (S.slot != null && !slotsFor(k).includes(S.slot)) S.slot = null;
     renderSlots(false);
     renderRecap();
   }
@@ -853,22 +925,40 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
     const tz = el.tz.value || LOCAL_TZ;
     const R = C.recap;
     type Row = [label: string, value: string, filled: boolean, html?: boolean];
+    const picked = S.slots.slice().sort((x, y) => x - y);
+    const slotLine = (ms: number, withDay: boolean) =>
+      (withDay ? fmtShortDay(ms, tz) + ' · ' : '') +
+      fmtTime(ms, tz) +
+      '<small>' +
+      esc(fmtTime(ms, BOOKING_HOME_TZ)) +
+      R.inLahore +
+      '</small>';
+    const dateTimeRows: Row[] =
+      S.n === 1
+        ? [
+            [R.date, S.date ? fmtLongDate(S.date) : R.notPicked, !!S.date],
+            [
+              R.time,
+              picked[0] != null ? slotLine(picked[0], false) : R.notPicked,
+              picked.length > 0,
+              true,
+            ],
+          ]
+        : [
+            [
+              R.timesRow,
+              picked.map((ms) => slotLine(ms, true)).join('') +
+                (picked.length < S.n
+                  ? '<small>' + esc(R.morePick(S.n - picked.length)) + '</small>'
+                  : ''),
+              picked.length > 0,
+              true,
+            ],
+          ];
     const rows: Row[] = [
       [R.session, T.name + ' (' + T.mins + R.minSuffix + ')', true],
       [R.sessions, S.n + R.times + T.price, true],
-      [R.date, S.date ? fmtLongDate(S.date) : R.notPicked, !!S.date],
-      [
-        R.time,
-        S.slot != null
-          ? fmtTime(S.slot, tz) +
-            '<small>' +
-            esc(fmtTime(S.slot, BOOKING_HOME_TZ)) +
-            R.inLahore +
-            '</small>'
-          : R.notPicked,
-        S.slot != null,
-        true,
-      ],
+      ...dateTimeRows,
       [R.platform, S.plat || R.notPicked, !!S.plat],
     ];
     const body = (list: Row[]) =>
@@ -898,7 +988,8 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
   function bookingData(): BookingRequest {
     const T = bookingSession(S.type);
     const tz = el.tz.value;
-    const slot = S.slot ?? 0;
+    const picked = S.slots.slice().sort((x, y) => x - y);
+    const slot = picked[0] ?? 0;
     return {
       sessionType: S.type,
       sessionName: T.name,
@@ -911,9 +1002,10 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
       name: S.name,
       phone: S.phone,
       company: S.company,
-      date: S.date ?? '',
+      date: fmtDayTz(slot, BOOKING_HOME_TZ),
       timezone: tz,
       startUtc: new Date(slot).toISOString(),
+      slots: picked.map((ms) => new Date(ms).toISOString()),
       timeLocal: fmtTime(slot, tz),
       timeLahore: fmtTime(slot, BOOKING_HOME_TZ),
       platform: (S.plat || 'Google Meet') as BookingPlatformValue,
@@ -930,6 +1022,14 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
       timeLocal: d.timeLocal,
       timezoneName: tzName(d.timezone),
       timeLahore: d.timeLahore,
+      slots: d.slots.map((iso) => {
+        const ms = Date.parse(iso);
+        return {
+          dateLong: fmtLongDate(fmtDayTz(ms, d.timezone)),
+          timeLocal: fmtTime(ms, d.timezone),
+          timeLahore: fmtTime(ms, BOOKING_HOME_TZ),
+        };
+      }),
       platform: d.platform,
       name: d.name,
       email: d.email,
@@ -955,10 +1055,23 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
       '<div><dt>' +
       D.ticket.when +
       '</dt><dd>' +
-      esc(fmtLongDate(d.date)) +
-      '<small>' +
-      esc(d.timeLocal + D.ticket.yourTime + d.timeLahore + D.ticket.inLahore) +
-      '</small></dd></div>' +
+      d.slots
+        .map((iso) => {
+          const ms = Date.parse(iso);
+          return (
+            esc(fmtLongDate(fmtDayTz(ms, d.timezone))) +
+            '<small>' +
+            esc(
+              fmtTime(ms, d.timezone) +
+                D.ticket.yourTime +
+                fmtTime(ms, BOOKING_HOME_TZ) +
+                D.ticket.inLahore,
+            ) +
+            '</small>'
+          );
+        })
+        .join('') +
+      '</dd></div>' +
       '<div><dt>' +
       D.ticket.platform +
       '</dt><dd>' +
@@ -1008,13 +1121,17 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
         unbusy();
         if (isApiError(err, 'SLOT_TAKEN')) {
           attempt = null;
-          S.slot = null;
-          freeSlots.delete(d.date + '|' + S.type);
+          const days = [
+            ...new Set(d.slots.map((iso) => fmtDayTz(Date.parse(iso), BOOKING_HOME_TZ))),
+          ];
+          days.forEach((day) => freeSlots.delete(day + '|' + S.type));
           goStep(2);
           need('#ct-bk-slot-err').textContent = C.errors.slotTaken;
           el.slots.classList.add('is-invalid');
-          void loadSlots(d.date).then(() => {
+          // Reload the free times of every picked day; picks that were taken drop out.
+          void Promise.all(days.map((day) => loadSlots(day))).then(() => {
             need('#ct-bk-slot-err').textContent = C.errors.slotTaken;
+            renderSlots(false);
           });
           return;
         }

@@ -125,6 +125,27 @@ export const BOOKING_PLATFORMS: BookingPlatform[] = [
 
 /** Lahore working slots: hourly start hours in PKT (UTC+5), Monday to Friday (slotsFor, L6060). */
 export const BOOKING_SLOT_HOURS_PKT: readonly number[] = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+/** First start (09:00) and end of the working day (18:00) in PKT, in minutes after midnight. */
+export const BOOKING_DAY_START_MIN = 9 * 60;
+export const BOOKING_DAY_END_MIN = 18 * 60;
+
+/**
+ * The start times of one day in minutes after midnight PKT, one every `sessionMinutes` while the
+ * session still ends by 18:00. Owner change (2026-09-29): a 30 minute Quick Chat starts every 30
+ * minutes (09:00, 09:30 .. 17:30, 18 slots) and a 60 minute Deep Dive every 60 (9 slots).
+ */
+export function bookingSlotStarts(sessionMinutes: number): number[] {
+  const out: number[] = [];
+  for (
+    let m = BOOKING_DAY_START_MIN;
+    m + sessionMinutes <= BOOKING_DAY_END_MIN;
+    m += sessionMinutes
+  ) {
+    out.push(m);
+  }
+  return out;
+}
 /** slotsFor builds each slot as Date.UTC(y, m, d, h - 5, 0). */
 export const BOOKING_PKT_OFFSET_HOURS = 5;
 /** A day is available when it is a weekday, after today and at most 60 days ahead (L6015). */
@@ -266,6 +287,13 @@ export const BOOKING_COPY = {
       nextMonth: 'Next month',
       /** Weeks start on Monday. */
       dow: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+      /** Hint under the slots when more than one session was booked (owner change, 2026-09-29). */
+      slotsHintMany: (n: number, picked: number) =>
+        'Pick ' +
+        n +
+        ' times, one for each session (' +
+        picked +
+        ' picked). Times shown in your timezone',
       /** Appended to a disabled day's aria-label. */
       unavailable: ', unavailable',
       tz: 'Your Timezone',
@@ -310,6 +338,10 @@ export const BOOKING_COPY = {
     platform: 'Platform',
     total: 'Total',
     notPicked: 'Not picked yet',
+    /** Row of the picked times when several sessions were booked. */
+    timesRow: 'Times',
+    /** Under the picked times while some are still missing. */
+    morePick: (left: number) => left + (left === 1 ? ' more time to pick' : ' more times to pick'),
   },
 
   /** Screen C (L4452-4461, finish() L6131-6145). */
@@ -351,6 +383,15 @@ export const BOOKING_COPY = {
     nameShort: 'That name looks a little short.',
     date: 'Pick a weekday for the meeting.',
     slot: 'Choose one of the time slots.',
+    /** Step 2 with several sessions: one slot per session. */
+    slotMany: (n: number, picked: number) =>
+      'Choose ' + n + ' time slots, one for each session (' + picked + ' picked so far).',
+    /** Tapping one more slot than there are sessions. */
+    slotLimit: (n: number) =>
+      'You booked ' +
+      n +
+      (n === 1 ? ' session' : ' sessions') +
+      '. Tap a picked time to remove it first.',
     platform: 'Choose Google Meet or Zoom.',
     /** 409 SLOT_TAKEN, shown in #ct-bk-slot-err after going back to step 2 (API_CONTRACT.md). */
     slotTaken: 'That time was just taken. Please pick another slot.',
@@ -374,6 +415,8 @@ export const BOOKING_COPY = {
     /** goStep (L5943). */
     step: (n: number) => 'Step ' + n + ' of 3',
     emailVerified: 'Email verified',
+    /** A slot was added or removed with several sessions. */
+    slotCount: (n: number, picked: number) => picked + ' of ' + n + ' times picked',
     /** pickDate (L6031); longDate is fmtLongDate(k), for example "Tue, Mar 10, 2026". */
     dateSelected: (longDate: string, slotCount: number) =>
       longDate + ' selected. ' + slotCount + ' time slots available.',
@@ -413,6 +456,8 @@ export interface BookingMailInput {
   timeLocal: string;
   timezoneName: string;
   timeLahore: string;
+  /** Every booked session in order. More than one entry lists them all in the mail. */
+  slots?: ReadonlyArray<{ dateLong: string; timeLocal: string; timeLahore: string }>;
   platform: string;
   name: string;
   email: string;
@@ -441,17 +486,34 @@ export function bookingMailBody(d: BookingMailInput): string {
     '\nTotal: $' +
     d.total +
     '\n\n' +
-    'Date: ' +
-    d.dateLong +
-    '\n' +
-    'Time: ' +
-    d.timeLocal +
-    ' (' +
-    d.timezoneName +
-    ')\n' +
-    'Time in Lahore: ' +
-    d.timeLahore +
-    ' PKT\n' +
+    (d.slots && d.slots.length > 1
+      ? d.slots
+          .map(
+            (s, i) =>
+              'Session ' +
+              (i + 1) +
+              ': ' +
+              s.dateLong +
+              ', ' +
+              s.timeLocal +
+              ' (' +
+              d.timezoneName +
+              '), ' +
+              s.timeLahore +
+              ' PKT\n',
+          )
+          .join('')
+      : 'Date: ' +
+        d.dateLong +
+        '\n' +
+        'Time: ' +
+        d.timeLocal +
+        ' (' +
+        d.timezoneName +
+        ')\n' +
+        'Time in Lahore: ' +
+        d.timeLahore +
+        ' PKT\n') +
     'Platform: ' +
     d.platform +
     '\n\n' +

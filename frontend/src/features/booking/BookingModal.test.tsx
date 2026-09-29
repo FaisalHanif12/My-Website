@@ -117,7 +117,8 @@ describe('booking modal (mailto mode)', () => {
     const day = document.querySelector<HTMLElement>('.ct-cal__d:not([disabled])')!;
     click('.ct-cal__d:not([disabled])');
     expect(day.getAttribute('aria-pressed')).toBe('true');
-    expect(document.querySelectorAll('.ct-slot')).toHaveLength(9);
+    // A Quick Chat starts every 30 minutes: 09:00 to 17:30.
+    expect(document.querySelectorAll('.ct-slot')).toHaveLength(18);
     click('.ct-pane[data-pane="2"] [data-bk-next]');
     expect(q('#ct-bk-slot-err').textContent).toBe('Choose one of the time slots.');
     click('.ct-slot');
@@ -150,5 +151,78 @@ describe('booking modal (mailto mode)', () => {
     expect(q('#ct-bk-t3').textContent).toBe('Request ready!');
     expect(q('#ct-bk-done-msg').textContent).toContain('a@b.co');
     expect(q('#ct-bk-ticket').textContent).toContain('Quick Chat × 1');
+  });
+
+  async function toStep2(type: 'quick' | 'deep', sessions: number) {
+    act(() => modal.open(BOOKING_MODAL_ID, { payload: bookingPayload(type) }));
+    for (let i = 1; i < sessions; i += 1) click('[data-bk-step="1"]');
+    await clickAndSettle('#ct-bk-go');
+    fireEvent.change(q('#ct-bk-email'), { target: { value: 'a@b.co' } });
+    fireEvent.change(q('#ct-bk-name'), { target: { value: 'Ada Lovelace' } });
+    await clickAndSettle('.ct-pane[data-pane="1"] [data-bk-next]');
+    click('.ct-cal__d:not([disabled])');
+  }
+
+  it('a Deep Dive offers a slot every 60 minutes, a Quick Chat every 30', async () => {
+    setup();
+    await toStep2('deep', 1);
+    const labels = [...document.querySelectorAll('.ct-slot')].map((b) => b.textContent);
+    expect(labels).toHaveLength(9);
+    expect(labels[1]).not.toMatch(/:30/);
+  });
+
+  it('two sessions need two different slots, and a third pick is refused', async () => {
+    setup();
+    await toStep2('quick', 2);
+    const slotBtns = () => [...document.querySelectorAll<HTMLElement>('.ct-slot')];
+    expect(slotBtns()[0]!.getAttribute('role')).toBe('checkbox');
+    expect(q('#ct-slots-hint').textContent).toContain('Pick 2 times');
+    fireEvent.click(slotBtns()[0]!);
+    await clickAndSettle('.ct-pane[data-pane="2"] [data-bk-next]');
+    expect(q('#ct-bk-slot-err').textContent).toBe(
+      'Choose 2 time slots, one for each session (1 picked so far).',
+    );
+    fireEvent.click(slotBtns()[1]!);
+    fireEvent.click(slotBtns()[2]!);
+    expect(q('#ct-bk-slot-err').textContent).toContain('Tap a picked time to remove it first');
+    expect(slotBtns().filter((b) => b.getAttribute('aria-checked') === 'true')).toHaveLength(2);
+    // Tapping a picked time removes it.
+    fireEvent.click(slotBtns()[0]!);
+    expect(slotBtns().filter((b) => b.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+    fireEvent.click(slotBtns()[2]!);
+    await clickAndSettle('.ct-pane[data-pane="2"] [data-bk-next]');
+    expect(q('.ct-pane[data-pane="3"]').hidden).toBe(false);
+    expect(q('.ct-order [data-recap]').textContent).toContain('Times');
+  });
+
+  it('the mail lists every session', async () => {
+    setup();
+    await toStep2('quick', 2);
+    const btns = () => [...document.querySelectorAll<HTMLElement>('.ct-slot')];
+    fireEvent.click(btns()[0]!);
+    fireEvent.click(btns()[3]!);
+    await clickAndSettle('.ct-pane[data-pane="2"] [data-bk-next]');
+    fireEvent.click(q('input[name="ct-bk-plat"][value="Zoom"]'));
+    const opened: string[] = [];
+    document.addEventListener(
+      'click',
+      (e) => {
+        const a = (e.target as Element).closest?.('a[href^="mailto:"]');
+        if (a) {
+          opened.push((a as HTMLAnchorElement).href);
+          e.preventDefault();
+        }
+      },
+      true,
+    );
+    click('#ct-bk-complete');
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(800);
+    });
+    const body = decodeURIComponent(opened[0]!);
+    expect(body).toContain('Session 1: ');
+    expect(body).toContain('Session 2: ');
+    expect(body).toContain('Number of sessions: 2');
+    expect(q('#ct-bk-ticket').querySelectorAll('small')).toHaveLength(2);
   });
 });

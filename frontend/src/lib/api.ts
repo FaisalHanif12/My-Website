@@ -94,12 +94,14 @@ export interface BookingRequest {
   name: string;
   phone: string;
   company: string;
-  /** "YYYY-MM-DD", the calendar day picked. */
+  /** "YYYY-MM-DD", the calendar day of the first slot. */
   date: string;
   /** IANA zone chosen in the modal. */
   timezone: string;
-  /** ISO time of the chosen slot. */
+  /** ISO time of the first chosen slot. */
   startUtc: string;
+  /** ISO time of every chosen slot, one per session (owner change, 2026-09-29). */
+  slots: string[];
   timeLocal: string;
   timeLahore: string;
   platform: 'Google Meet' | 'Zoom';
@@ -467,6 +469,7 @@ export async function postBooking(
     date: body.date,
     timezone: body.timezone,
     startUtc: body.startUtc,
+    slots: body.slots,
     timeLocal: body.timeLocal,
     timeLahore: body.timeLahore,
     platform: body.platform,

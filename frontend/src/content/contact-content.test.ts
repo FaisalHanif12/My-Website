@@ -726,7 +726,8 @@ describe('counts (REFERENCE_MAP.md 11.6.9, 11.7.10, 11.7.15, 11.7.16)', () => {
     expect(Object.keys(BOOKING_ZONE_NAMES)).toHaveLength(9);
     expect(BOOKING_EXPECT).toHaveLength(4);
     expect(BOOKING_PLATFORMS).toHaveLength(2);
-    expect(Object.keys(BOOKING_COPY.errors)).toHaveLength(9);
+    // 9 of the reference/contract plus the two several-session messages (owner change, 2026-09-29).
+    expect(Object.keys(BOOKING_COPY.errors)).toHaveLength(11);
     expect(BOOKING_MAX_DAYS_AHEAD).toBe(60);
     expect(BOOKING_SLOT_HOURS_PKT[0]).toBe(9);
     expect(BOOKING_SLOT_HOURS_PKT.at(-1)).toBe(17);
