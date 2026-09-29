@@ -550,8 +550,10 @@ export function initApprovals(root: HTMLElement, env: ApprovalsEnv): () => void 
           const r = deckEl.getBoundingClientRect();
           const px = (e.clientX - (r.left + r.width / 2)) / Math.max(1, innerWidth / 2);
           const py = (e.clientY - (r.top + r.height / 2)) / Math.max(1, innerHeight / 2);
-          gy = Math.max(-1, Math.min(1, px)) * 6;
-          gx = Math.max(-1, Math.min(1, py)) * -4.5;
+          /* Owner change (2026-09-29): the reference tilts the deck away from the cursor, against the
+             side the fan opens on. The signs are flipped so the deck leans toward the cursor. */
+          gy = Math.max(-1, Math.min(1, px)) * -6;
+          gx = Math.max(-1, Math.min(1, py)) * 4.5;
           if (!tRaf) tRaf = requestAnimationFrame(tloop);
         }) as EventListener,
         { passive: true },

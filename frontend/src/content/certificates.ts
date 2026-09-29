@@ -151,7 +151,7 @@ export const CERTIFICATES: readonly Certificate[] = [
     type: 'Professional Certificate',
     year: '2024',
     filterKey: 'mobile',
-    image: '/imgs/ReactNative.png',
+    image: '/imgs/react-native.webp',
     verifyUrl: 'https://www.coursera.org/account/accomplishments/certificate/BEMCRMJ7N46L',
     title: 'Meta React Native Mobile Development Certificate',
     tags: ['React Native', 'Mobile Development', 'JavaScript', 'UI/UX'],

@@ -1,0 +1,12 @@
+/*
+ * Owner changes to the reference design (2026-09-29). Loaded last. Each rule says what it changes.
+ *
+ * Mobile dock: the reference glass (72% white) lets the page text show through the bar. The bar
+ * is now solid, so nothing reads through it. The blur stays.
+ */
+.dock {
+  background: #fff;
+}
+[data-theme='dark'] .dock {
+  background: #0b1a16;
+}

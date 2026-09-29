@@ -166,10 +166,8 @@ describe('copy strings', () => {
       } else {
         // The reference writes the same path without the leading slash ('imgs/...', "vedioes/...").
         expect(value, path).toMatch(/^\/(imgs|vedioes)\//);
-        expect(
-          SOURCE.includes(`'${value.slice(1)}'`) || SOURCE.includes(`"${value.slice(1)}"`),
-          path,
-        ).toBe(true);
+        const written = referencePath(value);
+        expect(SOURCE.includes(`'${written}'`) || SOURCE.includes(`"${written}"`), path).toBe(true);
       }
     }
   });
@@ -220,6 +218,22 @@ interface RefCert {
   d: string;
 }
 
+/**
+ * Three screenshots the reference serves as large PNGs (1.8 MB, 0.7 MB and 0.45 MB) are served here
+ * as WebP files of the same picture (each under 120 KB), which the Lighthouse run needs. Maps our
+ * path to the reference path so the parity checks still compare the same file names.
+ */
+const REFERENCE_PATH_OF: Readonly<Record<string, string>> = {
+  '/imgs/uha-company-website.webp': '/imgs/UHA-Company website.png',
+  '/imgs/medicare.webp': '/imgs/medicare.png',
+  '/imgs/react-native.webp': '/imgs/ReactNative.png',
+};
+
+/** The path the reference writes for one of our asset paths (no leading slash). */
+function referencePath(path: string): string {
+  return (REFERENCE_PATH_OF[path] ?? path).replace(/^\//, '');
+}
+
 /** Our Project written back in the reference's field names (paths without the leading slash). */
 function toRefProject(p: Project): RefProject {
   return {
@@ -228,7 +242,7 @@ function toRefProject(p: Project): RefProject {
     cat: p.category,
     k: p.filterKey,
     b: p.badge,
-    img: p.image.replace(/^\//, ''),
+    img: referencePath(p.image),
     live: p.live,
     ...(p.modal ? { modal: p.modal } : {}),
     src: p.source,
@@ -244,7 +258,7 @@ function toRefCert(c: Certificate): RefCert {
     type: c.type,
     y: c.year,
     k: c.filterKey,
-    img: c.image.replace(/^\//, ''),
+    img: referencePath(c.image),
     url: c.verifyUrl,
     t: c.title,
     tags: [...c.tags],
@@ -737,13 +751,20 @@ describe('assets on disk (frontend/public)', () => {
     expect(statSync(file).size).toBeGreaterThan(0);
   });
 
-  it('keeps the two project file names with spaces (render them with encodeURI)', () => {
+  it('keeps the one project file name with a space (render it with encodeURI)', () => {
     const spaced = PROJECTS.filter((p) => p.image.includes(' ')).map((p) => p.image);
-    expect(spaced).toEqual(['/imgs/UHA-Company website.png', '/imgs/Smart Gallery.webp']);
-    expect(spaced.map((p) => encodeURI(p))).toEqual([
-      '/imgs/UHA-Company%20website.png',
-      '/imgs/Smart%20Gallery.webp',
-    ]);
+    expect(spaced).toEqual(['/imgs/Smart Gallery.webp']);
+    expect(spaced.map((p) => encodeURI(p))).toEqual(['/imgs/Smart%20Gallery.webp']);
+  });
+
+  it('serves the three formerly large PNG screenshots as WebP (under 200 KB each)', () => {
+    for (const path of [
+      '/imgs/uha-company-website.webp',
+      '/imgs/medicare.webp',
+      '/imgs/react-native.webp',
+    ]) {
+      expect(statSync(onDisk(path)).size, path).toBeLessThan(200 * 1024);
+    }
   });
 
   it('serves the hero screenshots at the intrinsic size of the section 8 table', () => {

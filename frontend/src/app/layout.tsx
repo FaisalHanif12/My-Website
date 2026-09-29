@@ -11,6 +11,7 @@ import '@/styles/profile.css';
 import '@/styles/works.css';
 import '@/styles/approvals.css';
 import '@/styles/heroes.css';
+import '@/styles/overrides.css';
 
 import { fontVariables } from '@/app/fonts';
 import { AmbientBackground } from '@/components/layout/AmbientBackground';

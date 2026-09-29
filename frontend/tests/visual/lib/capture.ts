@@ -23,6 +23,11 @@ export const FIXED_TIME = new Date('2026-03-10T09:00:00Z');
 export const LIVE_ORIGIN = 'https://faisalhanif.work';
 export const PUBLIC_DIR = fileURLToPath(new URL('../../../public/', import.meta.url));
 /**
+ * Files only the reference needs: the three large PNG screenshots the site now serves as WebP.
+ * The reference page still asks for the PNGs, so they are answered from here.
+ */
+export const REFERENCE_ASSETS_DIR = fileURLToPath(new URL('../reference-assets/', import.meta.url));
+/**
  * The reference loads Google Fonts from the network. A slow or failed font request made captures
  * time out or fall back to other faces, so font responses are kept on disk after the first fetch.
  */
@@ -120,8 +125,9 @@ export function publicFileFor(url: string, publicDir: string = PUBLIC_DIR): stri
 
 async function fulfilFromPublic(route: PwRoute, log: (line: string) => void): Promise<void> {
   const url = route.request().url();
-  const file = publicFileFor(url);
-  if (file && existsSync(file) && statSync(file).isFile()) {
+  const candidates = [publicFileFor(url), publicFileFor(url, REFERENCE_ASSETS_DIR)];
+  const file = candidates.find((f) => f && existsSync(f) && statSync(f).isFile());
+  if (file) {
     const type = MIME[extname(file).toLowerCase()] ?? 'application/octet-stream';
     await route.fulfill({ status: 200, contentType: type, body: readFileSync(file) });
     return;
