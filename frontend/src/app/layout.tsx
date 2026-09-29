@@ -26,6 +26,8 @@ import { ModalProvider } from '@/components/providers/ModalProvider';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { ToastProvider } from '@/components/providers/ToastProvider';
 import { TransitionProvider } from '@/components/providers/TransitionProvider';
+import { BookingModal } from '@/features/booking/BookingModal';
+import { ChatWidget } from '@/features/chat/ChatWidget';
 import { PureBodyModal } from '@/features/works/PureBodyModal';
 import { IconSprite } from '@/components/ui/IconSprite';
 import { Toast } from '@/components/ui/Toast';
@@ -83,6 +85,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     {children}
                     <Footer />
                   </main>
+                  <BookingModal />
+                  <ChatWidget />
                   <PureBodyModal />
                   <Toast />
                   <GlobalMotion />
