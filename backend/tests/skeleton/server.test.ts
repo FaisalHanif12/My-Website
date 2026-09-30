@@ -141,15 +141,16 @@ describe('startServer', () => {
     const { capture } = await start();
     const warnings = capture.lines().filter((line) => line.level === 40);
     expect(warnings).toHaveLength(1);
-    expect(warnings[0]).toMatchObject({ features: ['google', 'zoom'] });
-    expect(String(warnings[0]?.msg)).toContain('Not configured: google, zoom');
+    expect(warnings[0]).toMatchObject({ features: ['google'] });
+    expect(String(warnings[0]?.msg)).toContain('Not configured: google');
   });
 
   it('says so when the dev fakes are on', async () => {
     const { capture } = await start({ devFake: true });
     const messages = capture.lines().map((line) => String(line.msg));
     expect(messages.some((msg) => msg.includes('DEV_FAKE_EXTERNALS is on'))).toBe(true);
-    expect(capture.lines().find((line) => line.features)).toMatchObject({ features: ['zoom'] });
+    // Every feature is available with the fakes, so no "not configured" warning is written.
+    expect(capture.lines().find((line) => line.features)).toBeUndefined();
   });
 
   it('builds the given modules with its context and runs started hooks after listening', async () => {

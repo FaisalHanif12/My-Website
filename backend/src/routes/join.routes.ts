@@ -26,7 +26,7 @@ h1{margin:0 0 10px;font-size:1.4rem;color:#0e6655}p{margin:8px 0;color:#34504a}s
 }
 
 /**
- * GET /api/join/:token, the address both booking emails carry. The real Google Meet or Zoom address
+ * GET /api/join/:token, the address both booking emails carry. The real Google Meet address
  * is inside the (encrypted) token and only handed out from 10 minutes before the session until
  * 15 minutes after it should end. Outside that window the visitor sees a plain page with the time.
  */

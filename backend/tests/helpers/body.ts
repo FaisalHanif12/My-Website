@@ -12,7 +12,7 @@ export interface ApiBody {
   end: string;
   timezone: string;
   slots: string[];
-  platforms: { meet: boolean; zoom: boolean };
+  platforms: { meet: boolean };
   sessions: Record<string, { name: string; minutes: number; price: number }>;
   hours: { timezone: string };
   error: { code: string; message: string; fields: Record<string, string> };

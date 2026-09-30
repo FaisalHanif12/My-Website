@@ -58,7 +58,6 @@ export const SAMPLE_BOOKING: BookingEmailData = {
     'We are planning a React Native app with offline sync.\nI would like a second opinion on the architecture.',
   platform: 'Google Meet',
   meetLink: 'https://meet.google.com/abc-defg-hij',
-  zoomPending: false,
   whenVisitor: 'Wed, 30 Sep 2026, 10:00 AM to 11:00 AM',
   whenPkt: 'Wed, 30 Sep 2026, 2:00 PM to 3:00 PM PKT',
   visitorTimeZone: 'Europe/London',
@@ -84,9 +83,8 @@ export const HOSTILE_BOOKING: BookingEmailData = {
   phone: '',
   company: '"><svg onload=alert(1)>',
   notes: 'Please call me.\r\nSubject: spoofed\r\n<script>alert("notes")</script>',
-  platform: 'Zoom',
+  platform: 'Google Meet',
   meetLink: null,
-  zoomPending: true,
   whenVisitor: 'Thu, 1 Oct 2026, 7:00 AM to 7:30 AM',
   whenPkt: 'Thu, 1 Oct 2026, 4:00 PM to 4:30 PM PKT',
   visitorTimeZone: 'America/New_York',
@@ -113,6 +111,6 @@ export const MAIL_PREVIEWS: readonly EmailPreview[] = [
 export const EXTRA_MAIL_PREVIEWS: readonly EmailPreview[] = [
   { name: 'contact-owner-plain', render: () => renderContactOwner(SAMPLE_CONTACT) },
   { name: 'contact-visitor-hostile', render: () => renderContactVisitor(HOSTILE_CONTACT) },
-  { name: 'booking-visitor-zoom-pending', render: () => renderBookingVisitor(HOSTILE_BOOKING) },
+  { name: 'booking-visitor-no-link', render: () => renderBookingVisitor(HOSTILE_BOOKING) },
   { name: 'booking-owner-meet', render: () => renderBookingOwner(SAMPLE_BOOKING) },
 ];

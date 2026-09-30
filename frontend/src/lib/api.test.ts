@@ -625,7 +625,7 @@ describe('postBooking', () => {
     expect(e.message).toBe('That time was just taken. Please pick another slot.');
   });
 
-  it('normalizes a 2xx body (Zoom not set up gives meetLink null)', async () => {
+  it('normalizes a 2xx body (no meetLink gives null)', async () => {
     const api = await loadApi();
     mockFetch(() => Promise.resolve(json(200, { ok: true, bookingId: 'bk_9', meetLink: null })));
     await expect(api.postBooking(bookingBody, 'key-12345678')).resolves.toEqual({
@@ -690,7 +690,7 @@ describe('getBookingSlots', () => {
 describe('getBookingConfig', () => {
   const config = {
     ok: true,
-    platforms: { meet: true, zoom: false },
+    platforms: { meet: true },
     sessions: {
       quick: { name: 'Quick Chat', minutes: 30, price: 15 },
       deep: { name: 'Technical Deep Dive', minutes: 60, price: 25 },

@@ -25,7 +25,7 @@ export interface ContactEmailData {
   source: string;
 }
 
-export type MeetingPlatform = 'Google Meet' | 'Zoom';
+export type MeetingPlatform = 'Google Meet';
 
 /**
  * Everything the booking emails show. The booking service (be-11) fills it from the
@@ -46,10 +46,8 @@ export interface BookingEmailData {
   company: string;
   notes: string;
   platform: MeetingPlatform;
-  /** The join link for both sides, or null when no meeting was created (Zoom not set up). */
+  /** The join link for both sides, or null when no meeting link exists. */
   meetLink: string | null;
-  /** The visitor picked Zoom but Zoom is not set up: Faisal sends a link himself. */
-  zoomPending: boolean;
   /** The first session in the visitor's zone, for example "Wed, 30 Sep 2026, 10:00 AM to 11:00 AM". */
   whenVisitor: string;
   /** The same time in Pakistan, for example "Wed, 30 Sep 2026, 2:00 PM to 3:00 PM PKT". */

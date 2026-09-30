@@ -186,7 +186,7 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
     const meeting = meetingFor(body.platform);
     const many = starts.length > 1;
 
-    // 1. The meeting, before the events: a Zoom link is made first and goes into the events.
+    // 1. The meeting, before the events (Google Meet makes no call here).
     let plan;
     try {
       plan = await meeting.plan({
@@ -212,7 +212,7 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
       `${info.name}, ${info.minutes} minutes, $${info.price} per session`,
       `Sessions: ${body.sessions} (total $${price.total} ${CURRENCY})`,
       ...(many ? sessionLines : []),
-      `Platform: ${body.platform}${plan.pending ? ' (Zoom link still to be sent)' : ''}`,
+      `Platform: ${body.platform}`,
       `Visitor: ${body.name} <${body.email}>`,
       body.phone ? `Phone: ${body.phone}` : null,
       body.company ? `Company: ${body.company}` : null,
@@ -309,7 +309,6 @@ export function createBookingService(options: BookingServiceOptions): BookingSer
       notes: body.notes,
       platform: body.platform,
       meetLink,
-      zoomPending: plan.pending,
       whenVisitor: (sessionTimes[0] as { whenVisitor: string }).whenVisitor,
       whenPkt: (sessionTimes[0] as { whenPkt: string }).whenPkt,
       sessionTimes,

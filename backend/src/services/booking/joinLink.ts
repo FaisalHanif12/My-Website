@@ -13,7 +13,7 @@ const TAG_BYTES = 16;
 /** What a join link carries. It is encrypted, so nobody can read the meeting address out of it. */
 export interface JoinPayload {
   bookingId: string;
-  /** The real meeting address (Google Meet or Zoom). */
+  /** The real meeting address (Google Meet). */
   url: string;
   /** ISO start and end of every booked session, in order. The link opens around each of them. */
   sessions: Array<{ start: string; end: string }>;

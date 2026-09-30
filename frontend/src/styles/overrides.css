@@ -10,3 +10,11 @@
 [data-theme='dark'] .dock {
   background: #0b1a16;
 }
+
+/*
+ * Booking step 3: Google Meet is the only platform (Zoom was removed, 2026-10-01), so the single
+ * option spans the row instead of filling half of a two column grid.
+ */
+.ct-plats {
+  grid-template-columns: minmax(0, 1fr);
+}

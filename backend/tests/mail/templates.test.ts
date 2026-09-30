@@ -327,24 +327,14 @@ describe('booking visitor email', () => {
     expect(email.text).toContain('Join Google Meet: https://meet.google.com/abc-defg-hij');
     expect(email.text).toContain('Add to Google Calendar: https://calendar.google.com/');
     expect(email.text).toContain('Payment details will follow from Faisal.');
-    expect(email.html).not.toContain('Faisal will send the Zoom link');
+    expect(email.html).not.toContain('Faisal will send the meeting link');
   });
 
-  it('says Join Zoom when the Zoom meeting exists', () => {
-    const zoom = renderBookingVisitor({
-      ...SAMPLE_BOOKING,
-      platform: 'Zoom',
-      meetLink: 'https://us02web.zoom.us/j/123456789',
-    });
-    expect(zoom.html).toMatch(/>Join Zoom<\/a>/);
-    expect(zoom.text).toContain('Join Zoom: https://us02web.zoom.us/j/123456789');
-  });
-
-  it('says Faisal will send the Zoom link when Zoom is pending, with no button', () => {
+  it('says Faisal will send the link when there is none, with no button', () => {
     const pending = renderBookingVisitor(HOSTILE_BOOKING);
-    expect(pending.html).toContain('Faisal will send the Zoom link before the call.');
-    expect(pending.text).toContain('Faisal will send the Zoom link before the call.');
-    expect(pending.html).not.toMatch(/>Join (Zoom|Google Meet)<\/a>/);
+    expect(pending.html).toContain('Faisal will send the meeting link before the call.');
+    expect(pending.text).toContain('Faisal will send the meeting link before the call.');
+    expect(pending.html).not.toMatch(/>Join Google Meet<\/a>/);
   });
 
   it('explains the other sessions only for a multi-session booking', () => {
@@ -395,16 +385,11 @@ describe('booking owner email', () => {
     expect(email.html).toContain('Each one has its own calendar event');
   });
 
-  it('flags zoomPending in a clear warning box', () => {
+  it('shows "Not available" for the meeting link when there is none, with no warning box', () => {
     const email = renderBookingOwner(HOSTILE_BOOKING);
-    expect(email.html).toContain('Action needed: send a Zoom link');
-    expect(email.html).toContain('class="fh-warn"');
-    expect(email.html).toContain('Zoom is not set up on the server');
-    expect(email.html).toContain('Not created (Zoom is not set up)');
-    expect(email.text).toContain('ACTION NEEDED: SEND A ZOOM LINK');
-    expect(email.text).toContain('Meeting link: Not created (Zoom is not set up)');
-    // The warning comes before everything else in the card.
-    expect(email.html.indexOf('Action needed')).toBeLessThan(email.html.indexOf('booked a'));
+    expect(email.html).not.toContain('class="fh-warn"');
+    expect(email.html).not.toContain('Zoom');
+    expect(email.text).toContain('Meeting link: Not available');
   });
 
   it('shows "Not available" when there is no calendar event link', () => {

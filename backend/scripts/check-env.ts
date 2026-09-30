@@ -23,9 +23,7 @@ async function main(): Promise<void> {
   console.log(
     `  ${on.google ? 'set    ' : 'missing'} google GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN`,
   );
-  console.log(
-    `  ${on.zoom ? 'set    ' : 'missing'} zoom   ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET (optional)`,
-  );
+  console.log();
   console.log(
     `  model: ${env.OPENROUTER_MODEL ?? '(not set)'}  timezone: ${env.BOOKING_TIMEZONE}  site: ${env.SITE_URL}`,
   );
@@ -70,7 +68,6 @@ async function main(): Promise<void> {
   }
 
   if (!on.chat) fail('chat is off until OPENROUTER_API_KEY and OPENROUTER_MODEL are set');
-  if (!on.zoom) info('Zoom is not set up: visitors who pick Zoom get the link by email later.');
 }
 
 main().catch(reportFailure);

@@ -71,10 +71,10 @@ describe('createFakeCalendar', () => {
   it('adds no Meet link without withGoogleMeet and keeps the location', async () => {
     const calendar = createFakeCalendar();
     const created = await calendar.createEvent(
-      eventInput({ withGoogleMeet: false, location: 'https://zoom.us/j/123' }),
+      eventInput({ withGoogleMeet: false, location: 'https://meet.example.test/room-123' }),
     );
     expect(created.meetLink).toBeNull();
-    expect(calendar.events[0]?.location).toBe('https://zoom.us/j/123');
+    expect(calendar.events[0]?.location).toBe('https://meet.example.test/room-123');
   });
 
   it('dedupes by requestId like Google', async () => {

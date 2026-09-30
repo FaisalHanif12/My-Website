@@ -30,8 +30,7 @@ async function main(): Promise<void> {
     await writeFile(textPath, `Subject: ${email.subject}\n\n${email.text}`);
     console.log(`\n${preview.name}\n  subject: ${email.subject}\n  ${htmlPath}\n  ${textPath}`);
   }
-  if (!all)
-    console.log('\nRun with -- --all for the other branches (Zoom pending, plain samples).');
+  if (!all) console.log('\nRun with -- --all for the other branches (no link, plain samples).');
 }
 
 main().catch((error: unknown) => {

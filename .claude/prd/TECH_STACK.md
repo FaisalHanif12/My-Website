@@ -34,13 +34,13 @@ Check the latest stable versions with `npm view <pkg> version` before installing
   - `src/app.ts`, `src/server.ts`
   - `src/config/env.ts` (zod-validated env that fails fast)
   - `src/routes/`, `src/controllers/`
-  - `src/services/` (chat (OpenRouter), mail, booking, meeting providers (Google Meet, Zoom), calendar, knowledge)
+  - `src/services/` (chat (OpenRouter), mail, booking, meeting provider (Google Meet), calendar, knowledge)
   - `src/validators/`
   - `src/middleware/` (error handler, not found, rate limit, request id)
   - `src/templates/` (email HTML + text)
   - `src/knowledge/portfolio.json`
   - `tests/`
-- Env (`.env.example`): the full list is in BACKEND_SPEC.md (OpenRouter, Gmail SMTP, Google Calendar, optional Zoom, rate limits). Any SMTP provider must work by changing env only.
+- Env (`.env.example`): the full list is in BACKEND_SPEC.md (OpenRouter, Gmail SMTP, Google Calendar, rate limits). Any SMTP provider must work by changing env only.
 
 ## Hosting (owner decision: the same VPS that serves faisalhanif.work today)
 - The live site runs on an Ubuntu server with nginx. Both apps deploy there.

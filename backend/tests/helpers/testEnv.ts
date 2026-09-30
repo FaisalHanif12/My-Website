@@ -2,7 +2,7 @@ import { parseEnv } from '../../src/config/env.js';
 import type { Env } from '../../src/config/env.js';
 
 /**
- * Dummy values only: chat and mail count as configured, Google and Zoom stay unset.
+ * Dummy values only: chat and mail count as configured, Google stays unset.
  * Nothing here reaches a real service (tests fake or mock every adapter).
  */
 export const TEST_ENV_SOURCE: Readonly<Record<string, string>> = {

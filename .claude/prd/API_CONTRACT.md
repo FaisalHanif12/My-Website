@@ -68,7 +68,7 @@ Body (the object the reference passes to `FH_HOOKS.onBooking`, `bookingData()` a
   "slots": string[],            // ISO start of every booked session, one per session (owner change, 2026-09-29)
   "timeLocal": string,          // for display only, for example "2:00 PM"
   "timeLahore": string,         // for display only
-  "platform": "Google Meet" | "Zoom",
+  "platform": "Google Meet",   // the only platform (Zoom removed 2026-10-01); defaults to it when left out
   "notes": string,              // max 800 characters, "" allowed
   "website"?: string            // honeypot
 }
@@ -80,7 +80,7 @@ Server rules:
 - Trust only `sessionType`, `sessions`, `email`, `name`, `phone`, `company`, `date`, `timezone`, `startUtc`, `platform` and `notes`. Recompute the session name, duration, price, total and every formatted time on the server.
 - `slots` has exactly `sessions` different entries (they may be on different days). Each must be a start time of its session type on a weekday (Mon to Fri in PKT): a Quick Chat (30 min) starts every 30 minutes from 09:00 to 17:30 PKT, a Technical Deep Dive (60 min) every 60 minutes from 09:00 to 17:00 PKT, so every session ends by 18:00. Each must be from tomorrow up to 60 days ahead (in the payload `timezone`) and at least 2 hours from now.
 - One calendar event is made per slot. The first creates the Google Meet room, the others reuse its address, so all sessions share one meeting link. If any slot is taken (409) or any event fails (502), nothing is kept: the events already made are deleted and no email is sent.
-- 200 `{ "ok": true, "bookingId": string, "meetLink": string | null, "start": ISO string, "end": ISO string }`. `meetLink` is the join link: Google Meet, or Zoom when Zoom is chosen and set up. It is `null` only when Zoom is chosen but not set up (BACKEND_SPEC.md section 3). The response also holds `sessions: [{ start, end }]`, one entry per booked session. The value is the site's join link (`<SITE_URL>/api/join/<token>`), which redirects to the real meeting only from 10 minutes before the session until 15 minutes after it should end (owner request, 2026-09-29). `GET /api/join/:token` answers 302 inside that window, 200 "not open yet" before it, 410 after it and 404 for a token that is not valid.
+- 200 `{ "ok": true, "bookingId": string, "meetLink": string | null, "start": ISO string, "end": ISO string }`. `meetLink` is the join link of the Google Meet room. The response also holds `sessions: [{ start, end }]`, one entry per booked session. The value is the site's join link (`<SITE_URL>/api/join/<token>`), which redirects to the real meeting only from 10 minutes before the session until 15 minutes after it should end (owner request, 2026-09-29). `GET /api/join/:token` answers 302 inside that window, 200 "not open yet" before it, 410 after it and 404 for a token that is not valid.
 - The frontend then shows the reference done screen, with its copy and ticket unchanged. It does not add the link to the screen.
 - 409 `SLOT_TAKEN`: the frontend goes back to step 2, reloads the slots, and shows "That time was just taken. Please pick another slot." in the reference's existing slot error element (`#ct-bk-slot-err`).
 - Any other error: the reference toast "Booking did not go through. Please try again." (L6155).
@@ -96,7 +96,7 @@ The frontend renders only the free times, using the reference slot buttons and n
 ```
 {
   "ok": true,
-  "platforms": { "meet": true, "zoom": boolean },
+  "platforms": { "meet": true },
   "sessions": {
     "quick": { "name": "Quick Chat", "minutes": 30, "price": 15 },
     "deep":  { "name": "Technical Deep Dive", "minutes": 60, "price": 25 }
@@ -107,4 +107,4 @@ The frontend renders only the free times, using the reference slot buttons and n
   "hours": { "days": "Mon-Fri", "start": "09:00", "end": "18:00", "firstSlot": "09:00", "lastSlot": "17:00", "stepMinutes": 60, "timezone": "Asia/Karachi" }
 }
 ```
-The frontend does not change the reference UI based on this response. Zoom stays selectable exactly as in the reference.
+The frontend does not change the UI based on this response.

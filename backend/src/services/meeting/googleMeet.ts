@@ -14,7 +14,6 @@ export function createGoogleMeetProvider(): MeetingProvider {
         platform: 'Google Meet',
         withGoogleMeet: true,
         joinUrl: null,
-        pending: false,
       });
     },
   };

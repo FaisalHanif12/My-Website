@@ -125,9 +125,9 @@ describe('booking modal (mailto mode)', () => {
     await clickAndSettle('.ct-pane[data-pane="2"] [data-bk-next]');
     expect(q('.ct-pane[data-pane="3"]').hidden).toBe(false);
 
-    click('#ct-bk-complete');
-    expect(q('#ct-bk-plat-err').textContent).toBe('Choose Google Meet or Zoom.');
-    fireEvent.click(q('input[name="ct-bk-plat"][value="Zoom"]'));
+    // Google Meet is the only platform and is already picked.
+    expect(q<HTMLInputElement>('input[name="ct-bk-plat"][value="Google Meet"]').checked).toBe(true);
+    expect(document.querySelectorAll('input[name="ct-bk-plat"]')).toHaveLength(1);
     const opened: string[] = [];
     document.addEventListener(
       'click',
@@ -146,7 +146,7 @@ describe('booking modal (mailto mode)', () => {
     });
     expect(opened).toHaveLength(1);
     expect(decodeURIComponent(opened[0])).toContain('Meeting request: Quick Chat on ');
-    expect(decodeURIComponent(opened[0])).toContain('Platform: Zoom');
+    expect(decodeURIComponent(opened[0])).toContain('Platform: Google Meet');
     expect(q('[data-screen="done"]').hidden).toBe(false);
     expect(q('#ct-bk-t3').textContent).toBe('Request ready!');
     expect(q('#ct-bk-done-msg').textContent).toContain('a@b.co');
@@ -202,7 +202,6 @@ describe('booking modal (mailto mode)', () => {
     fireEvent.click(btns()[0]!);
     fireEvent.click(btns()[3]!);
     await clickAndSettle('.ct-pane[data-pane="2"] [data-bk-next]');
-    fireEvent.click(q('input[name="ct-bk-plat"][value="Zoom"]'));
     const opened: string[] = [];
     document.addEventListener(
       'click',

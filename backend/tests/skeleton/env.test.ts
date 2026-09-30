@@ -48,7 +48,6 @@ describe('parseEnv defaults', () => {
     expect(env.OPENROUTER_API_KEY).toBeUndefined();
     expect(env.OPENROUTER_MODEL).toBeUndefined();
     expect(env.MAIL_FROM).toBeUndefined();
-    expect(env.ZOOM_CLIENT_SECRET).toBeUndefined();
   });
 
   it('defaults LOG_LEVEL to silent in tests', () => {
@@ -203,8 +202,8 @@ describe('features', () => {
   const bare = parseEnv({ NODE_ENV: 'test' });
 
   it('reports everything off without keys', () => {
-    expect(features(bare)).toEqual({ chat: false, mail: false, google: false, zoom: false });
-    expect(unconfiguredFeatures(bare)).toEqual(['chat', 'mail', 'google', 'zoom']);
+    expect(features(bare)).toEqual({ chat: false, mail: false, google: false });
+    expect(unconfiguredFeatures(bare)).toEqual(['chat', 'mail', 'google']);
   });
 
   it('needs both the chat key and model', () => {
@@ -220,30 +219,25 @@ describe('features', () => {
     expect(features({ ...bare, ...mail, SMTP_PASS: undefined }).mail).toBe(false);
   });
 
-  it('needs the three Google secrets and the three Zoom values', () => {
+  it('needs the three Google secrets', () => {
     const google = { GOOGLE_CLIENT_ID: 'a', GOOGLE_CLIENT_SECRET: 'b', GOOGLE_REFRESH_TOKEN: 'c' };
-    const zoom = { ZOOM_ACCOUNT_ID: 'a', ZOOM_CLIENT_ID: 'b', ZOOM_CLIENT_SECRET: 'c' };
     expect(features({ ...bare, ...google }).google).toBe(true);
     expect(features({ ...bare, ...google, GOOGLE_REFRESH_TOKEN: undefined }).google).toBe(false);
-    expect(features({ ...bare, ...zoom }).zoom).toBe(true);
-    expect(features({ ...bare, ...zoom, ZOOM_ACCOUNT_ID: undefined }).zoom).toBe(false);
   });
 
-  it('counts chat, mail and google as available with DEV_FAKE_EXTERNALS, never zoom', () => {
+  it('counts chat, mail and google as available with DEV_FAKE_EXTERNALS', () => {
     expect(features({ ...bare, DEV_FAKE_EXTERNALS: true })).toEqual({
       chat: true,
       mail: true,
       google: true,
-      zoom: false,
     });
   });
 
-  it('matches the test env (chat and mail on, google and zoom off)', () => {
+  it('matches the test env (chat and mail on, google off)', () => {
     expect(features(makeTestEnv())).toEqual({
       chat: true,
       mail: true,
       google: false,
-      zoom: false,
     });
   });
 });

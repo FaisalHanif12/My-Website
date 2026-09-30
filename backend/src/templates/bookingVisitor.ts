@@ -26,7 +26,8 @@ export function bookingVisitorSubject(sessionName: string): string {
 
 /** The join button label for the platform. */
 export function joinLabel(platform: MeetingPlatform): string {
-  return platform === 'Zoom' ? 'Join Zoom' : 'Join Google Meet';
+  void platform;
+  return 'Join Google Meet';
 }
 
 /** Session, duration, price per session, sessions and total, as plain text rows (both emails). */
@@ -81,10 +82,8 @@ export function joinUrl(data: BookingEmailData): string {
 }
 
 /** What the visitor reads when there is no join link yet. */
-export function pendingLinkText(data: BookingEmailData): string {
-  return data.zoomPending || data.platform === 'Zoom'
-    ? 'Faisal will send the Zoom link before the call.'
-    : 'Faisal will send the meeting link before the call.';
+export function pendingLinkText(): string {
+  return 'Faisal will send the meeting link before the call.';
 }
 
 const FOOTER = 'You are getting this email because you booked a call on faisalhanif.work.';
@@ -94,7 +93,7 @@ const INVITE = 'The attached invite also works with Apple Calendar and Outlook.'
 
 /**
  * The booking confirmation to the visitor: the session, prices, the time in their zone and
- * in Pakistan, the join button (or the Zoom pending line), their notes, the booking id, an
+ * in Pakistan, the join button (or a line that the link follows), their notes, the booking id, an
  * "Add to Google Calendar" link, how to reschedule and the payment note.
  */
 export function renderBookingVisitor(data: BookingEmailData): RenderedEmail {
@@ -103,7 +102,7 @@ export function renderBookingVisitor(data: BookingEmailData): RenderedEmail {
   const heading = 'Your booking is confirmed';
   const intro = `Hi ${first}, thanks for booking a ${sessionName} with Faisal Hanif. Here are the details.`;
   const join = joinUrl(data);
-  const pending = pendingLinkText(data);
+  const pending = pendingLinkText();
   const multi = data.multiSession
     ? `You booked ${data.sessions} sessions. Each one has its own time above and all of them use ` +
       'the same meeting link, which opens shortly before each session.'

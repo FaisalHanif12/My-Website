@@ -246,7 +246,7 @@ describe('portfolio.json key facts', () => {
     expect(k.booking.workingDays).toEqual([1, 2, 3, 4, 5]);
     expect(k.booking.slotStartHours).toEqual([9, 10, 11, 12, 13, 14, 15, 16, 17]);
     expect(k.booking.maxDaysAhead).toBe(60);
-    expect(k.booking.platforms.map((p) => p.name)).toEqual(['Google Meet', 'Zoom']);
+    expect(k.booking.platforms.map((p) => p.name)).toEqual(['Google Meet']);
   });
 
   it('holds all 7 certificates', () => {

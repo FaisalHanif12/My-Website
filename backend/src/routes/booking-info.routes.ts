@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { features } from '../config/env.js';
 import { Errors } from '../lib/errors.js';
 import { rateLimiters } from '../middleware/rateLimit.js';
 import { parseInput } from '../middleware/validate.js';
@@ -22,7 +21,7 @@ export interface BookingInfoModuleOverrides {
 
 /**
  * GET /api/booking/slots?date=YYYY-MM-DD&session=quick|deep: the free hourly starts of a day in
- * Pakistan time. GET /api/booking/config: sessions, hours and whether Zoom is set up. The
+ * Pakistan time. GET /api/booking/config: sessions, hours and the platform (Google Meet). The
  * modal never changes because of the config; the slots only remove taken times from its list.
  */
 export function createBookingInfoModule(overrides: BookingInfoModuleOverrides = {}): ApiModule {
@@ -56,7 +55,7 @@ export function createBookingInfoModule(overrides: BookingInfoModuleOverrides = 
       router.get('/booking/config', limiters.bookingInfo, (_req: Request, res: Response) => {
         res.status(200).json({
           ok: true,
-          ...bookingConfig({ zoom: features(env).zoom, timeZone: env.BOOKING_TIMEZONE }),
+          ...bookingConfig({ timeZone: env.BOOKING_TIMEZONE }),
         });
       });
 

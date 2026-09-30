@@ -6,12 +6,6 @@ import type { MeetingPlanInput } from '../../src/services/meeting/types.js';
 import { createCapturingLogger } from '../helpers/logCapture.js';
 import { makeTestEnv } from '../helpers/testEnv.js';
 
-const ZOOM_ENV = {
-  ZOOM_ACCOUNT_ID: 'test-zoom-account-id',
-  ZOOM_CLIENT_ID: 'test-zoom-client-id',
-  ZOOM_CLIENT_SECRET: 'test-zoom-client-secret',
-};
-
 function ctx(overrides: Parameters<typeof makeTestEnv>[0] = {}) {
   return { env: makeTestEnv(overrides), logger: createCapturingLogger().logger };
 }
@@ -37,7 +31,6 @@ describe('createGoogleMeetProvider', () => {
       platform: 'Google Meet',
       withGoogleMeet: true,
       joinUrl: null,
-      pending: false,
     });
   });
 });
@@ -50,43 +43,15 @@ describe('getMeetingProvider', () => {
     expect(getMeetingProvider('Google Meet', ctx({ DEV_FAKE_EXTERNALS: true }))).toBe(provider);
   });
 
-  it('returns a configured Zoom provider, one per process, when the Zoom env is set', () => {
-    const context = ctx(ZOOM_ENV);
-    const provider = getMeetingProvider('Zoom', context);
-    expect(provider.platform).toBe('Zoom');
-    expect(provider.configured).toBe(true);
-    expect(getMeetingProvider('Zoom', context)).toBe(provider);
-    expect(getMeetingProvider('Zoom', { ...context })).toBe(provider);
-  });
-
-  it('returns a Zoom provider that plans a pending link when Zoom is not set up', async () => {
-    const provider = getMeetingProvider('Zoom', ctx());
-    expect(provider.configured).toBe(false);
-    await expect(provider.plan(INPUT)).resolves.toEqual({
-      platform: 'Zoom',
-      withGoogleMeet: false,
-      joinUrl: null,
-      pending: true,
-    });
-  });
-
-  it('keeps Zoom on its real config with DEV_FAKE_EXTERNALS', () => {
-    expect(getMeetingProvider('Zoom', ctx({ DEV_FAKE_EXTERNALS: true })).configured).toBe(false);
-    resetMeetingForTests();
-    expect(
-      getMeetingProvider('Zoom', ctx({ ...ZOOM_ENV, DEV_FAKE_EXTERNALS: true })).configured,
-    ).toBe(true);
-  });
-
-  it('builds new providers after a reset or for another env', () => {
-    const context = ctx(ZOOM_ENV);
-    const zoom = getMeetingProvider('Zoom', context);
+  it('builds a new provider after a reset', () => {
+    const context = ctx();
     const meet = getMeetingProvider('Google Meet', context);
     resetMeetingForTests();
-    const zoomAgain = getMeetingProvider('Zoom', context);
-    expect(zoomAgain).not.toBe(zoom);
     expect(getMeetingProvider('Google Meet', context)).not.toBe(meet);
-    expect(getMeetingProvider('Zoom', ctx(ZOOM_ENV))).not.toBe(zoomAgain);
+  });
+
+  it('does not know Zoom any more', () => {
+    expect(() => getMeetingProvider('Zoom' as never, ctx())).toThrow(/Unknown meeting platform/);
   });
 
   it('throws on a platform it does not know', () => {

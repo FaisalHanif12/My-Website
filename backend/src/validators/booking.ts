@@ -60,7 +60,7 @@ export const bookingBodySchema = z.object({
     )
     .min(1, { error: 'Pick your time slots.' })
     .max(MAX_SESSIONS, { error: `Book at most ${MAX_SESSIONS} sessions.` }),
-  platform: z.enum(PLATFORMS, { error: 'Choose Google Meet or Zoom.' }),
+  platform: z.enum(PLATFORMS, { error: 'Choose Google Meet.' }).default('Google Meet'),
   notes: optionalTrimmed(BOOKING_LIMITS.notesMax),
   website: honeypotSchema,
 });

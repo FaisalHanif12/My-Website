@@ -7,7 +7,8 @@
 export type SessionType = 'quick' | 'deep';
 
 /** Meeting platform the visitor picks at step 3 of the reference modal. */
-export type Platform = 'Google Meet' | 'Zoom';
+/** The only meeting platform (Zoom was removed at the owner's request, 2026-10-01). */
+export type Platform = 'Google Meet';
 
 /** Calendar day in YYYY-MM-DD form, for example "2026-10-06". */
 export type Ymd = string;
@@ -64,7 +65,7 @@ export interface BookingQuote {
 /** What POST /api/booking returns after `ok: true`. */
 export interface BookingResult {
   bookingId: string;
-  /** The join link. null only when Zoom was picked but Zoom is not set up. */
+  /** The join link. */
   meetLink: string | null;
   /** ISO start time of the first session. */
   start: string;

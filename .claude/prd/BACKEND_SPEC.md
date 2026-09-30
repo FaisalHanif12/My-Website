@@ -74,7 +74,7 @@ Flow when a visitor completes the booking modal (session pick, then 3 steps; the
 1. Validate:
    - session: `quick` = Quick Chat, 30 min, $15; `deep` = Technical Deep Dive, 60 min, $25
    - number of sessions: 1 to 10. Total = price x sessions. Recompute names, durations, prices and totals on the server; never trust the client's numbers.
-   - date, start time (`startUtc`), the visitor's time zone, platform ("Google Meet" or "Zoom"), name, email, optional phone and company, notes (max 800)
+   - date, start time (`startUtc`), the visitor's time zone, platform ("Google Meet"), name, email, optional phone and company, notes (max 800)
    - honeypot
 2. Check availability (the same rules the reference calendar uses):
    - a weekday (Mon to Fri, PKT), from tomorrow up to 60 days ahead
@@ -99,7 +99,7 @@ Google setup (the owner does this once, and the README explains it step by step)
 - Run a small included script (`npm run google:auth`) that opens the consent screen and prints a refresh token for the owner's Google account.
 - Env: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `GOOGLE_CALENDAR_ID` (default `primary`), `BOOKING_TIMEZONE=Asia/Karachi`.
 
-Zoom option: the reference lets visitors pick Google Meet or Zoom. Put meeting creation behind a `MeetingProvider` interface with a Google Meet provider and a Zoom provider (Zoom Server-to-Server OAuth API: `ZOOM_ACCOUNT_ID`, `ZOOM_CLIENT_ID`, `ZOOM_CLIENT_SECRET`). The Zoom option always stays selectable, exactly as in the reference; the UI never disables it or adds a note. If the Zoom env is not set and a visitor picks Zoom, still create the Google Calendar event (without a conference link), return `meetLink: null`, tell the visitor in the emails that Faisal will send the Zoom link before the call, and flag it clearly in the owner email. `GET /api/booking/config` reports `zoom: false` in that case, for information only. The owner decides whether to set up Zoom.
+Platform: Google Meet only. The owner removed Zoom on 2026-10-01. Meeting creation stays behind a `MeetingProvider` interface (one provider, Google Meet), so another platform can be added later.
 
 Other booking rules:
 - `GET /api/booking/slots?date=YYYY-MM-DD&session=quick|deep` returns the free hourly start times (PKT) for that day. The modal leaves taken times out of the list, so its look does not change.
@@ -109,4 +109,4 @@ Other booking rules:
 - No payments in v1. The email says payment details will follow from Faisal.
 
 ## Env summary (all go in backend/.env.example with comments)
-PORT, NODE_ENV, CORS_ORIGINS, OPENROUTER_API_KEY, OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODELS, CHAT_MAX_TOKENS, CHAT_DAILY_GLOBAL_LIMIT, SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, MAIL_FROM, MAIL_TO_OWNER, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, GOOGLE_CALENDAR_ID, BOOKING_TIMEZONE, ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET (optional).
+PORT, NODE_ENV, CORS_ORIGINS, OPENROUTER_API_KEY, OPENROUTER_MODEL, OPENROUTER_FALLBACK_MODELS, CHAT_MAX_TOKENS, CHAT_DAILY_GLOBAL_LIMIT, SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, MAIL_FROM, MAIL_TO_OWNER, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, GOOGLE_CALENDAR_ID, BOOKING_TIMEZONE, JOIN_LINK_SECRET, API_PUBLIC_URL (optional).

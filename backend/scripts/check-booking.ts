@@ -1,5 +1,5 @@
 /**
- * npm run check:booking [-- --to you@example.com] [--platform zoom] [--session deep] [--sessions 2] [--delete]
+ * npm run check:booking [-- --to you@example.com] [--session deep] [--sessions 2] [--delete]
  * Books the next free weekday slot for real: one Google Calendar event with a Google Meet link,
  * and the two emails (owner and visitor, the same link, with an .ics). The visitor address is
  * --to (default MAIL_TO_OWNER). The event stays on your calendar so you can open the link and
@@ -30,7 +30,7 @@ async function main(): Promise<void> {
     return;
   }
   const to = flagValue('to') ?? owner;
-  const platform = flagValue('platform')?.toLowerCase() === 'zoom' ? 'Zoom' : 'Google Meet';
+  const platform = 'Google Meet' as const;
   const secret = joinSecret(env);
   const store = new MemoryStore();
   const now = new Date();
@@ -88,9 +88,7 @@ async function main(): Promise<void> {
       `check-${Date.now()}`,
     );
     ok(`booked ${result.bookingId}: ${result.sessions.map((x) => x.start).join(', ')}`);
-    info(
-      `meeting link: ${result.meetLink ?? '(none: Zoom is not set up, the link would follow by email)'}`,
-    );
+    info(`meeting link: ${result.meetLink ?? '(none)'}`);
     info(`emails sent to ${owner} (owner) and ${to} (visitor). Both must show the same link.`);
     if (hasFlag('delete') && calendar.kind === 'google') {
       await calendar.deleteEvent(googleEventIdFor(result.bookingId));
