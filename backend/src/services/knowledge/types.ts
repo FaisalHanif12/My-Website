@@ -165,7 +165,7 @@ const bookingSchema = z.strictObject({
   window: text,
   maxDaysAhead: z.number().int().positive(),
   minNoticeHours: z.number().int().nonnegative(),
-  platforms: z.array(z.strictObject({ name: z.enum(['Google Meet', 'Zoom']), note: text })).min(1),
+  platforms: z.array(z.strictObject({ name: z.enum(['Google Meet']), note: text })).min(1),
   howToOpen: textList,
   steps: textList,
   expect: z.array(z.strictObject({ title: text, text })).min(1),

@@ -106,7 +106,8 @@ export const BOOKING_EXPECT: BookingExpectItem[] = [
 
 /* ---------- platforms (step 3, L4412-4413) ---------- */
 
-export type BookingPlatformValue = 'Google Meet' | 'Zoom';
+/** Google Meet is the only platform (Zoom was removed at the owner's request, 2026-10-01). */
+export type BookingPlatformValue = 'Google Meet';
 
 export interface BookingPlatform {
   /** Radio value (name="ct-bk-plat"), also the payload platform. */
@@ -118,7 +119,6 @@ export interface BookingPlatform {
 
 export const BOOKING_PLATFORMS: BookingPlatform[] = [
   { value: 'Google Meet', icon: 'i-video', title: 'Google Meet', sub: 'No downloads needed' },
-  { value: 'Zoom', icon: 'i-globe', title: 'Zoom', sub: 'Professional conferencing' },
 ];
 
 /* ---------- calendar, slots and time zones (L5811-5830, L6013-6016, L6060) ---------- */
@@ -392,7 +392,6 @@ export const BOOKING_COPY = {
       n +
       (n === 1 ? ' session' : ' sessions') +
       '. Tap a picked time to remove it first.',
-    platform: 'Choose Google Meet or Zoom.',
     /** 409 SLOT_TAKEN, shown in #ct-bk-slot-err after going back to step 2 (API_CONTRACT.md). */
     slotTaken: 'That time was just taken. Please pick another slot.',
     /** A picked day with no free slot, shown in #ct-bk-date-err (API_CONTRACT.md). */

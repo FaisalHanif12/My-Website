@@ -97,7 +97,7 @@ emails fail after the event exists, the booking still succeeds and the error is 
 booking id so you can send the emails yourself.
 
 **Meeting links only work at the booked time.** Both emails (and the `.ics` file) carry the same
-join link, `https://faisalhanif.work/api/join/<token>`, not the raw Google Meet or Zoom address. The
+join link, `https://faisalhanif.work/api/join/<token>`, not the raw Google Meet address. The
 address is sealed inside the token (AES-256-GCM), so it can not be read out of it. The link
 redirects to the real meeting from 10 minutes before the session starts until 15 minutes after it
 should end. Before that it shows a "not open yet" page with the time, after that a "meeting has
@@ -108,10 +108,7 @@ or SMTP password is the key, and with none of them the real link is emailed as i
 Calendar can not lock a Meet room to a time, so anyone who already has the raw address (you, from
 your calendar) can still open it; the join link protects what visitors receive.
 
-**Zoom is optional.** Without `ZOOM_ACCOUNT_ID`, `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` (a
-Server-to-Server OAuth app from <https://marketplace.zoom.us>), a visitor who picks Zoom still gets
-a calendar event; the emails say you will send the Zoom link before the call and the owner email
-flags it. `GET /api/booking/config` reports `zoom: false` in that case.
+**Google Meet is the only platform.** Zoom was removed at the owner's request (2026-10-01).
 
 ## Deploy on the Ubuntu VPS (nginx + PM2)
 
@@ -146,7 +143,7 @@ src/
   app.ts, server.ts        Express app, listen, graceful shutdown
   config/env.ts            zod validated environment
   routes/                  chat, contact, booking-info and booking routers (one module each)
-  services/                chat (OpenRouter), contact, booking, calendar (Google), meeting (Meet, Zoom), mail (SMTP)
+  services/                chat (OpenRouter), contact, booking, calendar (Google), meeting (Google Meet), mail (SMTP)
   knowledge/portfolio.json the facts the chat answers from (kept in sync with the site content)
   templates/               HTML and text emails
   validators/, middleware/, store/, lib/

@@ -28,7 +28,7 @@ export interface CreateEventInput {
    * off the event (their calendar would show the raw meeting link, which the join link hides).
    */
   attendee: { email: string; name: string } | null;
-  /** Join link used as the event location (Zoom), or null. */
+  /** Address used as the event location, or null. */
   location: string | null;
   /** True when the provider must attach a Google Meet conference to the event. */
   withGoogleMeet: boolean;

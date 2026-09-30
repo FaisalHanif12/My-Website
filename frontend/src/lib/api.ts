@@ -104,7 +104,7 @@ export interface BookingRequest {
   slots: string[];
   timeLocal: string;
   timeLahore: string;
-  platform: 'Google Meet' | 'Zoom';
+  platform: 'Google Meet';
   notes: string;
   /** Honeypot, usually ''. Sent as '' when left out. */
   website?: string;
@@ -136,7 +136,7 @@ export interface BookingSessionConfig {
 /** GET /api/booking/config response. The UI never changes because of it. */
 export interface BookingConfig {
   ok: true;
-  platforms: { meet: boolean; zoom: boolean };
+  platforms: { meet: boolean };
   sessions: { quick: BookingSessionConfig; deep: BookingSessionConfig };
   maxSessions: number;
   currency: 'USD';

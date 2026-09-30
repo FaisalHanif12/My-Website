@@ -43,29 +43,13 @@ const BODY = {
 
 const KEY = 'key-aaaaaaaa-0001';
 
-const zoomStub = (joinUrl: string | null): MeetingProvider => ({
-  platform: 'Zoom',
-  configured: joinUrl !== null,
-  plan: () =>
-    Promise.resolve({
-      platform: 'Zoom',
-      withGoogleMeet: false,
-      joinUrl,
-      pending: joinUrl === null,
-      ...(joinUrl ? { externalId: '123' } : {}),
-    }),
-});
-
-async function setup(
-  options: { zoom?: string | null; mailer?: ReturnType<typeof createMemoryMailer> } = {},
-) {
+async function setup(options: { mailer?: ReturnType<typeof createMemoryMailer> } = {}) {
   const calendar = createFakeCalendar({ now: () => NOW });
   const mailer = options.mailer ?? createMemoryMailer();
   const store = new MemoryStore();
   const logs = createCapturingLogger();
   const env = makeTestEnv();
-  const meetingFor = (platform: string): MeetingProvider =>
-    platform === 'Zoom' ? zoomStub(options.zoom ?? null) : createGoogleMeetProvider();
+  const meetingFor = (): MeetingProvider => createGoogleMeetProvider();
   let n = 0;
   const { app } = await buildTestApp({
     env,
@@ -312,35 +296,15 @@ describe('POST /api/booking', () => {
     });
   });
 
-  it('Zoom set up: the Zoom link is the event location and goes into both emails', async () => {
-    const { app, calendar, mailer } = await setup({ zoom: 'https://zoom.us/j/123456' });
-    const res = await post(app, { ...BODY, platform: 'Zoom' });
+  it('Google Meet is the only platform: anything else is rejected, and it is the default', async () => {
+    const { app } = await setup();
+    const zoom = await post(app, { ...BODY, platform: 'Zoom' });
+    expect(zoom.status).toBe(400);
+    expect(bodyOf(zoom).error.fields.platform).toBeDefined();
+    const none: Record<string, unknown> = { ...BODY };
+    delete none.platform;
+    const res = await post(app, none, 'default-key-00000001');
     expect(res.status).toBe(200);
-    const joinUrl = bodyOf(res).meetLink!;
-    expect(joinUrl).toContain('/api/join/');
-    const env = makeTestEnv();
-    expect(
-      createJoinLinks(joinSecret(env)!, env.SITE_URL).read(joinUrl.split('/').pop()!)!.url,
-    ).toBe('https://zoom.us/j/123456');
-    expect(calendar.events[0]!.withGoogleMeet).toBe(false);
-    // The owner's own calendar event keeps the real Zoom address.
-    expect(calendar.events[0]!.location).toBe('https://zoom.us/j/123456');
-    for (const tag of ['booking-visitor', 'booking-owner']) {
-      const html = mailer.byTag(tag)[0]!.html;
-      expect(html).toContain(joinUrl);
-      expect(html).not.toContain('zoom.us/j/123456');
-    }
-  });
-
-  it('Zoom not set up: event without a conference, meetLink null, both emails explain', async () => {
-    const { app, calendar, mailer } = await setup({ zoom: null });
-    const res = await post(app, { ...BODY, platform: 'Zoom' });
-    expect(res.status).toBe(200);
-    expect(bodyOf(res).meetLink).toBeNull();
-    expect(calendar.events).toHaveLength(1);
-    expect(calendar.events[0]!.withGoogleMeet).toBe(false);
-    expect(mailer.byTag('booking-visitor')[0]!.text).toContain('Faisal will send the Zoom link');
-    expect(mailer.byTag('booking-owner')[0]!.text.toLowerCase()).toContain('zoom');
   });
 
   it('a filled honeypot gets a normal 200 and books nothing', async () => {
@@ -528,11 +492,11 @@ describe('GET /api/booking/slots and /config', () => {
     );
   });
 
-  it('answers the config with zoom: false when Zoom is not set up', async () => {
+  it('answers the config with Google Meet as the only platform', async () => {
     const { app } = await setup();
     const res = await request(app).get('/api/booking/config');
     expect(res.status).toBe(200);
-    expect(bodyOf(res).platforms).toEqual({ meet: true, zoom: false });
+    expect(bodyOf(res).platforms).toEqual({ meet: true });
     expect(bodyOf(res).sessions.deep).toEqual({
       name: 'Technical Deep Dive',
       minutes: 60,

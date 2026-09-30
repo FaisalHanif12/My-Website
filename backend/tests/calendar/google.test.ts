@@ -407,19 +407,19 @@ describe('createEvent', () => {
     expectCleanLogs(capture.text());
   });
 
-  it('adds no conference for Zoom, sets the location and never returns a Meet link', async () => {
+  it('adds no conference when none is asked for, sets the location and never returns a Meet link', async () => {
     const { provider, insert } = makeProvider();
     // Google may still attach a Meet link when the owner auto adds one to new events.
     insert.mockResolvedValueOnce(googleEvent());
 
     const created = await provider.createEvent(
-      eventInput({ withGoogleMeet: false, location: 'https://zoom.us/j/123' }),
+      eventInput({ withGoogleMeet: false, location: 'https://meet.example.test/room-123' }),
     );
 
     expect(created.meetLink).toBeNull();
     const body = insert.mock.calls[0]?.[0].requestBody as calendar_v3.Schema$Event;
     expect(body.conferenceData).toBeUndefined();
-    expect(body.location).toBe('https://zoom.us/j/123');
+    expect(body.location).toBe('https://meet.example.test/room-123');
   });
 
   it('reads the link from the video entry point when hangoutLink is missing', async () => {

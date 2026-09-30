@@ -292,10 +292,7 @@
     "window": "Weekdays from tomorrow up to 60 days ahead.",
     "maxDaysAhead": 60,
     "minNoticeHours": 2,
-    "platforms": [
-      { "name": "Google Meet", "note": "No downloads needed" },
-      { "name": "Zoom", "note": "Professional conferencing" }
-    ],
+    "platforms": [{ "name": "Google Meet", "note": "No downloads needed" }],
     "howToOpen": [
       "Any Book button on the site, such as \"Book\" in the top bar or \"Book Meeting\" on the pages",
       "the chat actions \"Book a call\", \"Book Quick Chat\" and \"Book Deep Dive\""
@@ -304,7 +301,7 @@
       "Pick a session type and the number of sessions (1 to 10), then press \"Book Session\"",
       "Details: email, name, and an optional phone number and company",
       "Schedule: pick a weekday and one of the time slots",
-      "Confirm: choose Google Meet or Zoom, add optional notes, then press \"Complete Booking\""
+      "Confirm: check the Google Meet platform, add optional notes, then press \"Complete Booking\""
     ],
     "expect": [
       {

@@ -160,7 +160,7 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
       company: '',
       date: null,
       slots: [],
-      plat: '',
+      plat: 'Google Meet',
       notes: '',
     };
   }
@@ -295,8 +295,9 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
     $$<HTMLInputElement>('input[name="ct-bk-type"]').forEach((r) => {
       r.checked = r.value === S.type;
     });
+    // Google Meet is the only platform, so it is always picked.
     $$<HTMLInputElement>('input[name="ct-bk-plat"]').forEach((r) => {
-      r.checked = false;
+      r.checked = r.value === S.plat;
     });
     el.email.value = S.email || '';
     el.name.value = S.name || '';
@@ -555,16 +556,6 @@ export function initBooking(modal: HTMLElement, env: BookingEnv): BookingControl
         need('#ct-bk-slot-err').textContent =
           S.n === 1 ? C.errors.slot : C.errors.slotMany(S.n, S.slots.length);
         $('.ct-slot')?.focus();
-        return false;
-      }
-      return true;
-    }
-    if (n === 3) {
-      const set = need('.ct-bf--set');
-      if (!S.plat) {
-        set.classList.add('is-invalid');
-        need('#ct-bk-plat-err').textContent = C.errors.platform;
-        need('input[name="ct-bk-plat"]').focus();
         return false;
       }
       return true;

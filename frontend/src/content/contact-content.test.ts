@@ -576,7 +576,7 @@ describe('booking data equals the reference', () => {
       timeLocal: '9:00 AM',
       timezoneName: zoneName,
       timeLahore: '2:00 PM',
-      platform: 'Zoom',
+      platform: 'Google Meet',
       name: 'Ada Lovelace',
       email: 'ada@example.com',
       phone: '+44 20 7946 0000',
@@ -725,9 +725,11 @@ describe('counts (REFERENCE_MAP.md 11.6.9, 11.7.10, 11.7.15, 11.7.16)', () => {
     expect(BOOKING_ZONES).toHaveLength(23);
     expect(Object.keys(BOOKING_ZONE_NAMES)).toHaveLength(9);
     expect(BOOKING_EXPECT).toHaveLength(4);
-    expect(BOOKING_PLATFORMS).toHaveLength(2);
-    // 9 of the reference/contract plus the two several-session messages (owner change, 2026-09-29).
-    expect(Object.keys(BOOKING_COPY.errors)).toHaveLength(11);
+    // Google Meet only (owner change, 2026-10-01).
+    expect(BOOKING_PLATFORMS).toHaveLength(1);
+    // The reference/contract messages, minus the platform error (nothing to choose), plus the two
+    // several-session messages (owner change, 2026-09-29).
+    expect(Object.keys(BOOKING_COPY.errors)).toHaveLength(10);
     expect(BOOKING_MAX_DAYS_AHEAD).toBe(60);
     expect(BOOKING_SLOT_HOURS_PKT[0]).toBe(9);
     expect(BOOKING_SLOT_HOURS_PKT.at(-1)).toBe(17);

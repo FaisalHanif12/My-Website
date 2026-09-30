@@ -19,10 +19,10 @@ import {
   sessionInfo,
 } from '../../src/services/booking/catalog.js';
 
-/** The GET /api/booking/config example of API_CONTRACT.md, with zoom false. */
+/** The GET /api/booking/config example of API_CONTRACT.md. */
 const CONTRACT_CONFIG = {
   ok: true,
-  platforms: { meet: true, zoom: false },
+  platforms: { meet: true },
   sessions: {
     quick: { name: 'Quick Chat', minutes: 30, price: 15 },
     deep: { name: 'Technical Deep Dive', minutes: 60, price: 25 },
@@ -66,7 +66,7 @@ describe('catalog constants', () => {
     expect(LAST_HOUR).toBe(17);
     expect(DAY_END).toBe('18:00');
     expect(MIN_NOTICE_MS).toBe(2 * 60 * 60 * 1000);
-    expect(PLATFORMS).toEqual(['Google Meet', 'Zoom']);
+    expect(PLATFORMS).toEqual(['Google Meet']);
   });
 
   it('recognises session ids and platforms', () => {
@@ -75,8 +75,8 @@ describe('catalog constants', () => {
     expect(isSessionType('long')).toBe(false);
     expect(isSessionType(1)).toBe(false);
     expect(isPlatform('Google Meet')).toBe(true);
-    expect(isPlatform('Zoom')).toBe(true);
-    expect(isPlatform('zoom')).toBe(false);
+    expect(isPlatform('Zoom')).toBe(false);
+    expect(isPlatform('google meet')).toBe(false);
     expect(isPlatform(undefined)).toBe(false);
   });
 });
@@ -117,19 +117,19 @@ describe('quote', () => {
 describe('bookingConfig', () => {
   it('deep equals the API_CONTRACT.md example without ok', () => {
     const { ok: _ok, ...expected } = CONTRACT_CONFIG;
-    expect(bookingConfig({ zoom: false, timeZone: 'Asia/Karachi' })).toStrictEqual(expected);
+    expect(bookingConfig({ timeZone: 'Asia/Karachi' })).toStrictEqual(expected);
   });
 
-  it('reports zoom and the configured zone', () => {
-    const config = bookingConfig({ zoom: true, timeZone: 'Europe/London' });
-    expect(config.platforms).toEqual({ meet: true, zoom: true });
+  it('reports Google Meet and the configured zone', () => {
+    const config = bookingConfig({ timeZone: 'Europe/London' });
+    expect(config.platforms).toEqual({ meet: true });
     expect(config.hours.timezone).toBe('Europe/London');
   });
 
   it('keeps the contract key order when sent as JSON', () => {
     const body = JSON.stringify({
       ok: true,
-      ...bookingConfig({ zoom: false, timeZone: 'Asia/Karachi' }),
+      ...bookingConfig({ timeZone: 'Asia/Karachi' }),
     });
     expect(body).toBe(JSON.stringify(CONTRACT_CONFIG));
   });

@@ -56,10 +56,6 @@ export interface Env {
   readonly GOOGLE_CALENDAR_ID: string;
   readonly BOOKING_TIMEZONE: string;
 
-  readonly ZOOM_ACCOUNT_ID: string | undefined;
-  readonly ZOOM_CLIENT_ID: string | undefined;
-  readonly ZOOM_CLIENT_SECRET: string | undefined;
-
   readonly JOIN_LINK_SECRET: string | undefined;
 }
 
@@ -291,10 +287,6 @@ const envSchema = z.object({
     error: 'must be an IANA time zone such as Asia/Karachi',
   }),
 
-  ZOOM_ACCOUNT_ID: optionalText(),
-  ZOOM_CLIENT_ID: optionalText(),
-  ZOOM_CLIENT_SECRET: optionalText(),
-
   JOIN_LINK_SECRET: optionalText(),
 });
 
@@ -355,16 +347,14 @@ export interface Features {
   readonly chat: boolean;
   readonly mail: boolean;
   readonly google: boolean;
-  readonly zoom: boolean;
 }
 
 export type FeatureName = keyof Features;
 
 /**
  * Chat needs the OpenRouter key and model; mail needs SMTP_USER, SMTP_PASS and MAIL_TO_OWNER;
- * google needs the three GOOGLE_ secrets; zoom needs the three ZOOM_ values. With
- * DEV_FAKE_EXTERNALS the local fakes make chat, mail and google available; zoom always
- * follows its real config. Booking needs google and mail.
+ * google needs the three GOOGLE_ secrets. With DEV_FAKE_EXTERNALS the local fakes make chat,
+ * mail and google available. Booking needs google and mail.
  */
 export function features(env: Env): Features {
   const fake = env.DEV_FAKE_EXTERNALS;
@@ -373,7 +363,6 @@ export function features(env: Env): Features {
     mail: fake || Boolean(env.SMTP_USER && env.SMTP_PASS && env.MAIL_TO_OWNER),
     google:
       fake || Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.GOOGLE_REFRESH_TOKEN),
-    zoom: Boolean(env.ZOOM_ACCOUNT_ID && env.ZOOM_CLIENT_ID && env.ZOOM_CLIENT_SECRET),
   };
 }
 

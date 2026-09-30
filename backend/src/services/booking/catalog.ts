@@ -15,7 +15,7 @@ export const SESSION_TYPES: Readonly<Record<SessionType, Readonly<SessionTypeInf
 export const SESSION_TYPE_IDS = ['quick', 'deep'] as const satisfies readonly SessionType[];
 
 /** Meeting platforms of the reference modal, in its order. */
-export const PLATFORMS = ['Google Meet', 'Zoom'] as const satisfies readonly Platform[];
+export const PLATFORMS = ['Google Meet'] as const satisfies readonly Platform[];
 
 /** Fewest and most sessions one booking can hold (the reference stepper). */
 export const MIN_SESSIONS = 1;
@@ -79,7 +79,7 @@ export function quote(sessionType: SessionType, sessions: number): BookingQuote 
 
 /** Body of GET /api/booking/config without `ok` (API_CONTRACT.md). */
 export interface BookingConfig {
-  platforms: { meet: true; zoom: boolean };
+  platforms: { meet: true };
   sessions: Record<SessionType, { name: string; minutes: number; price: number }>;
   maxSessions: number;
   currency: 'USD';
@@ -101,13 +101,12 @@ function hourLabel(hour: number): string {
 }
 
 /**
- * The GET /api/booking/config body without `ok`. `zoom` reports whether Zoom is set up
- * (information only: the reference keeps Zoom selectable either way); `timeZone` is
+ * The GET /api/booking/config body without `ok`. `timeZone` is
  * BOOKING_TIMEZONE.
  */
-export function bookingConfig(options: { zoom: boolean; timeZone: string }): BookingConfig {
+export function bookingConfig(options: { timeZone: string }): BookingConfig {
   return {
-    platforms: { meet: true, zoom: options.zoom },
+    platforms: { meet: true },
     sessions: {
       quick: {
         name: SESSION_TYPES.quick.name,

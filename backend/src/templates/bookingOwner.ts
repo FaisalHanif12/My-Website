@@ -27,12 +27,11 @@ export function bookingOwnerSubject(sessionName: string, name: string): string {
 
 const FOOTER = 'Sent by the booking form on faisalhanif.work.';
 const NOT_AVAILABLE = 'Not available';
-const ZOOM_TITLE = 'Action needed: send a Zoom link';
 
 /**
  * The new booking email to the owner: the visitor's details, the session and prices, both
- * times, the join link, the calendar event link, and a warning box when the visitor picked
- * Zoom but Zoom is not set up. The booking service sets Reply-To to the visitor.
+ * times, the join link and the calendar event link. The booking service sets Reply-To to the
+ * visitor.
  */
 export function renderBookingOwner(data: BookingEmailData): RenderedEmail {
   const name = oneLine(data.name);
@@ -43,19 +42,22 @@ export function renderBookingOwner(data: BookingEmailData): RenderedEmail {
   const intro = `${name} booked a ${sessionName}.`;
   const join = joinUrl(data);
   const eventUrl = safeUrl(data.eventLink);
-  const zoomWarning =
-    `${name} picked Zoom, but Zoom is not set up on the server, so no Zoom meeting was ` +
-    `created. Send ${first} a Zoom link yourself before the call.`;
   const multi = data.multiSession
     ? `${first} booked ${data.sessions} sessions. Each one has its own calendar event, and all of ` +
       'them use the same meeting link.'
     : '';
   const replyHint = `Press Reply to answer. Your reply goes straight to ${email}.`;
   const payment = `No payment was taken. Send ${first} the payment details.`;
-  const noLink = data.zoomPending ? 'Not created (Zoom is not set up)' : NOT_AVAILABLE;
+  const noLink = NOT_AVAILABLE;
 
   const whenRows: Array<[string, string]> = [
-    ...sessionTimeRows(data, { you: 'Visitor time', pkt: 'When (PKT)', pktFirst: true }),
+    ...sessionTimeRows(data, {
+      you: 'Visitor time',
+      pkt: 'When (PKT)',
+      youShort: 'visitor time',
+      pktShort: 'PKT',
+      pktFirst: true,
+    }),
     ['Platform', data.platform],
   ];
 
@@ -73,10 +75,9 @@ export function renderBookingOwner(data: BookingEmailData): RenderedEmail {
   ];
 
   const html = renderLayout({
-    preheader: `${sessionName} on ${oneLine(data.whenPkt)}.${data.zoomPending ? ' Zoom link needed.' : ''}`,
+    preheader: `${sessionName} on ${oneLine(data.whenPkt)}.`,
     heading,
     bodyHtml:
-      (data.zoomPending ? note(zoomWarning, 'warning', ZOOM_TITLE) : '') +
       paragraph(intro) +
       (join ? button(joinLabel(data.platform), join) : '') +
       sectionHeading('Visitor') +
@@ -99,7 +100,6 @@ export function renderBookingOwner(data: BookingEmailData): RenderedEmail {
   const text = renderTextLayout({
     heading,
     blocks: [
-      data.zoomPending ? `${ZOOM_TITLE.toUpperCase()}\n${zoomWarning}` : '',
       intro,
       `Visitor\n\n${textRows(visitorText)}`,
       `Booking\n\n${textRows([

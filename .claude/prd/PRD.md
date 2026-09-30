@@ -34,7 +34,7 @@ Everything in this file is a summary. If a summary here differs from the referen
 - Toasts, modals, and the floating chat button with its "Ask me anything" nudge.
 - Booking modal, exactly as in the reference:
   - First screen: pick the session, Quick Chat (30 min, $15) or Technical Deep Dive (60 min, $25), and the number of sessions (1 to 10). The total updates live. A summary sits beside it.
-  - Then 3 steps: (1) your details: email with a Verify button (a format check on the page), name, optional phone and company; (2) date, time zone and time slot: weekdays only, from tomorrow up to 60 days ahead, hourly start times from 9:00 to 17:00 PKT shown in the visitor's time zone; (3) platform (Google Meet or Zoom) and optional notes (max 800 characters).
+  - Then 3 steps: (1) your details: email with a Verify button (a format check on the page), name, optional phone and company; (2) date, time zone and time slot: weekdays only, from tomorrow up to 60 days ahead, hourly start times from 9:00 to 17:00 PKT shown in the visitor's time zone; (3) platform (Google Meet only; the owner removed Zoom on 2026-10-01) and optional notes (max 800 characters).
   - A done screen with a ticket (session, when, platform, total).
   - Every Book button (`data-book`) opens it. The one with `data-book="deep"` preselects Technical Deep Dive; the rest open on Quick Chat.
 
