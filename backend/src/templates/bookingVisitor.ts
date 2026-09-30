@@ -48,30 +48,48 @@ export function visitorTime(data: BookingEmailData): string {
   return zone ? `${when} (${zone})` : when;
 }
 
+/** True when the visitor is in Pakistan: their time would repeat the Pakistan time row. */
+function samePlace(visitorZone: string, visitor: string, pkt: string): boolean {
+  if (visitorZone === 'Asia/Karachi') return true;
+  return visitor.trim() === pkt.replace(/\s*PKT$/i, '').trim();
+}
+
 /**
  * The time rows of a booking. One session: "Your time" and "Pakistan time" (labels and order come
- * from `labels`). Several: two rows per session, "Session 2 (your time)" and "Session 2 (Pakistan)".
+ * from `labels`). Several: two rows per session, "Session 2 (your time)" and "Session 2 (Pakistan)"
+ * (the words in brackets also come from `labels`). A visitor in Pakistan gets the Pakistan row only,
+ * because a second row would repeat the same time.
  */
 export function sessionTimeRows(
   data: BookingEmailData,
-  labels: { you: string; pkt: string; pktFirst?: boolean } = {
+  labels: {
+    you: string;
+    pkt: string;
+    /** Bracket word of the visitor's row in a several-session booking. */
+    youShort?: string;
+    /** Bracket word of the Pakistan row in a several-session booking. */
+    pktShort?: string;
+    pktFirst?: boolean;
+  } = {
     you: 'Your time',
     pkt: 'Pakistan time',
   },
 ): Array<[string, string]> {
   const list = data.sessionTimes;
+  const zone = oneLine(data.visitorTimeZone);
+  const youShort = labels.youShort ?? 'your time';
+  const pktShort = labels.pktShort ?? 'Pakistan';
   if (!list || list.length < 2) {
-    const you: [string, string] = [labels.you, visitorTime(data)];
     const pkt: [string, string] = [labels.pkt, oneLine(data.whenPkt)];
+    if (samePlace(zone, oneLine(data.whenVisitor), oneLine(data.whenPkt))) return [pkt];
+    const you: [string, string] = [labels.you, visitorTime(data)];
     return labels.pktFirst ? [pkt, you] : [you, pkt];
   }
-  const zone = oneLine(data.visitorTimeZone);
   return list.flatMap((t, i): Array<[string, string]> => {
     const when = oneLine(t.whenVisitor);
-    return [
-      [`Session ${i + 1} (your time)`, zone ? `${when} (${zone})` : when],
-      [`Session ${i + 1} (Pakistan)`, oneLine(t.whenPkt)],
-    ];
+    const pkt: [string, string] = [`Session ${i + 1} (${pktShort})`, oneLine(t.whenPkt)];
+    if (samePlace(zone, when, oneLine(t.whenPkt))) return [pkt];
+    return [[`Session ${i + 1} (${youShort})`, zone ? `${when} (${zone})` : when], pkt];
   });
 }
 

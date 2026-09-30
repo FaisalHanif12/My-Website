@@ -80,6 +80,42 @@ export function joinSecret(
   return env.JOIN_LINK_SECRET ?? env.GOOGLE_CLIENT_SECRET ?? env.SMTP_PASS ?? null;
 }
 
+const MEET_PREFIX = 'https://meet.google.com/';
+
+/**
+ * A short form of the payload, so the link stays short: a list of [bookingId, address, then the
+ * start and end of every session as base 36 minutes]. A Google Meet address keeps only its code.
+ */
+function pack(payload: JoinPayload): string {
+  const url = payload.url.startsWith(MEET_PREFIX)
+    ? `~${payload.url.slice(MEET_PREFIX.length)}`
+    : payload.url;
+  const minutes = payload.sessions.flatMap((s) =>
+    [s.start, s.end].map((iso) => Math.round(Date.parse(iso) / 60_000).toString(36)),
+  );
+  return JSON.stringify([payload.bookingId, url, ...minutes]);
+}
+
+function unpack(text: string): JoinPayload | null {
+  const value: unknown = JSON.parse(text);
+  if (!Array.isArray(value) || value.length < 4 || value.length % 2 !== 0) return null;
+  const [bookingId, packed, ...rest] = value as unknown[];
+  if (typeof bookingId !== 'string' || typeof packed !== 'string') return null;
+  const url = packed.startsWith('~') ? `${MEET_PREFIX}${packed.slice(1)}` : packed;
+  if (!/^https:\/\//i.test(url)) return null;
+  const sessions: JoinPayload['sessions'] = [];
+  for (let i = 0; i < rest.length; i += 2) {
+    const start = typeof rest[i] === 'string' ? parseInt(rest[i] as string, 36) : NaN;
+    const end = typeof rest[i + 1] === 'string' ? parseInt(rest[i + 1] as string, 36) : NaN;
+    if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
+    sessions.push({
+      start: new Date(start * 60_000).toISOString(),
+      end: new Date(end * 60_000).toISOString(),
+    });
+  }
+  return { bookingId, url, sessions };
+}
+
 export function createJoinLinks(secret: string, siteUrl: string): JoinLinks {
   const key = createHash('sha256').update(`faisalhanif.work/join-link\n${secret}`).digest();
   const base = siteUrl.replace(/\/+$/, '');
@@ -88,7 +124,7 @@ export function createJoinLinks(secret: string, siteUrl: string): JoinLinks {
     create(payload) {
       const iv = randomBytes(IV_BYTES);
       const cipher = createCipheriv(ALGORITHM, key, iv);
-      const body = Buffer.concat([cipher.update(JSON.stringify(payload), 'utf8'), cipher.final()]);
+      const body = Buffer.concat([cipher.update(pack(payload), 'utf8'), cipher.final()]);
       const token = Buffer.concat([iv, cipher.getAuthTag(), body]).toString('base64url');
       return `${base}/api/join/${token}`;
     },
@@ -103,28 +139,7 @@ export function createJoinLinks(secret: string, siteUrl: string): JoinLinks {
           decipher.update(raw.subarray(IV_BYTES + TAG_BYTES)),
           decipher.final(),
         ]).toString('utf8');
-        const value = JSON.parse(text) as Partial<JoinPayload>;
-        if (
-          typeof value.bookingId !== 'string' ||
-          typeof value.url !== 'string' ||
-          !Array.isArray(value.sessions) ||
-          value.sessions.length === 0 ||
-          !value.sessions.every(
-            (s) =>
-              typeof s?.start === 'string' &&
-              typeof s?.end === 'string' &&
-              !Number.isNaN(Date.parse(s.start)) &&
-              !Number.isNaN(Date.parse(s.end)),
-          ) ||
-          !/^https:\/\//i.test(value.url)
-        ) {
-          return null;
-        }
-        return {
-          bookingId: value.bookingId,
-          url: value.url,
-          sessions: value.sessions.map((s) => ({ start: s.start, end: s.end })),
-        };
+        return unpack(text);
       } catch {
         return null;
       }

@@ -51,7 +51,13 @@ export function renderBookingOwner(data: BookingEmailData): RenderedEmail {
   const noLink = NOT_AVAILABLE;
 
   const whenRows: Array<[string, string]> = [
-    ...sessionTimeRows(data, { you: 'Visitor time', pkt: 'When (PKT)', pktFirst: true }),
+    ...sessionTimeRows(data, {
+      you: 'Visitor time',
+      pkt: 'When (PKT)',
+      youShort: 'visitor time',
+      pktShort: 'PKT',
+      pktFirst: true,
+    }),
     ['Platform', data.platform],
   ];
 
