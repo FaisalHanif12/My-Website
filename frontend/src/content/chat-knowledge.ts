@@ -547,7 +547,7 @@ export const CHAT_KB: Record<ChatIntentId, ChatReplyFactory> = {
   social: () => ({
     p: ['You can find Faisal here:'],
     list: [
-      '[LinkedIn](https://www.linkedin.com/in/faisal-frontend-developer/)',
+      '[LinkedIn](https://www.linkedin.com/in/faisal-software-engineer/)',
       '[GitHub](https://github.com/FaisalHanif12)',
       '[X](https://x.com/FaisalHanif333)',
       '[Instagram](https://www.instagram.com/faisal_hanif_0/)',
