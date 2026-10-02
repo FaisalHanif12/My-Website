@@ -29,7 +29,7 @@ export const socials: readonly Social[] = [
     id: 'linkedin',
     label: 'LinkedIn',
     tip: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/faisal-frontend-developer/',
+    href: 'https://www.linkedin.com/in/faisal-software-engineer/',
     icon: 'i-linkedin',
   },
   {
